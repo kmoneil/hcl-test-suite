@@ -1,0 +1,27 @@
+{
+  "description": "A null number is not equal to zero",
+  "spec": [
+    "spec.md#null-values",
+    "hclsyntax/spec.md#comparison-operators"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "n": {
+      "null": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

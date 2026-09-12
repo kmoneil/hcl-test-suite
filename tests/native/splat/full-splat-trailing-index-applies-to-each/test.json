@@ -1,0 +1,67 @@
+{
+  "description": "In tuple[*].foo.bar[0], the index selects from each element's bar",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators"
+  ],
+  "op": "eval",
+  "variables": {
+    "tuple": {
+      "tuple": [
+        {
+          "object": {
+            "foo": {
+              "object": {
+                "bar": {
+                  "tuple": [
+                    {
+                      "number": "1"
+                    },
+                    {
+                      "number": "2"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "object": {
+            "foo": {
+              "object": {
+                "bar": {
+                  "tuple": [
+                    {
+                      "number": "3"
+                    },
+                    {
+                      "number": "4"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "number": "1"
+            },
+            {
+              "number": "3"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

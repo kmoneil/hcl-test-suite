@@ -1,0 +1,40 @@
+{
+  "description": "Two legacy indexes separated by a space are both applied",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec says the legacy index syntax does not support chaining, and explains that 0.0 would be read as a number literal. It doesn't say whether chaining works when whitespace keeps the steps from forming one number token. hashicorp/hcl scans .0 and .1 as two separate legacy indexes and applies both (parseExpressionTraversals in hclsyntax/parser.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "index",
+          "collection": {
+            "kind": "index",
+            "collection": {
+              "kind": "variable",
+              "name": "t"
+            },
+            "key": {
+              "kind": "literal",
+              "value": {
+                "number": "0"
+              }
+            }
+          },
+          "key": {
+            "kind": "literal",
+            "value": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

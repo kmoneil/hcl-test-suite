@@ -1,0 +1,11 @@
+{
+  "description": "A for directive with a colon after the collection, as in a for expression, is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive"
+  ],
+  "op": "parse",
+  "reference_error": "Extra characters in for marker",
+  "expect": {
+    "valid": false
+  }
+}

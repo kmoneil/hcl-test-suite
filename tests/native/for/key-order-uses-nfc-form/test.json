@@ -1,0 +1,28 @@
+{
+  "description": "Keys are sorted after NFC normalization, so a decomposed é sorts after f",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#primitive-types"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says object attributes are visited in lexicographic order of their names and that strings are equal when their NFC forms are, but not whether the order uses the normalized form. hashicorp/hcl normalizes every string to NFC when it creates it (NormalizeString in go-cty's cty/value_init.go), so e followed by U+0301 becomes U+00E9, which sort.Strings in elementIterator (cty/element_iterator.go) puts after f.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "number": "2"
+            },
+            {
+              "number": "1"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

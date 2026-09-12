@@ -1,0 +1,11 @@
+{
+  "description": "Curly quotation marks do not delimit strings",
+  "spec": [
+    "hclsyntax/spec.md#operators-and-delimiters"
+  ],
+  "op": "parse",
+  "reference_error": "Curly quotes",
+  "expect": {
+    "valid": false
+  }
+}

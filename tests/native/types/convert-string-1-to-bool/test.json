@@ -1,0 +1,19 @@
+{
+  "description": "The string 1 converts to the bool true",
+  "spec": [
+    "spec.md#primitive-type-conversions",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

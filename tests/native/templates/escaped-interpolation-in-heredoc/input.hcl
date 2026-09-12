@@ -1,0 +1,3 @@
+a = <<EOT
+$${name}
+EOT

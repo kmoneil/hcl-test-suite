@@ -1,0 +1,37 @@
+{
+  "description": "A tuple element expression can continue on the next line",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "notes": "The grammar has no place for a newline here, but the prose says newlines between the delimiters of a collection constructor are ignored as whitespace, and prose has priority over the grammar.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "tuple",
+          "elements": [
+            {
+              "kind": "binary",
+              "operator": "+",
+              "left": {
+                "kind": "literal",
+                "value": {
+                  "number": "1"
+                }
+              },
+              "right": {
+                "kind": "literal",
+                "value": {
+                  "number": "2"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

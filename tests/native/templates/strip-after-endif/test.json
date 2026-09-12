@@ -1,0 +1,19 @@
+{
+  "description": "A ~} on endif strips the whitespace after the if directive",
+  "spec": [
+    "hclsyntax/spec.md#template-literals",
+    "hclsyntax/spec.md#template-if-directive"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "bc"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

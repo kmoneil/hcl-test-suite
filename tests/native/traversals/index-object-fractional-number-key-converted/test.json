@@ -1,0 +1,28 @@
+{
+  "description": "A number key with a fractional part is converted to a string to select an object attribute",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "variables": {
+    "o": {
+      "object": {
+        "0.5": {
+          "string": "half"
+        }
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "half"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

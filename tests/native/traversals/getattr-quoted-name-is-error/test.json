@@ -1,0 +1,11 @@
+{
+  "description": "A quoted string after a dot is not an attribute name",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid attribute name",
+  "expect": {
+    "valid": false
+  }
+}

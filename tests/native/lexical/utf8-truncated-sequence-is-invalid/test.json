@@ -1,0 +1,11 @@
+{
+  "description": "A multi-byte UTF-8 sequence missing its last byte is a parse error",
+  "spec": [
+    "hclsyntax/spec.md#source-code-representation"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid character encoding",
+  "expect": {
+    "valid": false
+  }
+}

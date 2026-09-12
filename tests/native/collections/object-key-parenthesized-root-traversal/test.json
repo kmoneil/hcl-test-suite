@@ -1,0 +1,32 @@
+{
+  "description": "An object key that accesses an attribute of a parenthesized variable is evaluated",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "eval",
+  "notes": "Only a bare identifier is a literal name, and this key starts with parentheses, so it is evaluated. hashicorp/hcl only rejects traversal keys that start with an unparenthesized identifier (see object-key-bare-attribute-access).",
+  "variables": {
+    "k": {
+      "object": {
+        "b": {
+          "string": "x"
+        }
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "x": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

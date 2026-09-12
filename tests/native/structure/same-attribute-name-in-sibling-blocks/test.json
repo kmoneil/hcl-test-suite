@@ -1,0 +1,46 @@
+{
+  "description": "Sibling blocks have separate bodies, so each can define the same attribute name",
+  "spec": [
+    "hclsyntax/spec.md#attribute-definitions",
+    "spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "block",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "a": {
+                "kind": "literal",
+                "value": {
+                  "number": "1"
+                }
+              }
+            },
+            "blocks": []
+          }
+        },
+        {
+          "type": "block",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "a": {
+                "kind": "literal",
+                "value": {
+                  "number": "2"
+                }
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

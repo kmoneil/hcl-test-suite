@@ -1,0 +1,3 @@
+a = <<END_OF_TEXT2
+x
+END_OF_TEXT2

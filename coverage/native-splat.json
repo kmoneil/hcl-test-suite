@@ -1,0 +1,305 @@
+{
+  "area": "native/splat",
+  "rules": [
+    {
+      "id": "splat-full-parse",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "[*] after an expression term parses as a full splat whose source is that term; with nothing after it, each element is used unchanged",
+      "tests": [
+        "native/splat/full-splat-parse-node",
+        "native/splat/full-splat-tuple-without-traversal"
+      ]
+    },
+    {
+      "id": "splat-attr-parse",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": ".* after an expression term parses as an attribute-only splat whose source is that term; with nothing after it, each element is used unchanged",
+      "tests": [
+        "native/splat/attr-splat-parse-node",
+        "native/splat/attr-splat-tuple-without-traversal"
+      ]
+    },
+    {
+      "id": "splat-full-each-attributes",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "Attribute accesses after [*] are applied to each element",
+      "tests": [
+        "native/splat/full-splat-attributes-in-each",
+        "native/splat/full-splat-tuple-attribute"
+      ]
+    },
+    {
+      "id": "splat-attr-each-attributes",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "Any number of attribute accesses directly after .* are applied to each element",
+      "tests": [
+        "native/splat/attr-splat-attributes-in-each",
+        "native/splat/attr-splat-chained-attributes",
+        "native/splat/attr-splat-tuple-attribute"
+      ]
+    },
+    {
+      "id": "splat-full-each-indexes",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "Index operations after [*], with constant or computed keys, and any attribute accesses after them, are applied to each element",
+      "tests": [
+        "native/splat/full-splat-attribute-after-index-applies-to-each",
+        "native/splat/full-splat-attribute-after-index-in-each",
+        "native/splat/full-splat-direct-index-applies-to-each",
+        "native/splat/full-splat-direct-index-in-each",
+        "native/splat/full-splat-dynamic-index-applies-to-each",
+        "native/splat/full-splat-dynamic-index-in-each",
+        "native/splat/full-splat-index-in-each"
+      ]
+    },
+    {
+      "id": "splat-attr-index-ends",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "An index operation after .* and its attribute accesses, with a constant or computed key, is not part of the splat: it and everything after it apply to the splat's result",
+      "tests": [
+        "native/splat/attr-splat-attribute-after-index-applies-to-result",
+        "native/splat/attr-splat-attribute-after-index-outside",
+        "native/splat/attr-splat-direct-index-applies-to-result",
+        "native/splat/attr-splat-direct-index-outside",
+        "native/splat/attr-splat-dynamic-index-applies-to-result",
+        "native/splat/attr-splat-dynamic-index-outside",
+        "native/splat/attr-splat-index-outside"
+      ]
+    },
+    {
+      "id": "splat-full-each-legacy-index",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "A legacy index after [*] is an index operation applied to each element",
+      "tests": [
+        "native/splat/full-splat-legacy-index-applies-to-each",
+        "native/splat/full-splat-legacy-index-in-each"
+      ]
+    },
+    {
+      "id": "splat-attr-legacy-index",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "A legacy index after .* and its attribute accesses is applied to each element, like the attribute accesses (disputed)",
+      "tests": [
+        "native/splat/attr-splat-legacy-index-applies-to-each",
+        "native/splat/attr-splat-legacy-index-in-each"
+      ]
+    },
+    {
+      "id": "splat-attr-legacy-index-chain",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "Two legacy indexes written directly after each other inside an attribute-only splat are a syntax error",
+      "tests": [
+        "native/splat/attr-splat-legacy-index-chain-is-error"
+      ]
+    },
+    {
+      "id": "splat-source-term",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "The source of a splat is the whole expression term before it, including earlier attribute accesses and index operations, and can be any kind of term",
+      "tests": [
+        "native/functions/call-result-splat",
+        "native/splat/attr-splat-source-includes-preceding-attributes",
+        "native/splat/full-splat-source-includes-preceding-index",
+        "native/splat/splat-source-tuple-literal"
+      ]
+    },
+    {
+      "id": "splat-nested-full",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "A [*] inside a full splat's traversal starts a nested splat that is applied to each element (disputed)",
+      "tests": [
+        "native/splat/nested-full-splats",
+        "native/splat/nested-full-splats-parse"
+      ]
+    },
+    {
+      "id": "splat-attr-inside-full",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "A .* inside a full splat's traversal starts a nested attribute-only splat that is applied to each element (disputed)",
+      "tests": [
+        "native/splat/attr-splat-inside-full-splat",
+        "native/splat/attr-splat-inside-full-splat-parse"
+      ]
+    },
+    {
+      "id": "splat-full-after-attr",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "A [*] after an attribute-only splat is a new splat whose source is the attribute-only splat's result",
+      "tests": [
+        "native/splat/full-splat-after-attr-splat",
+        "native/splat/full-splat-after-attr-splat-parse"
+      ]
+    },
+    {
+      "id": "splat-attr-after-attr",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "A .* directly after an attribute-only splat's attribute accesses is a syntax error (disputed)",
+      "tests": [
+        "native/splat/attr-splat-after-attr-splat-is-error"
+      ]
+    },
+    {
+      "id": "splat-each-extent",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "A splat's traversal ends at the first token that isn't an attribute access, index or splat, such as an operator or a closing parenthesis",
+      "tests": [
+        "native/splat/attr-splat-each-ends-at-operator",
+        "native/splat/full-splat-each-ends-at-operator",
+        "native/splat/parentheses-end-full-splat",
+        "native/splat/parentheses-end-full-splat-parse"
+      ]
+    },
+    {
+      "id": "splat-malformed",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "The star of a full splat must be directly followed by a closing bracket, and the dots in an attribute-only splat must be followed by attribute names",
+      "tests": [
+        "native/splat/attr-splat-quoted-attribute-is-error",
+        "native/splat/full-splat-missing-close-bracket-is-error",
+        "native/splat/full-splat-two-stars-is-error"
+      ]
+    },
+    {
+      "id": "splat-newlines",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "Newlines inside or after a splat operator are ignored only inside parentheses, tuple brackets, index brackets or function call parentheses; at the top level of an attribute they are errors or end the expression",
+      "tests": [
+        "native/splat/attr-splat-newline-after-dot-is-error",
+        "native/splat/attr-splat-newlines-in-parentheses",
+        "native/splat/full-splat-newline-before-attribute-in-parentheses",
+        "native/splat/full-splat-newline-before-close-bracket-is-error",
+        "native/splat/full-splat-newline-before-star-is-error",
+        "native/splat/full-splat-newline-ends-each-is-error",
+        "native/splat/full-splat-newlines-in-parentheses"
+      ]
+    },
+    {
+      "id": "splat-whitespace",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "Spaces are allowed between the tokens of both splat operators",
+      "tests": [
+        "native/splat/attr-splat-spaces-around-dots",
+        "native/splat/full-splat-spaces-inside-brackets"
+      ]
+    },
+    {
+      "id": "splat-tuple-result",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "A splat on a tuple gives a tuple with one result per element, in order, keeping null elements and allowing results of different types",
+      "tests": [
+        "native/splat/attr-splat-tuple-without-traversal",
+        "native/splat/full-splat-tuple-without-traversal",
+        "native/splat/splat-keeps-null-elements",
+        "native/splat/splat-results-can-differ-in-type"
+      ]
+    },
+    {
+      "id": "splat-trailing-index-difference",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "A trailing index selects from each element's result with a full splat, but from the tuple of results with an attribute-only splat",
+      "tests": [
+        "native/splat/attr-splat-trailing-index-applies-to-result",
+        "native/splat/full-splat-trailing-index-applies-to-each"
+      ]
+    },
+    {
+      "id": "splat-list-result",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "A splat on a list gives a list of the results (disputed)",
+      "tests": [
+        "native/splat/attr-splat-list-gives-list",
+        "native/splat/full-splat-list-gives-list"
+      ]
+    },
+    {
+      "id": "splat-set-result",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "A splat on a set gives a list with one result per element (disputed)",
+      "tests": [
+        "native/splat/splat-empty-set-gives-empty-list",
+        "native/splat/splat-set-gives-list"
+      ]
+    },
+    {
+      "id": "splat-empty-tuple",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "A splat on an empty tuple gives an empty tuple without applying its traversal",
+      "tests": [
+        "native/splat/splat-empty-tuple-skips-traversal"
+      ]
+    },
+    {
+      "id": "splat-empty-list-result",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "A splat on an empty list gives an empty list whose element type is the traversal's result type (disputed)",
+      "tests": [
+        "native/splat/splat-empty-list-gives-empty-list"
+      ]
+    },
+    {
+      "id": "splat-empty-list-type-check",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "A splat on an empty list is an error if its traversal can't apply to the list's element type (disputed)",
+      "tests": [
+        "native/splat/splat-empty-list-checks-element-type"
+      ]
+    },
+    {
+      "id": "splat-wrap-non-sequence",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "A splat on a value that is not a tuple, list or set, such as a number, string, bool, object or map, gives a one-element tuple holding its traversal's result for that value (disputed)",
+      "tests": [
+        "native/splat/attr-splat-on-object-gets-attribute",
+        "native/splat/attr-splat-wraps-number",
+        "native/splat/scalar-becomes-tuple",
+        "native/splat/splat-wraps-bool",
+        "native/splat/splat-wraps-map",
+        "native/splat/splat-wraps-object",
+        "native/splat/splat-wraps-string"
+      ]
+    },
+    {
+      "id": "splat-null-non-sequence",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "A splat on null, or on a null of a type that isn't a tuple, list or set, gives an empty tuple without applying its traversal",
+      "tests": [
+        "native/splat/attr-splat-null-becomes-empty-tuple",
+        "native/splat/null-becomes-empty-tuple",
+        "native/splat/splat-null-map-becomes-empty-tuple",
+        "native/splat/splat-null-object-becomes-empty-tuple",
+        "native/splat/splat-null-skips-traversal",
+        "native/splat/splat-null-string-becomes-empty-tuple"
+      ]
+    },
+    {
+      "id": "splat-null-sequence",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "A splat on a null tuple, list or set is an error",
+      "tests": [
+        "native/splat/attr-splat-null-list-is-error",
+        "native/splat/splat-null-list-is-error",
+        "native/splat/splat-null-set-is-error",
+        "native/splat/splat-null-tuple-is-error"
+      ]
+    },
+    {
+      "id": "splat-each-error",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "A splat is an error if its source can't be evaluated or its traversal fails for any element, including a null element",
+      "tests": [
+        "native/splat/splat-missing-attribute-is-error",
+        "native/splat/splat-null-element-is-not-skipped",
+        "native/splat/splat-source-error-is-error"
+      ]
+    },
+    {
+      "id": "splat-nested-list",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "Nested splats on a list give a list whose elements are the inner splats' tuples, and are an error when those tuples have different types (disputed)",
+      "tests": [
+        "native/splat/nested-splat-list-mixed-types-is-error",
+        "native/splat/nested-splat-list-same-types"
+      ]
+    }
+  ]
+}

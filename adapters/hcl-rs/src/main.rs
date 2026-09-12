@@ -141,7 +141,7 @@ fn expr_json(expr: &Expression) -> Result<Json, String> {
     Ok(match expr {
         Expression::Null => literal(json!({"null": "dynamic"})),
         Expression::Bool(b) => literal(json!({"bool": b})),
-        Expression::Number(n) => literal(json!({"number": n.to_string()})),
+        Expression::Number(n) => literal(json!({"number": number_text(n)})),
         Expression::String(s) => literal(json!({"string": s})),
         Expression::Array(items) => json!({"kind": "tuple", "elements": exprs_json(items)?}),
         Expression::Object(object) => {
@@ -158,7 +158,7 @@ fn expr_json(expr: &Expression) -> Result<Json, String> {
         }
         Expression::TemplateExpr(template) => {
             let template = Template::from_expr(template).map_err(|err| err.to_string())?;
-            json!({"kind": "template", "parts": elements_json(template.elements())?})
+            json!({"kind": "template", "parts": elements_json(template.elements(), false, false)?})
         }
         Expression::Variable(var) => json!({"kind": "variable", "name": var.as_str()}),
         Expression::Traversal(traversal) => traversal_json(expr_json(&traversal.expr)?, &traversal.operators)?,
@@ -225,6 +225,10 @@ fn traversal_json(mut node: Json, operators: &[TraversalOperator]) -> Result<Jso
             TraversalOperator::Index(key) => {
                 node = json!({"kind": "index", "collection": node, "key": expr_json(key)?});
             }
+            TraversalOperator::LegacyIndex(index) => {
+                let key = literal(json!({"number": index.to_string()}));
+                node = json!({"kind": "index", "collection": node, "key": key});
+            }
             TraversalOperator::FullSplat => {
                 let each = traversal_json(json!({"kind": "splat_item"}), &operators[i + 1..])?;
                 return Ok(json!({"kind": "splat", "source": node, "each": each}));
@@ -244,36 +248,84 @@ fn traversal_json(mut node: Json, operators: &[TraversalOperator]) -> Result<Jso
     Ok(node)
 }
 
-/// hcl-rs keeps strip markers and heredoc indentation as flags that it applies
-/// during evaluation, so literal text here is reported before stripping.
-fn elements_json(elements: &[Element]) -> Result<Vec<Json>, String> {
-    elements
-        .iter()
-        .map(|element| {
-            Ok(match element {
-                Element::Literal(text) => literal(json!({"string": text})),
-                Element::Interpolation(interp) => json!({"kind": "interpolation", "expr": expr_json(&interp.expr)?}),
-                Element::Directive(directive) => match directive.as_ref() {
-                    Directive::If(dir) => json!({
+/// Converts template elements. `strip_first` and `strip_last` say whether the
+/// delimiters around these elements have strip markers facing them.
+///
+/// hcl-rs keeps strip markers as flags and applies them during evaluation, while
+/// the protocol wants them applied. This follows hcl-rs's own evaluation
+/// (strip_literal in src/eval/template.rs), so the output shows what hcl-rs
+/// does. Heredoc indentation is already removed by hcl-rs's parser.
+fn elements_json(elements: &[Element], strip_first: bool, strip_last: bool) -> Result<Vec<Json>, String> {
+    let mut parts = Vec::new();
+    for (i, element) in elements.iter().enumerate() {
+        parts.push(match element {
+            Element::Literal(text) => {
+                let strip_start = if i == 0 { strip_first } else { strips(&elements[i - 1]).1 };
+                let strip_end = if i + 1 == elements.len() { strip_last } else { strips(&elements[i + 1]).0 };
+                literal(json!({"string": strip_literal(text, strip_start, strip_end)}))
+            }
+            Element::Interpolation(interp) => json!({"kind": "interpolation", "expr": expr_json(&interp.expr)?}),
+            Element::Directive(directive) => match directive.as_ref() {
+                Directive::If(dir) => {
+                    let then_end = match &dir.false_template {
+                        Some(_) => dir.else_strip.strip_start(),
+                        None => dir.endif_strip.strip_start(),
+                    };
+                    json!({
                         "kind": "template_if",
                         "condition": expr_json(&dir.cond_expr)?,
-                        "then": elements_json(dir.true_template.elements())?,
+                        "then": elements_json(dir.true_template.elements(), dir.if_strip.strip_end(), then_end)?,
                         "else": match &dir.false_template {
-                            Some(template) => elements_json(template.elements())?,
+                            Some(template) => elements_json(
+                                template.elements(),
+                                dir.else_strip.strip_end(),
+                                dir.endif_strip.strip_start(),
+                            )?,
                             None => Vec::new(),
                         },
-                    }),
-                    Directive::For(dir) => json!({
-                        "kind": "template_for",
-                        "key_var": dir.key_var.as_ref().map(|ident| ident.as_str()),
-                        "value_var": dir.value_var.as_str(),
-                        "collection": expr_json(&dir.collection_expr)?,
-                        "body": elements_json(dir.template.elements())?,
-                    }),
-                },
-            })
-        })
-        .collect()
+                    })
+                }
+                Directive::For(dir) => json!({
+                    "kind": "template_for",
+                    "key_var": dir.key_var.as_ref().map(|ident| ident.as_str()),
+                    "value_var": dir.value_var.as_str(),
+                    "collection": expr_json(&dir.collection_expr)?,
+                    "body": elements_json(
+                        dir.template.elements(),
+                        dir.for_strip.strip_end(),
+                        dir.endfor_strip.strip_start(),
+                    )?,
+                }),
+            },
+        });
+    }
+    Ok(parts)
+}
+
+/// Whether an element's opening and closing delimiters have strip markers.
+fn strips(element: &Element) -> (bool, bool) {
+    match element {
+        Element::Literal(_) => (false, false),
+        Element::Interpolation(interp) => (interp.strip.strip_start(), interp.strip.strip_end()),
+        Element::Directive(directive) => match directive.as_ref() {
+            Directive::If(dir) => (dir.if_strip.strip_start(), dir.endif_strip.strip_end()),
+            Directive::For(dir) => (dir.for_strip.strip_start(), dir.endfor_strip.strip_end()),
+        },
+    }
+}
+
+/// The same stripping as hcl-rs's strip_literal: spaces, then at most one line break.
+fn strip_literal(mut text: &str, strip_start: bool, strip_end: bool) -> &str {
+    let is_space = |ch: char| ch.is_whitespace() && ch != '\r' && ch != '\n';
+    if strip_start {
+        text = text.trim_start_matches(is_space);
+        text = text.strip_prefix("\r\n").or_else(|| text.strip_prefix('\n')).unwrap_or(text);
+    }
+    if strip_end {
+        text = text.trim_end_matches(is_space);
+        text = text.strip_suffix("\r\n").or_else(|| text.strip_suffix('\n')).unwrap_or(text);
+    }
+    text
 }
 
 /// hcl-rs values have no types beyond JSON's, so every array is reported as a
@@ -282,13 +334,24 @@ fn value_json(value: &Value) -> Json {
     match value {
         Value::Null => json!({"null": "dynamic"}),
         Value::Bool(b) => json!({"bool": b}),
-        Value::Number(n) => json!({"number": n.to_string()}),
+        Value::Number(n) => json!({"number": number_text(n)}),
         Value::String(s) => json!({"string": s}),
         Value::Array(items) => json!({"tuple": items.iter().map(value_json).collect::<Vec<_>>()}),
         Value::Object(object) => {
             let attrs: Map<String, Json> = object.iter().map(|(k, v)| (k.clone(), value_json(v))).collect();
             json!({"object": attrs})
         }
+    }
+}
+
+/// hcl-rs numbers print infinities and NaN as huge finite numbers, so report
+/// them as what they are ("NaN" makes the runner flag the output).
+fn number_text(n: &Number) -> String {
+    match n.as_f64() {
+        Some(f) if f.is_nan() => "NaN".to_string(),
+        Some(f) if f.is_infinite() && f > 0.0 => "Infinity".to_string(),
+        Some(f) if f.is_infinite() => "-Infinity".to_string(),
+        _ => n.to_string(),
     }
 }
 

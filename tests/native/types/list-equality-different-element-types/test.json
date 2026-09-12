@@ -1,0 +1,40 @@
+{
+  "description": "A list of numbers is not equal to a list of strings with the same digits",
+  "spec": [
+    "spec.md#collection-types",
+    "hclsyntax/spec.md#comparison-operators"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "number": "1"
+        }
+      ],
+      "element_type": "number"
+    },
+    "k": {
+      "list": [
+        {
+          "string": "1"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

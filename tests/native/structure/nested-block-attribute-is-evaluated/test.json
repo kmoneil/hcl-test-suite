@@ -1,0 +1,37 @@
+{
+  "description": "Evaluating a file evaluates the attributes of nested blocks",
+  "spec": [
+    "hclsyntax/spec.md#attribute-definitions",
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "outer",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": [
+              {
+                "type": "inner",
+                "labels": [],
+                "body": {
+                  "attributes": {
+                    "a": {
+                      "number": "2"
+                    }
+                  },
+                  "blocks": []
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "description": "In 1 - 2 + 3 the - applies first, giving 2",
+  "spec": [
+    "hclsyntax/spec.md#operations",
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "2"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "description": "A list selected by a conditional whose other result is a set stays a list",
+  "spec": [
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "s": {
+      "set": [
+        {
+          "string": "x"
+        }
+      ],
+      "element_type": "string"
+    },
+    "l": {
+      "list": [
+        {
+          "string": "y"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [
+            {
+              "string": "y"
+            }
+          ],
+          "element_type": "string"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "description": "A legacy index can follow a bracketed index",
+  "spec": [
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "index",
+          "collection": {
+            "kind": "index",
+            "collection": {
+              "kind": "variable",
+              "name": "t"
+            },
+            "key": {
+              "kind": "literal",
+              "value": {
+                "number": "0"
+              }
+            }
+          },
+          "key": {
+            "kind": "literal",
+            "value": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "description": "Keys that are equal after NFC normalization name the same attribute",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "spec.md#primitive-types"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "Attribute names are strings, and strings are equal when their NFC forms are, so the precomposed and decomposed keys name one attribute. Both elements have the same value, so the only open question is whether the spec allows two elements to name the same attribute, which it doesn't say. hashicorp/hcl accepts them as one attribute because go-cty normalizes strings to NFC when it creates them (cty.StringVal and cty.ObjectVal call NormalizeString in cty/value_init.go). The for expression makes the number of attributes visible, because the runner compares object keys after normalization.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "number": "1"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

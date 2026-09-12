@@ -1,0 +1,30 @@
+{
+  "description": "Objects with different attribute names unify to a map",
+  "spec": [
+    "spec.md#type-unification",
+    "spec.md#collection-and-structural-type-conversions",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec unifies two object types to an object type with the union of their attributes, and object conversion fills a missing attribute with null, giving {a = 1, b = null}. hashicorp/hcl unifies objects with different attribute names to a map of their unified attribute types (unifyObjectTypesToMap in cty/convert/unify.go), so it never performs that conversion.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "map": {
+            "a": {
+              "number": "1"
+            }
+          },
+          "element_type": "number"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

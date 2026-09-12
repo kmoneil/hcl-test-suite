@@ -1,0 +1,29 @@
+{
+  "description": "An object key cannot index a map",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#collection-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "m": {
+      "map": {
+        "k": {
+          "string": "v"
+        },
+        "l": {
+          "string": "w"
+        }
+      },
+      "element_type": "string"
+    }
+  },
+  "reference_error": "string required, but have object",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

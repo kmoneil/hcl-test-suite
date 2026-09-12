@@ -1,0 +1,13 @@
+{
+  "description": "+ doesn't concatenate two strings that aren't numbers",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "reference_error": "a number is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

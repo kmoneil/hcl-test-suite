@@ -1,0 +1,30 @@
+{
+  "description": "An unknown predicate with two null keyword results gives null",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says a conditional with an unknown predicate gives an unknown value of the unified type, here the dynamic pseudo-type. hashicorp/hcl returns a null when both results are null (ConditionalExpr.Value in hclsyntax/expression.go).",
+  "variables": {
+    "u": {
+      "unknown": "bool"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "null": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "description": "A colon after the expression in an interpolation is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations"
+  ],
+  "op": "parse",
+  "reference_error": "doesn't expect a colon",
+  "expect": {
+    "valid": false
+  }
+}

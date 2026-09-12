@@ -1,0 +1,35 @@
+{
+  "description": "The identifier for_each can be the first key of an object constructor",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "object",
+          "items": [
+            {
+              "key": {
+                "kind": "literal",
+                "value": {
+                  "string": "for_each"
+                }
+              },
+              "value": {
+                "kind": "literal",
+                "value": {
+                  "number": "1"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

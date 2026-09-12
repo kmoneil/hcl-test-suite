@@ -1,0 +1,22 @@
+{
+  "description": "A heredoc inside an interpolation can reuse the enclosing heredoc's marker",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions",
+    "hclsyntax/spec.md#template-interpolations",
+    "hclsyntax/spec.md#expression-terms"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says a heredoc ends when its identifier appears again on a line of its own, which the inner closing line does. hashicorp/hcl keeps a stack of open heredocs and only checks lines of literal text against the innermost one (heredocs in scanTokens, hclsyntax/scan_tokens.rl), so the first EOT closes the inner heredoc.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "inner\n\n"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "description": "An object for expression with an unknown value gives an object holding the unknown",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says that if a for expression's value expression returns an unknown value, the result is a value of the dynamic pseudo-type. hashicorp/hcl returns a known object holding the unknown value (ForExpr.Value in hclsyntax/expression.go).",
+  "variables": {
+    "u": {
+      "unknown": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "a": {
+              "unknown": "number"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "description": "Tuples with equal elements in the same order are equal",
+  "spec": [
+    "hclsyntax/spec.md#comparison-operators",
+    "spec.md#structural-types"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

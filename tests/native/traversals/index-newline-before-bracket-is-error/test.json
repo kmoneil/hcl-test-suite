@@ -1,0 +1,12 @@
+{
+  "description": "A newline before the opening bracket of an index ends the attribute definition",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "reference_error": "Argument or block definition required",
+  "expect": {
+    "valid": false
+  }
+}

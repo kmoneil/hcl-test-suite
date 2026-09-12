@@ -1,0 +1,18 @@
+{
+  "description": "The escape \\u0000 produces a NUL character",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "\u0000"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

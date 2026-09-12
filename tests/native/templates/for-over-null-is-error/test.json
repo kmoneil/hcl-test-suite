@@ -1,0 +1,16 @@
+{
+  "description": "A for directive over the null keyword is an error",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive",
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec lists tuple, object, list, map and set types as iterable but doesn't say what iterating a null value does; treating it as empty would also be reasonable. The null keyword is a null of the dynamic pseudo-type, so only being null makes it fail. hashicorp/hcl reports an error for any null collection: ForExpr.Value in hclsyntax/expression.go, the node a for directive is parsed into, checks IsNull before anything else.",
+  "reference_error": "Iteration over null value",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

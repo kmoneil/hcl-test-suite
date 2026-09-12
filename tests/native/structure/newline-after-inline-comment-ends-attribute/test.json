@@ -1,0 +1,28 @@
+{
+  "description": "A newline after an inline comment that spans lines ends the attribute",
+  "spec": [
+    "hclsyntax/spec.md#comments-and-whitespace",
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "port": {
+          "kind": "literal",
+          "value": {
+            "number": "80"
+          }
+        },
+        "size": {
+          "kind": "literal",
+          "value": {
+            "number": "2"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

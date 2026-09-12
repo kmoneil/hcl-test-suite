@@ -1,0 +1,42 @@
+{
+  "description": "A function argument can be a conditional expression",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "call",
+          "name": "f",
+          "args": [
+            {
+              "kind": "conditional",
+              "condition": {
+                "kind": "variable",
+                "name": "c"
+              },
+              "true_result": {
+                "kind": "literal",
+                "value": {
+                  "number": "1"
+                }
+              },
+              "false_result": {
+                "kind": "literal",
+                "value": {
+                  "number": "2"
+                }
+              }
+            }
+          ],
+          "expand_final": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

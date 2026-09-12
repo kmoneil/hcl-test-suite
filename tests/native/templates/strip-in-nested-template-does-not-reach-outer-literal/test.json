@@ -1,0 +1,19 @@
+{
+  "description": "A strip marker in a nested template does not strip the outer template's literal",
+  "spec": [
+    "hclsyntax/spec.md#template-literals",
+    "hclsyntax/spec.md#template-interpolations"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "a b"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

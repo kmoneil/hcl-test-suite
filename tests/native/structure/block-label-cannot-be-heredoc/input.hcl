@@ -1,0 +1,5 @@
+block <<EOT
+x
+EOT
+{
+}

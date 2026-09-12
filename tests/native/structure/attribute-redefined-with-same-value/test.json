@@ -1,0 +1,12 @@
+{
+  "description": "An attribute cannot be defined twice in a body, even with the same value",
+  "spec": [
+    "hclsyntax/spec.md#attribute-definitions",
+    "spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "reference_error": "Attribute redefined",
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "description": "%{~ endfor strips the end of the body in every iteration",
+  "spec": [
+    "hclsyntax/spec.md#template-literals",
+    "hclsyntax/spec.md#template-for-directive"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "  1  2"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

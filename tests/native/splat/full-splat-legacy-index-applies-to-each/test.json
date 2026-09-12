@@ -1,0 +1,26 @@
+{
+  "description": "A legacy index after a full splat selects from each element",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators",
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "number": "1"
+            },
+            {
+              "number": "3"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

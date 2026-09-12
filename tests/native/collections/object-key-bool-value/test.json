@@ -1,0 +1,28 @@
+{
+  "description": "A bool key value is converted to the name true or false",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "variables": {
+    "k": {
+      "bool": false
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "false": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "description": "A multi-byte UTF-8 sequence cut off by the end of the file is a parse error",
+  "spec": [
+    "hclsyntax/spec.md#source-code-representation"
+  ],
+  "op": "parse",
+  "notes": "The file ends right after the first two bytes of a three-byte sequence. The attribute before them still ends with a newline, so the input doesn't rely on a file ending without a newline after its last item.",
+  "reference_error": "Invalid character encoding",
+  "expect": {
+    "valid": false
+  }
+}

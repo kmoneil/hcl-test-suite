@@ -1,0 +1,19 @@
+{
+  "description": "An identifier in an expression parses as a variable expression with that name",
+  "spec": [
+    "hclsyntax/spec.md#variables-and-variable-expressions"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "variable",
+          "name": "name"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

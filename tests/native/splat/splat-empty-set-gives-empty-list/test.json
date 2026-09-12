@@ -1,0 +1,31 @@
+{
+  "description": "A full splat on an empty set gives an empty list",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators",
+    "spec.md#collection-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec doesn't give the result type of a splat over a list or set; it only says splats are approximately equivalent to for expressions, which produce tuples. hashicorp/hcl produces a list when the source is a list or a set (SplatExpr.Value in hclsyntax/expression.go).",
+  "variables": {
+    "s": {
+      "set": [],
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [],
+          "element_type": "string"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

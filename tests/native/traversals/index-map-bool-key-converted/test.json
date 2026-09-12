@@ -1,0 +1,32 @@
+{
+  "description": "A bool key is converted to a string to select a map element",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "m": {
+      "map": {
+        "false": {
+          "string": "no"
+        }
+      },
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "no"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

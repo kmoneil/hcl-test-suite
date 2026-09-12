@@ -1,0 +1,11 @@
+{
+  "description": "U+2010 HYPHEN is not allowed in identifiers",
+  "spec": [
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "parse",
+  "reference_error": "This character is not used within the language",
+  "expect": {
+    "valid": false
+  }
+}

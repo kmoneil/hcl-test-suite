@@ -1,0 +1,11 @@
+{
+  "description": "An attribute on a block's opening line needs the closing brace on that line too",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "reference_error": "which must also be closed on the same line",
+  "expect": {
+    "valid": false
+  }
+}

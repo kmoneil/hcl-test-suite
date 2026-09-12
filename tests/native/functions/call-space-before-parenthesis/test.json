@@ -1,0 +1,29 @@
+{
+  "description": "A space between a function name and its opening parenthesis is allowed",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "call",
+          "name": "f",
+          "args": [
+            {
+              "kind": "literal",
+              "value": {
+                "number": "1"
+              }
+            }
+          ],
+          "expand_final": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

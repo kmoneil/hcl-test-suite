@@ -1,0 +1,12 @@
+{
+  "description": "An attribute cannot end with a comma",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#attribute-definitions"
+  ],
+  "op": "parse",
+  "reference_error": "Unexpected comma after argument",
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "description": "Comparing an unknown number with itself gives an unknown bool",
+  "spec": [
+    "hclsyntax/spec.md#comparison-operators",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "bool"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

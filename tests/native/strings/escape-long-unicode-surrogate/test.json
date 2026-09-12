@@ -1,0 +1,12 @@
+{
+  "description": "A \\U escape naming a surrogate code point is an error",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "notes": "Every surrogate is in the Basic Multilingual Plane, so an implementation that rejects \\U escapes for that plane (see escape-long-unicode-basic-plane) rejects this input without ever checking for a surrogate.",
+  "reference_error": "Cannot encode character U+dc00 in UTF-8",
+  "expect": {
+    "valid": false
+  }
+}

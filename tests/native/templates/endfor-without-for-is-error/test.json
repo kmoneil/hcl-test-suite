@@ -1,0 +1,11 @@
+{
+  "description": "An endfor directive without a for is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive"
+  ],
+  "op": "parse",
+  "reference_error": "Unexpected endfor directive: The control directives within this template are unbalanced",
+  "expect": {
+    "valid": false
+  }
+}

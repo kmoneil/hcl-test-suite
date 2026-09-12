@@ -1,0 +1,12 @@
+{
+  "description": "An attribute access needs an expression before the dot",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator",
+    "hclsyntax/spec.md#expression-terms"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

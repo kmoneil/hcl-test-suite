@@ -1,0 +1,24 @@
+{
+  "description": "Multiplying positive infinity by a negative number gives negative infinity",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators",
+    "spec.md#primitive-types"
+  ],
+  "op": "eval",
+  "variables": {
+    "inf": {
+      "number": "Infinity"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "-Infinity"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

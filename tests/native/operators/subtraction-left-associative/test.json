@@ -1,5 +1,5 @@
 {
-  "description": "Operators of the same precedence associate left to right",
+  "description": "In 10 - 4 - 3 the first - applies first, giving 3",
   "spec": [
     "hclsyntax/spec.md#operations"
   ],

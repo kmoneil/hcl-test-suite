@@ -1,0 +1,33 @@
+{
+  "description": "A line comment inside a tuple constructor is ignored like a newline",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "tuple",
+          "elements": [
+            {
+              "kind": "literal",
+              "value": {
+                "number": "1"
+              }
+            },
+            {
+              "kind": "literal",
+              "value": {
+                "number": "2"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

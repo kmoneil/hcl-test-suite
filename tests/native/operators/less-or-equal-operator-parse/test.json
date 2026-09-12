@@ -1,0 +1,27 @@
+{
+  "description": "<= is a single less-than-or-equal operator",
+  "spec": [
+    "hclsyntax/spec.md#operations"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "binary",
+          "operator": "<=",
+          "left": {
+            "kind": "variable",
+            "name": "x"
+          },
+          "right": {
+            "kind": "variable",
+            "name": "y"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "description": "Three colons between the parts of a function name are an error",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "parse",
+  "reference_error": "Missing function name",
+  "expect": {
+    "valid": false
+  }
+}

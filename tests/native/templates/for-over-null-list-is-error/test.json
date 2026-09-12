@@ -1,0 +1,26 @@
+{
+  "description": "A for directive over a null list is an error",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says list types are iterable and doesn't say whether a null list is an error or has no elements to visit. hashicorp/hcl reports an error for any null collection: ForExpr.Value in hclsyntax/expression.go, the node a for directive is parsed into, checks IsNull before anything else.",
+  "variables": {
+    "l": {
+      "null": [
+        "list",
+        "string"
+      ]
+    }
+  },
+  "reference_error": "Iteration over null value",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

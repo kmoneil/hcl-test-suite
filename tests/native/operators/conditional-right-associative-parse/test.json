@@ -1,0 +1,43 @@
+{
+  "description": "A conditional after the colon is the false result of the first conditional",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec's grammar (Conditional = Expression \"?\" Expression \":\" Expression) allows both groupings of a conditional after the colon, and no rule chooses one. hashicorp/hcl parses the condition without conditionals and the false result as a whole expression, so conditionals nest to the right (parseTernaryConditional in hclsyntax/parser.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "conditional",
+          "condition": {
+            "kind": "variable",
+            "name": "x"
+          },
+          "true_result": {
+            "kind": "variable",
+            "name": "y"
+          },
+          "false_result": {
+            "kind": "conditional",
+            "condition": {
+              "kind": "variable",
+              "name": "z"
+            },
+            "true_result": {
+              "kind": "variable",
+              "name": "w"
+            },
+            "false_result": {
+              "kind": "variable",
+              "name": "v"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "description": "Positive infinity is a number value",
+  "spec": [
+    "spec.md#primitive-types"
+  ],
+  "op": "eval",
+  "variables": {
+    "inf": {
+      "number": "Infinity"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "Infinity"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

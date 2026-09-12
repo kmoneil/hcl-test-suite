@@ -1,0 +1,18 @@
+{
+  "description": "A for directive with an empty body produces nothing",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "<>"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

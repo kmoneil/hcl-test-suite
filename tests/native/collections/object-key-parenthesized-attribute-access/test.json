@@ -1,0 +1,31 @@
+{
+  "description": "A parenthesized attribute access can be an object key",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "eval",
+  "variables": {
+    "k": {
+      "object": {
+        "b": {
+          "string": "x"
+        }
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "x": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

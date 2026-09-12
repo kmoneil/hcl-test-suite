@@ -1,0 +1,12 @@
+{
+  "description": "* rejects a bool as its right operand",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "reference_error": "Unsuitable value for right operand: number required, but have bool",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

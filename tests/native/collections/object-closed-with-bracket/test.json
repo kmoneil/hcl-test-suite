@@ -1,0 +1,11 @@
+{
+  "description": "An object constructor can't be closed with a bracket",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "reference_error": "Missing attribute separator",
+  "expect": {
+    "valid": false
+  }
+}

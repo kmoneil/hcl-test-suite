@@ -1,0 +1,30 @@
+{
+  "description": "A horizontal tab can indent a line",
+  "spec": [
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "a": {
+                "kind": "literal",
+                "value": {
+                  "number": "1"
+                }
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

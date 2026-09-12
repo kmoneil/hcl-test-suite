@@ -1,0 +1,27 @@
+{
+  "description": "Identifiers that differ only in case are different names",
+  "spec": [
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "literal",
+          "value": {
+            "number": "1"
+          }
+        },
+        "A": {
+          "kind": "literal",
+          "value": {
+            "number": "2"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "description": "Parsing keeps an attribute's expression unevaluated, so an undefined variable is not a parse error",
+  "spec": [
+    "hclsyntax/spec.md#attribute-definitions"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "binary",
+          "operator": "+",
+          "left": {
+            "kind": "variable",
+            "name": "missing"
+          },
+          "right": {
+            "kind": "literal",
+            "value": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

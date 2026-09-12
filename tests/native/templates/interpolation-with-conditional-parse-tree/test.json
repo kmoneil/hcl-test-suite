@@ -1,0 +1,44 @@
+{
+  "description": "An interpolation can hold any expression, such as a conditional",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "literal",
+              "value": {
+                "string": "x"
+              }
+            },
+            {
+              "kind": "interpolation",
+              "expr": {
+                "kind": "conditional",
+                "condition": {
+                  "kind": "variable",
+                  "name": "a"
+                },
+                "true_result": {
+                  "kind": "variable",
+                  "name": "b"
+                },
+                "false_result": {
+                  "kind": "variable",
+                  "name": "c"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

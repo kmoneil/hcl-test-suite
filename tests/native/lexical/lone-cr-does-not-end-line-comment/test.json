@@ -1,0 +1,21 @@
+{
+  "description": "A CR that is not followed by LF does not end a line comment",
+  "spec": [
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "literal",
+          "value": {
+            "number": "1"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

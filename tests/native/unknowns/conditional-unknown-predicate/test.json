@@ -1,0 +1,28 @@
+{
+  "description": "A conditional with an unknown predicate gives an unknown of its results' type",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "bool"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "number"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

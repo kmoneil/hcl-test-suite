@@ -1,0 +1,36 @@
+{
+  "description": "Blocks with the same type and the same labels are separate blocks",
+  "spec": [
+    "hclsyntax/spec.md#blocks",
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "block",
+          "labels": [
+            "x"
+          ],
+          "body": {
+            "attributes": {},
+            "blocks": []
+          }
+        },
+        {
+          "type": "block",
+          "labels": [
+            "x"
+          ],
+          "body": {
+            "attributes": {},
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

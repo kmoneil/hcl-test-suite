@@ -1,0 +1,21 @@
+{
+  "description": "A line comment inside a directive in a quoted template is ignored",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec allows comments inside template directives, but a line comment counts as a newline, and the spec doesn't say newlines are ignored inside directives. hashicorp/hcl ignores them: parseTemplateParts in hclsyntax/parser_template.go calls PushIncludeNewlines(false) before reading the directive, and its peeker skips comments.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

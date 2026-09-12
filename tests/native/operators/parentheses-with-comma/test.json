@@ -1,0 +1,11 @@
+{
+  "description": "Parentheses can't hold a comma-separated list",
+  "spec": [
+    "hclsyntax/spec.md#expression-terms"
+  ],
+  "op": "parse",
+  "reference_error": "Unbalanced parentheses",
+  "expect": {
+    "valid": false
+  }
+}

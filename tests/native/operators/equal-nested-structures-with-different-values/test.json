@@ -1,0 +1,19 @@
+{
+  "description": "Nested structures that differ only in a deeply nested value are not equal",
+  "spec": [
+    "hclsyntax/spec.md#comparison-operators",
+    "spec.md#structural-types"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

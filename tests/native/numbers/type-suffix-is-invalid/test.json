@@ -1,0 +1,11 @@
+{
+  "description": "A numeric literal cannot have a type suffix",
+  "spec": [
+    "hclsyntax/spec.md#numeric-literals"
+  ],
+  "op": "parse",
+  "reference_error": "Missing newline after argument",
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "description": "A } without a matching { is a parse error",
+  "spec": [
+    "hclsyntax/spec.md#operators-and-delimiters"
+  ],
+  "op": "parse",
+  "reference_error": "Missing newline after argument",
+  "expect": {
+    "valid": false
+  }
+}

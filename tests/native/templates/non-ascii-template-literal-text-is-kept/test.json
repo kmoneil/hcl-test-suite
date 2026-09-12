@@ -1,0 +1,18 @@
+{
+  "description": "Non-ASCII characters in template literals, including supplementary planes, are kept unchanged",
+  "spec": [
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "é ü 日本 𝄞"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

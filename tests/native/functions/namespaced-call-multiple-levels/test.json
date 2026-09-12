@@ -1,0 +1,30 @@
+{
+  "description": "A function name can have several namespace prefixes",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec's function call grammar has a single identifier as the function name (FunctionCall = Identifier \"(\" arguments \")\"), and :: is not one of its tokens. hashicorp/hcl accepts names separated by :: and reports them joined with :: as the function name (finishParsingFunctionCall in hclsyntax/parser.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "call",
+          "name": "a::b::c",
+          "args": [
+            {
+              "kind": "literal",
+              "value": {
+                "number": "1"
+              }
+            }
+          ],
+          "expand_final": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

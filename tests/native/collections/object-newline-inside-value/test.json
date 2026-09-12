@@ -1,0 +1,14 @@
+{
+  "description": "An object value expression can't continue on the next line outside brackets or parentheses",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#syntax-notation"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The prose says newlines between the braces of an object constructor are ignored as whitespace. hashicorp/hcl makes newlines significant inside object constructors, so an operand of a value expression can't be on the next line unless it is inside parentheses or brackets (parseObjectCons in hclsyntax/parser.go).",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

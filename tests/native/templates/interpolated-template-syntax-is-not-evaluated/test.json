@@ -1,0 +1,23 @@
+{
+  "description": "Template sequences inside an interpolated string value are inserted as text",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations"
+  ],
+  "op": "eval",
+  "variables": {
+    "v": {
+      "string": "${x} %{ if y }"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "<${x} %{ if y }>"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

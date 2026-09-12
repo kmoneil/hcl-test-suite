@@ -1,0 +1,22 @@
+{
+  "description": "An empty quoted string is a valid object key",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "description": "A strip marker removes typographic spaces such as en, em, thin and hair spaces",
+  "spec": [
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says strip markers remove spaces, \"interpreted as per Unicode's definition\", without saying which definition it means. The en, em, thin and hair spaces (U+2002, U+2003, U+2009, U+200A) are space separators (category Zs) with the White_Space property, but not in Pattern_White_Space, the set Unicode recommends for syntax (UAX #31). Stripping them is hashicorp/hcl's reading: parseTemplateParts in hclsyntax/parser_template.go trims with Go's unicode.IsSpace, which follows the White_Space property.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "ab"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

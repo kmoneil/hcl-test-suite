@@ -1,0 +1,31 @@
+{
+  "description": "A block does not stop a later attribute in the same body from using its type name",
+  "spec": [
+    "hclsyntax/spec.md#attribute-definitions",
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "literal",
+          "value": {
+            "number": "1"
+          }
+        }
+      },
+      "blocks": [
+        {
+          "type": "a",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

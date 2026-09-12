@@ -1,0 +1,21 @@
+{
+  "description": "A strip marker removes a space written as a \\u0020 escape sequence",
+  "spec": [
+    "hclsyntax/spec.md#template-literals",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec doesn't say whether a quoted template's escape sequences are decoded before strip markers apply; if stripping looked at the source text, the escape \\u0020 would not be a space. hashicorp/hcl decodes first: parseTemplateParts in hclsyntax/parser_template.go calls ParseStringLiteralToken, which decodes escapes, before it trims the literal.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "ab"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "description": "An object for expression over an empty map produces an empty object",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#collection-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "m": {
+      "map": {},
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {}
+        }
+      },
+      "blocks": []
+    }
+  }
+}

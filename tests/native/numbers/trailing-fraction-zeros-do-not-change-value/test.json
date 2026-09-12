@@ -1,0 +1,19 @@
+{
+  "description": "Trailing zeros in a fractional part do not change a number's value",
+  "spec": [
+    "spec.md#primitive-types",
+    "hclsyntax/spec.md#comparison-operators"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

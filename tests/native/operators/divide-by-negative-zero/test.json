@@ -1,0 +1,21 @@
+{
+  "description": "Dividing a positive number by a negated zero gives negative infinity",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators",
+    "spec.md#primitive-types"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec's numbers have a single zero, so if division by zero gives an infinity at all (itself disputed), 1 / -0 is the same as 1 / 0. hashicorp/hcl keeps math/big's signed zero: Value.Negate turns 0 into a negative zero, and Float.Quo gives an infinity whose sign combines the signs of both operands (Value.Divide in cty/value_ops.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "-Infinity"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

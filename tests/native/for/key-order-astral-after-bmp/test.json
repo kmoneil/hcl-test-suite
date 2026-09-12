@@ -1,0 +1,26 @@
+{
+  "description": "Key order compares code points, so U+1D41A sorts after U+FF41",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "notes": "Strings are sequences of Unicode characters, so they are compared by code point. Comparing UTF-16 code units gives the opposite order, because U+1D41A is encoded with the surrogate D835.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "ａ"
+            },
+            {
+              "string": "𝐚"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

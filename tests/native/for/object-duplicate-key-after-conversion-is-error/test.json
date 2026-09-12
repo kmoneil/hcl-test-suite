@@ -1,0 +1,14 @@
+{
+  "description": "A number key and a string key that convert to the same string are duplicates",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "notes": "The spec calls it an error when two elements produce the same result from the key expression. 1 and \"1\" are unequal values, but the key becomes an attribute name, which is always a string, so what counts is the name after conversion to string, and both give \"1\".",
+  "reference_error": "produced the key \"1\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "description": "A line comment after a one-line block's attribute ends the line, which makes the block an error",
+  "spec": [
+    "hclsyntax/spec.md#comments-and-whitespace",
+    "hclsyntax/spec.md#blocks"
+  ],
+  "op": "parse",
+  "reference_error": "must also be closed on the same line",
+  "expect": {
+    "valid": false
+  }
+}

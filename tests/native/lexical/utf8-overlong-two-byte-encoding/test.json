@@ -1,0 +1,20 @@
+{
+  "description": "An overlong two-byte UTF-8 encoding is accepted inside a quoted string",
+  "spec": [
+    "hclsyntax/spec.md#source-code-representation"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says invalid or non-normalized UTF-8 is always a parse error, and C0 AF is an overlong encoding of \"/\". hashicorp/hcl's AnyUTF8 rule in hclsyntax/scan_tokens.rl only checks that a lead byte is followed by the right number of continuation bytes, so string literals accept it. Comparing the string with itself makes an implementation evaluate it without putting the bytes in the result.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

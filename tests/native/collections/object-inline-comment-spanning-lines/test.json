@@ -1,0 +1,13 @@
+{
+  "description": "An inline comment containing a newline doesn't separate object elements",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "notes": "An inline comment is equivalent to whitespace, even when it contains a newline.",
+  "reference_error": "Missing attribute separator",
+  "expect": {
+    "valid": false
+  }
+}

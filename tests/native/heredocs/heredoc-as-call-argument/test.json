@@ -1,0 +1,29 @@
+{
+  "description": "A heredoc can be a function call argument",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions",
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "call",
+          "name": "f",
+          "args": [
+            {
+              "kind": "literal",
+              "value": {
+                "string": "x\n"
+              }
+            }
+          ],
+          "expand_final": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

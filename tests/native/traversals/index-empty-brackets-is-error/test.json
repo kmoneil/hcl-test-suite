@@ -1,0 +1,11 @@
+{
+  "description": "An index operation without a key is an error",
+  "spec": [
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

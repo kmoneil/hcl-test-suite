@@ -1,0 +1,18 @@
+{
+  "description": "A $ followed by anything other than { is literal text",
+  "spec": [
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "$x and $ {y}"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

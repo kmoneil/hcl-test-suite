@@ -1,0 +1,29 @@
+{
+  "description": "The identifier for after the first tuple element is a variable reference",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "tuple",
+          "elements": [
+            {
+              "kind": "variable",
+              "name": "foo"
+            },
+            {
+              "kind": "variable",
+              "name": "for"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

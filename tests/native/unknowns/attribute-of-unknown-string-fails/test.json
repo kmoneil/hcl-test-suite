@@ -1,0 +1,22 @@
+{
+  "description": "Accessing an attribute of an unknown string is an error",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "string"
+    }
+  },
+  "reference_error": "Can't access attributes on a primitive-typed value",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

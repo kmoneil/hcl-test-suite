@@ -1,0 +1,614 @@
+{
+  "area": "native/lexical",
+  "rules": [
+    {
+      "id": "lexical-utf8-valid-text",
+      "spec": "hclsyntax/spec.md#source-code-representation",
+      "rule": "Source files are UTF-8, and multi-byte characters are accepted wherever the grammar allows them",
+      "tests": [
+        "native/lexical/identifier-with-non-ascii-letters",
+        "native/lexical/comment-with-non-ascii-text"
+      ]
+    },
+    {
+      "id": "lexical-utf8-impossible-byte",
+      "spec": "hclsyntax/spec.md#source-code-representation",
+      "rule": "A byte that never occurs in UTF-8, such as FF, is a parse error between tokens and inside identifiers, quoted strings and heredocs",
+      "tests": [
+        "native/lexical/invalid-utf8-byte-in-quoted-string",
+        "native/lexical/invalid-utf8-byte-between-tokens",
+        "native/lexical/invalid-utf8-byte-in-identifier",
+        "native/lexical/invalid-utf8-byte-in-heredoc"
+      ]
+    },
+    {
+      "id": "lexical-utf8-invalid-in-comments",
+      "spec": "hclsyntax/spec.md#source-code-representation",
+      "rule": "A byte that never occurs in UTF-8 is accepted inside line comments and inline comments (disputed)",
+      "tests": [
+        "native/lexical/invalid-utf8-in-line-comment",
+        "native/lexical/invalid-utf8-in-inline-comment"
+      ]
+    },
+    {
+      "id": "lexical-utf8-lone-continuation-byte",
+      "spec": "hclsyntax/spec.md#source-code-representation",
+      "rule": "A continuation byte (80 to BF) that doesn't follow a lead byte is a parse error",
+      "tests": [
+        "native/lexical/utf8-lone-continuation-byte-is-invalid"
+      ]
+    },
+    {
+      "id": "lexical-utf8-truncated-sequence",
+      "spec": "hclsyntax/spec.md#source-code-representation",
+      "rule": "A lead byte that isn't followed by all of its continuation bytes is a parse error, whether another character or the end of the file cuts the sequence short",
+      "tests": [
+        "native/lexical/utf8-truncated-sequence-is-invalid",
+        "native/lexical/utf8-truncated-sequence-at-end-of-file-is-invalid"
+      ]
+    },
+    {
+      "id": "lexical-utf8-invalid-sequence-in-identifier",
+      "spec": "hclsyntax/spec.md#source-code-representation",
+      "rule": "Inside an identifier, some lead bytes followed by a byte that isn't a continuation byte are accepted as one character of the name (disputed)",
+      "tests": [
+        "native/lexical/utf8-truncated-sequence-in-identifier"
+      ]
+    },
+    {
+      "id": "lexical-utf8-overlong-encoding",
+      "spec": "hclsyntax/spec.md#source-code-representation",
+      "rule": "An overlong UTF-8 encoding, which uses more bytes than its code point needs, is accepted inside a quoted string (disputed)",
+      "tests": [
+        "native/lexical/utf8-overlong-two-byte-encoding",
+        "native/lexical/utf8-overlong-three-byte-encoding"
+      ]
+    },
+    {
+      "id": "lexical-utf8-surrogate",
+      "spec": "hclsyntax/spec.md#source-code-representation",
+      "rule": "A UTF-8 sequence encoding a surrogate code point (U+D800 to U+DFFF) is accepted inside a quoted string (disputed)",
+      "tests": [
+        "native/lexical/utf8-encoded-surrogate"
+      ]
+    },
+    {
+      "id": "lexical-utf8-beyond-unicode",
+      "spec": "hclsyntax/spec.md#source-code-representation",
+      "rule": "A four-byte UTF-8 sequence for a value above U+10FFFF is accepted inside a quoted string (disputed)",
+      "tests": [
+        "native/lexical/utf8-code-point-above-unicode-range"
+      ]
+    },
+    {
+      "id": "lexical-utf8-obsolete-long-forms",
+      "spec": "hclsyntax/spec.md#source-code-representation",
+      "rule": "The obsolete five- and six-byte UTF-8 forms are a parse error",
+      "tests": [
+        "native/lexical/utf8-five-byte-sequence-is-invalid"
+      ]
+    },
+    {
+      "id": "lexical-bom-at-start",
+      "spec": "hclsyntax/spec.md#source-code-representation",
+      "rule": "A UTF-8 byte order mark at the very start of a file is skipped (disputed)",
+      "tests": [
+        "native/lexical/byte-order-mark-at-start"
+      ]
+    },
+    {
+      "id": "lexical-bom-after-start",
+      "spec": "hclsyntax/spec.md#source-code-representation",
+      "rule": "A byte order mark that doesn't begin the file is a parse error, including a second one directly after a leading byte order mark",
+      "tests": [
+        "native/lexical/byte-order-mark-after-start-is-invalid",
+        "native/lexical/byte-order-mark-twice-is-invalid"
+      ]
+    },
+    {
+      "id": "lexical-bom-character-in-string",
+      "spec": "hclsyntax/spec.md#source-code-representation",
+      "rule": "U+FEFF inside a string literal is the character ZERO WIDTH NO-BREAK SPACE, not a byte order mark",
+      "tests": [
+        "native/lexical/zero-width-no-break-space-in-string"
+      ]
+    },
+    {
+      "id": "lexical-no-unicode-normalization",
+      "spec": "hclsyntax/spec.md#source-code-representation",
+      "rule": "The syntax doesn't normalize Unicode: identifiers that differ only in normalization form are different attribute and variable names, and a quoted block label keeps its code points",
+      "tests": [
+        "native/lexical/identifiers-are-not-normalized",
+        "native/lexical/variable-names-are-not-normalized",
+        "native/structure/block-label-not-normalized"
+      ]
+    },
+    {
+      "id": "lexical-attribute-access-normalization",
+      "spec": "hclsyntax/spec.md#source-code-representation",
+      "rule": "An attribute access finds an object attribute whose name differs from the written name only in normalization form (disputed)",
+      "tests": [
+        "native/traversals/getattr-name-matches-normalized-attribute"
+      ]
+    },
+    {
+      "id": "lexical-whitespace-optional",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "Whitespace is zero or more spaces, so tokens need no whitespace between them",
+      "tests": [
+        "native/lexical/tokens-need-no-whitespace"
+      ]
+    },
+    {
+      "id": "lexical-whitespace-tab",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "A horizontal tab is whitespace, both between tokens and at the start of a line",
+      "tests": [
+        "native/lexical/tab-is-whitespace-between-tokens",
+        "native/lexical/tab-indentation"
+      ]
+    },
+    {
+      "id": "lexical-whitespace-tab-column",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "A tab counts as one column in reported source positions",
+      "untested": "The protocol doesn't compare error positions or source ranges"
+    },
+    {
+      "id": "lexical-whitespace-only-space-and-tab",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "No character other than space and tab is whitespace, including other Unicode spaces and the form feed and vertical tab controls",
+      "tests": [
+        "native/lexical/no-break-space-is-not-whitespace",
+        "native/lexical/ideographic-space-is-not-whitespace",
+        "native/lexical/form-feed-is-not-whitespace",
+        "native/lexical/vertical-tab-is-not-whitespace"
+      ]
+    },
+    {
+      "id": "lexical-whitespace-separates-tokens",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "Whitespace ends a token, so a space inside a word or number makes two tokens",
+      "tests": [
+        "native/lexical/space-splits-identifier",
+        "native/numbers/space-inside-number-is-invalid"
+      ]
+    },
+    {
+      "id": "lexical-newline-crlf",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "CR LF is a newline sequence and works everywhere LF does, including at the end of line comments and where newlines are ignored",
+      "tests": [
+        "native/lexical/crlf-ends-line-comment",
+        "native/lexical/crlf-ignored-inside-parentheses"
+      ]
+    },
+    {
+      "id": "lexical-newline-lone-cr",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "A CR that isn't followed by LF is neither a newline sequence nor whitespace: it doesn't end an attribute or a line comment, isn't ignored inside tuple brackets, and is ordinary text inside an inline comment",
+      "tests": [
+        "native/lexical/lone-cr-between-attributes-is-invalid",
+        "native/lexical/lone-cr-before-crlf-is-invalid",
+        "native/lexical/lone-cr-at-line-start-is-invalid",
+        "native/lexical/lone-cr-inside-brackets-is-invalid",
+        "native/lexical/lone-cr-does-not-end-line-comment",
+        "native/lexical/inline-comment-with-lone-cr"
+      ]
+    },
+    {
+      "id": "lexical-newline-lone-cr-in-templates",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "A CR that isn't followed by LF is rejected inside quoted strings and heredocs (disputed)",
+      "tests": [
+        "native/lexical/lone-cr-in-quoted-string",
+        "native/lexical/lone-cr-in-heredoc"
+      ]
+    },
+    {
+      "id": "lexical-newline-unicode-line-breaks",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "Unicode line break characters other than LF, such as U+0085 NEXT LINE and U+2028 LINE SEPARATOR, are not newline sequences",
+      "tests": [
+        "native/lexical/next-line-is-not-a-newline",
+        "native/lexical/line-separator-is-not-a-newline"
+      ]
+    },
+    {
+      "id": "lexical-comments-three-forms",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "# and // start line comments and /* */ delimits inline comments, and all three are ignored",
+      "tests": [
+        "native/lexical/comments"
+      ]
+    },
+    {
+      "id": "lexical-comments-line-comment-is-newline",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "A line comment is equivalent to a newline: it can end an attribute or start a block body, and it is an error where a newline isn't allowed",
+      "tests": [
+        "native/lexical/line-comment-where-newline-is-not-allowed",
+        "native/lexical/line-comment-ends-one-line-block",
+        "native/lexical/line-comment-after-block-open-brace"
+      ]
+    },
+    {
+      "id": "lexical-comments-line-comment-at-end-of-file",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "A line comment can end at the end of the file instead of at a newline (disputed)",
+      "tests": [
+        "native/lexical/line-comment-at-end-of-file"
+      ]
+    },
+    {
+      "id": "lexical-comments-where-newlines-are-ignored",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "Line comments can appear inside parentheses, tuple and object delimiters, index brackets and function call arguments, where newlines are ignored",
+      "tests": [
+        "native/lexical/line-comment-inside-parentheses",
+        "native/collections/tuple-line-comment",
+        "native/lexical/line-comment-inside-object",
+        "native/traversals/index-line-comment-inside-brackets",
+        "native/functions/call-comments-inside-parentheses"
+      ]
+    },
+    {
+      "id": "lexical-comments-inside-template-sequences",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "Inline comments can appear inside interpolation sequences and template directives, and a line comment inside an interpolation is ignored like a newline",
+      "tests": [
+        "native/templates/interpolation-allows-inline-comments",
+        "native/templates/directives-allow-inline-comments",
+        "native/templates/interpolation-allows-hash-line-comment"
+      ]
+    },
+    {
+      "id": "lexical-comments-inline-comment-is-whitespace",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "An inline comment is equivalent to whitespace: it separates tokens anywhere whitespace may appear, and newlines inside it neither end an attribute nor count as the newline that starts a block body",
+      "tests": [
+        "native/lexical/inline-comment-between-tokens-without-spaces",
+        "native/lexical/inline-comment-separates-tokens",
+        "native/lexical/inline-comment-spanning-lines-does-not-end-attribute",
+        "native/lexical/inline-comment-spanning-lines-is-whitespace",
+        "native/structure/inline-comment-after-opening-brace-is-not-a-newline"
+      ]
+    },
+    {
+      "id": "lexical-comments-unterminated",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "An inline comment must be closed by */, so one that reaches the end of the file is a parse error",
+      "tests": [
+        "native/lexical/unterminated-inline-comment-is-invalid"
+      ]
+    },
+    {
+      "id": "lexical-comments-no-nesting",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "Comments cannot begin inside other comments, so a /* inside an inline comment doesn't nest and comment markers inside any comment are plain text",
+      "tests": [
+        "native/lexical/inline-comments-do-not-nest",
+        "native/lexical/inline-comment-extra-close-is-invalid",
+        "native/lexical/line-comment-markers-inside-inline-comment",
+        "native/lexical/inline-comment-marker-inside-line-comment"
+      ]
+    },
+    {
+      "id": "lexical-comments-inline-comment-end",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "An inline comment ends at the first */ that follows its /*: the * of the /* can't be reused, and extra stars before the closing */ don't prevent it from closing",
+      "tests": [
+        "native/lexical/inline-comment-close-cannot-reuse-open",
+        "native/lexical/inline-comment-closed-after-extra-star"
+      ]
+    },
+    {
+      "id": "lexical-comments-before-division",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "// always starts a comment, even after an operand where / would be division",
+      "tests": [
+        "native/lexical/double-slash-starts-comment-not-division"
+      ]
+    },
+    {
+      "id": "lexical-comments-any-content",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "Comments may be empty and may contain any characters except their own end sequence, including quotation marks, which don't start strings there",
+      "tests": [
+        "native/lexical/empty-comments",
+        "native/lexical/comment-with-non-ascii-text",
+        "native/lexical/inline-comment-with-lone-cr",
+        "native/lexical/quote-inside-comment-does-not-start-string"
+      ]
+    },
+    {
+      "id": "lexical-comments-adjacent-to-tokens",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "A comment needs no whitespace before it",
+      "tests": [
+        "native/lexical/line-comment-directly-after-token",
+        "native/lexical/inline-comment-between-tokens-without-spaces"
+      ]
+    },
+    {
+      "id": "lexical-identifiers-ascii",
+      "spec": "hclsyntax/spec.md#identifiers",
+      "rule": "ASCII letters start identifiers, and ASCII letters, digits and underscores continue them",
+      "tests": [
+        "native/lexical/identifier-with-digits-and-underscores"
+      ]
+    },
+    {
+      "id": "lexical-identifiers-underscore-start",
+      "spec": "hclsyntax/spec.md#identifiers",
+      "rule": "An identifier can start with an underscore (disputed)",
+      "tests": [
+        "native/lexical/identifier-leading-underscore"
+      ]
+    },
+    {
+      "id": "lexical-identifiers-no-digit-start",
+      "spec": "hclsyntax/spec.md#identifiers",
+      "rule": "A digit cannot start an identifier",
+      "tests": [
+        "native/lexical/identifier-starting-with-digit-is-invalid"
+      ]
+    },
+    {
+      "id": "lexical-identifiers-dash",
+      "spec": "hclsyntax/spec.md#identifiers",
+      "rule": "A dash may appear anywhere after the first character of an identifier, including at the end and several times in a row",
+      "tests": [
+        "native/lexical/identifier-with-dash",
+        "native/lexical/identifier-ending-with-dash",
+        "native/lexical/identifier-with-consecutive-dashes"
+      ]
+    },
+    {
+      "id": "lexical-identifiers-no-dash-start",
+      "spec": "hclsyntax/spec.md#identifiers",
+      "rule": "A dash cannot start an identifier",
+      "tests": [
+        "native/lexical/identifier-starting-with-dash-is-invalid"
+      ]
+    },
+    {
+      "id": "lexical-identifiers-dash-binds-to-name",
+      "spec": "hclsyntax/spec.md#identifiers",
+      "rule": "A dash directly after an identifier continues the identifier, so x-1 is a name rather than a subtraction",
+      "tests": [
+        "native/lexical/identifier-absorbs-dash-and-digit",
+        "native/lexical/keyword-with-dash-is-identifier"
+      ]
+    },
+    {
+      "id": "lexical-identifiers-only-ascii-dash",
+      "spec": "hclsyntax/spec.md#identifiers",
+      "rule": "Only the ASCII hyphen-minus is added to ID_Continue; other Unicode dashes are not allowed",
+      "tests": [
+        "native/lexical/unicode-hyphen-in-identifier-is-invalid"
+      ]
+    },
+    {
+      "id": "lexical-identifiers-letters",
+      "spec": "hclsyntax/spec.md#identifiers",
+      "rule": "Every kind of Unicode letter is ID_Start: cased letters, letters without case, titlecase letters, modifier letters and letter numbers, inside and outside the Basic Multilingual Plane",
+      "tests": [
+        "native/lexical/identifier-with-non-ascii-letters",
+        "native/lexical/identifier-with-letters-without-case",
+        "native/lexical/identifier-starting-with-titlecase-letter",
+        "native/lexical/identifier-starting-with-modifier-letter",
+        "native/lexical/identifier-starting-with-letter-number",
+        "native/lexical/identifier-with-supplementary-plane-letter",
+        "native/lexical/variable-name-with-non-ascii-letters"
+      ]
+    },
+    {
+      "id": "lexical-identifiers-other-id-start",
+      "spec": "hclsyntax/spec.md#identifiers",
+      "rule": "Characters with the Other_ID_Start property, such as the symbols U+2118 and U+309B, start identifiers, including those that XID_Start excludes",
+      "tests": [
+        "native/lexical/identifier-starting-with-other-id-start",
+        "native/lexical/identifier-starting-with-id-start-that-is-not-xid-start"
+      ]
+    },
+    {
+      "id": "lexical-identifiers-continue-characters",
+      "spec": "hclsyntax/spec.md#identifiers",
+      "rule": "Nonspacing and spacing combining marks, decimal digits of any script, connector punctuation and Other_ID_Continue characters can continue an identifier",
+      "tests": [
+        "native/lexical/identifier-with-nonspacing-mark",
+        "native/lexical/identifier-with-spacing-marks",
+        "native/lexical/identifier-with-non-ascii-digit",
+        "native/lexical/identifier-with-connector-punctuation",
+        "native/lexical/identifier-with-other-id-continue"
+      ]
+    },
+    {
+      "id": "lexical-identifiers-continue-only-characters",
+      "spec": "hclsyntax/spec.md#identifiers",
+      "rule": "Characters that are in ID_Continue but not ID_Start cannot start an identifier",
+      "tests": [
+        "native/lexical/identifier-starting-with-combining-mark-is-invalid",
+        "native/lexical/identifier-starting-with-non-ascii-digit-is-invalid",
+        "native/lexical/identifier-starting-with-connector-punctuation-is-invalid",
+        "native/lexical/identifier-starting-with-other-id-continue-is-invalid"
+      ]
+    },
+    {
+      "id": "lexical-identifiers-excluded-characters",
+      "spec": "hclsyntax/spec.md#identifiers",
+      "rule": "Characters in neither ID_Start nor ID_Continue can't appear in identifiers: symbols without Other_ID_Start, enclosing marks, numbers other than decimal digits and letter numbers, format characters, and Pattern_Syntax characters even when their category is a letter",
+      "tests": [
+        "native/lexical/identifier-with-symbol-is-invalid",
+        "native/lexical/identifier-with-enclosing-mark-is-invalid",
+        "native/lexical/identifier-with-other-number-is-invalid",
+        "native/lexical/identifier-with-format-character-is-invalid",
+        "native/lexical/identifier-with-pattern-syntax-letter-is-invalid"
+      ]
+    },
+    {
+      "id": "lexical-identifiers-case-sensitive",
+      "spec": "hclsyntax/spec.md#identifiers",
+      "rule": "Identifiers are compared by code point, so names that differ in case are distinct",
+      "tests": [
+        "native/lexical/identifiers-are-case-sensitive"
+      ]
+    },
+    {
+      "id": "lexical-keywords-attribute-names",
+      "spec": "hclsyntax/spec.md#keywords",
+      "rule": "No word is reserved globally, so true, false, null, for, in and if can be attribute names",
+      "tests": [
+        "native/lexical/literal-keywords-as-attribute-names",
+        "native/lexical/for-keywords-as-attribute-names"
+      ]
+    },
+    {
+      "id": "lexical-keywords-block-types-and-labels",
+      "spec": "hclsyntax/spec.md#keywords",
+      "rule": "Keywords can be block types and unquoted block labels",
+      "tests": [
+        "native/lexical/literal-keywords-as-block-types",
+        "native/lexical/for-keywords-as-block-types",
+        "native/lexical/keywords-as-block-labels"
+      ]
+    },
+    {
+      "id": "lexical-keywords-literals-supersede-variables",
+      "spec": "hclsyntax/spec.md#keywords",
+      "rule": "As an expression, true, false and null are always literals, even if the scope defines variables with those names",
+      "tests": [
+        "native/lexical/literal-keywords-ignore-variables"
+      ]
+    },
+    {
+      "id": "lexical-keywords-for-keywords-outside-for",
+      "spec": "hclsyntax/spec.md#keywords",
+      "rule": "for, in and if are only keywords inside for expressions and template directives; elsewhere in expressions they are variable names",
+      "tests": [
+        "native/lexical/for-keywords-are-variables-in-expressions"
+      ]
+    },
+    {
+      "id": "lexical-keywords-attribute-access",
+      "spec": "hclsyntax/spec.md#keywords",
+      "rule": "After a dot, a keyword is an attribute name",
+      "tests": [
+        "native/lexical/keywords-as-attribute-access-names"
+      ]
+    },
+    {
+      "id": "lexical-keywords-exact-match",
+      "spec": "hclsyntax/spec.md#keywords",
+      "rule": "Only the exact lowercase words are keywords: names that differ in case or have extra characters, including dashes, are ordinary identifiers",
+      "tests": [
+        "native/lexical/keywords-are-case-sensitive",
+        "native/lexical/identifiers-starting-with-keywords",
+        "native/lexical/keyword-with-dash-is-identifier"
+      ]
+    },
+    {
+      "id": "lexical-operators-multi-character-tokens",
+      "spec": "hclsyntax/spec.md#operators-and-delimiters",
+      "rule": "<=, >=, ==, !=, &&, ||, => and ... are each a single token, recognized without surrounding whitespace",
+      "tests": [
+        "native/lexical/less-than-or-equal-is-one-token",
+        "native/lexical/greater-than-or-equal-is-one-token",
+        "native/lexical/equality-operator-is-one-token",
+        "native/lexical/inequality-operator-is-one-token",
+        "native/lexical/and-operator-is-one-token",
+        "native/lexical/or-operator-is-one-token",
+        "native/lexical/fat-arrow-is-one-token",
+        "native/functions/call-expand-final"
+      ]
+    },
+    {
+      "id": "lexical-operators-no-space-inside-token",
+      "spec": "hclsyntax/spec.md#operators-and-delimiters",
+      "rule": "A space inside a multi-character operator splits it into separate characters, which don't form the operator",
+      "tests": [
+        "native/lexical/less-than-or-equal-split-by-space-is-invalid",
+        "native/lexical/greater-than-or-equal-split-by-space-is-invalid",
+        "native/lexical/equality-operator-split-by-space-is-invalid",
+        "native/lexical/inequality-operator-split-by-space-is-invalid",
+        "native/lexical/and-operator-split-by-space-is-invalid",
+        "native/lexical/or-operator-split-by-space-is-invalid",
+        "native/lexical/fat-arrow-split-by-space-is-invalid",
+        "native/lexical/ellipsis-split-by-spaces-is-invalid"
+      ]
+    },
+    {
+      "id": "lexical-operators-unlisted-operators",
+      "spec": "hclsyntax/spec.md#operators-and-delimiters",
+      "rule": "Operators from other languages that aren't in the list, such as &, |, ^, ~ and **, are errors",
+      "tests": [
+        "native/lexical/single-ampersand-is-invalid",
+        "native/lexical/single-pipe-is-invalid",
+        "native/lexical/caret-is-invalid",
+        "native/lexical/tilde-outside-template-is-invalid",
+        "native/lexical/double-star-is-not-an-operator"
+      ]
+    },
+    {
+      "id": "lexical-operators-unused-characters",
+      "spec": "hclsyntax/spec.md#operators-and-delimiters",
+      "rule": "ASCII punctuation that no token uses, such as ;, ', `, @, $ and \\, is an error outside strings, heredocs and comments",
+      "tests": [
+        "native/lexical/semicolon-is-invalid",
+        "native/lexical/single-quotes-are-invalid",
+        "native/lexical/backtick-is-invalid",
+        "native/lexical/at-sign-is-invalid",
+        "native/lexical/dollar-sign-outside-template-is-invalid",
+        "native/lexical/backslash-outside-string-is-invalid"
+      ]
+    },
+    {
+      "id": "lexical-operators-non-ascii-look-alikes",
+      "spec": "hclsyntax/spec.md#operators-and-delimiters",
+      "rule": "Non-ASCII characters that look like delimiters or operators, such as curly quotes and U+2212 MINUS SIGN, are not tokens",
+      "tests": [
+        "native/lexical/curly-quotes-are-invalid",
+        "native/lexical/minus-sign-character-is-invalid"
+      ]
+    },
+    {
+      "id": "lexical-operators-template-sequences",
+      "spec": "hclsyntax/spec.md#operators-and-delimiters",
+      "rule": "${ and %{ don't start interpolations or directives outside templates, so template sequences written directly in an expression are an error",
+      "tests": [
+        "native/lexical/interpolation-start-outside-template-is-invalid",
+        "native/lexical/directive-start-outside-template-is-invalid"
+      ]
+    },
+    {
+      "id": "lexical-operators-percent-brace-in-expressions",
+      "spec": "hclsyntax/spec.md#operators-and-delimiters",
+      "rule": "In an expression, %{ is the modulo operator followed by an opening brace rather than one token (disputed)",
+      "tests": [
+        "native/lexical/percent-brace-outside-template-is-modulo"
+      ]
+    },
+    {
+      "id": "lexical-operators-unmatched-closing-delimiters",
+      "spec": "hclsyntax/spec.md#operators-and-delimiters",
+      "rule": "A closing ), ] or } without a matching opening delimiter is an error",
+      "tests": [
+        "native/lexical/unmatched-closing-parenthesis-is-invalid",
+        "native/lexical/unmatched-closing-bracket-is-invalid",
+        "native/lexical/unmatched-closing-brace-is-invalid"
+      ]
+    },
+    {
+      "id": "lexical-operators-misplaced-delimiters",
+      "spec": "hclsyntax/spec.md#operators-and-delimiters",
+      "rule": "=>, ..., : and = are errors inside an attribute's expression where no construct uses them",
+      "tests": [
+        "native/lexical/fat-arrow-outside-for-expression-is-invalid",
+        "native/lexical/ellipsis-outside-call-is-invalid",
+        "native/lexical/colon-outside-conditional-is-invalid",
+        "native/lexical/equals-inside-expression-is-invalid"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "description": "A block cannot have an equals sign between its labels and its opening brace",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#blocks"
+  ],
+  "op": "parse",
+  "reference_error": "must not be used when defining a block",
+  "expect": {
+    "valid": false
+  }
+}

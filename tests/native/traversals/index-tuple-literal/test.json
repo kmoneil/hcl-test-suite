@@ -1,0 +1,19 @@
+{
+  "description": "The index operator applies to a tuple constructed in the expression",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "hclsyntax/spec.md#expression-terms"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "y"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

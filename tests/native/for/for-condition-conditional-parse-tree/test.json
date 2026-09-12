@@ -1,0 +1,47 @@
+{
+  "description": "The if condition of a for expression may be a conditional with its own colon",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "for",
+          "result": "tuple",
+          "key_var": null,
+          "value_var": "v",
+          "collection": {
+            "kind": "variable",
+            "name": "xs"
+          },
+          "key": null,
+          "value": {
+            "kind": "variable",
+            "name": "v"
+          },
+          "condition": {
+            "kind": "conditional",
+            "condition": {
+              "kind": "variable",
+              "name": "c"
+            },
+            "true_result": {
+              "kind": "variable",
+              "name": "d"
+            },
+            "false_result": {
+              "kind": "variable",
+              "name": "e"
+            }
+          },
+          "grouping": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

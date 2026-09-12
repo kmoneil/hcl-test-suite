@@ -1,0 +1,26 @@
+{
+  "description": "A full splat applied to a null tuple is an error",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators",
+    "spec.md#null-values"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "t": {
+      "null": [
+        "tuple",
+        [
+          "string"
+        ]
+      ]
+    }
+  },
+  "reference_error": "Splat of null value",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

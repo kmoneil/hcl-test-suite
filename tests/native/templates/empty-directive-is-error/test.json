@@ -1,0 +1,11 @@
+{
+  "description": "An empty directive %{} is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid template directive",
+  "expect": {
+    "valid": false
+  }
+}

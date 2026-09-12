@@ -1,0 +1,44 @@
+{
+  "description": "A block's body can contain blocks, each with its own type and labels",
+  "spec": [
+    "hclsyntax/spec.md#blocks",
+    "spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "outer",
+          "labels": [
+            "x"
+          ],
+          "body": {
+            "attributes": {},
+            "blocks": [
+              {
+                "type": "inner",
+                "labels": [
+                  "y"
+                ],
+                "body": {
+                  "attributes": {
+                    "a": {
+                      "kind": "literal",
+                      "value": {
+                        "number": "1"
+                      }
+                    }
+                  },
+                  "blocks": []
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

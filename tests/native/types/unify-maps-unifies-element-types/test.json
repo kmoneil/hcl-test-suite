@@ -1,0 +1,46 @@
+{
+  "description": "A map of numbers and a map of strings unify to a map of strings",
+  "spec": [
+    "spec.md#type-unification",
+    "spec.md#collection-and-structural-type-conversions",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "m": {
+      "map": {
+        "a": {
+          "number": "5"
+        }
+      },
+      "element_type": "number"
+    },
+    "n": {
+      "map": {
+        "b": {
+          "string": "x"
+        }
+      },
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "map": {
+            "a": {
+              "string": "5"
+            }
+          },
+          "element_type": "string"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

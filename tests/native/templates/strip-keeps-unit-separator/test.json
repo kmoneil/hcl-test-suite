@@ -1,0 +1,20 @@
+{
+  "description": "A strip marker does not remove the unit separator control character U+001F",
+  "spec": [
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says strip markers remove spaces, \"interpreted as per Unicode's definition\", without saying which definition it means. The unit separator U+001F has no White_Space property and is not a space separator (Zs), but some libraries count it as whitespace, such as Python's str.isspace. hashicorp/hcl keeps it: parseTemplateParts in hclsyntax/parser_template.go trims with Go's unicode.IsSpace, which follows the White_Space property.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "a\u001fb"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

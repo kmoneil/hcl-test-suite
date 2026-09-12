@@ -1,0 +1,12 @@
+{
+  "description": "There is no unary plus operator, so +1 is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#operations",
+    "hclsyntax/spec.md#numeric-literals"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

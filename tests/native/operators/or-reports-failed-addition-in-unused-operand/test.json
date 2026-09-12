@@ -1,0 +1,14 @@
+{
+  "description": "|| reports a failed addition in its second operand even when the first is true",
+  "spec": [
+    "hclsyntax/spec.md#logic-operators",
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "notes": "The spec gives logic operators no short-circuit rule, so an error in either operand is reported. hashicorp/hcl agrees here because the failed addition leaves an unknown number, which BinaryOpExpr.Value (hclsyntax/expression_ops.go) can't convert to bool, although it drops the error of an undefined variable in the same place (or-ignores-error-in-unused-operand).",
+  "reference_error": "Unsuitable value for right operand: a number is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

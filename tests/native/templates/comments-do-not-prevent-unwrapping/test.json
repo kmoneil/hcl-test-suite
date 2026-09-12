@@ -1,0 +1,19 @@
+{
+  "description": "A comment inside a lone interpolation does not prevent unwrapping",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolation-unwrapping",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1.5"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

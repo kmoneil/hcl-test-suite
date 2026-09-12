@@ -1,0 +1,19 @@
+{
+  "description": "Objects whose attribute types differ are not equal",
+  "spec": [
+    "spec.md#structural-types",
+    "hclsyntax/spec.md#comparison-operators"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

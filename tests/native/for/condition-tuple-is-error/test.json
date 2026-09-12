@@ -1,0 +1,13 @@
+{
+  "description": "An if condition that is a tuple is an error",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#type-conversions-and-unification"
+  ],
+  "op": "eval",
+  "reference_error": "bool required, but have tuple",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "description": "A list and a tuple unify to a list",
+  "spec": [
+    "spec.md#type-unification",
+    "spec.md#collection-and-structural-type-conversions",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says list and tuple types unify by preferring the tuple type, which would convert the selected list to a tuple. hashicorp/hcl gives a list because go-cty first tries to unify tuples as lists (unifyTuplesAsList in cty/convert/unify.go, called from ConditionalExpr.Value in hclsyntax/expression.go).",
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "number": "5"
+        }
+      ],
+      "element_type": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [
+            {
+              "number": "5"
+            }
+          ],
+          "element_type": "number"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

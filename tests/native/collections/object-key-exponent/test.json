@@ -1,0 +1,23 @@
+{
+  "description": "A number key written with an exponent is converted without an exponent",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "1000": {
+              "string": "x"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

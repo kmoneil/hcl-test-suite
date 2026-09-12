@@ -1,0 +1,271 @@
+{
+  "area": "native/strings",
+  "rules": [
+    {
+      "id": "strings-quoted-literal-text",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "A quoted template made only of literal text produces a string holding exactly the characters between the quotes, including every space and tab",
+      "tests": [
+        "native/strings/literal-text",
+        "native/strings/literal-text-parse",
+        "native/strings/spaces-are-preserved",
+        "native/strings/literal-tab-is-preserved"
+      ]
+    },
+    {
+      "id": "strings-quoted-syntax-characters-are-text",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "Characters that are punctuation elsewhere (brackets, braces, commas, equals signs) are literal text inside quotes and don't affect the enclosing expression",
+      "tests": [
+        "native/strings/syntax-characters-are-literal"
+      ]
+    },
+    {
+      "id": "strings-empty",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "Two quotes with nothing between them produce the empty string",
+      "tests": [
+        "native/strings/empty-string",
+        "native/strings/empty-string-parse"
+      ]
+    },
+    {
+      "id": "strings-typographic-quotes-are-text",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "Only the ASCII double quote delimits a quoted template, so typographic quote marks inside one are ordinary characters",
+      "tests": [
+        "native/strings/typographic-quotes-are-literal"
+      ]
+    },
+    {
+      "id": "strings-unclosed-comment-introducer",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "Comments can't begin inside a quoted template, so a /* without a matching */ is literal text and doesn't swallow the closing quote",
+      "tests": [
+        "native/strings/unclosed-block-comment-is-literal"
+      ]
+    },
+    {
+      "id": "strings-unicode-text",
+      "spec": "hclsyntax/spec.md#source-code-representation",
+      "rule": "Non-ASCII characters written directly inside quotes, whatever their UTF-8 length, are kept in the string",
+      "tests": [
+        "native/templates/non-ascii-template-literal-text-is-kept"
+      ]
+    },
+    {
+      "id": "strings-literal-values-are-nfc-normalized",
+      "spec": "hclsyntax/spec.md#source-code-representation",
+      "rule": "A string value made from literal text is NFC-normalized, so text written with a decomposed character is the same string as its precomposed form when object keys are sorted or compared, while a quoted block label keeps its code points (native/structure/block-label-not-normalized) (disputed)",
+      "tests": [
+        "native/for/key-order-uses-nfc-form",
+        "native/collections/object-duplicate-key-nfc",
+        "native/strings/decomposed-literal-text-is-normalized"
+      ]
+    },
+    {
+      "id": "strings-only-lf-and-crlf-are-newlines",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "Only LF and CR LF are newline sequences, so other line-breaking characters (NEL, LINE SEPARATOR, PARAGRAPH SEPARATOR) are allowed as literal text inside quotes",
+      "tests": [
+        "native/strings/unicode-line-separators-are-literal"
+      ]
+    },
+    {
+      "id": "strings-control-characters",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "Raw control characters other than CR and LF (including NUL, vertical tab, form feed, ESC and DEL) are literal text inside quotes",
+      "tests": [
+        "native/strings/control-characters-are-literal",
+        "native/strings/nul-character-is-literal"
+      ]
+    },
+    {
+      "id": "strings-newline-not-permitted",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "A newline sequence (LF or CR LF) between the quotes is a syntax error, and a backslash before it doesn't turn it into a line continuation",
+      "tests": [
+        "native/strings/literal-newline-is-invalid",
+        "native/strings/literal-crlf-is-invalid",
+        "native/strings/backslash-newline-is-invalid"
+      ]
+    },
+    {
+      "id": "strings-unterminated",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "A quoted template must be closed by an unescaped quote on the same line; reaching a newline or the end of the file first is a syntax error",
+      "tests": [
+        "native/strings/unterminated-at-end-of-file",
+        "native/strings/unterminated-at-end-of-line",
+        "native/strings/escaped-quote-does-not-close"
+      ]
+    },
+    {
+      "id": "strings-first-unescaped-quote-ends",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "The first quote that isn't escaped ends the quoted template, so text after it is outside the string",
+      "tests": [
+        "native/strings/unescaped-inner-quote-ends-string"
+      ]
+    },
+    {
+      "id": "strings-escape-newline",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "The escape \\n produces a line feed (U+000A)",
+      "tests": [
+        "native/strings/escape-newline",
+        "native/strings/escape-newline-parse"
+      ]
+    },
+    {
+      "id": "strings-escape-carriage-return",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "The escape \\r produces a carriage return (U+000D)",
+      "tests": [
+        "native/strings/escape-carriage-return"
+      ]
+    },
+    {
+      "id": "strings-escape-tab",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "The escape \\t produces a horizontal tab (U+0009)",
+      "tests": [
+        "native/strings/escape-tab"
+      ]
+    },
+    {
+      "id": "strings-escape-quote",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "The escape \\\" produces a quote character and doesn't end the string, including right before the closing quote",
+      "tests": [
+        "native/strings/escape-quote",
+        "native/strings/escape-quote-only"
+      ]
+    },
+    {
+      "id": "strings-escape-backslash",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "The escape \\\\ produces one backslash; escapes are read left to right, so the backslash it produces doesn't escape the next character",
+      "tests": [
+        "native/strings/escape-backslash",
+        "native/strings/escaped-backslash-before-closing-quote",
+        "native/strings/escaped-backslash-then-escaped-quote",
+        "native/strings/escaped-backslash-then-n",
+        "native/strings/escaped-backslash-before-interpolation"
+      ]
+    },
+    {
+      "id": "strings-escape-short-unicode",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "The escape \\u followed by exactly four hexadecimal digits, in either case, produces that code point, from U+0000 to U+FFFF outside the surrogate range; a following hex digit is literal text",
+      "tests": [
+        "native/strings/escape-short-unicode",
+        "native/strings/escape-short-unicode-parse",
+        "native/strings/escape-short-unicode-mixed-case-hex",
+        "native/strings/escape-short-unicode-nul",
+        "native/strings/escape-short-unicode-maximum",
+        "native/strings/escape-short-unicode-next-to-surrogates",
+        "native/strings/escape-short-unicode-takes-four-digits"
+      ]
+    },
+    {
+      "id": "strings-escape-short-unicode-malformed",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "A \\u escape that isn't followed by four hexadecimal digits (none, too few, a non-hex digit, a sign, or braces) is a syntax error",
+      "tests": [
+        "native/strings/escape-short-unicode-without-digits",
+        "native/strings/escape-short-unicode-three-digits",
+        "native/strings/escape-short-unicode-non-hex-digit",
+        "native/strings/escape-short-unicode-sign-is-invalid",
+        "native/strings/escape-short-unicode-braces"
+      ]
+    },
+    {
+      "id": "strings-escape-long-unicode",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "The escape \\U followed by exactly eight hexadecimal digits, in either case, produces that code point, up to U+10FFFF; a following hex digit is literal text",
+      "tests": [
+        "native/strings/escape-long-unicode",
+        "native/strings/escape-long-unicode-lowercase-hex",
+        "native/strings/escape-long-unicode-maximum",
+        "native/strings/escape-long-unicode-takes-eight-digits"
+      ]
+    },
+    {
+      "id": "strings-escape-long-unicode-basic-plane",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "A \\U escape may also name a character from the Basic Multilingual Plane (disputed)",
+      "tests": [
+        "native/strings/escape-long-unicode-basic-plane"
+      ]
+    },
+    {
+      "id": "strings-escape-long-unicode-malformed",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "A \\U escape that isn't followed by eight hexadecimal digits (none, too few, or a non-hex digit) is a syntax error",
+      "tests": [
+        "native/strings/escape-long-unicode-without-digits",
+        "native/strings/escape-long-unicode-seven-digits",
+        "native/strings/escape-long-unicode-four-digits",
+        "native/strings/escape-long-unicode-non-hex-digit"
+      ]
+    },
+    {
+      "id": "strings-escape-unicode-surrogates",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "A \\u or \\U escape naming a surrogate code point (U+D800 to U+DFFF) is an error, and two escapes forming a UTF-16 surrogate pair are not combined",
+      "tests": [
+        "native/strings/escape-short-unicode-high-surrogate",
+        "native/strings/escape-short-unicode-low-surrogate",
+        "native/strings/escape-short-unicode-surrogate-pair",
+        "native/strings/escape-long-unicode-surrogate"
+      ]
+    },
+    {
+      "id": "strings-escape-unicode-above-maximum",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "A \\U escape naming a value above U+10FFFF is an error",
+      "tests": [
+        "native/strings/escape-long-unicode-above-maximum",
+        "native/strings/escape-long-unicode-all-ones"
+      ]
+    },
+    {
+      "id": "strings-escape-unknown",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "A backslash followed by anything other than n, r, t, a quote, a backslash, u or U is a syntax error; selectors are case-sensitive and escapes known from C, JSON or shells are not accepted",
+      "tests": [
+        "native/strings/escape-bell-is-invalid",
+        "native/strings/escape-backspace-is-invalid",
+        "native/strings/escape-form-feed-is-invalid",
+        "native/strings/escape-vertical-tab-is-invalid",
+        "native/strings/escape-slash-is-invalid",
+        "native/strings/escape-single-quote-is-invalid",
+        "native/strings/escape-zero-is-invalid",
+        "native/strings/escape-hex-byte-is-invalid",
+        "native/strings/escape-dollar-is-invalid",
+        "native/strings/escape-uppercase-selector-is-invalid",
+        "native/strings/escape-space-is-invalid",
+        "native/strings/escape-non-ascii-selector-is-invalid"
+      ]
+    },
+    {
+      "id": "strings-escapes-single-pass",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "Characters produced by escape sequences are not read again as syntax: an escaped quote doesn't end the string, an escaped backslash doesn't start another escape, and an escaped $ doesn't start an interpolation",
+      "tests": [
+        "native/strings/escaped-quote-code-point-does-not-close",
+        "native/strings/escaped-backslash-code-point-is-not-an-escape",
+        "native/strings/escaped-dollar-code-point-is-not-interpolation"
+      ]
+    },
+    {
+      "id": "strings-escapes-beside-interpolations",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "Escape sequences are processed in every literal part of a quoted template, including the text around interpolations",
+      "tests": [
+        "native/strings/escapes-around-interpolation"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "description": "Spaces between three dots make separate tokens rather than the ... symbol",
+  "spec": [
+    "hclsyntax/spec.md#operators-and-delimiters"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid attribute name",
+  "expect": {
+    "valid": false
+  }
+}

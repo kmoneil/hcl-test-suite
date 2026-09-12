@@ -1,0 +1,11 @@
+{
+  "description": "The escape \\UFFFFFFFF is an error",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "reference_error": "Cannot encode character U+ffffffff in UTF-8",
+  "expect": {
+    "valid": false
+  }
+}

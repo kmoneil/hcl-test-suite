@@ -1,0 +1,659 @@
+{
+  "area": "native/for",
+  "rules": [
+    {
+      "id": "for-tuple-form",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "A for expression delimited by [ and ] is a tuple for expression, with one element expression after the colon",
+      "tests": [
+        "native/for/tuple-for-parse-tree",
+        "native/for/tuple-for-two-variables-parse-tree"
+      ]
+    },
+    {
+      "id": "for-object-form",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "A for expression delimited by { and } is an object for expression, with a key expression, => and a value expression after the colon",
+      "tests": [
+        "native/for/object-for-one-variable-parse-tree",
+        "native/for/object-for-parse-tree"
+      ]
+    },
+    {
+      "id": "for-one-variable",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "With one identifier after for, that identifier names the value variable and no key variable is declared",
+      "tests": [
+        "native/for/map-one-variable-is-element-value",
+        "native/for/object-for-one-variable-parse-tree",
+        "native/for/object-one-variable-is-attribute-value",
+        "native/for/object-values-visited-in-key-order",
+        "native/for/set-one-variable-is-element",
+        "native/for/tuple-for-binds-value-variable",
+        "native/for/tuple-for-parse-tree"
+      ]
+    },
+    {
+      "id": "for-two-variables",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "With two identifiers separated by a comma, the first names the key variable and the second names the value variable",
+      "tests": [
+        "native/for/object-for-builds-attributes",
+        "native/for/object-for-parse-tree",
+        "native/for/tuple-for-two-variables-parse-tree",
+        "native/for/tuple-key-is-index"
+      ]
+    },
+    {
+      "id": "for-parse-tree",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "A for expression appears in the parse tree as a for node recording its form, variables, collection, key, value, condition and grouping",
+      "tests": [
+        "native/for/for-collection-and-condition-named-like-keywords",
+        "native/for/for-collection-conditional-parse-tree",
+        "native/for/for-condition-conditional-parse-tree",
+        "native/for/for-expression-is-indexable-parse-tree",
+        "native/for/for-variable-named-for",
+        "native/for/for-variable-named-if",
+        "native/for/for-variable-named-in",
+        "native/for/object-for-call-ellipsis-is-not-grouping",
+        "native/for/object-for-grouping-parse-tree",
+        "native/for/object-for-grouping-then-condition-parse-tree",
+        "native/for/object-for-key-conditional-parse-tree",
+        "native/for/object-for-one-variable-parse-tree",
+        "native/for/object-for-parse-tree",
+        "native/for/tuple-for-call-ellipsis-is-allowed",
+        "native/for/tuple-for-condition-parse-tree",
+        "native/for/tuple-for-parse-tree",
+        "native/for/tuple-for-two-variables-parse-tree"
+      ]
+    },
+    {
+      "id": "for-variable-names-are-identifiers",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "Each iteration variable must be an identifier; a missing variable or a non-identifier in its place is a syntax error",
+      "tests": [
+        "native/for/for-missing-variable-is-error",
+        "native/for/for-second-variable-must-be-identifier",
+        "native/for/for-variable-must-be-identifier"
+      ]
+    },
+    {
+      "id": "for-at-most-two-variables",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "At most two iteration variables are allowed, separated by exactly one comma; a third variable, a missing comma or a dangling comma is a syntax error",
+      "tests": [
+        "native/for/for-comma-without-second-variable-is-error",
+        "native/for/for-three-variables-is-error",
+        "native/for/for-variables-without-comma-is-error"
+      ]
+    },
+    {
+      "id": "for-in-keyword",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "The variables must be followed by the keyword in, written in lowercase as a token of its own",
+      "tests": [
+        "native/for/for-in-keyword-is-case-sensitive",
+        "native/for/for-in-keyword-must-be-separate-token",
+        "native/for/for-missing-in-is-error",
+        "native/for/object-for-missing-in-is-error"
+      ]
+    },
+    {
+      "id": "for-keywords-contextual",
+      "spec": "hclsyntax/spec.md#keywords",
+      "rule": "The words for, in and if can name iteration variables, and variables named in and if can be used right after the in and if keywords (disputed)",
+      "tests": [
+        "native/for/for-collection-and-condition-named-like-keywords",
+        "native/for/for-variable-named-for",
+        "native/for/for-variable-named-if",
+        "native/for/for-variable-named-in"
+      ]
+    },
+    {
+      "id": "for-collection-expression",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "An expression must follow in; any expression is allowed, and a conditional there takes its own colon before the colon that ends the introduction",
+      "tests": [
+        "native/for/for-collection-conditional-parse-tree",
+        "native/for/for-missing-collection-is-error"
+      ]
+    },
+    {
+      "id": "for-colon-ends-introduction",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "A colon must end the introduction; leaving it out, or writing the if clause before it, is a syntax error",
+      "tests": [
+        "native/for/for-condition-before-colon-is-error",
+        "native/for/for-missing-colon-is-error",
+        "native/for/object-for-missing-colon-is-error"
+      ]
+    },
+    {
+      "id": "for-tuple-element-expression",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "A tuple for expression has exactly one element expression after the colon; a missing element, a second element or a trailing comma is a syntax error",
+      "tests": [
+        "native/for/tuple-for-condition-without-element-is-error",
+        "native/for/tuple-for-missing-element-is-error",
+        "native/for/tuple-for-second-element-is-error",
+        "native/for/tuple-for-trailing-comma-is-error"
+      ]
+    },
+    {
+      "id": "for-tuple-no-key-or-grouping",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "A tuple for expression can't have a => key expression or a grouping ellipsis",
+      "tests": [
+        "native/for/tuple-for-grouping-is-error",
+        "native/for/tuple-for-key-expression-is-error"
+      ]
+    },
+    {
+      "id": "for-object-key-and-value",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "An object for expression needs a key expression, => and a value expression; no key, = or : instead of =>, a missing side, a second =>, a second item or a trailing comma is a syntax error",
+      "tests": [
+        "native/for/object-for-colon-instead-of-arrow-is-error",
+        "native/for/object-for-equals-instead-of-arrow-is-error",
+        "native/for/object-for-missing-key-expression-is-error",
+        "native/for/object-for-missing-value-expression-is-error",
+        "native/for/object-for-second-arrow-is-error",
+        "native/for/object-for-second-item-is-error",
+        "native/for/object-for-trailing-comma-is-error",
+        "native/for/object-for-without-key-is-error"
+      ]
+    },
+    {
+      "id": "for-grouping-position",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "The grouping ellipsis may appear once, immediately after the value expression of an object for expression and before any if clause",
+      "tests": [
+        "native/for/object-for-ellipsis-after-condition-is-error",
+        "native/for/object-for-ellipsis-after-key-is-error",
+        "native/for/object-for-grouping-parse-tree",
+        "native/for/object-for-grouping-then-condition-parse-tree",
+        "native/for/object-for-repeated-ellipsis-is-error",
+        "native/for/tuple-for-grouping-is-error"
+      ]
+    },
+    {
+      "id": "for-call-ellipsis-not-grouping",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "An ellipsis inside the parentheses of a function call in the value expression expands the call's arguments and is not the grouping ellipsis",
+      "tests": [
+        "native/for/object-for-call-ellipsis-is-not-grouping",
+        "native/for/tuple-for-call-ellipsis-is-allowed"
+      ]
+    },
+    {
+      "id": "for-condition-syntax",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "An optional if clause, the lowercase keyword if as a token of its own followed by one expression, may follow the element expressions and any ellipsis; at most one is allowed",
+      "tests": [
+        "native/for/for-condition-before-colon-is-error",
+        "native/for/for-condition-without-expression-is-error",
+        "native/for/for-if-keyword-is-case-sensitive",
+        "native/for/for-if-keyword-must-be-separate-token",
+        "native/for/for-second-condition-is-error",
+        "native/for/object-for-condition-before-arrow-is-error",
+        "native/for/object-for-grouping-then-condition-parse-tree",
+        "native/for/tuple-for-condition-parse-tree"
+      ]
+    },
+    {
+      "id": "for-closing-delimiter",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "A for expression must be closed by the bracket or brace that matches its opening one",
+      "tests": [
+        "native/for/object-for-closed-with-bracket-is-error",
+        "native/for/object-for-unclosed-is-error",
+        "native/for/tuple-for-closed-with-brace-is-error",
+        "native/for/tuple-for-unclosed-is-error"
+      ]
+    },
+    {
+      "id": "for-expression-term",
+      "spec": "hclsyntax/spec.md#expression-terms",
+      "rule": "A for expression is an expression term, so postfix operators such as an index or attribute access apply to its result",
+      "tests": [
+        "native/for/for-expression-is-indexable-parse-tree",
+        "native/for/object-for-result-supports-attribute-access"
+      ]
+    },
+    {
+      "id": "for-inline-comments",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "Inline comments count as whitespace and may appear between any two tokens of a for expression",
+      "tests": [
+        "native/for/for-inline-comments-between-tokens"
+      ]
+    },
+    {
+      "id": "for-no-whitespace-required",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "No whitespace is needed around the comma, colon, => or ellipsis of a for expression",
+      "tests": [
+        "native/for/for-no-spaces-around-punctuation"
+      ]
+    },
+    {
+      "id": "for-newlines-ignored",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "Newlines and line comments inside a for expression are ignored, between its tokens and inside its sub-expressions (disputed)",
+      "tests": [
+        "native/for/for-line-comment-inside",
+        "native/for/for-newline-inside-element-expression",
+        "native/for/object-for-newlines-between-tokens",
+        "native/for/tuple-for-newlines-between-tokens"
+      ]
+    },
+    {
+      "id": "for-newline-after-closing-delimiter",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "Once a for expression is closed, a newline after it ends the attribute as usual",
+      "tests": [
+        "native/for/newline-after-for-expression-ends-attribute"
+      ]
+    },
+    {
+      "id": "for-nested-object-constructor-newlines",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "An object constructor inside a for expression still separates its items with newlines (disputed)",
+      "tests": [
+        "native/for/object-constructor-in-for-separates-items-by-newline"
+      ]
+    },
+    {
+      "id": "for-subexpressions-are-full-expressions",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "The key, value and condition are full expressions: a bare identifier as the key is a variable reference, and a conditional in any of them keeps its own colon",
+      "tests": [
+        "native/for/for-condition-conditional-parse-tree",
+        "native/for/for-element-can-be-conditional",
+        "native/for/object-for-key-conditional-parse-tree",
+        "native/for/object-for-key-identifier-is-variable"
+      ]
+    },
+    {
+      "id": "for-tuple-result",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "A tuple for expression produces a tuple, whatever kind of collection it iterates, with one element per included source element, each keeping its own type",
+      "tests": [
+        "native/for/tuple-for-binds-value-variable",
+        "native/for/tuple-for-elements-keep-their-types",
+        "native/for/tuple-for-over-list-produces-tuple"
+      ]
+    },
+    {
+      "id": "for-object-result",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "An object for expression produces an object, whatever kind of collection it iterates, whose attributes keep their own types",
+      "tests": [
+        "native/for/object-for-attributes-keep-their-types",
+        "native/for/object-for-builds-attributes",
+        "native/for/object-for-over-map-produces-object",
+        "native/for/set-object-for-keys-elements-by-themselves"
+      ]
+    },
+    {
+      "id": "for-null-results-kept",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "A null produced by the element or value expression is kept in the result like any other value",
+      "tests": [
+        "native/for/object-for-keeps-null-values",
+        "native/for/tuple-for-keeps-null-elements"
+      ]
+    },
+    {
+      "id": "for-empty-collection",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "Iterating an empty tuple, object, list, map or set produces an empty tuple or an empty object",
+      "tests": [
+        "native/for/object-for-over-empty-map",
+        "native/for/object-for-over-empty-object",
+        "native/for/object-grouping-over-empty-collection",
+        "native/for/tuple-for-over-empty-list",
+        "native/for/tuple-for-over-empty-set",
+        "native/for/tuple-for-over-empty-tuple"
+      ]
+    },
+    {
+      "id": "for-evaluated-per-element",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "The key and value expressions are evaluated once for each included element, so they aren't evaluated for an empty collection, and their errors, for any element, are errors of the for expression",
+      "tests": [
+        "native/for/object-for-empty-collection-skips-key-and-value",
+        "native/for/object-for-key-error-is-reported",
+        "native/for/object-for-value-error-is-reported",
+        "native/for/tuple-for-element-error-is-reported",
+        "native/for/tuple-for-empty-collection-skips-element",
+        "native/for/tuple-for-error-in-later-element-is-reported"
+      ]
+    },
+    {
+      "id": "for-collection-errors",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "An error in the collection expression is an error of the for expression",
+      "tests": [
+        "native/for/for-collection-error-is-reported"
+      ]
+    },
+    {
+      "id": "for-sequence-iteration",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "For tuples and lists, the key variable holds the zero-based index as a number and the value variable holds the element",
+      "tests": [
+        "native/for/list-key-is-index-and-value-is-element",
+        "native/for/tuple-key-is-index"
+      ]
+    },
+    {
+      "id": "for-sequence-order",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "Tuple and list elements are visited in numeric index order",
+      "tests": [
+        "native/for/list-visited-in-index-order",
+        "native/for/tuple-visited-in-index-order",
+        "native/for/tuple-visited-in-numeric-index-order"
+      ]
+    },
+    {
+      "id": "for-mapping-iteration",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "For objects and maps, the key variable holds the attribute name or element key as a string and the value variable holds the attribute or element value",
+      "tests": [
+        "native/for/map-key-is-element-key",
+        "native/for/map-one-variable-is-element-value",
+        "native/for/object-key-is-attribute-name",
+        "native/for/object-one-variable-is-attribute-value"
+      ]
+    },
+    {
+      "id": "for-mapping-order",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "Object attributes and map elements are visited in lexicographic order of their names, not in source order",
+      "tests": [
+        "native/for/map-visited-in-key-order",
+        "native/for/object-grouping-follows-visit-order",
+        "native/for/object-values-visited-in-key-order",
+        "native/for/object-visited-in-key-order"
+      ]
+    },
+    {
+      "id": "for-key-order-case",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "Key order is case-sensitive: uppercase ASCII letters sort before all lowercase letters",
+      "tests": [
+        "native/for/key-order-uppercase-before-lowercase"
+      ]
+    },
+    {
+      "id": "for-key-order-digits",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "In key order digits sort before letters, and keys made of digits are compared as text, not as numbers",
+      "tests": [
+        "native/for/key-order-compares-digits-as-text",
+        "native/for/key-order-digits-before-letters"
+      ]
+    },
+    {
+      "id": "for-key-order-prefix",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "In key order a key sorts before every longer key that starts with it",
+      "tests": [
+        "native/for/key-order-empty-key-first",
+        "native/for/key-order-prefix-sorts-first"
+      ]
+    },
+    {
+      "id": "for-key-order-code-points",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "Key order compares Unicode code points, so non-ASCII characters sort after ASCII ones and characters beyond U+FFFF after those below",
+      "tests": [
+        "native/for/key-order-astral-after-bmp",
+        "native/for/key-order-non-ascii-after-ascii"
+      ]
+    },
+    {
+      "id": "for-key-order-nfc",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "Keys are sorted by their NFC normalized form (disputed)",
+      "tests": [
+        "native/for/key-order-uses-nfc-form"
+      ]
+    },
+    {
+      "id": "for-set-iteration",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "For sets, both the key variable and the value variable hold the element",
+      "tests": [
+        "native/for/set-key-and-value-are-element",
+        "native/for/set-object-for-keys-elements-by-themselves",
+        "native/for/set-one-variable-is-element"
+      ]
+    },
+    {
+      "id": "for-set-order-consistent",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "Set elements are visited in an unspecified order that is the same each time the same set is iterated",
+      "tests": [
+        "native/for/set-visited-in-consistent-order"
+      ]
+    },
+    {
+      "id": "for-condition-filters",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "Source elements whose if condition is false are left out of the result, and those whose condition is true are included",
+      "tests": [
+        "native/for/condition-false-for-all-gives-empty-tuple",
+        "native/for/condition-filters-elements",
+        "native/for/condition-uses-value-variable",
+        "native/for/object-condition-false-for-all-gives-empty-object",
+        "native/for/object-for-condition-filters-elements"
+      ]
+    },
+    {
+      "id": "for-condition-scope",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "The if condition is evaluated for each element in the same scope as the element expressions, so it can use the key and value variables",
+      "tests": [
+        "native/for/condition-filters-elements",
+        "native/for/condition-uses-value-variable",
+        "native/for/object-for-condition-filters-elements"
+      ]
+    },
+    {
+      "id": "for-condition-skips-evaluation",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "The key and value expressions aren't evaluated for elements the if clause leaves out, so those elements can't cause errors or duplicate keys",
+      "tests": [
+        "native/for/condition-false-avoids-duplicate-key",
+        "native/for/condition-false-skips-element-expression",
+        "native/for/object-condition-false-skips-key-and-value"
+      ]
+    },
+    {
+      "id": "for-condition-with-grouping",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "With grouping, only elements the if clause includes contribute values to the groups",
+      "tests": [
+        "native/for/condition-applies-before-grouping"
+      ]
+    },
+    {
+      "id": "for-condition-conversion",
+      "spec": "spec.md#type-conversions-and-unification",
+      "rule": "A string if condition is converted to bool: true and 1 mean true, false and 0 mean false",
+      "tests": [
+        "native/for/condition-string-one-and-zero-convert",
+        "native/for/condition-string-true-and-false-convert"
+      ]
+    },
+    {
+      "id": "for-condition-invalid",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "An if condition that can't be converted to bool, such as a string other than true, false, 1 or 0, a number or a tuple, is an error, even if only a later element produces it",
+      "tests": [
+        "native/for/condition-invalid-for-one-element-is-error",
+        "native/for/condition-number-is-error",
+        "native/for/condition-other-string-is-error",
+        "native/for/condition-tuple-is-error",
+        "native/for/object-condition-invalid-for-one-element-is-error"
+      ]
+    },
+    {
+      "id": "for-condition-null",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "An if condition that is null, whether the null keyword or a null bool, is an error, even if only a later element produces it (disputed)",
+      "tests": [
+        "native/for/condition-null-bool-is-error",
+        "native/for/condition-null-for-one-element-is-error",
+        "native/for/condition-null-is-error",
+        "native/for/object-condition-null-for-one-element-is-error"
+      ]
+    },
+    {
+      "id": "for-condition-checked-before-iteration",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "The if condition is also checked once before iterating, with unknown key and value, so a condition that is null, can't be a bool or fails to evaluate is an error even for an empty collection (disputed)",
+      "tests": [
+        "native/for/condition-error-reported-for-empty-collection",
+        "native/for/condition-null-reported-for-empty-collection",
+        "native/for/condition-number-reported-for-empty-collection"
+      ]
+    },
+    {
+      "id": "for-key-conversion",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "A number or bool produced by the key expression is converted to a string key, numbers in decimal without an exponent",
+      "tests": [
+        "native/for/object-duplicate-key-after-conversion-is-error",
+        "native/for/object-grouping-merges-converted-keys",
+        "native/for/object-key-bool-becomes-string",
+        "native/for/object-key-fraction-becomes-string",
+        "native/for/object-key-integer-becomes-string",
+        "native/for/object-key-number-has-no-exponent"
+      ]
+    },
+    {
+      "id": "for-key-strings",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "A string produced by the key expression is used as the attribute name as it is, including the empty string and strings that aren't identifiers",
+      "tests": [
+        "native/for/object-key-empty-string",
+        "native/for/object-key-need-not-be-identifier"
+      ]
+    },
+    {
+      "id": "for-key-invalid",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "A key expression that produces null, or a value that can't be converted to a string such as a tuple or an object, is an error",
+      "tests": [
+        "native/for/object-key-null-is-error",
+        "native/for/object-key-object-is-error",
+        "native/for/object-key-tuple-is-error"
+      ]
+    },
+    {
+      "id": "for-duplicate-keys",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "Without grouping, two included elements that produce equal keys are an error, even if their values are equal; keys are compared after conversion to string, as NFC normalized strings",
+      "tests": [
+        "native/for/condition-false-avoids-duplicate-key",
+        "native/for/object-duplicate-key",
+        "native/for/object-duplicate-key-after-conversion-is-error",
+        "native/for/object-duplicate-key-equal-under-nfc-is-error",
+        "native/for/object-duplicate-key-with-equal-values-is-error",
+        "native/for/object-keys-differing-in-case-are-distinct"
+      ]
+    },
+    {
+      "id": "for-grouping",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "With grouping, each attribute value is a tuple of all values produced for that key, in visit order, each keeping its type, including equal values, keys produced once and keys interleaved with others",
+      "tests": [
+        "native/for/object-grouping",
+        "native/for/object-grouping-follows-visit-order",
+        "native/for/object-grouping-interleaved-keys",
+        "native/for/object-grouping-keeps-equal-values",
+        "native/for/object-grouping-keeps-value-types",
+        "native/for/object-grouping-over-empty-collection",
+        "native/for/object-grouping-single-value-is-tuple"
+      ]
+    },
+    {
+      "id": "for-grouping-key-equality",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "Grouping compares keys after conversion to string, as NFC normalized strings",
+      "tests": [
+        "native/for/object-grouping-merges-converted-keys",
+        "native/for/object-grouping-merges-keys-equal-under-nfc"
+      ]
+    },
+    {
+      "id": "for-non-iterable",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "Iterating a string, number or bool is an error, because only tuples, objects, lists, maps and sets can be iterated",
+      "tests": [
+        "native/for/iterating-bool-is-error",
+        "native/for/iterating-number-is-error",
+        "native/for/iterating-string-is-error",
+        "native/for/object-for-iterating-string-is-error"
+      ]
+    },
+    {
+      "id": "for-null-collection",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "Iterating a null value, whether the null keyword or a null list, is an error (disputed)",
+      "tests": [
+        "native/for/iterating-null-is-error",
+        "native/for/iterating-null-list-is-error"
+      ]
+    },
+    {
+      "id": "for-scope-hides-outer",
+      "spec": "hclsyntax/spec.md#variables-and-variable-expressions",
+      "rule": "Inside a for expression its iteration variables hide outer variables of the same name, while other outer variables stay visible",
+      "tests": [
+        "native/for/key-variable-hides-outer-variable",
+        "native/for/outer-variables-visible-inside",
+        "native/for/value-variable-hides-outer-variable"
+      ]
+    },
+    {
+      "id": "for-scope-local",
+      "spec": "hclsyntax/spec.md#variables-and-variable-expressions",
+      "rule": "Iteration variables are defined only inside the for expression that declares them",
+      "tests": [
+        "native/for/iteration-variable-undefined-outside"
+      ]
+    },
+    {
+      "id": "for-scope-collection-outer",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "The collection expression is evaluated in the enclosing scope, where the iteration variables aren't defined yet",
+      "tests": [
+        "native/for/collection-uses-enclosing-scope",
+        "native/for/nested-for-hides-outer-variable"
+      ]
+    },
+    {
+      "id": "for-scope-nested",
+      "spec": "hclsyntax/spec.md#variables-and-variable-expressions",
+      "rule": "A nested for expression can use the variables of the for expressions around it and can hide them with its own",
+      "tests": [
+        "native/for/nested-for-hides-outer-variable",
+        "native/for/nested-for-uses-outer-variable"
+      ]
+    },
+    {
+      "id": "for-scope-same-name",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "When the key and value variables have the same name, that name refers to the value (disputed)",
+      "tests": [
+        "native/for/same-name-key-and-value-refers-to-value"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,727 @@
+{
+  "area": "native/types",
+  "rules": [
+    {
+      "id": "types-equality-requires-identical-types",
+      "spec": "spec.md#values-and-value-types",
+      "rule": "Values of different types are never equal, even when one would convert to the other or both hold the same elements",
+      "tests": [
+        "native/types/equality-number-and-bool-not-equal",
+        "native/types/equality-object-and-map-not-equal",
+        "native/types/equality-list-and-set-not-equal",
+        "native/operators/equal-number-and-string",
+        "native/operators/equal-string-and-bool",
+        "native/operators/equal-tuple-and-list",
+        "native/operators/equal-empty-tuple-and-empty-object"
+      ]
+    },
+    {
+      "id": "types-equality-nested-typed-nulls",
+      "spec": "spec.md#values-and-value-types",
+      "rule": "Tuples holding nulls of different types are unequal, because their tuple types differ",
+      "tests": [
+        "native/types/equality-nested-null-string-and-null-keyword"
+      ]
+    },
+    {
+      "id": "types-equality-nulls-ignore-types",
+      "spec": "spec.md#values-and-value-types",
+      "rule": "Two nulls compared directly are equal whatever their types, including a null string and the null keyword (disputed)",
+      "tests": [
+        "native/types/equality-null-string-and-null-keyword",
+        "native/types/equality-nulls-of-different-types"
+      ]
+    },
+    {
+      "id": "types-string-equality-nfc",
+      "spec": "spec.md#primitive-types",
+      "rule": "Two strings are equal when their NFC normalizations are identical: composition, canonical reordering of combining marks, singleton mappings and Hangul composition all apply, including inside tuples and attribute names",
+      "tests": [
+        "native/types/string-equality-uses-nfc",
+        "native/types/string-equality-reorders-combining-marks",
+        "native/types/string-equality-normalizes-singletons",
+        "native/types/string-equality-composes-hangul-jamo",
+        "native/types/string-equality-in-tuple-elements-uses-nfc",
+        "native/types/string-equality-in-attribute-names-uses-nfc"
+      ]
+    },
+    {
+      "id": "types-string-equality-only-nfc",
+      "spec": "spec.md#primitive-types",
+      "rule": "String equality applies no normalization beyond NFC, so compatibility equivalents and a letter with and without a combining accent are unequal",
+      "tests": [
+        "native/types/string-equality-compatibility-equivalents-not-equal",
+        "native/types/string-equality-accent-not-ignored"
+      ]
+    },
+    {
+      "id": "types-bool-equality",
+      "spec": "spec.md#primitive-types",
+      "rule": "Two bools are equal exactly when both are true or both are false",
+      "tests": [
+        "native/operators/equal-bools",
+        "native/operators/equal-different-bools"
+      ]
+    },
+    {
+      "id": "types-tuple-equality-elementwise",
+      "spec": "spec.md#structural-types",
+      "rule": "Two tuples of identical type are equal exactly when every pair of corresponding elements is equal by the rules of the element type, recursively",
+      "tests": [
+        "native/types/string-equality-in-tuple-elements-uses-nfc",
+        "native/types/tuple-equality-compares-numbers-by-value",
+        "native/operators/equal-tuples",
+        "native/operators/equal-tuples-different-order",
+        "native/operators/equal-nested-structures"
+      ]
+    },
+    {
+      "id": "types-object-equality-attributewise",
+      "spec": "spec.md#structural-types",
+      "rule": "Two objects of identical type are equal exactly when every attribute is equal, whatever order the attributes were written in",
+      "tests": [
+        "native/types/string-equality-in-attribute-names-uses-nfc",
+        "native/operators/equal-objects-attribute-order",
+        "native/operators/equal-objects-different-values",
+        "native/operators/equal-nested-structures"
+      ]
+    },
+    {
+      "id": "types-structural-type-identity",
+      "spec": "spec.md#structural-types",
+      "rule": "Structural types are identical only if they are of the same kind with the same attribute names or element count and identical attribute or element types, so values of other structural types are unequal",
+      "tests": [
+        "native/types/object-equality-different-attribute-names",
+        "native/types/object-equality-different-attribute-types",
+        "native/operators/equal-empty-tuple-and-empty-object",
+        "native/operators/equal-tuples-different-length",
+        "native/operators/equal-tuples-with-different-element-types",
+        "native/operators/equal-objects-different-attributes"
+      ]
+    },
+    {
+      "id": "types-list-equality-elementwise",
+      "spec": "spec.md#collection-types",
+      "rule": "Two lists of identical type are equal exactly when they have the same length and equal elements in the same order",
+      "tests": [
+        "native/types/list-equality-order-matters",
+        "native/types/list-equality-different-lengths",
+        "native/types/list-equality-empty-lists",
+        "native/operators/equal-lists"
+      ]
+    },
+    {
+      "id": "types-set-equality",
+      "spec": "spec.md#collection-types",
+      "rule": "Two sets of identical type are equal exactly when each holds every element of the other, in any order",
+      "tests": [
+        "native/types/set-equality-ignores-order",
+        "native/types/set-equality-different-elements",
+        "native/types/set-equality-subset-not-equal"
+      ]
+    },
+    {
+      "id": "types-map-equality",
+      "spec": "spec.md#collection-types",
+      "rule": "Two maps of identical type are equal exactly when they have the same keys with equal values",
+      "tests": [
+        "native/types/map-equality-equal-entries",
+        "native/types/map-equality-different-keys",
+        "native/types/map-equality-different-values",
+        "native/types/map-equality-subset-keys-not-equal"
+      ]
+    },
+    {
+      "id": "types-collection-type-identity",
+      "spec": "spec.md#collection-types",
+      "rule": "Collection types are identical only if they are of the same kind with identical element types, so collections of different kinds or element types are unequal, even when empty",
+      "tests": [
+        "native/types/equality-list-and-set-not-equal",
+        "native/types/list-equality-different-element-types",
+        "native/types/list-equality-empty-lists-of-different-element-types",
+        "native/operators/equal-tuple-and-list"
+      ]
+    },
+    {
+      "id": "types-capsule-type-identity",
+      "spec": "spec.md#capsule-types",
+      "rule": "A capsule type is identical only to itself, and the calling application defines equality of its values",
+      "untested": "The protocol has no encoding for capsule values, and implementations need not support capsule types"
+    },
+    {
+      "id": "types-capsule-no-operations",
+      "spec": "spec.md#capsule-types",
+      "rule": "No operations other than application-defined equality and application functions apply to capsule values",
+      "untested": "The protocol has no encoding for capsule values, and implementations need not support capsule types"
+    },
+    {
+      "id": "types-type-specification-matches-identical",
+      "spec": "spec.md#type-specifications",
+      "rule": "A type matches a type specification that is identical to it",
+      "untested": "Type specifications are only used for function parameters; needs test functions"
+    },
+    {
+      "id": "types-type-specification-matches-dynamic",
+      "spec": "spec.md#type-specifications",
+      "rule": "Any type matches the dynamic pseudo-type, also nested, so a list of strings matches a list of the dynamic pseudo-type while a set of strings doesn't",
+      "untested": "Type specifications are only used for function parameters; needs test functions"
+    },
+    {
+      "id": "types-null-equals-itself",
+      "spec": "spec.md#null-values",
+      "rule": "A null value is equal to a null of the same type",
+      "tests": [
+        "native/types/null-equality-null-string-equals-itself",
+        "native/types/tuple-equality-null-keyword-elements",
+        "native/operators/equal-null-and-null"
+      ]
+    },
+    {
+      "id": "types-null-not-equal-to-values",
+      "spec": "spec.md#null-values",
+      "rule": "A null value is not equal to any non-null value, including zero and the empty string",
+      "tests": [
+        "native/types/null-equality-null-string-not-empty-string",
+        "native/types/null-equality-null-number-not-zero",
+        "native/operators/equal-number-and-null"
+      ]
+    },
+    {
+      "id": "types-null-predicate-error",
+      "spec": "spec.md#null-values",
+      "rule": "A conditional whose predicate is null, whether the null keyword or a typed null, is an error (disputed)",
+      "tests": [
+        "native/types/null-bool-predicate-is-error",
+        "native/operators/conditional-null-condition",
+        "native/templates/if-condition-null-bool-is-error"
+      ]
+    },
+    {
+      "id": "types-null-operator-operand",
+      "spec": "spec.md#null-values",
+      "rule": "An arithmetic, comparison or logic operator with a null operand is an error, except that hashicorp/hcl's short circuits make null || true true, and null && true false because they treat the null as not true (disputed)",
+      "tests": [
+        "native/types/null-number-arithmetic-operand-is-error",
+        "native/operators/add-null-operand",
+        "native/operators/less-than-null-operand",
+        "native/operators/not-null-operand",
+        "native/operators/or-null-and-false-operands",
+        "native/operators/or-null-and-true-operands",
+        "native/operators/and-null-operand"
+      ]
+    },
+    {
+      "id": "types-null-interpolation",
+      "spec": "spec.md#null-values",
+      "rule": "Interpolating a null, whether the null keyword or a typed null, into a template with other parts is an error (disputed)",
+      "tests": [
+        "native/templates/interpolated-typed-null-is-error",
+        "native/templates/interpolated-null-is-error"
+      ]
+    },
+    {
+      "id": "types-null-index",
+      "spec": "spec.md#null-values",
+      "rule": "Indexing into a null collection is an error, even if its type can be indexed, and so is indexing with a null key",
+      "tests": [
+        "native/traversals/index-null-list-is-error",
+        "native/traversals/index-null-is-error",
+        "native/traversals/index-tuple-null-key-is-error",
+        "native/traversals/index-map-null-key-is-error"
+      ]
+    },
+    {
+      "id": "types-null-attribute",
+      "spec": "spec.md#null-values",
+      "rule": "Accessing an attribute of a null object is an error, even if the object type has that attribute",
+      "tests": [
+        "native/traversals/getattr-on-null-object-is-error",
+        "native/traversals/getattr-on-null-is-error"
+      ]
+    },
+    {
+      "id": "types-null-attribute-means-absent",
+      "spec": "spec.md#null-values",
+      "rule": "Calling applications should treat an attribute whose value is null as if it were absent",
+      "untested": "This is guidance for calling applications; the protocol reports every attribute's value, including nulls, and has no schema to apply it"
+    },
+    {
+      "id": "types-function-null-argument",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "A function call passing null to a parameter that doesn't accept null is an error",
+      "untested": "Needs test functions: the adapter's function table is empty, so every call fails as a call to an unknown function"
+    },
+    {
+      "id": "types-conversion-to-own-type",
+      "spec": "spec.md#type-conversions-and-unification",
+      "rule": "Converting a value to its own type leaves it unchanged",
+      "tests": [
+        "native/types/unify-identical-types-keeps-value"
+      ]
+    },
+    {
+      "id": "types-unsafe-conversion-can-fail",
+      "spec": "spec.md#type-conversions-and-unification",
+      "rule": "An unsafe conversion is an error for a source value that has no corresponding value in the target type",
+      "tests": [
+        "native/types/convert-hex-string-to-number-fails",
+        "native/operators/conditional-non-bool-string-condition",
+        "native/operators/add-non-numeric-string-operand"
+      ]
+    },
+    {
+      "id": "types-null-converts-to-any-type",
+      "spec": "spec.md#conversion-of-null-values",
+      "rule": "A null converts to a null of the target type, keeping the target type",
+      "tests": [
+        "native/types/unify-null-keyword-with-number",
+        "native/types/unify-null-keyword-in-false-branch",
+        "native/types/unify-null-keyword-with-tuple",
+        "native/types/unify-null-keyword-element-with-number",
+        "native/types/null-number-converts-to-null-string"
+      ]
+    },
+    {
+      "id": "types-null-conversion-needs-type-conversion",
+      "spec": "spec.md#conversion-of-null-values",
+      "rule": "A null converts to another type only if its own type converts to it, so a null number used as a || operand is an error (disputed)",
+      "tests": [
+        "native/types/null-number-or-operand-is-error"
+      ]
+    },
+    {
+      "id": "types-bool-to-string",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "true converts to the string true and false to the string false",
+      "tests": [
+        "native/templates/interpolated-bools",
+        "native/operators/conditional-unifies-false-result"
+      ]
+    },
+    {
+      "id": "types-string-to-bool",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "The strings true and 1 convert to true, and the strings false and 0 convert to false",
+      "tests": [
+        "native/types/convert-string-1-to-bool",
+        "native/types/convert-string-0-to-bool",
+        "native/operators/and-bool-string",
+        "native/operators/conditional-converts-string-condition",
+        "native/templates/if-condition-strings-one-and-zero"
+      ]
+    },
+    {
+      "id": "types-string-to-bool-rejects-other-strings",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "Any other string fails to convert to bool, including other capitalizations, added spaces, the empty string, other words and other spellings of one",
+      "tests": [
+        "native/types/convert-capitalized-true-to-bool-fails",
+        "native/types/convert-empty-string-to-bool-fails",
+        "native/types/convert-string-with-space-to-bool-fails",
+        "native/types/convert-string-1-point-0-to-bool-fails",
+        "native/operators/conditional-non-bool-string-condition"
+      ]
+    },
+    {
+      "id": "types-number-to-string-digits",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "A number converts to the decimal digits of its integer part, then a period and the fractional digits only if the fractional part isn't zero, with a minus sign for negative numbers",
+      "tests": [
+        "native/types/convert-zero-to-string",
+        "native/operators/conditional-unifies-result-types",
+        "native/templates/interpolated-integer",
+        "native/templates/interpolated-fraction",
+        "native/templates/interpolated-negative-integer",
+        "native/templates/interpolated-negative-fraction",
+        "native/templates/interpolated-number-drops-trailing-zeros",
+        "native/templates/interpolated-whole-number-has-no-period",
+        "native/templates/interpolated-number-from-negative-exponent"
+      ]
+    },
+    {
+      "id": "types-number-to-string-negative-zero",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "Negative zero converts to the string -0 (disputed)",
+      "tests": [
+        "native/templates/interpolated-negative-zero"
+      ]
+    },
+    {
+      "id": "types-number-to-string-infinity",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "Positive infinity converts to the string +Inf and negative infinity to -Inf (disputed)",
+      "tests": [
+        "native/templates/interpolated-infinity",
+        "native/templates/interpolated-negative-infinity"
+      ]
+    },
+    {
+      "id": "types-number-to-string-no-exponent",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "Number to string conversion never uses an exponent, however large or small the number",
+      "tests": [
+        "native/templates/interpolated-number-from-positive-exponent",
+        "native/templates/interpolated-number-from-negative-exponent",
+        "native/templates/interpolated-small-fraction-has-no-exponent",
+        "native/templates/interpolated-large-integer-keeps-all-digits"
+      ]
+    },
+    {
+      "id": "types-number-to-string-full-precision",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "Number to string conversion writes the number at full precision, including integers beyond 64 bits and binary fractions beyond float64 precision",
+      "tests": [
+        "native/templates/interpolated-fraction-keeps-full-precision",
+        "native/templates/interpolated-large-integer-keeps-all-digits"
+      ]
+    },
+    {
+      "id": "types-string-to-number",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "A string of decimal digits, optionally with a minus sign and a fractional part, converts to the number it spells, at full precision",
+      "tests": [
+        "native/types/convert-fraction-string-to-number",
+        "native/types/convert-negative-string-to-number",
+        "native/types/convert-long-integer-string-to-number",
+        "native/types/convert-string-with-leading-zeros-to-number",
+        "native/types/convert-string-with-trailing-zeros-to-number",
+        "native/operators/add-numeric-strings",
+        "native/traversals/index-tuple-string-key-converted"
+      ]
+    },
+    {
+      "id": "types-string-to-number-rejects-other-syntax",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "A string that isn't in the number syntax fails to convert to number: surrounding spaces, hexadecimal, underscores, NaN, non-ASCII digits and the empty string",
+      "tests": [
+        "native/types/convert-string-with-leading-space-to-number-fails",
+        "native/types/convert-string-with-trailing-space-to-number-fails",
+        "native/types/convert-hex-string-to-number-fails",
+        "native/types/convert-empty-string-to-number-fails",
+        "native/types/convert-string-with-underscore-to-number-fails",
+        "native/types/convert-nan-string-to-number-fails",
+        "native/types/convert-non-ascii-digit-string-to-number-fails",
+        "native/operators/add-non-numeric-string-operand"
+      ]
+    },
+    {
+      "id": "types-string-to-number-exponents",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "A string with a decimal exponent (e) or a binary exponent (p) converts to the number it spells (disputed)",
+      "tests": [
+        "native/types/convert-string-with-exponent-to-number",
+        "native/types/convert-string-with-binary-exponent-to-number"
+      ]
+    },
+    {
+      "id": "types-string-to-number-sign-and-period-forms",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "A string with a leading plus sign, a leading or trailing period, or the spelling inf converts to a number (disputed)",
+      "tests": [
+        "native/types/convert-string-with-leading-plus-to-number",
+        "native/types/convert-string-with-leading-period-to-number",
+        "native/types/convert-string-with-trailing-period-to-number",
+        "native/types/convert-inf-string-to-number"
+      ]
+    },
+    {
+      "id": "types-no-bool-number-conversion",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "There is no conversion in either direction between bool and number: not for operands, predicates, index keys or unification",
+      "tests": [
+        "native/types/unify-bool-and-number-fails",
+        "native/operators/add-bool-operand",
+        "native/operators/conditional-number-condition",
+        "native/traversals/index-tuple-bool-key-is-error"
+      ]
+    },
+    {
+      "id": "types-set-to-list-conversion",
+      "spec": "spec.md#collection-and-structural-type-conversions",
+      "rule": "A set converts to a list holding the same elements",
+      "tests": [
+        "native/types/unify-set-and-list-converts-set-to-list",
+        "native/types/unify-set-and-list-unifies-element-types"
+      ]
+    },
+    {
+      "id": "types-set-to-list-order",
+      "spec": "spec.md#collection-and-structural-type-conversions",
+      "rule": "Set elements become list elements in an order the spec leaves undefined",
+      "untested": "The order is implementation-defined, and a portable test can't depend on it"
+    },
+    {
+      "id": "types-set-to-list-consistent-order",
+      "spec": "spec.md#collection-and-structural-type-conversions",
+      "rule": "Converting the same set to a list more than once gives its elements in the same order each time",
+      "tests": [
+        "native/types/set-to-list-conversion-order-is-consistent"
+      ]
+    },
+    {
+      "id": "types-list-to-set-merges-equal-elements",
+      "spec": "spec.md#collection-and-structural-type-conversions",
+      "rule": "Converting a tuple with equal elements to a set keeps one of them, as hashicorp/hcl does when a set and a tuple unify to a set (disputed)",
+      "tests": [
+        "native/types/unify-set-and-tuple-merges-equal-elements"
+      ]
+    },
+    {
+      "id": "types-tuple-to-list-conversion",
+      "spec": "spec.md#collection-and-structural-type-conversions",
+      "rule": "A tuple converts to a list when every element converts to the list's element type, converting each element",
+      "tests": [
+        "native/types/unify-tuple-and-list-converts-tuple-to-list",
+        "native/types/unify-list-with-unconvertible-tuple-fails"
+      ]
+    },
+    {
+      "id": "types-object-to-map-conversion",
+      "spec": "spec.md#collection-and-structural-type-conversions",
+      "rule": "An object converts to a map when every attribute converts to the map's element type, with attribute names as keys",
+      "tests": [
+        "native/types/unify-map-and-object-gives-map",
+        "native/types/unify-map-with-unconvertible-object-fails"
+      ]
+    },
+    {
+      "id": "types-list-to-tuple-conversion",
+      "spec": "spec.md#collection-and-structural-type-conversions",
+      "rule": "hashicorp/hcl has no conversion from a list or set to a tuple, so a list never fails the spec's length check: a list and a tuple of another length unify to a list (disputed)",
+      "tests": [
+        "native/types/unify-list-and-tuple-of-other-length-gives-list"
+      ]
+    },
+    {
+      "id": "types-map-to-object-conversion",
+      "spec": "spec.md#collection-and-structural-type-conversions",
+      "rule": "hashicorp/hcl never converts a map to an object when unifying, so a map keeps its keys even when they don't match the object's attributes (disputed)",
+      "tests": [
+        "native/types/unify-map-and-object-keeps-map",
+        "native/types/unify-map-and-object-with-other-keys-gives-map"
+      ]
+    },
+    {
+      "id": "types-object-to-object-conversion",
+      "spec": "spec.md#collection-and-structural-type-conversions",
+      "rule": "An object converts to an object type with the same attribute names by converting each attribute value",
+      "tests": [
+        "native/types/unify-objects-unifies-common-attribute-types"
+      ]
+    },
+    {
+      "id": "types-object-to-object-missing-attributes",
+      "spec": "spec.md#collection-and-structural-type-conversions",
+      "rule": "hashicorp/hcl never converts an object to an object type with attributes it lacks, which the spec fills with null, because objects with different attribute names unify to a map (disputed)",
+      "tests": [
+        "native/types/unify-objects-with-different-attributes-gives-map"
+      ]
+    },
+    {
+      "id": "types-tuple-to-tuple-conversion",
+      "spec": "spec.md#collection-and-structural-type-conversions",
+      "rule": "A tuple converts to another tuple type of the same length when each element converts",
+      "tests": [
+        "native/types/unify-tuples-unifies-each-element",
+        "native/types/unify-tuples-with-ununifiable-elements-fails"
+      ]
+    },
+    {
+      "id": "types-collection-conversion-safety",
+      "spec": "spec.md#collection-and-structural-type-conversions",
+      "rule": "Converting a set of strings to a list of numbers is unsafe and fails for a string that isn't a number, which hashicorp/hcl attempts when a list of numbers and a set of strings unify (disputed)",
+      "tests": [
+        "native/types/unify-list-and-set-unifies-element-types"
+      ]
+    },
+    {
+      "id": "types-unify-prefers-safe-conversion",
+      "spec": "spec.md#type-unification",
+      "rule": "When two types convert to each other, unification picks the one reached by a safe conversion, so number or bool with string gives string, in either branch",
+      "tests": [
+        "native/operators/conditional-unifies-result-types",
+        "native/operators/conditional-unifies-false-result"
+      ]
+    },
+    {
+      "id": "types-unify-bool-and-number-fail",
+      "spec": "spec.md#type-unification",
+      "rule": "Bool and number have no unification rule and fail to unify, also as collection element types",
+      "tests": [
+        "native/types/unify-bool-and-number-fails",
+        "native/types/unify-lists-with-ununifiable-element-types-fails"
+      ]
+    },
+    {
+      "id": "types-unify-same-kind-collections",
+      "spec": "spec.md#type-unification",
+      "rule": "Two collection types of the same kind unify to that kind of collection of their unified element types, or fail if the element types don't unify",
+      "tests": [
+        "native/types/unify-lists-unifies-element-types",
+        "native/types/unify-maps-unifies-element-types",
+        "native/types/unify-sets-unifies-element-types",
+        "native/types/unify-lists-with-ununifiable-element-types-fails"
+      ]
+    },
+    {
+      "id": "types-unify-list-and-set",
+      "spec": "spec.md#type-unification",
+      "rule": "A list type and a set type with unifiable element types unify to a list type",
+      "tests": [
+        "native/types/unify-set-and-list-converts-set-to-list",
+        "native/types/unify-list-and-set-gives-list",
+        "native/types/unify-set-and-list-unifies-element-types"
+      ]
+    },
+    {
+      "id": "types-unify-list-and-set-element-types",
+      "spec": "spec.md#type-unification",
+      "rule": "A list of numbers and a set of strings unify to a list of numbers, because the set's strings convert to numbers unsafely (disputed)",
+      "tests": [
+        "native/types/unify-list-and-set-unifies-element-types"
+      ]
+    },
+    {
+      "id": "types-unify-map-and-object",
+      "spec": "spec.md#type-unification",
+      "rule": "A map type and an object type unify to a map type, converting the object (disputed)",
+      "tests": [
+        "native/types/unify-map-and-object-gives-map",
+        "native/types/unify-map-and-object-keeps-map",
+        "native/types/unify-map-and-object-with-other-keys-gives-map"
+      ]
+    },
+    {
+      "id": "types-unify-sequence-and-tuple",
+      "spec": "spec.md#type-unification",
+      "rule": "A list type and a tuple type unify to a list type, and a set type and a tuple type unify to a set type (disputed)",
+      "tests": [
+        "native/types/unify-list-and-tuple-gives-list",
+        "native/types/unify-tuple-and-list-converts-tuple-to-list",
+        "native/types/unify-list-and-tuple-of-other-length-gives-list",
+        "native/types/unify-set-and-tuple-gives-set",
+        "native/types/unify-set-and-tuple-merges-equal-elements"
+      ]
+    },
+    {
+      "id": "types-unify-dynamic-takes-other-type",
+      "spec": "spec.md#type-unification",
+      "rule": "The dynamic pseudo-type unifies with another type to that type, both for a whole result and for a tuple element of primitive type",
+      "tests": [
+        "native/types/unify-null-keyword-with-number",
+        "native/types/unify-null-keyword-in-false-branch",
+        "native/types/unify-null-keyword-with-tuple",
+        "native/types/unify-null-keyword-element-with-number"
+      ]
+    },
+    {
+      "id": "types-unify-dynamic-element-with-structural-type",
+      "spec": "spec.md#type-unification",
+      "rule": "A dynamic tuple element unified with an object element keeps the dynamic pseudo-type instead of taking the object type (disputed)",
+      "tests": [
+        "native/types/unify-null-keyword-element-with-object",
+        "native/unknowns/conditional-dynamic-element-with-object-stays-dynamic"
+      ]
+    },
+    {
+      "id": "types-unify-all-dynamic",
+      "spec": "spec.md#type-unification",
+      "rule": "Unifying only dynamic pseudo-types gives the dynamic pseudo-type",
+      "tests": [
+        "native/types/unify-two-null-keywords-gives-dynamic",
+        "native/types/unify-tuples-of-null-keywords-keeps-dynamic-elements"
+      ]
+    },
+    {
+      "id": "types-unify-objects-same-attributes",
+      "spec": "spec.md#type-unification",
+      "rule": "Two object types with the same attribute names unify attribute by attribute to an object type, or fail if some attribute types don't unify",
+      "tests": [
+        "native/types/unify-objects-unifies-common-attribute-types",
+        "native/types/unify-objects-with-ununifiable-common-attribute-fails",
+        "native/types/unify-objects-produces-new-type"
+      ]
+    },
+    {
+      "id": "types-unify-objects-different-attributes",
+      "spec": "spec.md#type-unification",
+      "rule": "Two object types with different attribute names unify to a map of their unified attribute types, or fail if those types don't unify (disputed)",
+      "tests": [
+        "native/types/unify-objects-with-different-attributes-gives-map",
+        "native/types/unify-objects-with-different-attribute-types-fails"
+      ]
+    },
+    {
+      "id": "types-unify-tuples",
+      "spec": "spec.md#type-unification",
+      "rule": "Two tuple types of the same length unify element by element to a tuple type, or fail if some element types don't unify",
+      "tests": [
+        "native/types/unify-tuples-unifies-each-element",
+        "native/types/unify-tuples-produces-new-type",
+        "native/types/unify-tuples-with-ununifiable-elements-fails"
+      ]
+    },
+    {
+      "id": "types-unify-tuples-of-different-lengths",
+      "spec": "spec.md#type-unification",
+      "rule": "Tuple types of different lengths unify to a list of their unified element types (disputed)",
+      "tests": [
+        "native/types/unify-tuples-of-different-lengths-gives-list"
+      ]
+    },
+    {
+      "id": "types-unify-new-type",
+      "spec": "spec.md#type-unification",
+      "rule": "Unification can produce a type that is none of its input types",
+      "tests": [
+        "native/types/unify-objects-produces-new-type",
+        "native/types/unify-tuples-produces-new-type"
+      ]
+    },
+    {
+      "id": "types-unify-requires-conversion",
+      "spec": "spec.md#type-unification",
+      "rule": "Unification fails if one of the types can't convert to the type the rules select",
+      "tests": [
+        "native/types/unify-list-with-unconvertible-tuple-fails",
+        "native/types/unify-map-with-unconvertible-object-fails"
+      ]
+    },
+    {
+      "id": "types-unify-unrelated-kinds",
+      "spec": "spec.md#type-unification",
+      "rule": "Types whose kinds have no unification rule, such as tuple and object, list and map, or a primitive and a structural type, fail to unify",
+      "tests": [
+        "native/types/unify-tuple-and-object-fails",
+        "native/types/unify-list-and-map-fails",
+        "native/operators/conditional-result-types-must-unify"
+      ]
+    },
+    {
+      "id": "types-unify-transitive",
+      "spec": "spec.md#type-unification",
+      "rule": "Unification rules combine: a set of numbers and a list of strings unify to a list of strings",
+      "tests": [
+        "native/types/unify-set-and-list-unifies-element-types"
+      ]
+    },
+    {
+      "id": "types-collections-from-variables",
+      "spec": "hclsyntax/spec.md#types",
+      "rule": "List, set and map values have no native syntax, but values from variables keep their collection types, including nested ones",
+      "tests": [
+        "native/types/unify-identical-types-keeps-value",
+        "native/traversals/variable-nested-collection-value"
+      ]
+    },
+    {
+      "id": "types-null-keyword-is-dynamic",
+      "spec": "hclsyntax/spec.md#literal-values",
+      "rule": "The null keyword is a null of the dynamic pseudo-type",
+      "tests": [
+        "native/types/equality-nested-null-string-and-null-keyword",
+        "native/types/unify-two-null-keywords-gives-dynamic"
+      ]
+    }
+  ]
+}

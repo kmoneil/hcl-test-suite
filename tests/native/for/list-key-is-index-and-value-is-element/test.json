@@ -1,0 +1,56 @@
+{
+  "description": "For a list, the key variable holds the zero-based index and the value variable the element",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#collection-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "string": "x"
+        },
+        {
+          "string": "y"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "tuple": [
+                {
+                  "number": "0"
+                },
+                {
+                  "string": "x"
+                }
+              ]
+            },
+            {
+              "tuple": [
+                {
+                  "number": "1"
+                },
+                {
+                  "string": "y"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

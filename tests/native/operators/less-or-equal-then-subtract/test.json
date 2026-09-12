@@ -1,0 +1,19 @@
+{
+  "description": "In 1 <= 3 - 2 the - applies first, giving true",
+  "spec": [
+    "hclsyntax/spec.md#operations",
+    "hclsyntax/spec.md#comparison-operators"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

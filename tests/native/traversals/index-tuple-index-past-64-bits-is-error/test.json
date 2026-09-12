@@ -1,0 +1,28 @@
+{
+  "description": "An index of 2^64 + 1 is out of range rather than wrapping around to 1",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#primitive-types"
+  ],
+  "op": "eval",
+  "variables": {
+    "t": {
+      "tuple": [
+        {
+          "string": "x"
+        },
+        {
+          "string": "y"
+        },
+        {
+          "string": "z"
+        }
+      ]
+    }
+  },
+  "reference_error": "does not identify an element in this collection value.",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

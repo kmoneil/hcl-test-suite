@@ -1,0 +1,32 @@
+{
+  "description": "A heredoc can be the value of an attribute inside a block",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions",
+    "hclsyntax/spec.md#blocks",
+    "hclsyntax/spec.md#attribute-definitions"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "a": {
+                "kind": "literal",
+                "value": {
+                  "string": "x\n"
+                }
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

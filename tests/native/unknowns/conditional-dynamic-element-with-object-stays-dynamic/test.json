@@ -1,0 +1,35 @@
+{
+  "description": "A dynamic tuple element unified with an object element stays the dynamic value",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator",
+    "spec.md#type-unification",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says the dynamic pseudo-type unifies with any other type to that type, so the element should become an unknown object. go-cty gives up on element types that are all objects or dynamic and chooses the dynamic pseudo-type (unifyAllAsDynamic, called from unifyObjectTypes in cty/convert/unify.go), while a dynamic element and a number element unify to number (conditional-dynamic-element-unifies-with-number). An implementation whose unknown values are all dynamic would pass regardless, hence typed-values.",
+  "variables": {
+    "d": {
+      "unknown": "dynamic"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "unknown": "dynamic"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

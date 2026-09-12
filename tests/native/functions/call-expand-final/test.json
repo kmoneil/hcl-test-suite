@@ -1,0 +1,26 @@
+{
+  "description": "An ellipsis after the only argument of a call marks it for expansion",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "call",
+          "name": "f",
+          "args": [
+            {
+              "kind": "variable",
+              "name": "args"
+            }
+          ],
+          "expand_final": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "description": "An attribute and a block in the same body can have the same name",
+  "spec": [
+    "hclsyntax/spec.md#attribute-definitions",
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "parse",
+  "notes": "spec.md says a schema cannot request both, because some syntaxes (such as JSON) combine the two namespaces. The native syntax keeps them apart, and only attribute names must be unique.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "literal",
+          "value": {
+            "number": "1"
+          }
+        }
+      },
+      "blocks": [
+        {
+          "type": "a",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

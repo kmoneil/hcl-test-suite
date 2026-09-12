@@ -1,0 +1,19 @@
+{
+  "description": "The escape \\U0010FFFF produces the highest Unicode code point",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "notes": "U+10FFFF is a noncharacter, but it is still a Unicode scalar value that a string can contain.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "􏿿"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

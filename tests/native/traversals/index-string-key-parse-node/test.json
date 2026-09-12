@@ -1,0 +1,28 @@
+{
+  "description": "An index with a quoted string key parses as an index node, not as an attribute access",
+  "spec": [
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "index",
+          "collection": {
+            "kind": "variable",
+            "name": "o"
+          },
+          "key": {
+            "kind": "literal",
+            "value": {
+              "string": "b"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

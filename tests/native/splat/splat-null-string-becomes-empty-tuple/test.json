@@ -1,0 +1,27 @@
+{
+  "description": "A full splat applied to a null string produces an empty tuple",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators",
+    "spec.md#null-values"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "v": {
+      "null": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": []
+        }
+      },
+      "blocks": []
+    }
+  }
+}

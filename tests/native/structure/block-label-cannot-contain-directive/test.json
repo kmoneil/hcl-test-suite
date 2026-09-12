@@ -1,0 +1,12 @@
+{
+  "description": "A quoted block label cannot contain a template directive",
+  "spec": [
+    "hclsyntax/spec.md#blocks",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "reference_error": "To include a literal \"%\", double it",
+  "expect": {
+    "valid": false
+  }
+}

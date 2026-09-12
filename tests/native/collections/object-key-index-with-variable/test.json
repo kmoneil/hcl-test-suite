@@ -1,0 +1,35 @@
+{
+  "description": "An unparenthesized index with a variable key can be an object key",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "eval",
+  "notes": "Only a bare identifier is a literal name. hashicorp/hcl evaluates this key normally because an index with a variable key is not a traversal, unlike k[0] (see object-key-bare-index).",
+  "variables": {
+    "k": {
+      "tuple": [
+        {
+          "string": "x"
+        }
+      ]
+    },
+    "i": {
+      "number": "0"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "x": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

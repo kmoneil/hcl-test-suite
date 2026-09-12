@@ -1,0 +1,14 @@
+{
+  "description": "The string \"TRUE\" as an if condition is an error because conversion is case-sensitive",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive",
+    "hclsyntax/spec.md#conditional-operator",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "reference_error": "Incorrect condition type",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "description": "A function call without a closing parenthesis is an error",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "parse",
+  "reference_error": "Unterminated function call",
+  "expect": {
+    "valid": false
+  }
+}

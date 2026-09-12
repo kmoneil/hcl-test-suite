@@ -1,0 +1,30 @@
+{
+  "description": "Evaluating a file evaluates the attributes inside its blocks",
+  "spec": [
+    "hclsyntax/spec.md#attribute-definitions",
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "block",
+          "labels": [
+            "x"
+          ],
+          "body": {
+            "attributes": {
+              "a": {
+                "number": "2"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

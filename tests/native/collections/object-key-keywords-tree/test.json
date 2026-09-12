@@ -1,0 +1,65 @@
+{
+  "description": "The bare keys true, false and null are literal names in the syntax tree",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#keywords"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec says a bare identifier used as an object key is a literal attribute name, but also that a keyword's role supersedes any other interpretation where it is reserved, and true, false and null are literal values in expressions. So these keys could also be the literal values true, false and null. The hclsyntax tree itself keeps them as literal values wrapped in ObjectConsKeyExpr; hashicorp/hcl only reads them as names through hcl.ExprAsKeyword (ObjectConsKeyExpr.literalName and LiteralValueExpr.AsTraversal in hclsyntax/expression.go). The protocol follows that: its section on expression trees in docs/protocol.md makes such keys literal strings.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "object",
+          "items": [
+            {
+              "key": {
+                "kind": "literal",
+                "value": {
+                  "string": "true"
+                }
+              },
+              "value": {
+                "kind": "literal",
+                "value": {
+                  "number": "1"
+                }
+              }
+            },
+            {
+              "key": {
+                "kind": "literal",
+                "value": {
+                  "string": "false"
+                }
+              },
+              "value": {
+                "kind": "literal",
+                "value": {
+                  "number": "2"
+                }
+              }
+            },
+            {
+              "key": {
+                "kind": "literal",
+                "value": {
+                  "string": "null"
+                }
+              },
+              "value": {
+                "kind": "literal",
+                "value": {
+                  "number": "3"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

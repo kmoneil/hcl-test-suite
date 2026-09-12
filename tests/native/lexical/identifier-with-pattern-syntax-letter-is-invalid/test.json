@@ -1,0 +1,11 @@
+{
+  "description": "U+2E2F VERTICAL TILDE is not an identifier character, though it's a letter",
+  "spec": [
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "parse",
+  "reference_error": "This character is not used within the language",
+  "expect": {
+    "valid": false
+  }
+}

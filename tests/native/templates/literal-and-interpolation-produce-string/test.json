@@ -1,0 +1,18 @@
+{
+  "description": "A literal followed by a bool interpolation produces a string",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolation-unwrapping"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "hello true"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

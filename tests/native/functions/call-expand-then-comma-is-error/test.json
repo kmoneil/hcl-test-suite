@@ -1,0 +1,11 @@
+{
+  "description": "An ellipsis cannot be followed by a trailing comma",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "parse",
+  "reference_error": "Missing closing parenthesis",
+  "expect": {
+    "valid": false
+  }
+}

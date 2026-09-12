@@ -1,0 +1,19 @@
+{
+  "description": "Strip markers on a lone interpolation do not prevent unwrapping",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolation-unwrapping",
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1.5"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "description": "A newline after a full splat ends the attribute, so an attribute access on the next line is an error",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "reference_error": "Argument or block definition required",
+  "expect": {
+    "valid": false
+  }
+}

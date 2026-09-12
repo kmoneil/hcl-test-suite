@@ -1,0 +1,14 @@
+{
+  "description": "A newline between an equals sign and the object value is an error",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#syntax-notation"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The prose says newlines between the braces of an object constructor are ignored as whitespace. hashicorp/hcl makes newlines significant inside object constructors, so the value can't start on the line after the equals sign (parseObjectCons in hclsyntax/parser.go).",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

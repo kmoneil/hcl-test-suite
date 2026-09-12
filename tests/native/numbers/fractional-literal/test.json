@@ -1,0 +1,21 @@
+{
+  "description": "A numeric literal can have a fractional part after a point",
+  "spec": [
+    "hclsyntax/spec.md#numeric-literals"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "literal",
+          "value": {
+            "number": "1.25"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

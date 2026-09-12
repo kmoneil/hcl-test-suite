@@ -1,0 +1,27 @@
+{
+  "description": "A block's type, quoted labels and opening brace need no spaces between them",
+  "spec": [
+    "hclsyntax/spec.md#blocks",
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "block",
+          "labels": [
+            "x",
+            "y"
+          ],
+          "body": {
+            "attributes": {},
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

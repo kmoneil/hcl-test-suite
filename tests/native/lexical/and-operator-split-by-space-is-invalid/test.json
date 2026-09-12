@@ -1,0 +1,11 @@
+{
+  "description": "A space between two ampersands makes two tokens rather than the && operator",
+  "spec": [
+    "hclsyntax/spec.md#operators-and-delimiters"
+  ],
+  "op": "parse",
+  "reference_error": "Did you mean boolean AND",
+  "expect": {
+    "valid": false
+  }
+}

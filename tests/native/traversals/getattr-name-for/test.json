@@ -1,0 +1,28 @@
+{
+  "description": "Attribute access can look up an attribute named for",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator",
+    "hclsyntax/spec.md#keywords"
+  ],
+  "op": "eval",
+  "variables": {
+    "o": {
+      "object": {
+        "for": {
+          "string": "x"
+        }
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

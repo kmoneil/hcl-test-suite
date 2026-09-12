@@ -1,0 +1,11 @@
+{
+  "description": "A dot at the end of an expression, without an attribute name, is an error",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid attribute name",
+  "expect": {
+    "valid": false
+  }
+}

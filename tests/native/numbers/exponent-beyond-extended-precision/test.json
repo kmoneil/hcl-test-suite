@@ -1,0 +1,21 @@
+{
+  "description": "Numbers around 10^9000 can be compared, since binary exponents have at least 16 bits",
+  "spec": [
+    "spec.md#primitive-types",
+    "hclsyntax/spec.md#comparison-operators"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "10^9000 is an integer by value, but written with an exponent. The spec gives integers at least 256 bits, with an error for an integer in source that can't be represented exactly, and gives non-integers a binary exponent of at least 16 bits, rounding values that need more precision. It doesn't say whether a literal's value or its written form decides which rule applies: by value, an implementation with exactly 256-bit integers must reject 1e9000, while as a number written with an exponent it is rounded and the comparison is true. hashicorp/hcl parses every literal as a 512-bit math/big float (cty.ParseNumberVal), so the comparison is true.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

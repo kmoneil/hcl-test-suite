@@ -1,0 +1,35 @@
+{
+  "description": "An iteration variable may be named for and used in the element expression",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "hclsyntax/spec.md#keywords"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec says that where an identifier works as a keyword, its keyword role supersedes any other interpretation, and a for expression is a place where for, in and if work as keywords, so an iteration variable named for could be invalid. hashicorp/hcl accepts it: finishParsingForExpr in hclsyntax/parser.go only checks for TokenIdent where it expects a variable name. The element expression is parsed by parseExpressionTerm, which reads for as a variable.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "for",
+          "result": "tuple",
+          "key_var": null,
+          "value_var": "for",
+          "collection": {
+            "kind": "variable",
+            "name": "xs"
+          },
+          "key": null,
+          "value": {
+            "kind": "variable",
+            "name": "for"
+          },
+          "condition": null,
+          "grouping": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

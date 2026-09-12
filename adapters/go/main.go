@@ -87,7 +87,7 @@ func capabilities() object {
 		"implementation": "hashicorp/hcl",
 		"version":        version,
 		"operations":     []string{"parse", "eval"},
-		"features":       []string{"unknown-values"},
+		"features":       []string{"typed-values", "unknown-values"},
 	}
 }
 
@@ -477,6 +477,12 @@ func decodeValue(data json.RawMessage) (cty.Value, error) {
 			if err := json.Unmarshal(raw, &s); err != nil {
 				return cty.NilVal, err
 			}
+			switch s {
+			case "Infinity":
+				return cty.PositiveInfinity, nil
+			case "-Infinity":
+				return cty.NegativeInfinity, nil
+			}
 			return cty.ParseNumberVal(s)
 		case "bool":
 			var b bool
@@ -530,6 +536,11 @@ func sequence(kind string, rawType json.RawMessage, elems []cty.Value) (v cty.Va
 	if err != nil {
 		return cty.NilVal, fmt.Errorf("%s element_type: %w", kind, err)
 	}
+	for i, elem := range elems {
+		if !elem.Type().Equals(ety) {
+			return cty.NilVal, fmt.Errorf("%s element %d is %s, but element_type is %s", kind, i, elem.Type().FriendlyName(), ety.FriendlyName())
+		}
+	}
 	defer recoverInvalid(kind, &err) // cty panics if elements don't match
 	switch {
 	case kind == "list" && len(elems) == 0:
@@ -549,6 +560,11 @@ func mapping(kind string, rawType json.RawMessage, attrs map[string]cty.Value) (
 	ety, err := ctyjson.UnmarshalType(rawType)
 	if err != nil {
 		return cty.NilVal, fmt.Errorf("map element_type: %w", err)
+	}
+	for key, elem := range attrs {
+		if !elem.Type().Equals(ety) {
+			return cty.NilVal, fmt.Errorf("map element %q is %s, but element_type is %s", key, elem.Type().FriendlyName(), ety.FriendlyName())
+		}
 	}
 	defer recoverInvalid(kind, &err)
 	if len(attrs) == 0 {

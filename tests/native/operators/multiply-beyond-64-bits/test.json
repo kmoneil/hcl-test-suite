@@ -1,0 +1,19 @@
+{
+  "description": "Multiplication is exact when the product needs 128 bits",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators",
+    "spec.md#primitive-types"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "340282366920938463426481119284349108225"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "description": "1 < 2 < 3 is an error, because it compares the bool result of 1 < 2 with 3",
+  "spec": [
+    "hclsyntax/spec.md#operations",
+    "hclsyntax/spec.md#comparison-operators"
+  ],
+  "op": "eval",
+  "reference_error": "Unsuitable value for left operand: number required, but have bool",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

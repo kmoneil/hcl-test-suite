@@ -1,0 +1,43 @@
+{
+  "description": "An ellipsis inside a function call in the value expression doesn't turn on grouping",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "for",
+          "result": "object",
+          "key_var": "k",
+          "value_var": "v",
+          "collection": {
+            "kind": "variable",
+            "name": "xs"
+          },
+          "key": {
+            "kind": "variable",
+            "name": "k"
+          },
+          "value": {
+            "kind": "call",
+            "name": "f",
+            "args": [
+              {
+                "kind": "variable",
+                "name": "v"
+              }
+            ],
+            "expand_final": true
+          },
+          "condition": null,
+          "grouping": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

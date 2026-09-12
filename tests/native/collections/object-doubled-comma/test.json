@@ -1,0 +1,11 @@
+{
+  "description": "Two commas in a row between object elements are an error",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

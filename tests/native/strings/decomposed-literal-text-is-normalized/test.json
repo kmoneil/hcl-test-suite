@@ -1,0 +1,29 @@
+{
+  "description": "A decomposed é written in a quoted key is normalized, so the key sorts after f",
+  "spec": [
+    "hclsyntax/spec.md#source-code-representation",
+    "spec.md#primitive-types",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The key is e followed by U+0301 COMBINING ACUTE ACCENT, written as raw text. The spec promises special handling of Unicode normalization for string literals (Source Code Representation) but never describes it, and otherwise only says that strings are equal when their NFC forms are. hashicorp/hcl normalizes every string value to NFC when it creates it (NormalizeString in go-cty's cty/value_init.go), so the key becomes U+00E9, which the for expression visits after f (sort.Strings in cty/element_iterator.go). A key kept as written would sort before f and give [1, 2].",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "number": "2"
+            },
+            {
+              "number": "1"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

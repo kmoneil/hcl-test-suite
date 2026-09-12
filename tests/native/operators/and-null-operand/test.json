@@ -1,0 +1,22 @@
+{
+  "description": "An && with a null first operand and a true second operand is false",
+  "spec": [
+    "hclsyntax/spec.md#logic-operators",
+    "spec.md#null-values",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec contradicts itself here. The Logic Operators section says that an operand of the dynamic pseudo-type makes the result unknown, and the null keyword is a null of that type, but the section on unknown values says: \"Calling applications are guaranteed that unless the global scope includes unknown values, or the function table includes functions that return unknown values, no expression will evaluate to an unknown value.\" hashicorp/hcl returns false without an error: the ShortCircuit function of OpLogicalAnd (hclsyntax/expression_ops.go) checks lhs.False(), which cty defines as !True() (cty/value_ops.go), so it holds for a null.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

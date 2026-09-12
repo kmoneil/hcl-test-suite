@@ -1,0 +1,33 @@
+{
+  "description": "A minus sign directly after a number is subtraction, since a numeric literal has no sign",
+  "spec": [
+    "hclsyntax/spec.md#numeric-literals",
+    "hclsyntax/spec.md#operations"
+  ],
+  "op": "parse",
+  "notes": "The runner treats negation of a number literal the same as a negative literal, so this checks the sign rule through a minus that can only be an operator.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "binary",
+          "operator": "-",
+          "left": {
+            "kind": "literal",
+            "value": {
+              "number": "5"
+            }
+          },
+          "right": {
+            "kind": "literal",
+            "value": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

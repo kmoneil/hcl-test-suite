@@ -1,0 +1,20 @@
+{
+  "description": "A strip marker removes the line separator U+2028 and paragraph separator U+2029",
+  "spec": [
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says strip markers remove spaces, \"interpreted as per Unicode's definition\", without saying which definition it means. The line separator U+2028 and paragraph separator U+2029 have the White_Space property but are not space separators (category Zs): they are in categories Zl and Zp. Stripping them is hashicorp/hcl's reading: parseTemplateParts in hclsyntax/parser_template.go trims with Go's unicode.IsSpace, which follows the White_Space property.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "ab"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

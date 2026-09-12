@@ -1,0 +1,22 @@
+{
+  "description": "Adding an unknown number to a string that isn't a number is an error",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "number"
+    }
+  },
+  "reference_error": "right operand: a number is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

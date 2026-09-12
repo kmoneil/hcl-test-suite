@@ -1,0 +1,14 @@
+{
+  "description": "A key that evaluates to an object is an error",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "spec.md#structural-types"
+  ],
+  "op": "eval",
+  "notes": "Attribute names are strings, and there is no conversion from an object to a string.",
+  "reference_error": "string required, but have object",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

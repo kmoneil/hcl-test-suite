@@ -1,0 +1,11 @@
+{
+  "description": "A for directive whose variable is a number is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive"
+  ],
+  "op": "parse",
+  "reference_error": "requires variable name after 'for'",
+  "expect": {
+    "valid": false
+  }
+}

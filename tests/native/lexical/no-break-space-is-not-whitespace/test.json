@@ -1,0 +1,11 @@
+{
+  "description": "U+00A0 NO-BREAK SPACE is not whitespace",
+  "spec": [
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "reference_error": "This character is not used within the language",
+  "expect": {
+    "valid": false
+  }
+}

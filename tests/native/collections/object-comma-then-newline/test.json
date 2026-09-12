@@ -1,0 +1,49 @@
+{
+  "description": "A comma followed by a newline separates object elements",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "notes": "The grammar has no place for a newline here, but the prose says newlines between the delimiters of a collection constructor are ignored as whitespace, and prose has priority over the grammar.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "object",
+          "items": [
+            {
+              "key": {
+                "kind": "literal",
+                "value": {
+                  "string": "b"
+                }
+              },
+              "value": {
+                "kind": "literal",
+                "value": {
+                  "number": "1"
+                }
+              }
+            },
+            {
+              "key": {
+                "kind": "literal",
+                "value": {
+                  "string": "c"
+                }
+              },
+              "value": {
+                "kind": "literal",
+                "value": {
+                  "number": "2"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

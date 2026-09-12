@@ -1,0 +1,37 @@
+{
+  "description": "The attribute value in a one-line block can be a template containing an interpolation",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "block",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "a": {
+                "kind": "template",
+                "parts": [
+                  {
+                    "kind": "interpolation",
+                    "expr": {
+                      "kind": "variable",
+                      "name": "b"
+                    }
+                  }
+                ]
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

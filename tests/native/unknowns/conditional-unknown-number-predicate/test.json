@@ -1,0 +1,30 @@
+{
+  "description": "A conditional with an unknown number predicate gives an unknown result",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec requires a bool predicate and gives an unknown result only for an unknown bool or the dynamic value; a number never converts to bool, so this should be an error. hashicorp/hcl returns an unknown result because ConditionalExpr.Value (hclsyntax/expression.go) checks whether the predicate is known before converting it to bool.",
+  "variables": {
+    "u": {
+      "unknown": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "number"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

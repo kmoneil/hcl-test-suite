@@ -1,0 +1,20 @@
+{
+  "description": "A tab after the closing marker does not stop it from ending the heredoc",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says the marker must appear on a line of its own and doesn't say whether whitespace may follow it on that line. hashicorp/hcl compares each candidate line with its leading and trailing Unicode whitespace removed by bytes.TrimSpace, for both heredoc forms (the heredocLiteralEOL action in hclsyntax/scan_tokens.rl).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "hello\n"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

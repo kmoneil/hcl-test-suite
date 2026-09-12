@@ -1,0 +1,38 @@
+{
+  "description": "An index after a full splat's attribute access is part of its each expression",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "splat",
+          "source": {
+            "kind": "variable",
+            "name": "t"
+          },
+          "each": {
+            "kind": "index",
+            "collection": {
+              "kind": "get_attr",
+              "object": {
+                "kind": "splat_item"
+              },
+              "name": "b"
+            },
+            "key": {
+              "kind": "literal",
+              "value": {
+                "number": "0"
+              }
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

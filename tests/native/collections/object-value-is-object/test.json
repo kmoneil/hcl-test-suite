@@ -1,0 +1,27 @@
+{
+  "description": "An object constructor whose values share a type still produces an object, not a map",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "spec.md#structural-types"
+  ],
+  "op": "eval",
+  "notes": "Only tuple and object values can be constructed directly by native syntax.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "b": {
+              "number": "1"
+            },
+            "c": {
+              "number": "2"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

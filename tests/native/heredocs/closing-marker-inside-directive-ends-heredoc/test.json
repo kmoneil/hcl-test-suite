@@ -1,0 +1,12 @@
+{
+  "description": "A closing marker line inside an if directive's body ends the heredoc before the endif",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions",
+    "hclsyntax/spec.md#template-if-directive"
+  ],
+  "op": "parse",
+  "reference_error": "is missing its corresponding endif directive",
+  "expect": {
+    "valid": false
+  }
+}

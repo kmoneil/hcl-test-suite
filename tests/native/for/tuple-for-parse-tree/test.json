@@ -1,0 +1,32 @@
+{
+  "description": "A tuple for expression with one variable is a for node with result tuple and no key",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "for",
+          "result": "tuple",
+          "key_var": null,
+          "value_var": "v",
+          "collection": {
+            "kind": "variable",
+            "name": "xs"
+          },
+          "key": null,
+          "value": {
+            "kind": "variable",
+            "name": "v"
+          },
+          "condition": null,
+          "grouping": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "description": "An empty pair of brackets is a tuple constructor with no elements",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "tuple",
+          "elements": []
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "description": "The null keyword unified with a tuple becomes a null of that tuple type",
+  "spec": [
+    "spec.md#conversion-of-null-values",
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "null": [
+            "tuple",
+            [
+              "number"
+            ]
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

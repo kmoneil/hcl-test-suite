@@ -1,0 +1,19 @@
+{
+  "description": "Division is exact when the quotient doesn't fit in 64 bits",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators",
+    "spec.md#primitive-types"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "36893488147419103230"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

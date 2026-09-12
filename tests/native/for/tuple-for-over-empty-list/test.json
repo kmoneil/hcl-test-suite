@@ -1,0 +1,28 @@
+{
+  "description": "A tuple for expression over an empty list produces an empty tuple",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#collection-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "l": {
+      "list": [],
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": []
+        }
+      },
+      "blocks": []
+    }
+  }
+}

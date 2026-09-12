@@ -1,0 +1,22 @@
+{
+  "description": "<<- removes leading tabs as indentation",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions",
+    "hclsyntax/spec.md#comments-and-whitespace",
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says <<- removes leading spaces without saying which characters count as spaces: Comments and Whitespace treats tabs as whitespace as well as U+0020, and Template Literals interprets space characters by Unicode's definition for strip markers. hashicorp/hcl counts any leading Unicode whitespace, tabs included, as one character of indentation (flushHeredocTemplateParts in hclsyntax/parser_template.go uses unicode.IsSpace). If only U+0020 counted, nothing would be removed.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "a\n\tb\n"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "description": "A key that is a null string is an error",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "spec.md#null-values"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "notes": "The key already has type string, but a null value has no string to name an attribute with.",
+  "variables": {
+    "k": {
+      "null": "string"
+    }
+  },
+  "reference_error": "Null value as key",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

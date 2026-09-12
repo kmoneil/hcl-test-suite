@@ -1,0 +1,28 @@
+{
+  "description": "A string key with a combining accent selects the object attribute named with the precomposed form",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#primitive-types"
+  ],
+  "op": "eval",
+  "variables": {
+    "o": {
+      "object": {
+        "café": {
+          "string": "x"
+        }
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

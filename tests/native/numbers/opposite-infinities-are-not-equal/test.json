@@ -1,0 +1,27 @@
+{
+  "description": "Positive and negative infinity are not equal",
+  "spec": [
+    "spec.md#primitive-types",
+    "hclsyntax/spec.md#comparison-operators"
+  ],
+  "op": "eval",
+  "variables": {
+    "inf": {
+      "number": "Infinity"
+    },
+    "neg_inf": {
+      "number": "-Infinity"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

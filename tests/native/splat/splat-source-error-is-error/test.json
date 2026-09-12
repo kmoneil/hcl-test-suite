@@ -1,0 +1,13 @@
+{
+  "description": "A full splat is an error when its source can't be evaluated, rather than giving an empty tuple",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators",
+    "hclsyntax/spec.md#variables-and-variable-expressions"
+  ],
+  "op": "eval",
+  "reference_error": "Unknown variable: There is no variable named \"nope\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

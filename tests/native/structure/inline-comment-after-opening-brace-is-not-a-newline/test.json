@@ -1,0 +1,13 @@
+{
+  "description": "An inline comment spanning lines after an opening brace does not start a multi-line block body",
+  "spec": [
+    "hclsyntax/spec.md#comments-and-whitespace",
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "notes": "The inline comment is whitespace, so the attribute is on the opening brace's line and makes this a one-line block, which has to close on that line.",
+  "reference_error": "which must also be closed on the same line",
+  "expect": {
+    "valid": false
+  }
+}

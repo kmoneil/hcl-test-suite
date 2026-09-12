@@ -1,0 +1,53 @@
+{
+  "description": "A quoted template inside an interpolation is a nested template node",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "literal",
+              "value": {
+                "string": "<"
+              }
+            },
+            {
+              "kind": "interpolation",
+              "expr": {
+                "kind": "template",
+                "parts": [
+                  {
+                    "kind": "literal",
+                    "value": {
+                      "string": "x"
+                    }
+                  },
+                  {
+                    "kind": "interpolation",
+                    "expr": {
+                      "kind": "variable",
+                      "name": "y"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "kind": "literal",
+              "value": {
+                "string": ">"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

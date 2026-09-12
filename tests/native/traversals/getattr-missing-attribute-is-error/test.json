@@ -1,0 +1,21 @@
+{
+  "description": "Accessing an attribute that an object does not have is an error",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator"
+  ],
+  "op": "eval",
+  "variables": {
+    "o": {
+      "object": {
+        "b": {
+          "number": "1"
+        }
+      }
+    }
+  },
+  "reference_error": "does not have an attribute named \"c\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

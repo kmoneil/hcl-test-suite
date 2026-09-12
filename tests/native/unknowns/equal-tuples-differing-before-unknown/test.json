@@ -1,0 +1,29 @@
+{
+  "description": "Tuples that differ before an unknown element are not equal",
+  "spec": [
+    "hclsyntax/spec.md#comparison-operators",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "notes": "Tuples are equal only if all corresponding elements are equal, and the first elements already differ, so the unknown element can't make them equal.",
+  "variables": {
+    "u": {
+      "unknown": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

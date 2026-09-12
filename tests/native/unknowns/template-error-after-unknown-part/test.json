@@ -1,0 +1,23 @@
+{
+  "description": "An unknown part doesn't hide a part that can't convert to a string",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations",
+    "hclsyntax/spec.md#templates",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "string"
+    }
+  },
+  "reference_error": "Cannot include the given value in a string template",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

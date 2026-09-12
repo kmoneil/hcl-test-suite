@@ -1,0 +1,18 @@
+{
+  "description": "A << heredoc keeps tabs at the start of its lines",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "\ta\n\t\tb\n"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "description": "A conditional can be the true result of another conditional without parentheses",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "conditional",
+          "condition": {
+            "kind": "variable",
+            "name": "x"
+          },
+          "true_result": {
+            "kind": "conditional",
+            "condition": {
+              "kind": "variable",
+              "name": "y"
+            },
+            "true_result": {
+              "kind": "variable",
+              "name": "z"
+            },
+            "false_result": {
+              "kind": "variable",
+              "name": "w"
+            }
+          },
+          "false_result": {
+            "kind": "variable",
+            "name": "v"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

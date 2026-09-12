@@ -1,0 +1,52 @@
+{
+  "description": "A line comment after an object element separates it from the next element",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#syntax-notation",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "A line comment is equivalent to a newline, and the prose says newlines between the braces are ignored as whitespace, with priority over the grammar's Newline separator, which leaves no separator here. hashicorp/hcl turns the newline that ends the comment into a newline token and accepts it as a separator (peeker.nextToken in hclsyntax/peeker.go, parseObjectCons in hclsyntax/parser.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "object",
+          "items": [
+            {
+              "key": {
+                "kind": "literal",
+                "value": {
+                  "string": "b"
+                }
+              },
+              "value": {
+                "kind": "literal",
+                "value": {
+                  "number": "1"
+                }
+              }
+            },
+            {
+              "key": {
+                "kind": "literal",
+                "value": {
+                  "string": "c"
+                }
+              },
+              "value": {
+                "kind": "literal",
+                "value": {
+                  "number": "2"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

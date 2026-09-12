@@ -1,0 +1,19 @@
+{
+  "description": "The angstrom sign is equal to the letter A with ring above",
+  "spec": [
+    "spec.md#primitive-types",
+    "hclsyntax/spec.md#comparison-operators"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

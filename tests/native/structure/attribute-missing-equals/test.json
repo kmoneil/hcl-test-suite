@@ -1,0 +1,12 @@
+{
+  "description": "An attribute needs an equals sign between its name and value",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#attribute-definitions"
+  ],
+  "op": "parse",
+  "reference_error": "use the equals sign \"=\" to introduce the argument value",
+  "expect": {
+    "valid": false
+  }
+}

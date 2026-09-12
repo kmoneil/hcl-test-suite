@@ -1,0 +1,22 @@
+{
+  "description": "Indexing an unknown number is an error",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "number"
+    }
+  },
+  "reference_error": "This value does not have any indices",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

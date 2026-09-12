@@ -1,0 +1,18 @@
+{
+  "description": "A ~} right before another interpolation does not strip the literal after that interpolation",
+  "spec": [
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "xy z"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "description": "Attribute access on null is an error",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator",
+    "spec.md#null-values"
+  ],
+  "op": "eval",
+  "reference_error": "Attempt to get attribute from null value",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

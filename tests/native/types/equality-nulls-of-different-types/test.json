@@ -1,0 +1,33 @@
+{
+  "description": "A null string is equal to a null number",
+  "spec": [
+    "spec.md#values-and-value-types",
+    "spec.md#null-values",
+    "hclsyntax/spec.md#comparison-operators"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says equal values must have identical types, so a null string and a null number should be unequal. hashicorp/hcl returns true because go-cty treats any two nulls as equal regardless of type (Value.Equals in cty/value_ops.go).",
+  "variables": {
+    "n": {
+      "null": "string"
+    },
+    "m": {
+      "null": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

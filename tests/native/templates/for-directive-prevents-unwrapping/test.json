@@ -1,0 +1,19 @@
+{
+  "description": "A for directive producing one interpolation still makes the template produce a string",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolation-unwrapping",
+    "hclsyntax/spec.md#template-for-directive"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "true"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

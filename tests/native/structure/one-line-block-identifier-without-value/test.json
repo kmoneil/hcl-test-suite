@@ -1,0 +1,11 @@
+{
+  "description": "A one-line block cannot contain a name without an equals sign and value",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "reference_error": "use the equals sign \"=\" to introduce the argument value",
+  "expect": {
+    "valid": false
+  }
+}

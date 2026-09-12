@@ -1,0 +1,13 @@
+{
+  "description": "A newline alone doesn't separate tuple elements",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#syntax-notation"
+  ],
+  "op": "parse",
+  "notes": "The grammar lists Newline as a separator between tuple elements, but the prose says newlines between the brackets are ignored as whitespace, and prose has priority over the grammar. hashicorp/hcl ignores newlines inside tuple constructors (parseTupleCons in hclsyntax/parser.go).",
+  "reference_error": "Missing item separator",
+  "expect": {
+    "valid": false
+  }
+}

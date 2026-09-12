@@ -1,0 +1,21 @@
+{
+  "description": "Dividing a negative number by zero gives negative infinity",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators",
+    "spec.md#primitive-types"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec requires infinities to exist but doesn't say what division by zero produces; in an arbitrary-precision number space the quotient is undefined, so an error would be just as reasonable. hashicorp/hcl returns an infinity with the sign of the dividend, from math/big's Float.Quo (Value.Divide in cty/value_ops.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "-Infinity"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

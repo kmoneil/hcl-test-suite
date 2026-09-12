@@ -1,0 +1,12 @@
+{
+  "description": "An if clause can't take the place of the element expression of a tuple for expression",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "notes": "hashicorp/hcl reads if as a variable used as the element expression and then reports c as extra. Either way the input has one mistake.",
+  "reference_error": "Extra characters after the end of the 'for' expression",
+  "expect": {
+    "valid": false
+  }
+}

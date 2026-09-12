@@ -1,0 +1,31 @@
+{
+  "description": "Every keyword can be an unquoted block label",
+  "spec": [
+    "hclsyntax/spec.md#keywords",
+    "hclsyntax/spec.md#blocks"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [
+            "true",
+            "false",
+            "null",
+            "for",
+            "in",
+            "if"
+          ],
+          "body": {
+            "attributes": {},
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

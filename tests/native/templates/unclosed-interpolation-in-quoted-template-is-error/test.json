@@ -1,0 +1,11 @@
+{
+  "description": "An interpolation missing its closing brace in a quoted template is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations"
+  ],
+  "op": "parse",
+  "reference_error": "before the end of the quoted template",
+  "expect": {
+    "valid": false
+  }
+}

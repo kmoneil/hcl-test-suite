@@ -1,0 +1,36 @@
+{
+  "description": "An if directive without else has an empty list of else parts",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "template_if",
+              "condition": {
+                "kind": "variable",
+                "name": "c"
+              },
+              "then": [
+                {
+                  "kind": "literal",
+                  "value": {
+                    "string": "yes"
+                  }
+                }
+              ],
+              "else": []
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

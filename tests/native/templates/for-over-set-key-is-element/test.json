@@ -1,0 +1,32 @@
+{
+  "description": "The key variable of a for directive over a set is the element itself",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "s": {
+      "set": [
+        {
+          "string": "x"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x=x"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "description": "The remainder is the dividend itself when it is smaller than the divisor",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "2"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

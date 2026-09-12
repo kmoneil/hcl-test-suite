@@ -1,0 +1,11 @@
+{
+  "description": "The at sign is not a token",
+  "spec": [
+    "hclsyntax/spec.md#operators-and-delimiters"
+  ],
+  "op": "parse",
+  "reference_error": "This character is not used within the language",
+  "expect": {
+    "valid": false
+  }
+}

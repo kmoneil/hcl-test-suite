@@ -1,0 +1,11 @@
+{
+  "description": "The obsolete five-byte UTF-8 form is a parse error",
+  "spec": [
+    "hclsyntax/spec.md#source-code-representation"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid character encoding",
+  "expect": {
+    "valid": false
+  }
+}

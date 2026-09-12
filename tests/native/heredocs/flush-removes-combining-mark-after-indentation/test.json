@@ -1,0 +1,20 @@
+{
+  "description": "<<- removes a combining mark together with the indentation space it follows",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says the minimum number of leading spaces is removed from each line, which would give \" x\\n\\u0301y\\n\". hashicorp/hcl removes that many grapheme clusters (flushHeredocTemplateParts in hclsyntax/parser_template.go uses textseg.ScanGraphemeClusters), and a space followed by a combining mark is one cluster, so the mark is removed too.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": " x\ny\n"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

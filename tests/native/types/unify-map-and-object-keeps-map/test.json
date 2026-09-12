@@ -1,0 +1,40 @@
+{
+  "description": "A map selected by a conditional whose other result is an object stays a map",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says map and object types unify to the object type, which would convert the selected map to an object with attribute a. hashicorp/hcl unifies to a map (unifyObjectsAsMaps in cty/convert/unify.go) and returns the map unchanged, so it never performs the spec's map to object conversion here.",
+  "variables": {
+    "m": {
+      "map": {
+        "a": {
+          "number": "5"
+        }
+      },
+      "element_type": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "map": {
+            "a": {
+              "number": "5"
+            }
+          },
+          "element_type": "number"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

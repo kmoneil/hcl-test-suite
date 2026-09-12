@@ -1,0 +1,24 @@
+{
+  "description": "A line comment can follow a block's closing brace",
+  "spec": [
+    "hclsyntax/spec.md#comments-and-whitespace",
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "block",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

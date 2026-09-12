@@ -1,0 +1,11 @@
+{
+  "description": "A line feed inside quotes is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid multi-line string",
+  "expect": {
+    "valid": false
+  }
+}

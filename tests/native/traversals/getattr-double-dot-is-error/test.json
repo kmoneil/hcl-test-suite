@@ -1,0 +1,11 @@
+{
+  "description": "Two dots in a row are not an attribute access",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid attribute name",
+  "expect": {
+    "valid": false
+  }
+}

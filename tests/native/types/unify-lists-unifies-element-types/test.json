@@ -1,0 +1,46 @@
+{
+  "description": "A list of numbers and a list of strings unify to a list of strings",
+  "spec": [
+    "spec.md#type-unification",
+    "spec.md#collection-and-structural-type-conversions",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "number": "5"
+        }
+      ],
+      "element_type": "number"
+    },
+    "k": {
+      "list": [
+        {
+          "string": "x"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [
+            {
+              "string": "5"
+            }
+          ],
+          "element_type": "string"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

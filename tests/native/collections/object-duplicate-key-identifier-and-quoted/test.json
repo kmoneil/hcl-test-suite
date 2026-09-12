@@ -1,0 +1,25 @@
+{
+  "description": "A bare key and a quoted key with the same text name the same attribute",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "spec.md#structural-types"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec doesn't say what happens when two elements of an object constructor produce the same attribute name. Object types can't have two attributes with the same name, and a for expression that produces a duplicate key is an error. hashicorp/hcl keeps the value of the last element without any diagnostic (ObjectConsExpr.Value in hclsyntax/expression.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "b": {
+              "number": "2"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

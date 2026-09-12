@@ -1,0 +1,11 @@
+{
+  "description": "A space cannot group the digits of a number",
+  "spec": [
+    "hclsyntax/spec.md#numeric-literals"
+  ],
+  "op": "parse",
+  "reference_error": "Missing newline after argument",
+  "expect": {
+    "valid": false
+  }
+}

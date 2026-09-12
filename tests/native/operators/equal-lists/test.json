@@ -1,0 +1,46 @@
+{
+  "description": "Lists of the same type with equal elements are equal",
+  "spec": [
+    "hclsyntax/spec.md#comparison-operators",
+    "spec.md#collection-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "string": "a"
+        },
+        {
+          "string": "b"
+        }
+      ],
+      "element_type": "string"
+    },
+    "m": {
+      "list": [
+        {
+          "string": "a"
+        },
+        {
+          "string": "b"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

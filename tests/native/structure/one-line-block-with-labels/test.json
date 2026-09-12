@@ -1,0 +1,34 @@
+{
+  "description": "A one-line block can have labels",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#blocks"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "block",
+          "labels": [
+            "x",
+            "y"
+          ],
+          "body": {
+            "attributes": {
+              "a": {
+                "kind": "literal",
+                "value": {
+                  "number": "1"
+                }
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

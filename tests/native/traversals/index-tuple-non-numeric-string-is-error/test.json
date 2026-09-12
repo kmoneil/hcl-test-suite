@@ -1,0 +1,28 @@
+{
+  "description": "A string key that isn't a number cannot index a tuple",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "variables": {
+    "t": {
+      "tuple": [
+        {
+          "string": "x"
+        },
+        {
+          "string": "y"
+        },
+        {
+          "string": "z"
+        }
+      ]
+    }
+  },
+  "reference_error": "a number is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

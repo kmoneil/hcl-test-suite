@@ -1,0 +1,14 @@
+{
+  "description": "A second point and digits after a fractional part make an invalid number literal",
+  "spec": [
+    "hclsyntax/spec.md#numeric-literals",
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "By the grammar, 1.2.3 is the literal 1.2 followed by the legacy index operator .3, which parses and only fails when evaluated. The reference scanner's NumberLit rule in hclsyntax/scan_tokens.rl reads 1.2.3 as one token, and numberLitValue in parser.go then rejects it.",
+  "reference_error": "Invalid number literal",
+  "expect": {
+    "valid": false
+  }
+}

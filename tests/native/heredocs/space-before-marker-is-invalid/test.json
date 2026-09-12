@@ -1,0 +1,14 @@
+{
+  "description": "A space between << and the marker does not start a heredoc",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec says << is followed by an identifier and gives the grammar (\"<<\" | \"<<-\") Identifier Newline, without saying whether whitespace may separate them, while whitespace between lexical elements is generally ignored. hashicorp/hcl only recognizes a heredoc when the identifier follows immediately (BeginHeredocTmpl in hclsyntax/scan_tokens.rl), so << becomes two less-than symbols.",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

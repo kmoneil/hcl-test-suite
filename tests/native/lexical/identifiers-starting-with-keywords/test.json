@@ -1,0 +1,28 @@
+{
+  "description": "Identifiers that start with a keyword, like nullable, are ordinary names",
+  "spec": [
+    "hclsyntax/spec.md#keywords",
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "variable",
+          "name": "trueish"
+        },
+        "b": {
+          "kind": "variable",
+          "name": "nullable"
+        },
+        "c": {
+          "kind": "variable",
+          "name": "format"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

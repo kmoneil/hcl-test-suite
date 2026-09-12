@@ -1,0 +1,22 @@
+{
+  "description": "Attribute names are case-sensitive, so B does not find an attribute named b",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator",
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "eval",
+  "variables": {
+    "o": {
+      "object": {
+        "b": {
+          "string": "x"
+        }
+      }
+    }
+  },
+  "reference_error": "does not have an attribute named \"B\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "description": "A list is not equal to a set with the same elements",
+  "spec": [
+    "spec.md#values-and-value-types",
+    "spec.md#collection-types",
+    "hclsyntax/spec.md#comparison-operators"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "number": "1"
+        }
+      ],
+      "element_type": "number"
+    },
+    "s": {
+      "set": [
+        {
+          "number": "1"
+        }
+      ],
+      "element_type": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

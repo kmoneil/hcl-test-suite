@@ -1,0 +1,18 @@
+{
+  "description": "Templates nested inside interpolations are evaluated and inserted",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "abc"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

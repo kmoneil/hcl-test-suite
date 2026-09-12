@@ -1,0 +1,12 @@
+{
+  "description": "An error while evaluating an object key fails the object constructor",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "eval",
+  "reference_error": "There is no variable named \"nope\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

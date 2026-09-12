@@ -1,0 +1,13 @@
+{
+  "description": "|| rejects a non-bool second operand even when the first is true",
+  "spec": [
+    "hclsyntax/spec.md#logic-operators"
+  ],
+  "op": "eval",
+  "notes": "The spec says logic operators apply only to bools and gives them no short-circuit rule, while the conditional operator section says when errors are suppressed, so a non-bool operand is an error even when the other operand decides the result. hashicorp/hcl converts both operands to bool before its short-circuit check (BinaryOpExpr.Value in hclsyntax/expression_ops.go).",
+  "reference_error": "Unsuitable value for right operand: bool required, but have number",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

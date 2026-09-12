@@ -1,0 +1,12 @@
+{
+  "description": "A newline between a dot and the attribute name is an error outside parentheses",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid attribute name",
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "description": "An index after a tuple for expression applies to the whole for expression",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "hclsyntax/spec.md#expression-terms",
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "index",
+          "collection": {
+            "kind": "for",
+            "result": "tuple",
+            "key_var": null,
+            "value_var": "v",
+            "collection": {
+              "kind": "variable",
+              "name": "xs"
+            },
+            "key": null,
+            "value": {
+              "kind": "variable",
+              "name": "v"
+            },
+            "condition": null,
+            "grouping": false
+          },
+          "key": {
+            "kind": "literal",
+            "value": {
+              "number": "0"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

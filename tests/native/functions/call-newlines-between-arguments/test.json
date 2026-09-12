@@ -1,0 +1,34 @@
+{
+  "description": "Newlines between function arguments are ignored",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "call",
+          "name": "f",
+          "args": [
+            {
+              "kind": "literal",
+              "value": {
+                "number": "1"
+              }
+            },
+            {
+              "kind": "literal",
+              "value": {
+                "number": "2"
+              }
+            }
+          ],
+          "expand_final": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

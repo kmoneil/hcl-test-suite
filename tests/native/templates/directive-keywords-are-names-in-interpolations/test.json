@@ -1,0 +1,27 @@
+{
+  "description": "Directive keywords are ordinary variable names inside an interpolation",
+  "spec": [
+    "hclsyntax/spec.md#keywords",
+    "hclsyntax/spec.md#template-interpolations"
+  ],
+  "op": "eval",
+  "variables": {
+    "if": {
+      "string": "a"
+    },
+    "endfor": {
+      "string": "b"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "<ab>"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

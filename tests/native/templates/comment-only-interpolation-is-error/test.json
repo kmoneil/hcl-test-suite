@@ -1,0 +1,12 @@
+{
+  "description": "An interpolation containing only a comment is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

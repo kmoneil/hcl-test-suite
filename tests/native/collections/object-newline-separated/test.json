@@ -1,0 +1,51 @@
+{
+  "description": "A newline separates object elements",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#syntax-notation"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The grammar lists Newline as a separator between object elements, but the prose says newlines between the braces are ignored as whitespace, and prose has priority over the grammar, which leaves no newline separator. hashicorp/hcl makes newlines significant inside object constructors and accepts one as a separator (parseObjectCons in hclsyntax/parser.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "object",
+          "items": [
+            {
+              "key": {
+                "kind": "literal",
+                "value": {
+                  "string": "b"
+                }
+              },
+              "value": {
+                "kind": "literal",
+                "value": {
+                  "number": "1"
+                }
+              }
+            },
+            {
+              "key": {
+                "kind": "literal",
+                "value": {
+                  "string": "c"
+                }
+              },
+              "value": {
+                "kind": "literal",
+                "value": {
+                  "number": "2"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

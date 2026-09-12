@@ -1,0 +1,12 @@
+{
+  "description": "An object value can't be followed by an ellipsis",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "notes": "Object values are plain expressions. The grouping ellipsis only appears in object for expressions.",
+  "reference_error": "Missing attribute separator",
+  "expect": {
+    "valid": false
+  }
+}

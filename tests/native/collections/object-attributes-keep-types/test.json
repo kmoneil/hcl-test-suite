@@ -1,0 +1,29 @@
+{
+  "description": "Object attributes keep their own types instead of being unified",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "spec.md#structural-types"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "b": {
+              "number": "1"
+            },
+            "c": {
+              "string": "x"
+            },
+            "d": {
+              "bool": true
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "description": "Consecutive heredocs can use the same marker",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions",
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "x\n"
+            },
+            {
+              "string": "y\n"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

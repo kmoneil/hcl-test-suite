@@ -1,0 +1,27 @@
+{
+  "description": "Indexing an object with a string reaches an attribute whose name isn't an identifier",
+  "spec": [
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "eval",
+  "variables": {
+    "o": {
+      "object": {
+        "my key": {
+          "string": "x"
+        }
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "description": "A strip marker removes the ogham, narrow no-break and medium mathematical spaces",
+  "spec": [
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says strip markers remove spaces, \"interpreted as per Unicode's definition\", without saying which definition it means. The ogham space mark U+1680, narrow no-break space U+202F and medium mathematical space U+205F are space separators (category Zs) with the White_Space property, but not in Pattern_White_Space, the set Unicode recommends for syntax (UAX #31). Stripping them is hashicorp/hcl's reading: parseTemplateParts in hclsyntax/parser_template.go trims with Go's unicode.IsSpace, which follows the White_Space property.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "ab"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

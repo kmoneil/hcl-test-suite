@@ -1,0 +1,11 @@
+{
+  "description": "A tuple for expression with a key expression and => is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "reference_error": "Key expression is not valid when building a tuple",
+  "expect": {
+    "valid": false
+  }
+}

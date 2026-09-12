@@ -1,0 +1,14 @@
+{
+  "description": "A key that evaluates to null is an error",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "spec.md#null-values"
+  ],
+  "op": "eval",
+  "notes": "Attribute names are always strings, and a null value has no string to name an attribute with.",
+  "reference_error": "Null value as key",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

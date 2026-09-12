@@ -1,0 +1,19 @@
+{
+  "description": "A variable name must match the defined name code point for code point",
+  "spec": [
+    "hclsyntax/spec.md#source-code-representation",
+    "hclsyntax/spec.md#variables-and-variable-expressions"
+  ],
+  "op": "eval",
+  "notes": "The expression uses e followed by U+0301 COMBINING ACUTE ACCENT, while the variable is named with the precomposed U+00E9.",
+  "variables": {
+    "café": {
+      "number": "1"
+    }
+  },
+  "reference_error": "Unknown variable",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "description": "The remainder is 0 when the dividend is a multiple of the divisor",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "0"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

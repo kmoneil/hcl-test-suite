@@ -1,0 +1,31 @@
+{
+  "description": "A legacy index uses its number as the key, so .01 selects attribute 1 rather than 01",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "variables": {
+    "o": {
+      "object": {
+        "01": {
+          "string": "x"
+        },
+        "1": {
+          "string": "y"
+        }
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "y"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

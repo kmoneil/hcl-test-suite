@@ -1,0 +1,19 @@
+{
+  "description": "In 9 % 4 / 2 the % applies first, giving 0.5",
+  "spec": [
+    "hclsyntax/spec.md#operations",
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "0.5"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "description": "An unknown template result is not equal to a string with a different start",
+  "spec": [
+    "hclsyntax/spec.md#comparison-operators",
+    "hclsyntax/spec.md#templates",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says a comparison with an unknown operand gives an unknown bool. hashicorp/hcl returns false because TemplateExpr.Value (hclsyntax/expression_template.go) records the known start of an unknown template result as a refinement, and Value.Equals (cty/value_ops.go) uses it to rule out \"xyz\".",
+  "variables": {
+    "u": {
+      "unknown": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

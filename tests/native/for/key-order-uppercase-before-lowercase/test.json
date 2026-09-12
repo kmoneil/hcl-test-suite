@@ -1,0 +1,32 @@
+{
+  "description": "Uppercase ASCII letters sort before lowercase letters in key order",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "notes": "Lexicographic order compares characters by code point, and all uppercase ASCII letters (U+0041 to U+005A) come before the lowercase ones (U+0061 to U+007A).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "A"
+            },
+            {
+              "string": "B"
+            },
+            {
+              "string": "a"
+            },
+            {
+              "string": "b"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

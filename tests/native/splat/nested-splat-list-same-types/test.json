@@ -1,0 +1,71 @@
+{
+  "description": "Nested full splats on a list give a list of the inner splats' tuples",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators",
+    "spec.md#collection-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec's grammar doesn't nest a second splat inside a full splat, which would make this [\"x\", \"y\"], and it doesn't give the result type of a splat over a list, while the for expressions it compares splats to produce tuples. hashicorp/hcl nests the second splat, which wraps each string in a one-element tuple, and collects the results for a list source in a list (parseExpressionTraversals in hclsyntax/parser.go, SplatExpr.Value in hclsyntax/expression.go).",
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "object": {
+            "b": {
+              "string": "x"
+            }
+          }
+        },
+        {
+          "object": {
+            "b": {
+              "string": "y"
+            }
+          }
+        }
+      ],
+      "element_type": [
+        "object",
+        {
+          "b": "string"
+        }
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [
+            {
+              "tuple": [
+                {
+                  "string": "x"
+                }
+              ]
+            },
+            {
+              "tuple": [
+                {
+                  "string": "y"
+                }
+              ]
+            }
+          ],
+          "element_type": [
+            "tuple",
+            [
+              "string"
+            ]
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "description": "A literal too large for the exponent range evaluates to positive infinity without an error",
+  "spec": [
+    "spec.md#primitive-types",
+    "hclsyntax/spec.md#numeric-literals"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec requires an error when a number in source can't be represented, whether it counts as an integer (as its value does) or as a non-integer that overflows. cty.ParseNumberVal uses math/big's ParseFloat, which scales the mantissa by 5^700000000 and, when the result's exponent passes math/big's range, turns it into infinity without an error (Float.setExpAndRound), so hashicorp/hcl evaluates the literal to positive infinity.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "Infinity"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

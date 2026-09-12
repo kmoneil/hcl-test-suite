@@ -1,0 +1,19 @@
+{
+  "description": "Values interpolated in a for directive body are converted to strings and concatenated",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "1trues"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

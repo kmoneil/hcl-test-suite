@@ -1,0 +1,28 @@
+{
+  "description": "The key variable of a for expression hides an outer variable with the same name",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "hclsyntax/spec.md#variables-and-variable-expressions"
+  ],
+  "op": "eval",
+  "variables": {
+    "k": {
+      "string": "outer"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "x"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

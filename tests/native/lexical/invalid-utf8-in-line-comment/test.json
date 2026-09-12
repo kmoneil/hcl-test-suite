@@ -1,0 +1,24 @@
+{
+  "description": "A byte that can never appear in UTF-8 is accepted inside a line comment",
+  "spec": [
+    "hclsyntax/spec.md#source-code-representation",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec says invalid UTF-8 is always a parse error. The reference scanner doesn't check the encoding of comments: the Comment rule in hclsyntax/scan_tokens.rl matches any byte up to the end of the line.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "literal",
+          "value": {
+            "number": "1"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

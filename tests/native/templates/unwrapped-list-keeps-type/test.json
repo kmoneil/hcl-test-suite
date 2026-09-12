@@ -1,0 +1,42 @@
+{
+  "description": "A template that is only an interpolation of a list produces the list",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolation-unwrapping"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "v": {
+      "list": [
+        {
+          "string": "x"
+        },
+        {
+          "string": "y"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [
+            {
+              "string": "x"
+            },
+            {
+              "string": "y"
+            }
+          ],
+          "element_type": "string"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

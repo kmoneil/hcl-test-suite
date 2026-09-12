@@ -1,0 +1,25 @@
+{
+  "description": "A number key is an error when no object attribute is named by its string form",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "variables": {
+    "o": {
+      "object": {
+        "0": {
+          "string": "zero"
+        },
+        "2": {
+          "string": "two"
+        }
+      }
+    }
+  },
+  "reference_error": "An object only supports looking up attributes by name",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

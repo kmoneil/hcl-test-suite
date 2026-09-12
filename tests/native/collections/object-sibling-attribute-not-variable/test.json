@@ -1,0 +1,13 @@
+{
+  "description": "An object value can't refer to another attribute of the same object by name",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#variables-and-variable-expressions"
+  ],
+  "op": "eval",
+  "reference_error": "There is no variable named \"b\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "description": "A legacy index on an object selects the attribute named by its digits",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "variables": {
+    "o": {
+      "object": {
+        "1": {
+          "string": "one"
+        }
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "one"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

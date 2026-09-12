@@ -1,0 +1,22 @@
+{
+  "description": "Any number of spaces can surround the equals sign of an attribute",
+  "spec": [
+    "hclsyntax/spec.md#attribute-definitions",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "port": {
+          "kind": "literal",
+          "value": {
+            "number": "80"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

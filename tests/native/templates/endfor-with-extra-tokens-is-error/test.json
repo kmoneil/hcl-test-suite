@@ -1,0 +1,11 @@
+{
+  "description": "An endfor directive followed by a name is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive"
+  ],
+  "op": "parse",
+  "reference_error": "Extra characters in endfor marker",
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "description": "Inline comments inside an interpolation are ignored",
+  "spec": [
+    "hclsyntax/spec.md#comments-and-whitespace",
+    "hclsyntax/spec.md#template-interpolations"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "<x>"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

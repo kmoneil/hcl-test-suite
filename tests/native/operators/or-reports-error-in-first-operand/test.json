@@ -1,0 +1,12 @@
+{
+  "description": "|| reports an error in its first operand when the second is false",
+  "spec": [
+    "hclsyntax/spec.md#logic-operators"
+  ],
+  "op": "eval",
+  "reference_error": "Unknown variable",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

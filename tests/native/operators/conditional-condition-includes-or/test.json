@@ -1,0 +1,19 @@
+{
+  "description": "In false || true ? 1 : 2 the condition is the whole || operation",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator",
+    "hclsyntax/spec.md#operations"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

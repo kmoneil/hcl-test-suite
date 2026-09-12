@@ -1,0 +1,52 @@
+{
+  "description": "A CR LF sequence separates object elements like a newline",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#syntax-notation",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "CR LF is a newline sequence, and the prose says newlines between the braces are ignored as whitespace, with priority over the grammar's Newline separator, which leaves no newline separator. hashicorp/hcl accepts it as a separator like any newline (parseObjectCons in hclsyntax/parser.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "object",
+          "items": [
+            {
+              "key": {
+                "kind": "literal",
+                "value": {
+                  "string": "b"
+                }
+              },
+              "value": {
+                "kind": "literal",
+                "value": {
+                  "number": "1"
+                }
+              }
+            },
+            {
+              "key": {
+                "kind": "literal",
+                "value": {
+                  "string": "c"
+                }
+              },
+              "value": {
+                "kind": "literal",
+                "value": {
+                  "number": "2"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "description": "A block type cannot be a number",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#blocks"
+  ],
+  "op": "parse",
+  "reference_error": "Argument or block definition required",
+  "expect": {
+    "valid": false
+  }
+}

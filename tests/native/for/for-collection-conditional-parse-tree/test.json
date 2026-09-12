@@ -1,0 +1,44 @@
+{
+  "description": "A conditional collection expression keeps its own colon, and the next colon ends the introduction",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "for",
+          "result": "tuple",
+          "key_var": null,
+          "value_var": "v",
+          "collection": {
+            "kind": "conditional",
+            "condition": {
+              "kind": "variable",
+              "name": "c"
+            },
+            "true_result": {
+              "kind": "variable",
+              "name": "xs"
+            },
+            "false_result": {
+              "kind": "variable",
+              "name": "ys"
+            }
+          },
+          "key": null,
+          "value": {
+            "kind": "variable",
+            "name": "v"
+          },
+          "condition": null,
+          "grouping": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

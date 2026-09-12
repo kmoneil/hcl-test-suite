@@ -1,0 +1,32 @@
+{
+  "description": "Newlines still separate the items of an object constructor nested in a for expression",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The grammar lists Newline as a separator between object elements, but the prose says newlines between the braces are ignored as whitespace, and prose has priority over the grammar, which leaves no newline separator. hashicorp/hcl makes newlines significant inside object constructors and accepts one as a separator, even inside a for expression that ignores newlines: parseObjectCons in hclsyntax/parser.go calls PushIncludeNewlines(true) for the constructor's items.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "a": {
+              "object": {
+                "x": {
+                  "string": "a"
+                },
+                "y": {
+                  "number": "1"
+                }
+              }
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

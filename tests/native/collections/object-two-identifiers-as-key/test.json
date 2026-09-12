@@ -1,0 +1,11 @@
+{
+  "description": "Two identifiers separated by a space can't be an object key",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "reference_error": "attribute name containing periods or spaces",
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "description": "Logical OR of true and true is true",
+  "spec": [
+    "hclsyntax/spec.md#logic-operators"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

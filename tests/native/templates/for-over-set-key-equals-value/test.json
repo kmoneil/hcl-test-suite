@@ -1,0 +1,35 @@
+{
+  "description": "For every element of a set, the key and value variables of a for directive are equal",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "s": {
+      "set": [
+        {
+          "number": "1"
+        },
+        {
+          "number": "2"
+        }
+      ],
+      "element_type": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "truetrue"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

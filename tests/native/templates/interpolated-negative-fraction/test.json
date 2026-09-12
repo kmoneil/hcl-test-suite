@@ -1,0 +1,19 @@
+{
+  "description": "An interpolated negative non-integer number keeps its minus sign and leading zero",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "<-0.5>"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

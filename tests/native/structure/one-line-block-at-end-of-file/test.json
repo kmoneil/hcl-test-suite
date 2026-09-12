@@ -1,0 +1,33 @@
+{
+  "description": "A one-line block can end the file without a newline",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#blocks"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The Block and OneLineBlock productions end with a Newline, and the spec says nothing about the end of the file. hashicorp/hcl accepts the end of the file instead of the newline after a block's closing brace (parser.finishParsingBodyBlock in hclsyntax/parser.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "block",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "a": {
+                "kind": "literal",
+                "value": {
+                  "number": "1"
+                }
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

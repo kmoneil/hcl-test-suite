@@ -1,0 +1,11 @@
+{
+  "description": "A tuple constructor can't be closed with a brace",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "reference_error": "Missing item separator",
+  "expect": {
+    "valid": false
+  }
+}

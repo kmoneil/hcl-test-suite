@@ -1,0 +1,25 @@
+{
+  "description": "The keyword null followed by an argument list is a call to a function named null",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#keywords",
+    "hclsyntax/spec.md#literal-values"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec says that where an identifier acts as a keyword, that role supersedes any other interpretation, and null is a keyword among expression terms, so the parentheses after null would be a syntax error. hashicorp/hcl checks for an opening parenthesis after any identifier before it recognizes the keywords true, false and null, so this is a call to a function named null (parseExpressionTerm in hclsyntax/parser.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "call",
+          "name": "null",
+          "args": [],
+          "expand_final": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

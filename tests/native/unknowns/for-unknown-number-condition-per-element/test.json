@@ -1,0 +1,30 @@
+{
+  "description": "A tuple for expression whose condition is an unknown number for an element gives the dynamic value",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec requires a bool condition and gives the dynamic value only for unknowns that are otherwise type-valid, so an unknown number condition should be an error. A tuple for expression in hashicorp/hcl checks whether the condition is known before converting it to bool and returns the dynamic value (ForExpr.Value in hclsyntax/expression.go); an object for expression converts first and reports the error (for-object-unknown-number-condition-per-element-fails).",
+  "variables": {
+    "u": {
+      "unknown": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "description": "A block label cannot be a heredoc",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#blocks"
+  ],
+  "op": "parse",
+  "notes": "A newline always follows a heredoc's closing marker and belongs to what contains the heredoc, so the opening brace can only come on the next line. An implementation that accepted heredoc labels would therefore still reject this input, because the brace is not on the header's line, and no input avoids that. hashicorp/hcl rejects the heredoc itself: parser.ParseBodyItem in hclsyntax/parser.go starts a block only when the type is followed by a quoted label, an identifier or a brace.",
+  "reference_error": "use the equals sign \"=\" to introduce the argument value",
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "description": "A line comment can end at the end of the file instead of a newline",
+  "spec": [
+    "hclsyntax/spec.md#comments-and-whitespace",
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "A line comment is equivalent to a newline, so it ends the attribute before it. The only open question is whether a line comment may end at the end of the file instead of at a newline sequence, which the spec doesn't say. hashicorp/hcl accepts it: the Comment rule in hclsyntax/scan_tokens.rl makes the comment's final newline optional, peeker.nextToken in hclsyntax/peeker.go drops a comment that doesn't end with a newline, and parser.finishParsingBodyAttribute in hclsyntax/parser.go accepts the end of the file after an attribute.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "literal",
+          "value": {
+            "number": "1"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

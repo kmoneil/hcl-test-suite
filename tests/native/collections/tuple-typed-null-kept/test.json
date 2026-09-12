@@ -1,0 +1,31 @@
+{
+  "description": "A null string element keeps its type inside a tuple",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "spec.md#structural-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "s": {
+      "null": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "null": "string"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

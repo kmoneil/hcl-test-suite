@@ -1,0 +1,27 @@
+{
+  "description": "Indexing the dynamic value gives the dynamic value",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "unknown-values"
+  ],
+  "variables": {
+    "d": {
+      "unknown": "dynamic"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

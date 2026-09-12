@@ -1,0 +1,11 @@
+{
+  "description": "A one-line block without a closing brace is an error",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "reference_error": "Unclosed configuration block",
+  "expect": {
+    "valid": false
+  }
+}

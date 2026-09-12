@@ -1,0 +1,12 @@
+{
+  "description": "Indexing a number is an error",
+  "spec": [
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "eval",
+  "reference_error": "This value does not have any indices",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

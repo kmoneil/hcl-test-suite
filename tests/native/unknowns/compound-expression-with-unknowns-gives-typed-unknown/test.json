@@ -1,0 +1,30 @@
+{
+  "description": "An expression built from several unknown variables gives an unknown of its result type",
+  "spec": [
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "number"
+    },
+    "v": {
+      "unknown": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "string"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

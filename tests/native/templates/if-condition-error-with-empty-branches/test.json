@@ -1,0 +1,13 @@
+{
+  "description": "An error in an if condition is reported even when both branches are empty",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "reference_error": "There is no variable named \"nope\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

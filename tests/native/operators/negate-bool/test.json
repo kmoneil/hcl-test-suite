@@ -1,0 +1,12 @@
+{
+  "description": "Unary minus rejects a bool",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "reference_error": "Unsuitable value for unary operand: number required, but have bool",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

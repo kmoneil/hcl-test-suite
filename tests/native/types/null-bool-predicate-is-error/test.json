@@ -1,0 +1,23 @@
+{
+  "description": "A conditional whose predicate is a null bool is an error",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator",
+    "spec.md#null-values"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec's conditional operator requires a bool predicate and only says what true and false select; it doesn't say whether a null bool is an error. hashicorp/hcl reports \"Null condition\" (ConditionalExpr.Value in hclsyntax/expression.go). A typed null avoids the question of whether the null keyword, a value of the dynamic pseudo-type, makes the result unknown.",
+  "variables": {
+    "n": {
+      "null": "bool"
+    }
+  },
+  "reference_error": "Null condition",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

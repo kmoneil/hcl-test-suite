@@ -1,0 +1,14 @@
+{
+  "description": "A string of a non-ASCII decimal digit doesn't convert to number",
+  "spec": [
+    "spec.md#primitive-type-conversions",
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "notes": "U+0663 is ARABIC-INDIC DIGIT THREE. The number syntax uses only the digits 0 through 9.",
+  "reference_error": "left operand: a number is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

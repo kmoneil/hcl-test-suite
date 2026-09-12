@@ -1,0 +1,11 @@
+{
+  "description": "An if directive with else but without endif is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive"
+  ],
+  "op": "parse",
+  "reference_error": "is missing its corresponding endif directive",
+  "expect": {
+    "valid": false
+  }
+}

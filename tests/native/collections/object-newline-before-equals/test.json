@@ -1,0 +1,14 @@
+{
+  "description": "A newline between an object key and its equals sign is an error",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#syntax-notation"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The prose says newlines between the braces of an object constructor are ignored as whitespace. hashicorp/hcl makes newlines significant inside object constructors, so the newline after the key ends the element before its value (parseObjectCons in hclsyntax/parser.go).",
+  "reference_error": "Missing attribute value",
+  "expect": {
+    "valid": false
+  }
+}

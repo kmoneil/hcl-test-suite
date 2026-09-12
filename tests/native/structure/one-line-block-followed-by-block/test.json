@@ -1,0 +1,11 @@
+{
+  "description": "Another block cannot follow a one-line block on the same line",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "reference_error": "Missing newline after block definition",
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "description": "Inside parentheses newlines may follow ( and precede )",
+  "spec": [
+    "hclsyntax/spec.md#expression-terms"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "binary",
+          "operator": "+",
+          "left": {
+            "kind": "literal",
+            "value": {
+              "number": "1"
+            }
+          },
+          "right": {
+            "kind": "literal",
+            "value": {
+              "number": "2"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

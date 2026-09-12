@@ -1,0 +1,29 @@
+{
+  "description": "An unparenthesized equality expression can be an object key",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "notes": "The == operator is a different token from the = that separates the key from the value. The bool result becomes the name true.",
+  "variables": {
+    "k": {
+      "number": "1"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "true": {
+              "string": "v"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "description": "A tuple constructor without a closing bracket is an error",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "reference_error": "Unterminated tuple constructor expression",
+  "expect": {
+    "valid": false
+  }
+}

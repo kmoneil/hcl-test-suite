@@ -1,0 +1,14 @@
+{
+  "description": "A hexadecimal string doesn't convert to number",
+  "spec": [
+    "spec.md#primitive-type-conversions",
+    "hclsyntax/spec.md#arithmetic-operators",
+    "spec.md#type-conversions-and-unification"
+  ],
+  "op": "eval",
+  "reference_error": "left operand: a number is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

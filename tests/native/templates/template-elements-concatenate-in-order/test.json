@@ -1,0 +1,18 @@
+{
+  "description": "Literals, interpolations and directives are joined in source order",
+  "spec": [
+    "hclsyntax/spec.md#templates"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "abcd"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

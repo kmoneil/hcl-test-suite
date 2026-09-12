@@ -1,0 +1,48 @@
+{
+  "description": "Map elements are visited in lexicographic order of their keys",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#collection-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "m": {
+      "map": {
+        "b": {
+          "number": "1"
+        },
+        "c": {
+          "number": "3"
+        },
+        "a": {
+          "number": "2"
+        }
+      },
+      "element_type": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "a"
+            },
+            {
+              "string": "b"
+            },
+            {
+              "string": "c"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

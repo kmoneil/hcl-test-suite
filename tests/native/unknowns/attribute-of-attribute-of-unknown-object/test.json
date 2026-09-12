@@ -1,0 +1,38 @@
+{
+  "description": "Chained attribute access into an unknown object gives an unknown of the inner attribute's type",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "u": {
+      "unknown": [
+        "object",
+        {
+          "a": [
+            "object",
+            {
+              "b": "bool"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "bool"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

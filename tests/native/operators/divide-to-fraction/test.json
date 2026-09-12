@@ -1,0 +1,18 @@
+{
+  "description": "Dividing integers gives the exact quotient, not an integer quotient",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "2.5"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

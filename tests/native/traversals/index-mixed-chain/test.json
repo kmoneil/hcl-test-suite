@@ -1,0 +1,43 @@
+{
+  "description": "Index operations and attribute accesses can be chained in any order",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "hclsyntax/spec.md#attribute-access-operator"
+  ],
+  "op": "eval",
+  "variables": {
+    "o": {
+      "object": {
+        "b": {
+          "tuple": [
+            {
+              "object": {
+                "c": {
+                  "number": "1"
+                }
+              }
+            },
+            {
+              "object": {
+                "c": {
+                  "number": "2"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "2"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

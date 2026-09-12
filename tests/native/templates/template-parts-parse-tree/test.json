@@ -1,0 +1,40 @@
+{
+  "description": "A template parses into literal and interpolation parts in source order",
+  "spec": [
+    "hclsyntax/spec.md#template-literals",
+    "hclsyntax/spec.md#template-interpolations"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "literal",
+              "value": {
+                "string": "a "
+              }
+            },
+            {
+              "kind": "interpolation",
+              "expr": {
+                "kind": "variable",
+                "name": "x"
+              }
+            },
+            {
+              "kind": "literal",
+              "value": {
+                "string": " b"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "description": "An || with an unknown number operand is an error",
+  "spec": [
+    "hclsyntax/spec.md#logic-operators",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "number"
+    }
+  },
+  "reference_error": "left operand: bool required, but have number",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

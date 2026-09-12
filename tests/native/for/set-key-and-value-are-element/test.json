@@ -1,0 +1,43 @@
+{
+  "description": "For a set, the key variable and the value variable both hold the element",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#collection-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "s": {
+      "set": [
+        {
+          "string": "x"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "tuple": [
+                {
+                  "string": "x"
+                },
+                {
+                  "string": "x"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "description": "A comment right after the closing marker makes the line content",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec's grammar ends a heredoc with Identifier Newline and treats a line comment as equivalent to a newline, so EOT# done could end the heredoc and leave the last EOT as a stray token. Its prose requires the marker to be on a line of its own, though, and comments can't begin inside template literals. hashicorp/hcl only ends the heredoc when the whole line, apart from surrounding whitespace, equals the marker (the heredocLiteralEOL action in hclsyntax/scan_tokens.rl), so that line is content and the next one ends the heredoc.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "hello\nEOT# done\n"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

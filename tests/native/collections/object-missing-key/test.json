@@ -1,0 +1,11 @@
+{
+  "description": "An object element needs a key before the equals sign",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

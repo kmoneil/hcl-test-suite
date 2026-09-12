@@ -1,0 +1,21 @@
+{
+  "description": "A letter number such as U+216B ROMAN NUMERAL TWELVE can start an identifier",
+  "spec": [
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "Ⅻ": {
+          "kind": "literal",
+          "value": {
+            "number": "1"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "description": "Legacy indexes can be used before and after an attribute access",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "hclsyntax/spec.md#attribute-access-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "index",
+          "collection": {
+            "kind": "get_attr",
+            "object": {
+              "kind": "index",
+              "collection": {
+                "kind": "variable",
+                "name": "t"
+              },
+              "key": {
+                "kind": "literal",
+                "value": {
+                  "number": "0"
+                }
+              }
+            },
+            "name": "b"
+          },
+          "key": {
+            "kind": "literal",
+            "value": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

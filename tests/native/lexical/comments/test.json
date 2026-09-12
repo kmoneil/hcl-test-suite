@@ -19,6 +19,12 @@
           "value": {
             "number": "2"
           }
+        },
+        "c": {
+          "kind": "literal",
+          "value": {
+            "number": "3"
+          }
         }
       },
       "blocks": []

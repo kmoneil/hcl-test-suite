@@ -1,0 +1,11 @@
+{
+  "description": "A tuple whose first element is the identifier for is read as a for expression",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "reference_error": "For expression requires variable name after 'for'",
+  "expect": {
+    "valid": false
+  }
+}

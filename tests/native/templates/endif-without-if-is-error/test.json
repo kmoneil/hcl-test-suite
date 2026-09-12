@@ -1,0 +1,11 @@
+{
+  "description": "An endif directive without an if is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive"
+  ],
+  "op": "parse",
+  "reference_error": "Unexpected endif directive: The control directives within this template are unbalanced",
+  "expect": {
+    "valid": false
+  }
+}

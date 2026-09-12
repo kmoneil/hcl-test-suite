@@ -1,0 +1,13 @@
+{
+  "description": "A first object key that begins with the identifier for starts a for expression",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "notes": "The first key is an expression derived from a variable named for, which needs parentheses.",
+  "reference_error": "For expression requires variable name after 'for'",
+  "expect": {
+    "valid": false
+  }
+}

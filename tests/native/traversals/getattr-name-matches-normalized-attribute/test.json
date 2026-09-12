@@ -1,0 +1,31 @@
+{
+  "description": "An attribute name written with a combining accent finds the precomposed attribute",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator",
+    "spec.md#primitive-types",
+    "hclsyntax/spec.md#source-code-representation"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says identifiers are sequences of code points without Unicode normalization, but also that object attribute names are strings and that two strings are equal when their NFC forms are. hashicorp/hcl finds the attribute because go-cty normalizes attribute names to NFC when looking them up (Type.HasAttribute and Value.GetAttr in cty), while variable names are matched exactly (Traversal.TraverseAbs in traversal.go).",
+  "variables": {
+    "o": {
+      "object": {
+        "café": {
+          "string": "x"
+        }
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "description": "A numeric literal can have only one exponent",
+  "spec": [
+    "hclsyntax/spec.md#numeric-literals"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid number literal",
+  "expect": {
+    "valid": false
+  }
+}

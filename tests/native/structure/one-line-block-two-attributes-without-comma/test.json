@@ -1,0 +1,11 @@
+{
+  "description": "A one-line block cannot contain two attributes separated by a space",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "reference_error": "must end with a closing brace immediately after its single argument definition",
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "description": "The null keyword as an if condition is an error",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive",
+    "hclsyntax/spec.md#conditional-operator",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec's conditional operator gives an unknown result when the predicate is a value of the dynamic pseudo-type, and the null keyword is such a value; it mentions no error. hashicorp/hcl reports \"Null condition\" in ConditionalExpr.Value (hclsyntax/expression.go), the node an if directive is parsed into.",
+  "reference_error": "Null condition",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

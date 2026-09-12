@@ -1,0 +1,27 @@
+{
+  "description": "Interpolating positive infinity produces +Inf",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations",
+    "spec.md#primitive-type-conversions",
+    "spec.md#primitive-types"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec requires the number type to represent positive and negative infinity, but its number to string conversion only describes integer and fractional digits, so it doesn't say what infinity converts to. hashicorp/hcl uses go-cty's conversion (cty/convert/conversion_primitive.go), which formats the number with big.Float.Text and writes \"+Inf\".",
+  "variables": {
+    "v": {
+      "number": "Infinity"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "<+Inf>"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "description": "Adding a number to an unknown string gives an unknown number",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "notes": "A string converts to number (unsafely), so an unknown string converts to an unknown number.",
+  "variables": {
+    "u": {
+      "unknown": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "number"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

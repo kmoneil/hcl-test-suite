@@ -1,0 +1,22 @@
+{
+  "description": "Parentheses in an interpolation of a quoted template can contain newlines",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations",
+    "hclsyntax/spec.md#template-expressions",
+    "hclsyntax/spec.md#expression-terms"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec describes a quoted template as a single-line expression, but it also says newlines are ignored between the parentheses of a sub-expression, which an interpolation may contain. That wording is the only conflict. hashicorp/hcl accepts it: parseExpressionTerm in hclsyntax/parser.go ignores newlines inside parentheses.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "<x>"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

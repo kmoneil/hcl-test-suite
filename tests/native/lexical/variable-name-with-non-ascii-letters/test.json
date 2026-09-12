@@ -1,0 +1,24 @@
+{
+  "description": "A variable name can contain non-ASCII letters",
+  "spec": [
+    "hclsyntax/spec.md#identifiers",
+    "hclsyntax/spec.md#variables-and-variable-expressions"
+  ],
+  "op": "eval",
+  "variables": {
+    "größe": {
+      "number": "1"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

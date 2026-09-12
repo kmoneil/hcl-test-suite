@@ -1,0 +1,13 @@
+{
+  "description": "An if condition that is a string other than true, false, 1 or 0 is an error",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "reference_error": "The 'if' clause value is invalid: a bool is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

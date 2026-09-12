@@ -1,0 +1,11 @@
+{
+  "description": "A quoted string is not an attribute name inside an attribute-only splat",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid attribute name",
+  "expect": {
+    "valid": false
+  }
+}

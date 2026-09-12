@@ -1,0 +1,32 @@
+{
+  "description": "A body can contain several blocks of the same type",
+  "spec": [
+    "hclsyntax/spec.md#blocks",
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "block",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": []
+          }
+        },
+        {
+          "type": "block",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "description": "With one variable, iterating a map binds the element values, not the keys",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#collection-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "m": {
+      "map": {
+        "x": {
+          "number": "1"
+        }
+      },
+      "element_type": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "number": "1"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

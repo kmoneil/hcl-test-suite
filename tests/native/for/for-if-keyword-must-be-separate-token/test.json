@@ -1,0 +1,13 @@
+{
+  "description": "The if keyword must be a separate token, so ifc is an identifier and not if followed by c",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "hclsyntax/spec.md#keywords"
+  ],
+  "op": "parse",
+  "notes": "An identifier token extends over all following identifier characters, so ifc is one identifier left over after the element expression.",
+  "reference_error": "Extra characters after the end of the 'for' expression",
+  "expect": {
+    "valid": false
+  }
+}

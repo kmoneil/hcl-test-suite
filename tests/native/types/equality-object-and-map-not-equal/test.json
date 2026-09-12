@@ -1,0 +1,33 @@
+{
+  "description": "An object is not equal to a map with the same keys and values",
+  "spec": [
+    "spec.md#values-and-value-types",
+    "spec.md#collection-types",
+    "hclsyntax/spec.md#comparison-operators"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "m": {
+      "map": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "element_type": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

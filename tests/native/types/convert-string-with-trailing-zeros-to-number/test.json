@@ -1,0 +1,20 @@
+{
+  "description": "A string with trailing zeros in its fraction converts to the number",
+  "spec": [
+    "spec.md#primitive-type-conversions",
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "notes": "Number to string conversion never writes trailing zeros, but the digits still spell the number, as they do in a numeric literal.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1.5"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

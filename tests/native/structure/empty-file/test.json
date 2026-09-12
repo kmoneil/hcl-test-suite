@@ -1,0 +1,15 @@
+{
+  "description": "An empty file is a valid configuration with an empty body",
+  "spec": [
+    "hclsyntax/spec.md#configuration-files",
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": []
+    }
+  }
+}

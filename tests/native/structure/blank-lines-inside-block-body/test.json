@@ -1,0 +1,33 @@
+{
+  "description": "Blank lines at the start and end of a block body are ignored",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The Body production is (Attribute | Block | OneLineBlock)*, which has no place for a newline that doesn't end an item, and the prose only says newlines are ignored \"in certain contexts\" without naming bodies. hashicorp/hcl skips newline tokens wherever a body item may start: before the first item, between items, after the last one and in a body with no items (parser.ParseBody in hclsyntax/parser.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "block",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "a": {
+                "kind": "literal",
+                "value": {
+                  "number": "1"
+                }
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

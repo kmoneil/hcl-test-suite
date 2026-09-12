@@ -1,0 +1,40 @@
+{
+  "description": "The keywords for, in and if can be block types",
+  "spec": [
+    "hclsyntax/spec.md#keywords",
+    "hclsyntax/spec.md#blocks"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "for",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": []
+          }
+        },
+        {
+          "type": "in",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": []
+          }
+        },
+        {
+          "type": "if",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

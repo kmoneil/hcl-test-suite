@@ -1,0 +1,27 @@
+{
+  "description": "A map of numbers and an object with a tuple attribute fail to unify",
+  "spec": [
+    "spec.md#type-unification",
+    "spec.md#collection-and-structural-type-conversions",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "m": {
+      "map": {
+        "a": {
+          "number": "5"
+        }
+      },
+      "element_type": "number"
+    }
+  },
+  "reference_error": "must have consistent types",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

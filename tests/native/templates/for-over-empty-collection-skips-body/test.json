@@ -1,0 +1,19 @@
+{
+  "description": "The body of a for directive over an empty collection is never evaluated",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "<>"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

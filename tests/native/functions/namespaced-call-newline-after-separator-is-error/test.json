@@ -1,0 +1,12 @@
+{
+  "description": "A newline after the double colon of a function name is an error outside parentheses",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "reference_error": "Missing function name",
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "description": "An error while evaluating an attribute inside a block makes evaluation fail",
+  "spec": [
+    "hclsyntax/spec.md#attribute-definitions",
+    "hclsyntax/spec.md#variables-and-variable-expressions"
+  ],
+  "op": "eval",
+  "reference_error": "There is no variable named \"nope\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

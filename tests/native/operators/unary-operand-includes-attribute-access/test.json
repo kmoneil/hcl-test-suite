@@ -1,0 +1,27 @@
+{
+  "description": "A unary operator applies to its whole operand term, including attribute access",
+  "spec": [
+    "hclsyntax/spec.md#operations"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "unary",
+          "operator": "-",
+          "operand": {
+            "kind": "get_attr",
+            "object": {
+              "kind": "variable",
+              "name": "x"
+            },
+            "name": "y"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

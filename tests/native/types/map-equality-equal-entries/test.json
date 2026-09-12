@@ -1,0 +1,46 @@
+{
+  "description": "Maps with the same keys and equal values are equal",
+  "spec": [
+    "spec.md#collection-types",
+    "hclsyntax/spec.md#comparison-operators"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "m": {
+      "map": {
+        "a": {
+          "number": "1"
+        },
+        "b": {
+          "number": "2"
+        }
+      },
+      "element_type": "number"
+    },
+    "n": {
+      "map": {
+        "b": {
+          "number": "2"
+        },
+        "a": {
+          "number": "1"
+        }
+      },
+      "element_type": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

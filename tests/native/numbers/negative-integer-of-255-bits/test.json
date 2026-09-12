@@ -1,0 +1,20 @@
+{
+  "description": "The negation of a 255-bit integer is represented exactly",
+  "spec": [
+    "spec.md#primitive-types",
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "notes": "-(2^255 - 1).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "-57896044618658097711785492504343953926634992332820282019728792003956564819967"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

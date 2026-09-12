@@ -1,0 +1,1057 @@
+{
+  "area": "native/operators",
+  "rules": [
+    {
+      "id": "operators-unary-minus-syntax",
+      "spec": "hclsyntax/spec.md#operations",
+      "rule": "A - placed before an expression term forms a unary negation of that term",
+      "tests": [
+        "native/operators/unary-minus-parse"
+      ]
+    },
+    {
+      "id": "operators-unary-not-syntax",
+      "spec": "hclsyntax/spec.md#operations",
+      "rule": "A ! placed before an expression term forms a unary logical NOT of that term",
+      "tests": [
+        "native/operators/unary-not-parse"
+      ]
+    },
+    {
+      "id": "operators-unary-whitespace-before-operand",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "Whitespace may appear between a unary operator and its operand",
+      "tests": [
+        "native/operators/unary-operator-space-before-operand"
+      ]
+    },
+    {
+      "id": "operators-unary-operand-is-whole-term",
+      "spec": "hclsyntax/spec.md#operations",
+      "rule": "The operand of a unary operator is a whole expression term, including its attribute access and index steps",
+      "tests": [
+        "native/operators/unary-operand-includes-attribute-access",
+        "native/operators/unary-operand-includes-index",
+        "native/operators/unary-minus-negates-attribute-value"
+      ]
+    },
+    {
+      "id": "operators-unary-repeated",
+      "spec": "hclsyntax/spec.md#operations",
+      "rule": "Unary operators can be stacked, each applying to the result of the ones after it, with or without whitespace",
+      "tests": [
+        "native/operators/unary-not-repeated-parse",
+        "native/operators/unary-mixed-operators-parse",
+        "native/operators/unary-minus-repeated",
+        "native/operators/unary-not-repeated"
+      ]
+    },
+    {
+      "id": "operators-unary-requires-operand",
+      "spec": "hclsyntax/spec.md#operations",
+      "rule": "A unary operator with nothing after it is a syntax error",
+      "tests": [
+        "native/operators/unary-minus-missing-operand",
+        "native/operators/unary-not-missing-operand"
+      ]
+    },
+    {
+      "id": "operators-no-unary-plus",
+      "spec": "hclsyntax/spec.md#operations",
+      "rule": "+ is only a binary operator; there is no unary plus, even before a number",
+      "tests": [
+        "native/operators/no-unary-plus"
+      ]
+    },
+    {
+      "id": "operators-unary-parenthesized-operand",
+      "spec": "hclsyntax/spec.md#operations",
+      "rule": "A unary operator applied to a parenthesized expression applies to the value of the whole group",
+      "tests": [
+        "native/operators/unary-minus-parenthesized-operand",
+        "native/operators/unary-not-parenthesized-operand"
+      ]
+    },
+    {
+      "id": "operators-unary-binds-tighter-than-binary",
+      "spec": "hclsyntax/spec.md#operations",
+      "rule": "Unary operators bind tighter than every binary operator, so they apply only to the term right after them",
+      "tests": [
+        "native/operators/unary-minus-binds-tighter",
+        "native/operators/unary-minus-binds-tighter-than-multiply-parse",
+        "native/operators/unary-not-binds-tighter-than-and-parse",
+        "native/operators/unary-not-binds-tighter-than-and"
+      ]
+    },
+    {
+      "id": "operators-unary-binds-tighter-than-conditional",
+      "spec": "hclsyntax/spec.md#operations",
+      "rule": "A unary operator at the start of a conditional applies to the condition's first term, not to the conditional",
+      "tests": [
+        "native/operators/unary-not-binds-tighter-than-conditional"
+      ]
+    },
+    {
+      "id": "operators-unary-as-right-operand",
+      "spec": "hclsyntax/spec.md#operations",
+      "rule": "A unary operation can be the right operand of a binary operator, including a minus right after a binary minus",
+      "tests": [
+        "native/operators/unary-minus-right-operand",
+        "native/operators/unary-minus-after-binary-minus-parse",
+        "native/operators/unary-not-right-operand"
+      ]
+    },
+    {
+      "id": "operators-binary-operator-symbols",
+      "spec": "hclsyntax/spec.md#operations",
+      "rule": "Each of == != < > <= >= + - * / % && || between two terms forms a binary operation with that operator",
+      "tests": [
+        "native/operators/equal-operator-parse",
+        "native/operators/not-equal-operator-parse",
+        "native/operators/less-than-operator-parse",
+        "native/operators/greater-than-operator-parse",
+        "native/operators/less-or-equal-operator-parse",
+        "native/operators/greater-or-equal-operator-parse",
+        "native/operators/add-operator-parse",
+        "native/operators/subtract-operator-parse",
+        "native/operators/multiply-operator-parse",
+        "native/operators/divide-operator-parse",
+        "native/operators/modulo-operator-parse",
+        "native/operators/and-operator-parse",
+        "native/operators/or-operator-parse"
+      ]
+    },
+    {
+      "id": "operators-binary-requires-both-operands",
+      "spec": "hclsyntax/spec.md#operations",
+      "rule": "A binary operator needs a term on each side; a missing operand or a second binary operator is a syntax error",
+      "tests": [
+        "native/operators/binary-missing-right-operand",
+        "native/operators/binary-missing-left-operand",
+        "native/operators/binary-operators-adjacent"
+      ]
+    },
+    {
+      "id": "operators-minus-after-operand-is-binary",
+      "spec": "hclsyntax/spec.md#operations",
+      "rule": "A minus sign that follows a complete operand is binary subtraction, even when it touches the next number",
+      "tests": [
+        "native/operators/minus-after-operand-is-subtraction",
+        "native/operators/minus-minus-between-numbers"
+      ]
+    },
+    {
+      "id": "operators-whitespace-around-operators-optional",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "Operators, including the ? and : of a conditional, need no whitespace between them and their operands",
+      "tests": [
+        "native/operators/conditional-without-whitespace-parse",
+        "native/operators/arithmetic-without-whitespace-parse"
+      ]
+    },
+    {
+      "id": "operators-precedence-multiplicative-over-additive",
+      "spec": "hclsyntax/spec.md#operations",
+      "rule": "* / % (level 6) bind tighter than + - (level 5), whichever comes first",
+      "tests": [
+        "native/operators/multiply-before-add",
+        "native/operators/multiply-before-subtract-parse",
+        "native/operators/divide-before-add",
+        "native/operators/subtract-then-modulo"
+      ]
+    },
+    {
+      "id": "operators-precedence-additive-over-ordering",
+      "spec": "hclsyntax/spec.md#operations",
+      "rule": "+ - (level 5) bind tighter than < <= > >= (level 4), whichever comes first",
+      "tests": [
+        "native/operators/add-before-less-than-parse",
+        "native/operators/greater-or-equal-then-subtract-parse",
+        "native/operators/add-before-greater-than",
+        "native/operators/less-or-equal-then-subtract"
+      ]
+    },
+    {
+      "id": "operators-precedence-ordering-over-equality",
+      "spec": "hclsyntax/spec.md#operations",
+      "rule": "< <= > >= (level 4) bind tighter than == != (level 3), whichever comes first",
+      "tests": [
+        "native/operators/less-than-before-equal-parse",
+        "native/operators/not-equal-then-less-or-equal-parse",
+        "native/operators/greater-than-before-not-equal",
+        "native/operators/equal-then-greater-or-equal"
+      ]
+    },
+    {
+      "id": "operators-precedence-equality-over-and",
+      "spec": "hclsyntax/spec.md#operations",
+      "rule": "== != (level 3) bind tighter than && (level 2), whichever comes first",
+      "tests": [
+        "native/operators/equal-before-and-parse",
+        "native/operators/and-then-not-equal-parse",
+        "native/operators/equal-before-and",
+        "native/operators/and-then-not-equal"
+      ]
+    },
+    {
+      "id": "operators-precedence-and-over-or",
+      "spec": "hclsyntax/spec.md#operations",
+      "rule": "&& (level 2) binds tighter than || (level 1), whichever comes first",
+      "tests": [
+        "native/operators/and-before-or-parse",
+        "native/operators/or-then-and-parse",
+        "native/operators/and-before-or",
+        "native/operators/or-then-and"
+      ]
+    },
+    {
+      "id": "operators-precedence-all-levels",
+      "spec": "hclsyntax/spec.md#operations",
+      "rule": "The six binary precedence levels form a single order, so an expression using one operator from each level nests by level in either direction",
+      "tests": [
+        "native/operators/precedence-all-levels-loosest-first-parse",
+        "native/operators/precedence-all-levels-tightest-first-parse"
+      ]
+    },
+    {
+      "id": "operators-conditional-below-binary-operators",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "The conditional operator binds looser than every binary operator, so operations before ? form the condition and operations after : form the false result",
+      "tests": [
+        "native/operators/conditional-condition-includes-or-parse",
+        "native/operators/conditional-false-result-includes-or-parse",
+        "native/operators/conditional-condition-includes-or",
+        "native/operators/conditional-false-result-includes-add"
+      ]
+    },
+    {
+      "id": "operators-multiplicative-left-associative",
+      "spec": "hclsyntax/spec.md#operations",
+      "rule": "* / and % share one precedence level and group from left to right in any mix",
+      "tests": [
+        "native/operators/divide-multiply-left-associative-parse",
+        "native/operators/multiply-modulo-left-associative-parse",
+        "native/operators/modulo-divide-left-associative-parse",
+        "native/operators/divide-multiply-left-associative",
+        "native/operators/multiply-modulo-left-associative",
+        "native/operators/modulo-divide-left-associative"
+      ]
+    },
+    {
+      "id": "operators-additive-left-associative",
+      "spec": "hclsyntax/spec.md#operations",
+      "rule": "+ and - share one precedence level and group from left to right in any mix",
+      "tests": [
+        "native/operators/subtraction-left-associative",
+        "native/operators/subtract-add-left-associative-parse",
+        "native/operators/add-subtract-left-associative-parse",
+        "native/operators/subtract-add-left-associative"
+      ]
+    },
+    {
+      "id": "operators-ordering-left-associative",
+      "spec": "hclsyntax/spec.md#operations",
+      "rule": "< <= > and >= share one precedence level and group from left to right, so a chain compares a bool result with the next operand rather than testing a range",
+      "tests": [
+        "native/operators/less-than-less-or-equal-left-associative-parse",
+        "native/operators/less-or-equal-greater-than-left-associative-parse",
+        "native/operators/greater-than-greater-or-equal-left-associative-parse",
+        "native/operators/greater-or-equal-less-than-left-associative-parse",
+        "native/operators/chained-comparison-is-error"
+      ]
+    },
+    {
+      "id": "operators-equality-left-associative",
+      "spec": "hclsyntax/spec.md#operations",
+      "rule": "== and != share one precedence level and group from left to right",
+      "tests": [
+        "native/operators/equal-not-equal-left-associative-parse",
+        "native/operators/not-equal-equal-left-associative-parse",
+        "native/operators/equal-not-equal-left-associative",
+        "native/operators/not-equal-equal-left-associative"
+      ]
+    },
+    {
+      "id": "operators-and-left-associative",
+      "spec": "hclsyntax/spec.md#operations",
+      "rule": "A chain of && operations groups from left to right",
+      "tests": [
+        "native/operators/and-left-associative-parse"
+      ]
+    },
+    {
+      "id": "operators-or-left-associative",
+      "spec": "hclsyntax/spec.md#operations",
+      "rule": "A chain of || operations groups from left to right",
+      "tests": [
+        "native/operators/or-left-associative-parse"
+      ]
+    },
+    {
+      "id": "operators-parentheses-group",
+      "spec": "hclsyntax/spec.md#expression-terms",
+      "rule": "A parenthesized expression is a term, so parentheses override both precedence and associativity",
+      "tests": [
+        "native/operators/parentheses-override-precedence-parse",
+        "native/operators/parentheses-override-precedence",
+        "native/operators/parentheses-override-associativity"
+      ]
+    },
+    {
+      "id": "operators-parentheses-leave-no-node",
+      "spec": "hclsyntax/spec.md#expression-terms",
+      "rule": "Parentheses only group: a parenthesized expression has the same tree as the expression inside, however deeply nested",
+      "tests": [
+        "native/operators/parentheses-leave-no-node",
+        "native/operators/nested-parentheses-leave-no-node"
+      ]
+    },
+    {
+      "id": "operators-parentheses-ignore-newlines",
+      "spec": "hclsyntax/spec.md#expression-terms",
+      "rule": "Inside parentheses newlines are ignored between any two tokens of an operation or conditional",
+      "tests": [
+        "native/operators/parentheses-allow-newlines",
+        "native/operators/parentheses-allow-newline-after-operator",
+        "native/operators/parentheses-allow-newlines-inside-delimiters",
+        "native/operators/parentheses-allow-newlines-in-conditional",
+        "native/operators/parentheses-allow-newline-after-unary-operator"
+      ]
+    },
+    {
+      "id": "operators-parentheses-need-expression",
+      "spec": "hclsyntax/spec.md#expression-terms",
+      "rule": "Parentheses with nothing inside are a syntax error",
+      "tests": [
+        "native/operators/empty-parentheses"
+      ]
+    },
+    {
+      "id": "operators-parentheses-must-balance",
+      "spec": "hclsyntax/spec.md#expression-terms",
+      "rule": "Every opening parenthesis needs a matching closing one, and vice versa",
+      "tests": [
+        "native/operators/unclosed-parenthesis",
+        "native/lexical/unmatched-closing-parenthesis-is-invalid"
+      ]
+    },
+    {
+      "id": "operators-parentheses-hold-one-expression",
+      "spec": "hclsyntax/spec.md#expression-terms",
+      "rule": "Parentheses contain exactly one expression, not a sequence or comma-separated list",
+      "tests": [
+        "native/operators/parentheses-with-two-expressions",
+        "native/operators/parentheses-with-comma"
+      ]
+    },
+    {
+      "id": "operators-newline-ends-operation",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "Outside parentheses a newline ends the attribute, so it can't come before or after a binary operator or after a unary operator",
+      "tests": [
+        "native/operators/newline-after-binary-operator",
+        "native/structure/newline-ends-attribute",
+        "native/operators/newline-after-unary-operator"
+      ]
+    },
+    {
+      "id": "operators-newline-ends-conditional",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "Outside parentheses a newline ends the attribute, so it can't come before or after the ? or the : of a conditional",
+      "tests": [
+        "native/operators/newline-after-question-mark",
+        "native/operators/newline-before-question-mark",
+        "native/operators/newline-before-colon",
+        "native/operators/newline-after-colon"
+      ]
+    },
+    {
+      "id": "operators-equal-same-type",
+      "spec": "hclsyntax/spec.md#comparison-operators",
+      "rule": "== is true for equal values of the same primitive type and false for different ones",
+      "tests": [
+        "native/operators/equal-numbers",
+        "native/operators/equal-different-numbers",
+        "native/operators/equal-strings",
+        "native/operators/equal-different-strings",
+        "native/operators/equal-bools",
+        "native/operators/equal-different-bools"
+      ]
+    },
+    {
+      "id": "operators-equal-different-types",
+      "spec": "hclsyntax/spec.md#comparison-operators",
+      "rule": "Values of different types are never equal: == applies to any operands without converting them",
+      "tests": [
+        "native/operators/equal-number-and-string",
+        "native/operators/equal-string-and-bool",
+        "native/operators/equal-empty-tuple-and-empty-object",
+        "native/operators/equal-tuples-with-different-element-types",
+        "native/operators/equal-tuple-and-list"
+      ]
+    },
+    {
+      "id": "operators-equal-structural-values",
+      "spec": "spec.md#structural-types",
+      "rule": "Tuples are equal when their elements are pairwise equal, and objects when they have the same attributes with equal values, at any depth",
+      "tests": [
+        "native/operators/equal-tuples",
+        "native/operators/equal-tuples-different-order",
+        "native/operators/equal-tuples-different-length",
+        "native/operators/equal-objects-attribute-order",
+        "native/operators/equal-objects-different-values",
+        "native/operators/equal-objects-different-attributes",
+        "native/operators/equal-nested-structures",
+        "native/operators/equal-nested-structures-with-different-values"
+      ]
+    },
+    {
+      "id": "operators-equal-collection-values",
+      "spec": "spec.md#collection-types",
+      "rule": "Collections of the same type with equal elements are equal",
+      "tests": [
+        "native/operators/equal-lists"
+      ]
+    },
+    {
+      "id": "operators-equal-null",
+      "spec": "hclsyntax/spec.md#comparison-operators",
+      "rule": "The null keyword is equal to itself and not equal to a number (disputed)",
+      "tests": [
+        "native/operators/equal-number-and-null",
+        "native/operators/equal-null-and-null"
+      ]
+    },
+    {
+      "id": "operators-not-equal-opposite",
+      "spec": "hclsyntax/spec.md#comparison-operators",
+      "rule": "!= always gives the opposite of == for the same operands",
+      "tests": [
+        "native/operators/not-equal-different-numbers",
+        "native/operators/not-equal-same-numbers",
+        "native/operators/not-equal-string-and-number",
+        "native/operators/not-equal-equal-tuples",
+        "native/operators/not-equal-different-objects"
+      ]
+    },
+    {
+      "id": "operators-equality-reports-operand-errors",
+      "spec": "hclsyntax/spec.md#comparison-operators",
+      "rule": "An error in an operand of an equality operator is reported",
+      "tests": [
+        "native/operators/equality-reports-operand-error"
+      ]
+    },
+    {
+      "id": "operators-less-than",
+      "spec": "hclsyntax/spec.md#comparison-operators",
+      "rule": "< is true exactly when the left operand is smaller, so it is false for equal operands",
+      "tests": [
+        "native/operators/less-than-true",
+        "native/operators/less-than-false",
+        "native/operators/less-than-equal-operands"
+      ]
+    },
+    {
+      "id": "operators-less-or-equal",
+      "spec": "hclsyntax/spec.md#comparison-operators",
+      "rule": "<= is true exactly when the left operand is smaller or equal, so it is true for equal operands",
+      "tests": [
+        "native/operators/less-or-equal-true",
+        "native/operators/less-or-equal-false",
+        "native/operators/less-or-equal-equal-operands"
+      ]
+    },
+    {
+      "id": "operators-greater-than",
+      "spec": "hclsyntax/spec.md#comparison-operators",
+      "rule": "> is true exactly when the left operand is larger, so it is false for equal operands",
+      "tests": [
+        "native/operators/greater-than-true",
+        "native/operators/greater-than-false",
+        "native/operators/greater-than-equal-operands"
+      ]
+    },
+    {
+      "id": "operators-greater-or-equal",
+      "spec": "hclsyntax/spec.md#comparison-operators",
+      "rule": ">= is true exactly when the left operand is larger or equal, so it is true for equal operands",
+      "tests": [
+        "native/operators/greater-or-equal-true",
+        "native/operators/greater-or-equal-false",
+        "native/operators/greater-or-equal-equal-operands"
+      ]
+    },
+    {
+      "id": "operators-ordering-numeric-order",
+      "spec": "spec.md#primitive-types",
+      "rule": "Ordering compares numbers by exact value, including negative numbers, fractions and integers beyond 53 bits",
+      "tests": [
+        "native/operators/less-than-negative-and-fraction",
+        "native/operators/greater-than-beyond-float-precision"
+      ]
+    },
+    {
+      "id": "operators-ordering-converts-numeric-strings",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "Ordering operators convert numeric string operands to numbers, so they compare numerically, not lexically",
+      "tests": [
+        "native/operators/greater-than-numeric-strings",
+        "native/operators/less-than-numeric-strings",
+        "native/operators/greater-or-equal-numeric-strings",
+        "native/operators/less-or-equal-numeric-strings"
+      ]
+    },
+    {
+      "id": "operators-ordering-rejects-non-numeric-string",
+      "spec": "hclsyntax/spec.md#comparison-operators",
+      "rule": "Ordering operators reject strings that aren't numbers in either operand position",
+      "tests": [
+        "native/operators/less-than-non-numeric-string-operand",
+        "native/operators/greater-than-non-numeric-string-operand",
+        "native/operators/less-or-equal-non-numeric-string-operand",
+        "native/operators/greater-or-equal-non-numeric-string-operand"
+      ]
+    },
+    {
+      "id": "operators-ordering-rejects-bool",
+      "spec": "hclsyntax/spec.md#comparison-operators",
+      "rule": "Ordering operators reject bools in either operand position",
+      "tests": [
+        "native/operators/less-than-bool-operand",
+        "native/operators/greater-than-bool-operand",
+        "native/operators/less-or-equal-bool-operand",
+        "native/operators/greater-or-equal-bool-operand"
+      ]
+    },
+    {
+      "id": "operators-ordering-rejects-tuple",
+      "spec": "hclsyntax/spec.md#comparison-operators",
+      "rule": "Ordering operators reject tuples in either operand position",
+      "tests": [
+        "native/operators/less-than-tuple-operand",
+        "native/operators/greater-than-tuple-operand",
+        "native/operators/less-or-equal-tuple-operand",
+        "native/operators/greater-or-equal-tuple-operand"
+      ]
+    },
+    {
+      "id": "operators-ordering-rejects-object",
+      "spec": "hclsyntax/spec.md#comparison-operators",
+      "rule": "Ordering operators reject objects in either operand position",
+      "tests": [
+        "native/operators/less-than-object-operand",
+        "native/operators/greater-than-object-operand",
+        "native/operators/less-or-equal-object-operand",
+        "native/operators/greater-or-equal-object-operand"
+      ]
+    },
+    {
+      "id": "operators-ordering-rejects-null",
+      "spec": "hclsyntax/spec.md#comparison-operators",
+      "rule": "Ordering operators reject a null operand (disputed)",
+      "tests": [
+        "native/operators/less-than-null-operand",
+        "native/operators/greater-than-null-operand",
+        "native/operators/less-or-equal-null-operand",
+        "native/operators/greater-or-equal-null-operand"
+      ]
+    },
+    {
+      "id": "operators-add",
+      "spec": "hclsyntax/spec.md#arithmetic-operators",
+      "rule": "+ gives the exact sum of two numbers",
+      "tests": [
+        "native/operators/add-numbers",
+        "native/operators/add-fractions"
+      ]
+    },
+    {
+      "id": "operators-subtract",
+      "spec": "hclsyntax/spec.md#arithmetic-operators",
+      "rule": "- gives the exact difference of two numbers",
+      "tests": [
+        "native/operators/subtract-to-negative"
+      ]
+    },
+    {
+      "id": "operators-multiply",
+      "spec": "hclsyntax/spec.md#arithmetic-operators",
+      "rule": "* gives the exact product of two numbers, with the usual signs",
+      "tests": [
+        "native/operators/multiply-numbers",
+        "native/operators/multiply-negative-numbers",
+        "native/operators/multiply-fractions"
+      ]
+    },
+    {
+      "id": "operators-divide",
+      "spec": "hclsyntax/spec.md#arithmetic-operators",
+      "rule": "/ gives the exact quotient, which need not be an integer and is never truncated or floored",
+      "tests": [
+        "native/operators/divide-to-fraction",
+        "native/operators/divide-negative-to-fraction",
+        "native/operators/divide-exact"
+      ]
+    },
+    {
+      "id": "operators-modulo",
+      "spec": "hclsyntax/spec.md#arithmetic-operators",
+      "rule": "% gives the remainder of dividing by the divisor, for integer and fractional operands alike",
+      "tests": [
+        "native/operators/modulo-numbers",
+        "native/operators/modulo-exact-multiple",
+        "native/operators/modulo-dividend-smaller-than-divisor",
+        "native/operators/modulo-fractional-dividend",
+        "native/operators/modulo-fractional-divisor"
+      ]
+    },
+    {
+      "id": "operators-modulo-negative-operands",
+      "spec": "hclsyntax/spec.md#arithmetic-operators",
+      "rule": "The remainder takes the sign of the dividend (disputed)",
+      "tests": [
+        "native/operators/modulo-negative-dividend",
+        "native/operators/modulo-negative-divisor",
+        "native/operators/modulo-negative-operands"
+      ]
+    },
+    {
+      "id": "operators-divide-by-zero",
+      "spec": "hclsyntax/spec.md#arithmetic-operators",
+      "rule": "Dividing a non-zero number by zero gives an infinity whose sign combines the signs of both operands, a negated zero counting as negative (disputed)",
+      "tests": [
+        "native/operators/divide-by-zero",
+        "native/operators/divide-negative-by-zero",
+        "native/operators/divide-by-negative-zero"
+      ]
+    },
+    {
+      "id": "operators-modulo-by-zero",
+      "spec": "hclsyntax/spec.md#arithmetic-operators",
+      "rule": "The remainder of division by zero is the dividend (disputed)",
+      "tests": [
+        "native/operators/modulo-by-zero"
+      ]
+    },
+    {
+      "id": "operators-arithmetic-arbitrary-precision",
+      "spec": "hclsyntax/spec.md#arithmetic-operators",
+      "rule": "Arithmetic is exact in an arbitrary-precision number space, so results beyond 64 bits, or needing more precision than a float64, lose nothing",
+      "tests": [
+        "native/operators/add-beyond-64-bits",
+        "native/operators/subtract-beyond-64-bits",
+        "native/operators/multiply-beyond-64-bits",
+        "native/operators/multiply-200-bit-product",
+        "native/operators/divide-beyond-64-bits",
+        "native/operators/modulo-beyond-64-bits",
+        "native/operators/negate-beyond-64-bits",
+        "native/operators/add-fraction-beyond-float-precision"
+      ]
+    },
+    {
+      "id": "operators-arithmetic-infinite-operands",
+      "spec": "hclsyntax/spec.md#arithmetic-operators",
+      "rule": "Arithmetic with an infinite operand gives the extended-real result where one exists: an infinity of the right sign, or zero for a number divided by infinity",
+      "tests": [
+        "native/operators/add-infinity",
+        "native/operators/subtract-infinity",
+        "native/operators/multiply-infinity-by-negative",
+        "native/operators/divide-by-infinity",
+        "native/operators/negate-negative-infinity"
+      ]
+    },
+    {
+      "id": "operators-arithmetic-undefined-infinite-results",
+      "spec": "spec.md#primitive-types",
+      "rule": "Infinity minus infinity, the sum of opposite infinities, infinity times zero and infinity over infinity are errors, since there is no NaN",
+      "tests": [
+        "native/operators/subtract-infinity-from-itself",
+        "native/operators/add-opposite-infinities",
+        "native/operators/multiply-infinity-by-zero",
+        "native/operators/divide-infinity-by-infinity"
+      ]
+    },
+    {
+      "id": "operators-arithmetic-converts-numeric-strings",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "Arithmetic operators convert numeric string operands to numbers, and the result is always a number",
+      "tests": [
+        "native/operators/add-numeric-strings",
+        "native/operators/subtract-numeric-string",
+        "native/operators/multiply-numeric-string",
+        "native/operators/divide-numeric-string",
+        "native/operators/modulo-numeric-string"
+      ]
+    },
+    {
+      "id": "operators-arithmetic-rejects-non-numeric-string",
+      "spec": "hclsyntax/spec.md#arithmetic-operators",
+      "rule": "Arithmetic operators reject strings that aren't numbers, so + doesn't concatenate them",
+      "tests": [
+        "native/operators/add-non-numeric-string-operand",
+        "native/operators/subtract-non-numeric-string-operand",
+        "native/operators/multiply-non-numeric-string-operand",
+        "native/operators/divide-non-numeric-string-operand",
+        "native/operators/modulo-non-numeric-string-operand",
+        "native/operators/add-does-not-concatenate-strings"
+      ]
+    },
+    {
+      "id": "operators-arithmetic-rejects-bool",
+      "spec": "hclsyntax/spec.md#arithmetic-operators",
+      "rule": "Arithmetic operators reject bools",
+      "tests": [
+        "native/operators/add-bool-operand",
+        "native/operators/subtract-bool-operand",
+        "native/operators/multiply-bool-operand",
+        "native/operators/divide-bool-operand",
+        "native/operators/modulo-bool-operand"
+      ]
+    },
+    {
+      "id": "operators-arithmetic-rejects-tuple",
+      "spec": "hclsyntax/spec.md#arithmetic-operators",
+      "rule": "Arithmetic operators reject tuples, so + doesn't concatenate them",
+      "tests": [
+        "native/operators/add-tuple-operand",
+        "native/operators/subtract-tuple-operand",
+        "native/operators/multiply-tuple-operand",
+        "native/operators/divide-tuple-operand",
+        "native/operators/modulo-tuple-operand",
+        "native/operators/add-does-not-concatenate-tuples"
+      ]
+    },
+    {
+      "id": "operators-arithmetic-rejects-object",
+      "spec": "hclsyntax/spec.md#arithmetic-operators",
+      "rule": "Arithmetic operators reject objects",
+      "tests": [
+        "native/operators/add-object-operand",
+        "native/operators/subtract-object-operand",
+        "native/operators/multiply-object-operand",
+        "native/operators/divide-object-operand",
+        "native/operators/modulo-object-operand"
+      ]
+    },
+    {
+      "id": "operators-arithmetic-rejects-null",
+      "spec": "hclsyntax/spec.md#arithmetic-operators",
+      "rule": "Arithmetic operators reject a null operand (disputed)",
+      "tests": [
+        "native/operators/add-null-operand",
+        "native/operators/subtract-null-operand",
+        "native/operators/multiply-null-operand",
+        "native/operators/divide-null-operand",
+        "native/operators/modulo-null-operand"
+      ]
+    },
+    {
+      "id": "operators-arithmetic-reports-operand-errors",
+      "spec": "hclsyntax/spec.md#arithmetic-operators",
+      "rule": "An error in an operand of an arithmetic or unary operator is reported",
+      "tests": [
+        "native/operators/arithmetic-reports-operand-error",
+        "native/operators/unary-reports-operand-error"
+      ]
+    },
+    {
+      "id": "operators-negate",
+      "spec": "hclsyntax/spec.md#arithmetic-operators",
+      "rule": "Unary - gives the additive inverse of a number",
+      "tests": [
+        "native/operators/negate-number",
+        "native/operators/negate-negative-number"
+      ]
+    },
+    {
+      "id": "operators-negate-converts-numeric-string",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "Unary - converts a numeric string operand to a number",
+      "tests": [
+        "native/operators/negate-numeric-string"
+      ]
+    },
+    {
+      "id": "operators-negate-rejects-non-numbers",
+      "spec": "hclsyntax/spec.md#arithmetic-operators",
+      "rule": "Unary - rejects strings that aren't numbers, bools, tuples and objects",
+      "tests": [
+        "native/operators/negate-non-numeric-string",
+        "native/operators/negate-bool",
+        "native/operators/negate-tuple",
+        "native/operators/negate-object"
+      ]
+    },
+    {
+      "id": "operators-negate-rejects-null",
+      "spec": "hclsyntax/spec.md#arithmetic-operators",
+      "rule": "Unary - rejects a null operand (disputed)",
+      "tests": [
+        "native/operators/negate-null"
+      ]
+    },
+    {
+      "id": "operators-and-truth-table",
+      "spec": "hclsyntax/spec.md#logic-operators",
+      "rule": "&& is true only when both operands are true",
+      "tests": [
+        "native/operators/and-true-true",
+        "native/operators/and-true-false",
+        "native/operators/and-false-true",
+        "native/operators/and-false-false"
+      ]
+    },
+    {
+      "id": "operators-or-truth-table",
+      "spec": "hclsyntax/spec.md#logic-operators",
+      "rule": "|| is false only when both operands are false",
+      "tests": [
+        "native/operators/or-true-true",
+        "native/operators/or-true-false",
+        "native/operators/or-false-true",
+        "native/operators/or-false-false"
+      ]
+    },
+    {
+      "id": "operators-not",
+      "spec": "hclsyntax/spec.md#logic-operators",
+      "rule": "! gives the opposite bool",
+      "tests": [
+        "native/operators/not-true",
+        "native/operators/not-false"
+      ]
+    },
+    {
+      "id": "operators-logic-converts-bool-strings",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "Logic operators convert the strings \"true\" and \"false\" to bools, and the result is always a bool",
+      "tests": [
+        "native/operators/and-bool-string",
+        "native/operators/or-bool-string",
+        "native/operators/not-bool-string"
+      ]
+    },
+    {
+      "id": "operators-and-rejects-non-bools",
+      "spec": "hclsyntax/spec.md#logic-operators",
+      "rule": "&& rejects numbers, strings that aren't bools, tuples and objects",
+      "tests": [
+        "native/operators/and-number-operand",
+        "native/operators/and-non-bool-string-operand",
+        "native/operators/and-tuple-operand",
+        "native/operators/and-object-operand"
+      ]
+    },
+    {
+      "id": "operators-or-rejects-non-bools",
+      "spec": "hclsyntax/spec.md#logic-operators",
+      "rule": "|| rejects numbers, strings that aren't bools, tuples and objects",
+      "tests": [
+        "native/operators/or-number-operand",
+        "native/operators/or-non-bool-string-operand",
+        "native/operators/or-tuple-operand",
+        "native/operators/or-object-operand"
+      ]
+    },
+    {
+      "id": "operators-not-rejects-non-bools",
+      "spec": "hclsyntax/spec.md#logic-operators",
+      "rule": "! rejects numbers, strings that aren't bools, tuples and objects",
+      "tests": [
+        "native/operators/not-number-operand",
+        "native/operators/not-non-bool-string-operand",
+        "native/operators/not-tuple-operand",
+        "native/operators/not-object-operand"
+      ]
+    },
+    {
+      "id": "operators-logic-null-operands",
+      "spec": "hclsyntax/spec.md#logic-operators",
+      "rule": "A null operand makes && false and doesn't stop || from being true when the other operand is true, but is otherwise rejected by || and ! (disputed)",
+      "tests": [
+        "native/operators/and-null-operand",
+        "native/operators/or-null-and-true-operands",
+        "native/operators/or-null-and-false-operands",
+        "native/operators/not-null-operand"
+      ]
+    },
+    {
+      "id": "operators-logic-ignores-error-in-undeciding-operand",
+      "spec": "hclsyntax/spec.md#logic-operators",
+      "rule": "When one operand decides the result (false for &&, true for ||), an error in the other operand is dropped if that operand still yields a bool placeholder, as an undefined variable or a failed comparison does (disputed)",
+      "tests": [
+        "native/operators/or-ignores-error-in-unused-operand",
+        "native/operators/and-ignores-error-in-unused-operand",
+        "native/operators/or-ignores-error-in-left-operand",
+        "native/operators/and-ignores-error-in-left-operand",
+        "native/operators/and-ignores-failed-comparison-in-unused-operand"
+      ]
+    },
+    {
+      "id": "operators-logic-reports-error-in-deciding-operand",
+      "spec": "hclsyntax/spec.md#logic-operators",
+      "rule": "When the other operand doesn't decide the result, an error in either operand of && or || is reported",
+      "tests": [
+        "native/operators/or-reports-error-in-deciding-operand",
+        "native/operators/and-reports-error-in-deciding-operand",
+        "native/operators/and-reports-error-in-first-operand",
+        "native/operators/or-reports-error-in-first-operand"
+      ]
+    },
+    {
+      "id": "operators-logic-checks-types-of-both-operands",
+      "spec": "hclsyntax/spec.md#logic-operators",
+      "rule": "Both operands of && and || must be bools, even when the other operand decides the result, so a non-bool operand or a failed operation with a non-bool result is an error",
+      "tests": [
+        "native/operators/or-checks-type-of-unused-operand",
+        "native/operators/and-checks-type-of-unused-operand",
+        "native/operators/or-reports-failed-addition-in-unused-operand"
+      ]
+    },
+    {
+      "id": "operators-conditional-syntax",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "condition ? true-result : false-result forms a conditional expression",
+      "tests": [
+        "native/operators/conditional-parse"
+      ]
+    },
+    {
+      "id": "operators-conditional-requires-all-parts",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "A conditional needs a condition, a ?, a true result, a : and a false result; leaving out any part is a syntax error",
+      "tests": [
+        "native/operators/conditional-missing-colon",
+        "native/operators/conditional-missing-false-result",
+        "native/operators/conditional-missing-true-result",
+        "native/operators/conditional-missing-condition",
+        "native/lexical/colon-outside-conditional-is-invalid"
+      ]
+    },
+    {
+      "id": "operators-conditional-true-result-is-full-expression",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "The true result is a complete expression, which may contain binary operators and conditionals",
+      "tests": [
+        "native/operators/conditional-true-result-binary-parse",
+        "native/operators/conditional-nested-in-true-result-parse",
+        "native/operators/conditional-nested-in-true-result"
+      ]
+    },
+    {
+      "id": "operators-conditional-nests-in-false-result",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "A conditional after the colon becomes the false result, so chained conditionals group to the right (disputed)",
+      "tests": [
+        "native/operators/conditional-right-associative-parse",
+        "native/operators/conditional-right-associative"
+      ]
+    },
+    {
+      "id": "operators-conditional-as-condition-needs-parentheses",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "A conditional can be the condition of another conditional when parenthesized",
+      "tests": [
+        "native/operators/conditional-as-condition-parse",
+        "native/operators/conditional-as-condition"
+      ]
+    },
+    {
+      "id": "operators-conditional-as-operand-needs-parentheses",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "A conditional can be an operand of a binary operator when parenthesized",
+      "tests": [
+        "native/operators/conditional-as-operand-parse",
+        "native/operators/conditional-as-operand"
+      ]
+    },
+    {
+      "id": "operators-conditional-selects-result",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "A true condition selects the true result and a false one the false result",
+      "tests": [
+        "native/operators/conditional-selects-true-result",
+        "native/operators/conditional-selects-false-result"
+      ]
+    },
+    {
+      "id": "operators-conditional-ignores-unselected-errors",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "An error in the result that isn't selected is ignored",
+      "tests": [
+        "native/operators/conditional-ignores-unselected-error",
+        "native/operators/conditional-ignores-error-in-unselected-true-result"
+      ]
+    },
+    {
+      "id": "operators-conditional-reports-selected-errors",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "An error in the selected result is reported",
+      "tests": [
+        "native/operators/conditional-reports-error-in-selected-true-result",
+        "native/operators/conditional-reports-error-in-selected-false-result"
+      ]
+    },
+    {
+      "id": "operators-conditional-converts-condition",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "A string condition of \"true\" or \"false\" is converted to a bool",
+      "tests": [
+        "native/operators/conditional-converts-string-condition"
+      ]
+    },
+    {
+      "id": "operators-conditional-condition-must-be-bool",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "A condition that is a number, a string that isn't a bool, a tuple or an object is an error",
+      "tests": [
+        "native/operators/conditional-number-condition",
+        "native/operators/conditional-non-bool-string-condition",
+        "native/operators/conditional-tuple-condition",
+        "native/operators/conditional-object-condition"
+      ]
+    },
+    {
+      "id": "operators-conditional-null-condition",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "A null condition is an error (disputed)",
+      "tests": [
+        "native/operators/conditional-null-condition"
+      ]
+    },
+    {
+      "id": "operators-conditional-reports-condition-errors",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "An error in the condition is reported",
+      "tests": [
+        "native/operators/conditional-reports-error-in-condition"
+      ]
+    },
+    {
+      "id": "operators-conditional-unifies-results",
+      "spec": "spec.md#type-unification",
+      "rule": "The result has the unified type of both results, with the selected one converted to it",
+      "tests": [
+        "native/operators/conditional-unifies-result-types",
+        "native/operators/conditional-unifies-false-result"
+      ]
+    },
+    {
+      "id": "operators-conditional-results-must-unify",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "Results whose types can't be unified are an error, whichever result is selected",
+      "tests": [
+        "native/operators/conditional-result-types-must-unify"
+      ]
+    },
+    {
+      "id": "operators-conditional-unselected-result-still-unifies",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "A result that fails to evaluate still has its type unified with the other result, so a failed bool result that isn't selected makes a conditional with a number result fail (disputed)",
+      "tests": [
+        "native/operators/conditional-unselected-error-still-unified"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "description": "An attribute cannot be defined again after a block in the same body",
+  "spec": [
+    "hclsyntax/spec.md#attribute-definitions",
+    "spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "reference_error": "Attribute redefined",
+  "expect": {
+    "valid": false
+  }
+}

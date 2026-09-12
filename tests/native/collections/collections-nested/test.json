@@ -1,0 +1,46 @@
+{
+  "description": "Tuple and object constructors can be nested inside each other",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "tuple",
+          "elements": [
+            {
+              "kind": "tuple",
+              "elements": []
+            },
+            {
+              "kind": "object",
+              "items": [
+                {
+                  "key": {
+                    "kind": "literal",
+                    "value": {
+                      "string": "b"
+                    }
+                  },
+                  "value": {
+                    "kind": "tuple",
+                    "elements": [
+                      {
+                        "kind": "object",
+                        "items": []
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "description": "Attribute access on a map without an element of that key is an error",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "m": {
+      "map": {
+        "k": {
+          "string": "v"
+        }
+      },
+      "element_type": "string"
+    }
+  },
+  "reference_error": "Missing map element",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

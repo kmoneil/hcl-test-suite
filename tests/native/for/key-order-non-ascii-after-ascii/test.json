@@ -1,0 +1,29 @@
+{
+  "description": "Key order compares code points, so é sorts after z",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "notes": "Lexicographic order compares characters by code point, not by a language's alphabet, so U+00E9 comes after U+007A.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "e"
+            },
+            {
+              "string": "z"
+            },
+            {
+              "string": "é"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

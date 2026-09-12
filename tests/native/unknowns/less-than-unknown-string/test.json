@@ -1,0 +1,29 @@
+{
+  "description": "Comparing an unknown string with < gives an unknown bool",
+  "spec": [
+    "hclsyntax/spec.md#comparison-operators",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "notes": "A string converts to number, so an unknown string is a correctly typed operand.",
+  "variables": {
+    "u": {
+      "unknown": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "bool"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

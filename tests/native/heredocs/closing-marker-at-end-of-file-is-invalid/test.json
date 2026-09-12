@@ -1,0 +1,13 @@
+{
+  "description": "A closing marker at the end of the file without a newline does not end the heredoc",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The prose says a heredoc ends when its marker appears on a line of its own, and prose outranks the Newline that the grammar puts after the closing identifier. The last line of a file is a line of its own even without a newline. hashicorp/hcl only recognizes the marker when a newline follows it (the heredocLiteralEOL action in hclsyntax/scan_tokens.rl matches a line together with its newline), although it doesn't require a newline after the last attribute of a file.",
+  "reference_error": "Unterminated template string",
+  "expect": {
+    "valid": false
+  }
+}

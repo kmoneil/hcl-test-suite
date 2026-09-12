@@ -1,0 +1,18 @@
+{
+  "description": "2 + 3 is 5",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "5"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "description": "Nested full splats give a tuple of tuples",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec's grammar lets a full splat consume only attribute accesses and index operations (fullSplat = \"[\" \"*\" \"]\" (GetAttr | Index)*), so a second splat operator would start a new splat on the first splat's whole result, and the prose doesn't mention nesting. hashicorp/hcl makes everything after [*], including further splats, part of the first splat's each expression (parseExpressionTraversals in hclsyntax/parser.go). Read that way, the second splat would apply .c to each tuple of b values, which is an error.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "tuple": [
+                {
+                  "number": "1"
+                },
+                {
+                  "number": "2"
+                }
+              ]
+            },
+            {
+              "tuple": [
+                {
+                  "number": "3"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

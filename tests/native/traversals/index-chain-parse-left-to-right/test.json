@@ -1,0 +1,37 @@
+{
+  "description": "Chained index operations apply from left to right",
+  "spec": [
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "index",
+          "collection": {
+            "kind": "index",
+            "collection": {
+              "kind": "variable",
+              "name": "t"
+            },
+            "key": {
+              "kind": "literal",
+              "value": {
+                "number": "0"
+              }
+            }
+          },
+          "key": {
+            "kind": "literal",
+            "value": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

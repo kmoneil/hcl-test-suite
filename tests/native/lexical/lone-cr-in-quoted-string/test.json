@@ -1,0 +1,14 @@
+{
+  "description": "A CR that is not followed by LF is rejected inside a quoted string",
+  "spec": [
+    "hclsyntax/spec.md#comments-and-whitespace",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec defines the newline sequences as LF and CR LF, and quoted templates only forbid literal newline sequences, so a lone CR should be an ordinary character with the value \"x\\ry\". The reference scanner treats CR like LF inside quoted strings (NewlineChars in hclsyntax/scan_tokens.rl), and checkInvalidTokens in token.go reports the TokenQuotedNewline.",
+  "reference_error": "Invalid multi-line string",
+  "expect": {
+    "valid": false
+  }
+}

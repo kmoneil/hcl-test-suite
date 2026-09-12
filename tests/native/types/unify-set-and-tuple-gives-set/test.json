@@ -1,0 +1,40 @@
+{
+  "description": "A set and a tuple unify to a set",
+  "spec": [
+    "spec.md#type-unification",
+    "spec.md#collection-and-structural-type-conversions",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says set and tuple types unify by preferring the tuple type. go-cty ranks the tuple type first but has no set to tuple conversion, so it falls back to converting the tuple to a set (unify in cty/convert/unify.go, compareTypes in cty/convert/compare_types.go).",
+  "variables": {
+    "s": {
+      "set": [
+        {
+          "number": "5"
+        }
+      ],
+      "element_type": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "set": [
+            {
+              "number": "5"
+            }
+          ],
+          "element_type": "number"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

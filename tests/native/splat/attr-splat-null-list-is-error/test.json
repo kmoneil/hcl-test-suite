@@ -1,0 +1,24 @@
+{
+  "description": "An attribute-only splat applied to a null list is an error",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators",
+    "spec.md#null-values"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "l": {
+      "null": [
+        "list",
+        "string"
+      ]
+    }
+  },
+  "reference_error": "Splat of null value",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

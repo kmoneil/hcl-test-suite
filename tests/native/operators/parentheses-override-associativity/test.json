@@ -1,0 +1,19 @@
+{
+  "description": "10 - (4 - 3) evaluates the parenthesized subtraction first",
+  "spec": [
+    "hclsyntax/spec.md#expression-terms",
+    "hclsyntax/spec.md#operations"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "9"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

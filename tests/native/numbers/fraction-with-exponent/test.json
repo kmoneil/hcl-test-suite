@@ -1,0 +1,18 @@
+{
+  "description": "A numeric literal can have a fractional part followed by an exponent",
+  "spec": [
+    "hclsyntax/spec.md#numeric-literals"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1500"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "description": "A key expression may produce names that aren't identifiers, such as ones with spaces or digits",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#structural-types"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "a b": {
+              "string": "a b"
+            },
+            "1": {
+              "string": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

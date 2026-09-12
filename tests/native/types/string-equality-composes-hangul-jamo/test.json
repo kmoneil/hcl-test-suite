@@ -1,0 +1,19 @@
+{
+  "description": "A Hangul syllable spelled with conjoining jamo equals the precomposed syllable",
+  "spec": [
+    "spec.md#primitive-types",
+    "hclsyntax/spec.md#comparison-operators"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

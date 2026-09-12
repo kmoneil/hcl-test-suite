@@ -1,0 +1,12 @@
+{
+  "description": "An attribute needs a value before the end of its line",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#attribute-definitions"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

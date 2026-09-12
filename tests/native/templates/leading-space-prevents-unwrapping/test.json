@@ -1,0 +1,18 @@
+{
+  "description": "A space before a lone interpolation makes the template produce a string",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolation-unwrapping"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": " 1.5"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

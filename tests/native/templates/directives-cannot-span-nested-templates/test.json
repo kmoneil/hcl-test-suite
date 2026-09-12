@@ -1,0 +1,12 @@
+{
+  "description": "An endif in a nested template cannot close an if directive of the outer template",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations",
+    "hclsyntax/spec.md#template-if-directive"
+  ],
+  "op": "parse",
+  "reference_error": "Unexpected endif directive: The control directives within this template are unbalanced",
+  "expect": {
+    "valid": false
+  }
+}

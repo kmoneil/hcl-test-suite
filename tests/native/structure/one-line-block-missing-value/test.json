@@ -1,0 +1,11 @@
+{
+  "description": "The attribute in a one-line block needs a value after its equals sign",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

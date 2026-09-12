@@ -1,0 +1,36 @@
+{
+  "description": "The keywords true, false and null are literals even when variables have those names",
+  "spec": [
+    "hclsyntax/spec.md#keywords",
+    "hclsyntax/spec.md#literal-values"
+  ],
+  "op": "eval",
+  "variables": {
+    "true": {
+      "number": "1"
+    },
+    "false": {
+      "number": "2"
+    },
+    "null": {
+      "number": "3"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        },
+        "b": {
+          "bool": false
+        },
+        "c": {
+          "null": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

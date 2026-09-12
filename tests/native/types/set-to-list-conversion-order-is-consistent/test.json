@@ -1,0 +1,48 @@
+{
+  "description": "Converting the same set to a list twice gives its elements in the same order",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "notes": "The order itself is unspecified, so the test only compares two conversions of the same set.",
+  "variables": {
+    "s": {
+      "set": [
+        {
+          "string": "b"
+        },
+        {
+          "string": "c"
+        },
+        {
+          "string": "a"
+        }
+      ],
+      "element_type": "string"
+    },
+    "l": {
+      "list": [
+        {
+          "string": "x"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

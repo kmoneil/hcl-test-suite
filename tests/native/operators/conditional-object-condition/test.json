@@ -1,0 +1,12 @@
+{
+  "description": "An object condition is an error",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "reference_error": "Incorrect condition type",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

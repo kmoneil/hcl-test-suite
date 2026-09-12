@@ -1,0 +1,20 @@
+{
+  "description": "A \\U escape can name a Basic Multilingual Plane character",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec describes \\UNNNNNNNN as a character from the supplementary planes and doesn't say whether it may name a Basic Multilingual Plane character. hashicorp/hcl accepts any Unicode scalar value in either form (ParseStringLiteralToken in hclsyntax/parser.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "é"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

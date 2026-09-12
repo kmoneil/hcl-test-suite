@@ -1,0 +1,26 @@
+{
+  "description": "A quoted block label can contain braces, equals signs and comment markers",
+  "spec": [
+    "hclsyntax/spec.md#blocks",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "block",
+          "labels": [
+            "{ = } # // /*"
+          ],
+          "body": {
+            "attributes": {},
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

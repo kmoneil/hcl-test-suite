@@ -1,0 +1,22 @@
+{
+  "description": "A letter outside the Basic Multilingual Plane, such as U+10400, can start an identifier",
+  "spec": [
+    "hclsyntax/spec.md#identifiers",
+    "hclsyntax/spec.md#source-code-representation"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "𐐀": {
+          "kind": "literal",
+          "value": {
+            "number": "1"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

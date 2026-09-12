@@ -1,0 +1,57 @@
+{
+  "description": "List and set values stay lists and sets inside a tuple",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "spec.md#structural-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "string": "x"
+        }
+      ],
+      "element_type": "string"
+    },
+    "s": {
+      "set": [
+        {
+          "number": "1"
+        }
+      ],
+      "element_type": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "list": [
+                {
+                  "string": "x"
+                }
+              ],
+              "element_type": "string"
+            },
+            {
+              "set": [
+                {
+                  "number": "1"
+                }
+              ],
+              "element_type": "number"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

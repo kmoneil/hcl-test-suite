@@ -1,0 +1,13 @@
+{
+  "description": "Interpolating an empty tuple next to other template parts is an error",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "reference_error": "string required, but have tuple",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "description": "Multiplying an unknown number by zero gives an unknown number",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "notes": "The result would be zero for any known number, but the spec makes it unknown. go-cty returns a known zero only for its own internal zero value, which HCL literals are not.",
+  "variables": {
+    "u": {
+      "unknown": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "number"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

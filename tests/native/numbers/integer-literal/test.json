@@ -1,0 +1,21 @@
+{
+  "description": "A numeric literal can be a sequence of decimal digits",
+  "spec": [
+    "hclsyntax/spec.md#numeric-literals"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "literal",
+          "value": {
+            "number": "42"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

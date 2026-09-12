@@ -1,0 +1,26 @@
+{
+  "description": "Indexing a set with a number is an error, because set elements have no positions",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#collection-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "s": {
+      "set": [
+        {
+          "string": "x"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "reference_error": "Elements of a set are identified only by their value",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

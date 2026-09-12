@@ -1,0 +1,52 @@
+{
+  "description": "Arithmetic operators need no whitespace around them",
+  "spec": [
+    "hclsyntax/spec.md#operations",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "binary",
+          "operator": "+",
+          "left": {
+            "kind": "variable",
+            "name": "x"
+          },
+          "right": {
+            "kind": "binary",
+            "operator": "%",
+            "left": {
+              "kind": "binary",
+              "operator": "/",
+              "left": {
+                "kind": "binary",
+                "operator": "*",
+                "left": {
+                  "kind": "variable",
+                  "name": "y"
+                },
+                "right": {
+                  "kind": "variable",
+                  "name": "z"
+                }
+              },
+              "right": {
+                "kind": "variable",
+                "name": "w"
+              }
+            },
+            "right": {
+              "kind": "variable",
+              "name": "v"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

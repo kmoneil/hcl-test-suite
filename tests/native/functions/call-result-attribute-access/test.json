@@ -1,0 +1,26 @@
+{
+  "description": "An attribute access can follow a function call",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#attribute-access-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "get_attr",
+          "object": {
+            "kind": "call",
+            "name": "f",
+            "args": [],
+            "expand_final": false
+          },
+          "name": "b"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

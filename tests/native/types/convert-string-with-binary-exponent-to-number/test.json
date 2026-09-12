@@ -1,0 +1,21 @@
+{
+  "description": "A string with a p exponent converts to number as a power of two",
+  "spec": [
+    "spec.md#primitive-type-conversions",
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says no exponent portion is allowed. hashicorp/hcl converts \"1p4\" to 16 because big.ParseFloat, which go-cty uses (ParseNumberVal in cty/value_init.go), accepts a p exponent, meaning a power of two, even in base 10.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "16"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

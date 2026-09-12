@@ -1,0 +1,11 @@
+{
+  "description": "A second */ after an inline comment that contains /* is a parse error",
+  "spec": [
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "description": "A full splat applies attribute accesses that follow an index to each element",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "number": "1"
+            },
+            {
+              "number": "2"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

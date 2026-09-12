@@ -1,0 +1,30 @@
+{
+  "description": "Indexing a tuple of numbers with an unknown key gives the dynamic value",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says an unknown key gives an unknown of the type a known key would give, and the dynamic value only when type information can't determine that type. Every element here is a number, so the spec gives an unknown number. hashicorp/hcl returns the dynamic value for any tuple indexed by an unknown key (Index in ops.go).",
+  "variables": {
+    "u": {
+      "unknown": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

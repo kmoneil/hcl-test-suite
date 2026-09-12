@@ -1,0 +1,34 @@
+{
+  "description": "Accessing an attribute of an unknown object gives an unknown of the attribute's type",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "u": {
+      "unknown": [
+        "object",
+        {
+          "a": "string",
+          "b": "number"
+        }
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "string"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "description": "A heredoc marker can start with an underscore",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions",
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec's identifier grammar starts with ID_Start, which doesn't include the underscore. hashicorp/hcl's scanner allows a leading underscore in every identifier, heredoc markers included (Ident in hclsyntax/scan_tokens.rl).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x\n"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

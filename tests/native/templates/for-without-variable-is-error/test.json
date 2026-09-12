@@ -1,0 +1,12 @@
+{
+  "description": "A for directive without a variable name is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive"
+  ],
+  "op": "parse",
+  "notes": "The only mistake is the missing variable name. hashicorp/hcl accepts in as a variable name (see the disputed for-directive-variable-named-in), so it takes in as the variable name and then reports the missing in keyword; a parser that treats in as a keyword there reports the missing name instead.",
+  "reference_error": "requires 'in' keyword after names",
+  "expect": {
+    "valid": false
+  }
+}

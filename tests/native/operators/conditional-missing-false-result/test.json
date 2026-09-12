@@ -1,0 +1,11 @@
+{
+  "description": "A conditional with nothing after the colon is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

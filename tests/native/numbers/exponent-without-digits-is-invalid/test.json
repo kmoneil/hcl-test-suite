@@ -1,0 +1,11 @@
+{
+  "description": "An exponent needs at least one digit",
+  "spec": [
+    "hclsyntax/spec.md#numeric-literals"
+  ],
+  "op": "parse",
+  "reference_error": "Missing newline after argument",
+  "expect": {
+    "valid": false
+  }
+}

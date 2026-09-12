@@ -1,5 +1,5 @@
 {
-  "description": "Unary operators bind tighter than binary operators",
+  "description": "In -2 + 3 the unary - applies before the +, giving 1",
   "spec": [
     "hclsyntax/spec.md#operations"
   ],

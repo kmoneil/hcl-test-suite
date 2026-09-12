@@ -1,0 +1,13 @@
+{
+  "description": "The identifier for on the line after a tuple's open bracket starts a for expression",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "notes": "Newlines inside the brackets are ignored, so for is still the first element.",
+  "reference_error": "For expression requires variable name after 'for'",
+  "expect": {
+    "valid": false
+  }
+}

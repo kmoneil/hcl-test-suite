@@ -1,0 +1,12 @@
+{
+  "description": "A for directive with IN instead of in is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive",
+    "hclsyntax/spec.md#keywords"
+  ],
+  "op": "parse",
+  "reference_error": "requires 'in' keyword after names",
+  "expect": {
+    "valid": false
+  }
+}

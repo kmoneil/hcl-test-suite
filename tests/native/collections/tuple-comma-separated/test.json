@@ -1,0 +1,38 @@
+{
+  "description": "Commas separate tuple elements, which keep their source order",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "tuple",
+          "elements": [
+            {
+              "kind": "literal",
+              "value": {
+                "number": "1"
+              }
+            },
+            {
+              "kind": "literal",
+              "value": {
+                "string": "b"
+              }
+            },
+            {
+              "kind": "literal",
+              "value": {
+                "bool": true
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

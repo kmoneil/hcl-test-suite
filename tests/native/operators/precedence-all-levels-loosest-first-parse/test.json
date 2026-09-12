@@ -1,0 +1,67 @@
+{
+  "description": "With operators from loosest to tightest, each operation is the right operand of the one before",
+  "spec": [
+    "hclsyntax/spec.md#operations"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "binary",
+          "operator": "||",
+          "left": {
+            "kind": "variable",
+            "name": "x"
+          },
+          "right": {
+            "kind": "binary",
+            "operator": "&&",
+            "left": {
+              "kind": "variable",
+              "name": "y"
+            },
+            "right": {
+              "kind": "binary",
+              "operator": "==",
+              "left": {
+                "kind": "variable",
+                "name": "z"
+              },
+              "right": {
+                "kind": "binary",
+                "operator": "<",
+                "left": {
+                  "kind": "variable",
+                  "name": "w"
+                },
+                "right": {
+                  "kind": "binary",
+                  "operator": "+",
+                  "left": {
+                    "kind": "variable",
+                    "name": "v"
+                  },
+                  "right": {
+                    "kind": "binary",
+                    "operator": "*",
+                    "left": {
+                      "kind": "variable",
+                      "name": "u"
+                    },
+                    "right": {
+                      "kind": "variable",
+                      "name": "t"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

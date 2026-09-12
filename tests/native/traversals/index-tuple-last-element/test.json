@@ -1,0 +1,33 @@
+{
+  "description": "The index one less than a tuple's length selects its last element",
+  "spec": [
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "eval",
+  "variables": {
+    "t": {
+      "tuple": [
+        {
+          "string": "x"
+        },
+        {
+          "string": "y"
+        },
+        {
+          "string": "z"
+        }
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "z"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

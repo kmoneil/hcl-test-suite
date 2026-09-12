@@ -1,0 +1,19 @@
+{
+  "description": "- converts a numeric string operand to a number",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "6"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

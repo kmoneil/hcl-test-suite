@@ -1,0 +1,24 @@
+{
+  "description": "A tuple key cannot index an object",
+  "spec": [
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "eval",
+  "variables": {
+    "o": {
+      "object": {
+        "b": {
+          "string": "x"
+        },
+        "c": {
+          "string": "y"
+        }
+      }
+    }
+  },
+  "reference_error": "string required, but have tuple",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

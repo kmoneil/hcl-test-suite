@@ -1,0 +1,11 @@
+{
+  "description": "A double star is not an exponentiation operator",
+  "spec": [
+    "hclsyntax/spec.md#operators-and-delimiters"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

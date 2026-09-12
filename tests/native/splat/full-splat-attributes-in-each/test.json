@@ -1,0 +1,33 @@
+{
+  "description": "Attribute accesses after a full splat are part of its each expression",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "splat",
+          "source": {
+            "kind": "variable",
+            "name": "t"
+          },
+          "each": {
+            "kind": "get_attr",
+            "object": {
+              "kind": "get_attr",
+              "object": {
+                "kind": "splat_item"
+              },
+              "name": "b"
+            },
+            "name": "c"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

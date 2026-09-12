@@ -1,0 +1,11 @@
+{
+  "description": "A line comment is a parse error where a newline is not allowed",
+  "spec": [
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

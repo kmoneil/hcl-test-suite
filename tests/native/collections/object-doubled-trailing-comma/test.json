@@ -1,0 +1,11 @@
+{
+  "description": "An object constructor can't end with two commas",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

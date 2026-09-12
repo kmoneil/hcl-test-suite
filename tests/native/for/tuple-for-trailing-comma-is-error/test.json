@@ -1,0 +1,12 @@
+{
+  "description": "A trailing comma after the element of a tuple for expression is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "notes": "Unlike the tuple constructor grammar, the ForExpr grammar has no optional trailing comma.",
+  "reference_error": "Extra characters after the end of the 'for' expression",
+  "expect": {
+    "valid": false
+  }
+}

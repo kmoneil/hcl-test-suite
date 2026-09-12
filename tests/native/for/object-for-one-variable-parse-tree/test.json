@@ -1,0 +1,35 @@
+{
+  "description": "An object for expression may declare only a value variable",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "for",
+          "result": "object",
+          "key_var": null,
+          "value_var": "v",
+          "collection": {
+            "kind": "variable",
+            "name": "xs"
+          },
+          "key": {
+            "kind": "variable",
+            "name": "v"
+          },
+          "value": {
+            "kind": "variable",
+            "name": "v"
+          },
+          "condition": null,
+          "grouping": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

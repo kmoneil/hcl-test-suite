@@ -1,0 +1,12 @@
+{
+  "description": "An unknown escape sequence in a quoted block label is an error",
+  "spec": [
+    "hclsyntax/spec.md#blocks",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "reference_error": "The symbol \"q\" is not a valid escape sequence selector",
+  "expect": {
+    "valid": false
+  }
+}

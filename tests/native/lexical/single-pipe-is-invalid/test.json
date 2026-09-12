@@ -1,0 +1,11 @@
+{
+  "description": "A single vertical bar is not an operator",
+  "spec": [
+    "hclsyntax/spec.md#operators-and-delimiters"
+  ],
+  "op": "parse",
+  "reference_error": "Did you mean boolean OR",
+  "expect": {
+    "valid": false
+  }
+}

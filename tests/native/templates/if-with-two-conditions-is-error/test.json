@@ -1,0 +1,11 @@
+{
+  "description": "An if directive with two condition expressions is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive"
+  ],
+  "op": "parse",
+  "reference_error": "Extra characters in if marker",
+  "expect": {
+    "valid": false
+  }
+}

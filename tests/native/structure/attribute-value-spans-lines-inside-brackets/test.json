@@ -1,0 +1,33 @@
+{
+  "description": "An attribute whose value spans lines inside brackets ends at the newline after the brackets",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "tuple",
+          "elements": [
+            {
+              "kind": "literal",
+              "value": {
+                "number": "1"
+              }
+            }
+          ]
+        },
+        "b": {
+          "kind": "literal",
+          "value": {
+            "number": "2"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "description": "A tilde separated from the closing brace of a directive by a space is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#template-literals",
+    "hclsyntax/spec.md#template-if-directive"
+  ],
+  "op": "parse",
+  "reference_error": "Did you mean boolean NOT",
+  "expect": {
+    "valid": false
+  }
+}

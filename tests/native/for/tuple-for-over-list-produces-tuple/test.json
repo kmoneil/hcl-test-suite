@@ -1,0 +1,42 @@
+{
+  "description": "A tuple for expression over a list produces a tuple, not a list",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#collection-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "string": "x"
+        },
+        {
+          "string": "y"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "x"
+            },
+            {
+              "string": "y"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

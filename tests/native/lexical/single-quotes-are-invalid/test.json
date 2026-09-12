@@ -1,0 +1,11 @@
+{
+  "description": "Single quotes do not delimit strings",
+  "spec": [
+    "hclsyntax/spec.md#operators-and-delimiters"
+  ],
+  "op": "parse",
+  "reference_error": "Single quotes are not valid",
+  "expect": {
+    "valid": false
+  }
+}

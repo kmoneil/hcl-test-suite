@@ -1,0 +1,11 @@
+{
+  "description": "A for expression whose variable is a number instead of an identifier is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "reference_error": "requires variable name after 'for'",
+  "expect": {
+    "valid": false
+  }
+}

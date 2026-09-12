@@ -1,0 +1,30 @@
+{
+  "description": "A conditional with an unknown predicate doesn't report an error in a result",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec passes an error in a result through only if that result is selected, and an unknown predicate selects neither, which is what hashicorp/hcl does. The spec doesn't say what type a result that failed contributes to the unified type: hashicorp/hcl gives the failed + operation its usual type, number (BinaryOpExpr.Value in hclsyntax/expression_ops.go returns an unknown number along with the error), so the conditional gives an unknown number (ConditionalExpr.Value in hclsyntax/expression.go).",
+  "variables": {
+    "u": {
+      "unknown": "bool"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "number"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "description": "Addition is exact when the sum doesn't fit in 64 bits",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators",
+    "spec.md#primitive-types"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "18446744073709551617"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

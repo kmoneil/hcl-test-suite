@@ -1,0 +1,21 @@
+{
+  "description": "A string with a decimal exponent converts to number",
+  "spec": [
+    "spec.md#primitive-type-conversions",
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says no exponent portion is allowed when converting a string to a number. hashicorp/hcl accepts one because go-cty parses the string with big.ParseFloat (ParseNumberVal in cty/value_init.go, used by primitiveConversionsUnsafe in cty/convert/conversion_primitive.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1000"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

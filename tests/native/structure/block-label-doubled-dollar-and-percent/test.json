@@ -1,0 +1,27 @@
+{
+  "description": "A doubled $ or % that is not followed by { stays as written in a quoted block label",
+  "spec": [
+    "hclsyntax/spec.md#blocks",
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "block",
+          "labels": [
+            "$$",
+            "%%"
+          ],
+          "body": {
+            "attributes": {},
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

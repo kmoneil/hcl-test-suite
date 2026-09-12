@@ -1,0 +1,31 @@
+{
+  "description": "An || of two unknown bools gives an unknown bool",
+  "spec": [
+    "hclsyntax/spec.md#logic-operators",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "bool"
+    },
+    "v": {
+      "unknown": "bool"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "bool"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

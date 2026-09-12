@@ -1,0 +1,12 @@
+{
+  "description": "Two elements producing the same key are an error even when their values are equal",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "reference_error": "produced the key \"a\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

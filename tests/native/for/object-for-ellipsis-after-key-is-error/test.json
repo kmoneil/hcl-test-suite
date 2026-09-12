@@ -1,0 +1,11 @@
+{
+  "description": "A grouping ellipsis after the key expression instead of the value is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "reference_error": "Key expression is required when building an object",
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "description": "> converts numeric strings to numbers, so \"10\" > \"9\" compares 10 with 9",
+  "spec": [
+    "hclsyntax/spec.md#comparison-operators",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

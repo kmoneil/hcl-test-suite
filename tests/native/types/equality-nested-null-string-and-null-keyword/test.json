@@ -1,0 +1,29 @@
+{
+  "description": "A tuple holding a null string is not equal to a tuple holding the null keyword",
+  "spec": [
+    "spec.md#values-and-value-types",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+    "spec.md#structural-types",
+    "hclsyntax/spec.md#comparison-operators"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "n": {
+      "null": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

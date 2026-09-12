@@ -1,0 +1,28 @@
+{
+  "description": "Repeated unary operators nest, the outer one applying to the result of the inner one",
+  "spec": [
+    "hclsyntax/spec.md#operations"
+  ],
+  "op": "parse",
+  "notes": "The spec's grammar gives operators expression terms as operands, which would rule this out, but it can't express chains such as x + y + z either, which the prose allows. Read with the precedence rules, an operand can be any operation that binds tighter, and unary operations bind tightest.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "unary",
+          "operator": "!",
+          "operand": {
+            "kind": "unary",
+            "operator": "!",
+            "operand": {
+              "kind": "variable",
+              "name": "x"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

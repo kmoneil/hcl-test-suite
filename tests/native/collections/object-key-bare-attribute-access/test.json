@@ -1,0 +1,23 @@
+{
+  "description": "An unparenthesized attribute access used as an object key is an evaluation error",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The grammar allows any expression as a key and the prose only makes a bare identifier a literal name, so the key would be evaluated and name the attribute x. hashicorp/hcl rejects an unparenthesized traversal with more than one step when it evaluates the key, because it could be meant as a dotted name (ObjectConsKeyExpr.Value in hclsyntax/expression.go).",
+  "variables": {
+    "k": {
+      "object": {
+        "b": {
+          "string": "x"
+        }
+      }
+    }
+  },
+  "reference_error": "Ambiguous attribute key",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "description": "A dot followed by digits parses as an index with a number key, not as an attribute access",
+  "spec": [
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "index",
+          "collection": {
+            "kind": "variable",
+            "name": "t"
+          },
+          "key": {
+            "kind": "literal",
+            "value": {
+              "number": "0"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

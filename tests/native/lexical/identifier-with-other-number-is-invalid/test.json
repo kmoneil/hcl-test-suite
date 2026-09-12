@@ -1,0 +1,11 @@
+{
+  "description": "A number that isn't a decimal digit, such as U+00B2 SUPERSCRIPT TWO, cannot continue an identifier",
+  "spec": [
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "parse",
+  "reference_error": "This character is not used within the language",
+  "expect": {
+    "valid": false
+  }
+}

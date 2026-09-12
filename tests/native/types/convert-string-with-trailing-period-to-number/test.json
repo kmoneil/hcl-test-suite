@@ -1,0 +1,21 @@
+{
+  "description": "A string ending with a period converts to number",
+  "spec": [
+    "spec.md#primitive-type-conversions",
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec converts a string to a number by reversing number to string conversion, which writes a period only before fractional digits, so \"5.\" isn't in the expected syntax. hashicorp/hcl accepts it because go-cty parses the string with big.ParseFloat (ParseNumberVal in cty/value_init.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "5"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

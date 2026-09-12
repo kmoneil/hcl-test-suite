@@ -1,0 +1,20 @@
+{
+  "description": "A fraction that needs more than 64 bits of mantissa is represented exactly",
+  "spec": [
+    "spec.md#primitive-types",
+    "hclsyntax/spec.md#numeric-literals"
+  ],
+  "op": "eval",
+  "notes": "1 + 2^-65, which needs a 66-bit mantissa.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1.00000000000000000002710505431213761085018632002174854278564453125"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

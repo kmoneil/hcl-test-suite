@@ -1,0 +1,11 @@
+{
+  "description": "A backslash followed by a non-ASCII letter is not a valid escape",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "reference_error": "The symbol \"é\" is not a valid escape sequence selector",
+  "expect": {
+    "valid": false
+  }
+}

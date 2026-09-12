@@ -1,0 +1,18 @@
+{
+  "description": "A template that is only a null interpolation produces null without an error",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolation-unwrapping"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "null": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

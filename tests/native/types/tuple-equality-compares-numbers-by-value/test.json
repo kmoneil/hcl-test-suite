@@ -1,0 +1,20 @@
+{
+  "description": "Tuple elements that are numerically equal numbers make the tuples equal",
+  "spec": [
+    "spec.md#structural-types",
+    "spec.md#primitive-types",
+    "hclsyntax/spec.md#comparison-operators"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

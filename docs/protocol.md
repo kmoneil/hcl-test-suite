@@ -40,8 +40,10 @@ Describes the implementation and what the adapter supports.
 - `operations` lists the commands the adapter supports: `parse`, `eval` or
   both. Tests for other operations are skipped.
 - `features` lists optional parts of HCL the implementation supports. Tests
-  that need a missing feature are skipped. The only feature so far is
-  `unknown-values`.
+  that need a missing feature are skipped:
+  - `typed-values`: list, set and map values distinct from tuples and
+    objects, and null and unknown values that keep a type.
+  - `unknown-values`: unknown values and the dynamic pseudo-type.
 
 ## `parse`
 
@@ -133,7 +135,8 @@ Types use the same JSON notation as go-cty: `"string"`, `"number"`, `"bool"`,
 `null` keyword is `"dynamic"`.
 
 An implementation without types (such as one whose arrays aren't typed)
-should report arrays as tuples and objects as objects.
+should report arrays as tuples, objects as objects and nulls as
+`{"null": "dynamic"}`, and leave `typed-values` out of its capabilities.
 
 ## Expression trees
 
@@ -164,10 +167,18 @@ should report arrays as tuples and objects as objects.
 - `then`, `else` and `body` are lists of template parts, like `parts`. An
   omitted `else` is an empty list.
 - Template text is a `literal` string part, with escape sequences, strip
-  markers and heredoc indentation already applied.
+  markers and heredoc indentation already applied. The spec defines stripping
+  at the syntax level, so it belongs in the tree even if an implementation
+  applies it later. Text that stripping empties is still reported, as an empty
+  `literal` part: `" ${~ x ~} "` is not unwrapped the way `"${x}"` is.
+- Report `literal` parts only for text that is in the source. An
+  implementation that creates empty text parts of its own, such as between
+  two interpolations, must leave them out.
 - A bare identifier used as an object key is a `literal` string (`{a = 1}`
-  has the key `"a"`). A parenthesized key is an expression (`{(a) = 1}` has
-  the key `{"kind": "variable", "name": "a"}`).
+  has the key `"a"`). So are the keywords `true`, `false` and `null` used as
+  bare keys, as in hashicorp/hcl (`{null = 1}` has the key `"null"`; see the
+  disputed tests). A parenthesized key is an expression (`{(a) = 1}` has the
+  key `{"kind": "variable", "name": "a"}`).
 - Parentheses have no node; the tree's shape already records grouping.
 - A splat's `each` describes what is applied to each element, with
   `splat_item` standing for the element. `a[*].b[0]` is a splat whose `each`
@@ -181,20 +192,23 @@ Before comparing, the runner rewrites both the expected and the actual output
 into one canonical form. Adapters don't need to produce it:
 
 - Numbers are compared by value, so `"1500"`, `"1.5e3"` and `"1500.0"` match.
+- A `unary` minus applied to a number `literal` is the same as a negative
+  number `literal`, so `-1` may be reported either way.
 - Set elements are compared in any order.
 - Adjacent text parts in a template are joined, and empty ones are dropped.
+  The exception is a template left with one interpolation and some emptied
+  text, which keeps one empty text part because it isn't unwrapped.
 - A template with no interpolations or directives is the same as a `literal`
   string. `"abc"` may be reported either way.
 - A field set to `null` is the same as a missing field.
+- Strings are compared after NFC normalization, because the spec defines
+  string equality that way. This applies to string values, object and map
+  keys, and template text, but not to attribute names, block types or labels.
 
 ## Open questions
 
-These are undecided in v0, and no tests depend on them yet:
+These are undecided in v0:
 
-- **Strip markers and heredoc indentation in `parse` output.** The reference
-  implementation applies them while parsing, but hcl-rs keeps them as flags
-  and applies them during evaluation. One option is to allow the flags in
-  the tree and have the runner apply them.
 - **Non-integer precision.** The spec allows implementations with different
   precision, so a result like `1 / 3` has no single correct decimal string.
 - **Error positions.** Columns count grapheme clusters, which depends on the
@@ -203,5 +217,7 @@ These are undecided in v0, and no tests depend on them yet:
   need a schema input.
 - **Functions.** HCL has no built-in functions, so tests will need a few
   test-only functions provided by the adapter.
-- **Unknown value refinements**, marks, and object keys written as a bare
-  multi-step traversal such as `{a.b = 1}`.
+- **Unknown value refinements** and marks.
+- **Bare traversal keys in parse trees.** How an object key written as a bare
+  multi-step traversal such as `{a.b = 1}` appears in a parse tree. Its
+  evaluation is tested.

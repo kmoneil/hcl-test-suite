@@ -1,0 +1,22 @@
+{
+  "description": "A template that is only an object interpolation produces the object",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolation-unwrapping"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "k": {
+              "bool": true
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

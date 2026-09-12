@@ -5,7 +5,7 @@
   ],
   "op": "parse",
   "status": "disputed",
-  "notes": "The grammar ends every Attribute with a Newline and says nothing about end of file. The reference implementation accepts end of file instead, and real files depend on it.",
+  "notes": "The grammar ends every Attribute with a Newline and says nothing about the end of the file. hashicorp/hcl accepts the end of the file instead (parser.finishParsingBodyAttribute in hclsyntax/parser.go), and real files depend on it.",
   "expect": {
     "valid": true,
     "body": {

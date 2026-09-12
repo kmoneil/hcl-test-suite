@@ -1,0 +1,35 @@
+{
+  "description": "An ellipsis after an operation applies to the whole final argument, not to its last operand",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#operations"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "call",
+          "name": "f",
+          "args": [
+            {
+              "kind": "binary",
+              "operator": "+",
+              "left": {
+                "kind": "variable",
+                "name": "x"
+              },
+              "right": {
+                "kind": "variable",
+                "name": "y"
+              }
+            }
+          ],
+          "expand_final": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "description": "Infinity and NaN are variable names, not numeric literals",
+  "spec": [
+    "hclsyntax/spec.md#numeric-literals",
+    "spec.md#primitive-types",
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "variable",
+          "name": "Infinity"
+        },
+        "b": {
+          "kind": "variable",
+          "name": "NaN"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

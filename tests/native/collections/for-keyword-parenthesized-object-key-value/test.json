@@ -1,0 +1,31 @@
+{
+  "description": "A parenthesized first key for names the attribute with the variable's value",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "variables": {
+    "for": {
+      "string": "x"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "x": {
+              "number": "1"
+            },
+            "baz": {
+              "number": "2"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

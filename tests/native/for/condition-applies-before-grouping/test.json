@@ -1,0 +1,33 @@
+{
+  "description": "With grouping, only elements that pass the if clause are grouped",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "a": {
+              "tuple": [
+                {
+                  "number": "2"
+                }
+              ]
+            },
+            "b": {
+              "tuple": [
+                {
+                  "number": "1"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

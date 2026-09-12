@@ -1,0 +1,14 @@
+{
+  "description": "The string NaN doesn't convert to number",
+  "spec": [
+    "spec.md#primitive-type-conversions",
+    "spec.md#primitive-types",
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "reference_error": "left operand: a number is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

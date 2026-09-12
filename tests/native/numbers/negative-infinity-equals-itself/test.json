@@ -1,0 +1,27 @@
+{
+  "description": "Negative infinity is equal to negative infinity",
+  "spec": [
+    "spec.md#primitive-types",
+    "hclsyntax/spec.md#comparison-operators"
+  ],
+  "op": "eval",
+  "variables": {
+    "neg_inf": {
+      "number": "-Infinity"
+    },
+    "other_neg_inf": {
+      "number": "-Infinity"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

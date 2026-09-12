@@ -1,0 +1,11 @@
+{
+  "description": "Function arguments must be separated by commas",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "parse",
+  "reference_error": "Missing argument separator",
+  "expect": {
+    "valid": false
+  }
+}

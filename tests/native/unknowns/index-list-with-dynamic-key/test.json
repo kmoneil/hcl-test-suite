@@ -1,0 +1,39 @@
+{
+  "description": "Indexing a list of strings with the dynamic value gives the dynamic value",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#conversion-to-and-from-the-dynamic-pseudo-type",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says an unknown key gives an unknown of the type a known key would give, which is string for a list of strings. hashicorp/hcl returns the dynamic value whenever the key has the dynamic pseudo-type (Index in ops.go).",
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "string": "x"
+        }
+      ],
+      "element_type": "string"
+    },
+    "d": {
+      "unknown": "dynamic"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

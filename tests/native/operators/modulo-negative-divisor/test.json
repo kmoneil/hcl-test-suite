@@ -1,0 +1,20 @@
+{
+  "description": "The remainder with a negative divisor and a positive dividend is positive",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec calls % the remainder (modulo) without saying which sign the result takes. hashicorp/hcl computes a - b * trunc(a / b), so the result takes the sign of the dividend (Value.Modulo in cty/value_ops.go). For 7 % -3 truncated and Euclidean remainders give 1, while a floored remainder gives -2.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

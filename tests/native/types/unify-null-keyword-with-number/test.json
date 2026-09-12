@@ -1,0 +1,23 @@
+{
+  "description": "A conditional selecting the null keyword returns a null of the other result's type",
+  "spec": [
+    "spec.md#conversion-of-null-values",
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "null": "number"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

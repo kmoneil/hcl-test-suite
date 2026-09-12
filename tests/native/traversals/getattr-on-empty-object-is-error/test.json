@@ -1,0 +1,12 @@
+{
+  "description": "Accessing any attribute of an empty object is an error",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator"
+  ],
+  "op": "eval",
+  "reference_error": "does not have an attribute named \"b\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

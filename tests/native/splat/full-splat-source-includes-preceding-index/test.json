@@ -1,0 +1,38 @@
+{
+  "description": "The source of a full splat includes the index operations before it",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "splat",
+          "source": {
+            "kind": "index",
+            "collection": {
+              "kind": "variable",
+              "name": "t"
+            },
+            "key": {
+              "kind": "literal",
+              "value": {
+                "number": "0"
+              }
+            }
+          },
+          "each": {
+            "kind": "get_attr",
+            "object": {
+              "kind": "splat_item"
+            },
+            "name": "c"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

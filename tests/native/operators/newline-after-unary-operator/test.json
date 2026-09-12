@@ -1,0 +1,12 @@
+{
+  "description": "Outside parentheses a newline after a unary operator leaves it without an operand",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

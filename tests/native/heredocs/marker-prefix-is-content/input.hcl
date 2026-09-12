@@ -1,0 +1,3 @@
+a = <<EOTX
+EOT
+EOTX

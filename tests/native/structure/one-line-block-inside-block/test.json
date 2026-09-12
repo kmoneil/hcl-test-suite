@@ -1,0 +1,40 @@
+{
+  "description": "A one-line block can be nested inside a multi-line block",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#blocks"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "outer",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": [
+              {
+                "type": "inner",
+                "labels": [],
+                "body": {
+                  "attributes": {
+                    "a": {
+                      "kind": "literal",
+                      "value": {
+                        "number": "1"
+                      }
+                    }
+                  },
+                  "blocks": []
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

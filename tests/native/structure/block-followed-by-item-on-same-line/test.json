@@ -1,0 +1,12 @@
+{
+  "description": "Another item cannot follow a block's closing brace on the same line",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#blocks"
+  ],
+  "op": "parse",
+  "reference_error": "Missing newline after block definition",
+  "expect": {
+    "valid": false
+  }
+}

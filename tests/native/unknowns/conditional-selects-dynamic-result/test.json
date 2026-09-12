@@ -1,0 +1,32 @@
+{
+  "description": "A conditional selecting the dynamic value returns it unconverted",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator",
+    "spec.md#type-unification",
+    "spec.md#conversion-to-and-from-the-dynamic-pseudo-type",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec unifies the dynamic pseudo-type and number to number, and converting the dynamic value to number gives an unknown number. hashicorp/hcl skips unification when either result has the dynamic pseudo-type and returns the selected result unconverted (ConditionalExpr.Value in hclsyntax/expression.go). An implementation whose unknown values are all dynamic would pass regardless, hence typed-values.",
+  "variables": {
+    "d": {
+      "unknown": "dynamic"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

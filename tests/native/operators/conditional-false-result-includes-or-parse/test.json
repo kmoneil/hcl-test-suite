@@ -1,0 +1,39 @@
+{
+  "description": "Binary operators after the colon are all part of the false result",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator",
+    "hclsyntax/spec.md#operations"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "conditional",
+          "condition": {
+            "kind": "variable",
+            "name": "x"
+          },
+          "true_result": {
+            "kind": "variable",
+            "name": "y"
+          },
+          "false_result": {
+            "kind": "binary",
+            "operator": "||",
+            "left": {
+              "kind": "variable",
+              "name": "z"
+            },
+            "right": {
+              "kind": "variable",
+              "name": "w"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

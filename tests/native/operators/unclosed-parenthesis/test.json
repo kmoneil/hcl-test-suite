@@ -1,0 +1,11 @@
+{
+  "description": "An opening parenthesis without a closing one is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#expression-terms"
+  ],
+  "op": "parse",
+  "reference_error": "Unbalanced parentheses",
+  "expect": {
+    "valid": false
+  }
+}

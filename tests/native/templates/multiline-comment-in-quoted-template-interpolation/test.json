@@ -1,0 +1,22 @@
+{
+  "description": "An inline comment spanning lines can appear in an interpolation of a quoted template",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations",
+    "hclsyntax/spec.md#template-expressions",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec describes a quoted template as a single-line expression, but it also allows comments inside an interpolation sequence, and an inline comment may contain any characters except its ending sequence, newlines included. That wording is the only conflict. hashicorp/hcl accepts it: its scanner (hclsyntax/scan_tokens.rl) reads the whole comment as one token, which the parser skips.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "<x>"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

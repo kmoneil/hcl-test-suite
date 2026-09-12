@@ -1,0 +1,28 @@
+{
+  "description": "True, False and NULL are variable names, not keywords",
+  "spec": [
+    "hclsyntax/spec.md#keywords",
+    "hclsyntax/spec.md#literal-values"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "variable",
+          "name": "True"
+        },
+        "b": {
+          "kind": "variable",
+          "name": "False"
+        },
+        "c": {
+          "kind": "variable",
+          "name": "NULL"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "description": "A for directive's key variable hides an outer variable only inside the body",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "variables": {
+    "k": {
+      "string": "outer"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "0outer"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

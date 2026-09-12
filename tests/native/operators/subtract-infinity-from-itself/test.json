@@ -1,0 +1,19 @@
+{
+  "description": "Subtracting infinity from itself is an error, since there is no NaN",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators",
+    "spec.md#primitive-types"
+  ],
+  "op": "eval",
+  "notes": "The spec provides no NaN value, so an operation with no numeric result can only fail. hashicorp/hcl reports math/big's ErrNaN panic as an error (SubtractFunc in cty/function/stdlib/number.go).",
+  "variables": {
+    "inf": {
+      "number": "Infinity"
+    }
+  },
+  "reference_error": "can't subtract infinity from itself",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

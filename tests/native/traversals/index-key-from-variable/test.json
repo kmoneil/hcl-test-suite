@@ -1,0 +1,36 @@
+{
+  "description": "An index key can come from a variable",
+  "spec": [
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "eval",
+  "variables": {
+    "t": {
+      "tuple": [
+        {
+          "string": "x"
+        },
+        {
+          "string": "y"
+        },
+        {
+          "string": "z"
+        }
+      ]
+    },
+    "i": {
+      "number": "1"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "y"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "description": "A template that is only an interpolation of a set produces the set",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolation-unwrapping"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "v": {
+      "set": [
+        {
+          "bool": true
+        }
+      ],
+      "element_type": "bool"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "set": [
+            {
+              "bool": true
+            }
+          ],
+          "element_type": "bool"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

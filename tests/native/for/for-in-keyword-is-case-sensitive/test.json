@@ -1,0 +1,12 @@
+{
+  "description": "The in keyword of a for expression is case-sensitive, so IN is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "hclsyntax/spec.md#keywords"
+  ],
+  "op": "parse",
+  "reference_error": "requires the 'in' keyword",
+  "expect": {
+    "valid": false
+  }
+}

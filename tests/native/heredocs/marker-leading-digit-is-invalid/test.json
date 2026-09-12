@@ -1,0 +1,12 @@
+{
+  "description": "A heredoc marker cannot start with a digit",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions",
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "description": "A dash and digit directly after an identifier are part of its name, so x-1 is one variable",
+  "spec": [
+    "hclsyntax/spec.md#identifiers",
+    "hclsyntax/spec.md#variables-and-variable-expressions"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "variable",
+          "name": "x-1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

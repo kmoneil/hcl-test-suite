@@ -1,0 +1,38 @@
+{
+  "description": "The true result can be a binary operation",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "conditional",
+          "condition": {
+            "kind": "variable",
+            "name": "x"
+          },
+          "true_result": {
+            "kind": "binary",
+            "operator": "+",
+            "left": {
+              "kind": "variable",
+              "name": "y"
+            },
+            "right": {
+              "kind": "variable",
+              "name": "z"
+            }
+          },
+          "false_result": {
+            "kind": "variable",
+            "name": "w"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

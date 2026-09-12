@@ -1,0 +1,31 @@
+{
+  "description": "Chained attribute accesses reach into nested objects",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator"
+  ],
+  "op": "eval",
+  "variables": {
+    "o": {
+      "object": {
+        "b": {
+          "object": {
+            "c": {
+              "number": "1"
+            }
+          }
+        }
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

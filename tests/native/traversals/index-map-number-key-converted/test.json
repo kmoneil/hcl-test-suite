@@ -1,0 +1,32 @@
+{
+  "description": "A number key is converted to a string to select a map element",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "m": {
+      "map": {
+        "1": {
+          "string": "one"
+        }
+      },
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "one"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "description": "A selected unknown number converts to an unknown string when the other result is a string",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator",
+    "spec.md#type-unification",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "string"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "description": "An interpolation evaluates its expression and inserts the result",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "<3>"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

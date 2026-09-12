@@ -1,0 +1,22 @@
+{
+  "description": "Adding positive and negative infinity is an error, since there is no NaN",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators",
+    "spec.md#primitive-types"
+  ],
+  "op": "eval",
+  "notes": "The spec provides no NaN value, so an operation with no numeric result can only fail. hashicorp/hcl reports math/big's ErrNaN panic as an error (AddFunc in cty/function/stdlib/number.go).",
+  "variables": {
+    "inf": {
+      "number": "Infinity"
+    },
+    "neg_inf": {
+      "number": "-Infinity"
+    }
+  },
+  "reference_error": "can't compute sum of opposing infinities",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "description": "A one-line block cannot close after a heredoc value, because a newline follows its closing marker",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "notes": "The prose says a heredoc ends when its marker appears on a line of its own, and prose outranks the grammar's trailing Newline, so the newline after the marker belongs to the block and comes before the closing brace. hashicorp/hcl emits it as a separate token (heredocLiteralEOL in hclsyntax/scan_tokens.rl) and parser.finishParsingBodyBlock in hclsyntax/parser.go rejects it in a one-line block.",
+  "reference_error": "which must also be closed on the same line",
+  "expect": {
+    "valid": false
+  }
+}

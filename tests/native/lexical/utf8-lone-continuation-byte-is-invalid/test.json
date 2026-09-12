@@ -1,0 +1,11 @@
+{
+  "description": "A UTF-8 continuation byte without a lead byte is a parse error",
+  "spec": [
+    "hclsyntax/spec.md#source-code-representation"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid character encoding",
+  "expect": {
+    "valid": false
+  }
+}

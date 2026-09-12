@@ -1,0 +1,12 @@
+{
+  "description": "Only one byte order mark is skipped, so a second one directly after it is a parse error",
+  "spec": [
+    "hclsyntax/spec.md#source-code-representation"
+  ],
+  "op": "parse",
+  "notes": "hashicorp/hcl skips only the first byte order mark (stripUTF8BOM in hclsyntax/token.go) and reports the second as an invalid character. The spec permits neither, so the file is invalid either way.",
+  "reference_error": "This character is not used within the language",
+  "expect": {
+    "valid": false
+  }
+}

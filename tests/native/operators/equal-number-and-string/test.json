@@ -1,0 +1,19 @@
+{
+  "description": "A number is not equal to a string of the same digits, since equality doesn't convert",
+  "spec": [
+    "hclsyntax/spec.md#comparison-operators",
+    "spec.md#values-and-value-types"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

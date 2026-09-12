@@ -1,0 +1,51 @@
+{
+  "description": "Strip markers on for and endfor are applied to the literals around the directive in the parse tree",
+  "spec": [
+    "hclsyntax/spec.md#template-literals",
+    "hclsyntax/spec.md#template-for-directive"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "literal",
+              "value": {
+                "string": "a"
+              }
+            },
+            {
+              "kind": "template_for",
+              "key_var": null,
+              "value_var": "v",
+              "collection": {
+                "kind": "variable",
+                "name": "xs"
+              },
+              "body": [
+                {
+                  "kind": "interpolation",
+                  "expr": {
+                    "kind": "variable",
+                    "name": "v"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "literal",
+              "value": {
+                "string": "d"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

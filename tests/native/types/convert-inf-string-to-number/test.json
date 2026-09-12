@@ -1,0 +1,21 @@
+{
+  "description": "The string inf converts to positive infinity",
+  "spec": [
+    "spec.md#primitive-type-conversions",
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec's string form of a number is made of decimal digits, so \"inf\" should fail to convert. hashicorp/hcl converts it to positive infinity because go-cty parses the string with big.ParseFloat, which accepts \"inf\" and \"Inf\" (ParseNumberVal in cty/value_init.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "Infinity"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "description": "An index key can be an operation such as an addition",
+  "spec": [
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "index",
+          "collection": {
+            "kind": "variable",
+            "name": "t"
+          },
+          "key": {
+            "kind": "binary",
+            "operator": "+",
+            "left": {
+              "kind": "variable",
+              "name": "i"
+            },
+            "right": {
+              "kind": "literal",
+              "value": {
+                "number": "1"
+              }
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "description": "Attribute access on a set of objects is an error",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "s": {
+      "set": [
+        {
+          "object": {
+            "b": {
+              "string": "x"
+            }
+          }
+        }
+      ],
+      "element_type": [
+        "object",
+        {
+          "b": "string"
+        }
+      ]
+    }
+  },
+  "reference_error": "Can't access attributes on a set of objects",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

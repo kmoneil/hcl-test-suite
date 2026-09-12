@@ -1,0 +1,18 @@
+{
+  "description": "~} does not strip a newline produced by the interpolation itself",
+  "spec": [
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "a\nb"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

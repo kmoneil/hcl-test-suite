@@ -1,0 +1,19 @@
+{
+  "description": "$${ is an escape inside a template nested in an interpolation too",
+  "spec": [
+    "hclsyntax/spec.md#template-literals",
+    "hclsyntax/spec.md#template-interpolations"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "<${x}>"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

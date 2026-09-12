@@ -1,0 +1,21 @@
+{
+  "description": "A quoted template with only literal text parses as a literal string",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "literal",
+          "value": {
+            "string": "hello world"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

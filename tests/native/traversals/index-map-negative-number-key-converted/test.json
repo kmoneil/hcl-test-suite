@@ -1,0 +1,33 @@
+{
+  "description": "A negative number key is converted to a string with its minus sign to select a map element",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "notes": "The spec's number-to-string conversion doesn't mention the sign, but it calls that conversion safe, which requires distinct numbers such as -1 and 1 to become distinct strings.",
+  "variables": {
+    "m": {
+      "map": {
+        "-1": {
+          "string": "neg"
+        }
+      },
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "neg"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "description": "Negating an attribute access negates the attribute's value",
+  "spec": [
+    "hclsyntax/spec.md#operations",
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "variables": {
+    "x": {
+      "object": {
+        "y": {
+          "number": "2"
+        }
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "-2"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

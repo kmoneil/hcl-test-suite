@@ -1,0 +1,252 @@
+{
+  "area": "native/functions",
+  "rules": [
+    {
+      "id": "functions-call-parse",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "An identifier followed by parentheses parses as a function call with that name and its arguments in source order; there may be no arguments, and each argument is a full expression, such as a conditional or another call",
+      "tests": [
+        "native/functions/call-arguments-in-order",
+        "native/functions/call-conditional-argument",
+        "native/functions/call-nested-calls",
+        "native/functions/call-no-arguments"
+      ]
+    },
+    {
+      "id": "functions-call-trailing-comma",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "The last argument may be followed by one comma, but every comma must follow an argument",
+      "tests": [
+        "native/functions/call-double-comma-is-error",
+        "native/functions/call-only-comma-is-error",
+        "native/functions/call-single-argument-trailing-comma",
+        "native/functions/call-trailing-comma"
+      ]
+    },
+    {
+      "id": "functions-call-separator",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "Arguments must be separated by commas; a newline between two arguments is not a separator",
+      "tests": [
+        "native/functions/call-missing-separator-is-error",
+        "native/functions/call-newline-is-not-separator"
+      ]
+    },
+    {
+      "id": "functions-call-unterminated",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "A function call must be closed by a closing parenthesis",
+      "tests": [
+        "native/functions/call-unterminated-is-error"
+      ]
+    },
+    {
+      "id": "functions-expand-final-syntax",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "An ellipsis after the last argument, optionally separated by whitespace, marks the whole final argument expression for expansion",
+      "tests": [
+        "native/functions/call-expand-final",
+        "native/functions/call-expand-final-after-other-arguments",
+        "native/functions/call-expand-final-after-space",
+        "native/functions/call-expand-final-number-argument",
+        "native/functions/call-expand-final-operation-argument"
+      ]
+    },
+    {
+      "id": "functions-expand-final-position",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "The ellipsis may only directly follow the last argument inside the parentheses: not an earlier argument, not a lone ellipsis, not before or after a trailing comma and not after the closing parenthesis",
+      "tests": [
+        "native/functions/call-expand-after-comma-is-error",
+        "native/functions/call-expand-not-last-is-error",
+        "native/functions/call-expand-outside-parentheses-is-error",
+        "native/functions/call-expand-then-comma-is-error",
+        "native/functions/call-expand-without-argument-is-error"
+      ]
+    },
+    {
+      "id": "functions-call-newlines",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "Newlines and comments anywhere between the parentheses of a function call are ignored",
+      "tests": [
+        "native/functions/call-comments-inside-parentheses",
+        "native/functions/call-newline-before-comma",
+        "native/functions/call-newlines-around-ellipsis",
+        "native/functions/call-newlines-between-arguments"
+      ]
+    },
+    {
+      "id": "functions-call-space-before-parenthesis",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "Spaces and inline comments between the function name and the opening parenthesis are allowed",
+      "tests": [
+        "native/functions/call-comment-before-parenthesis",
+        "native/functions/call-space-before-parenthesis"
+      ]
+    },
+    {
+      "id": "functions-call-newline-before-parenthesis",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "A newline between the function name and the opening parenthesis is ignored only inside parentheses, tuple brackets, index brackets or function call parentheses; at the top level of an attribute it ends the expression",
+      "tests": [
+        "native/functions/call-newline-before-parenthesis-in-parentheses",
+        "native/functions/call-newline-before-parenthesis-is-error"
+      ]
+    },
+    {
+      "id": "functions-call-is-term",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "A function call is an expression term, so attribute accesses, index operations and splats can follow it",
+      "tests": [
+        "native/functions/call-result-attribute-access",
+        "native/functions/call-result-index",
+        "native/functions/call-result-splat"
+      ]
+    },
+    {
+      "id": "functions-call-name-is-identifier",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "Only a plain identifier can be called: attribute accesses, parenthesized expressions, call results and strings can't be followed by an argument list",
+      "tests": [
+        "native/functions/call-on-attribute-is-error",
+        "native/functions/call-on-parenthesized-name-is-error",
+        "native/functions/call-quoted-name-is-error",
+        "native/functions/call-result-cannot-be-called"
+      ]
+    },
+    {
+      "id": "functions-call-name-contextual-keywords",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "Identifiers that are keywords only in for expressions, such as for and if, can be called as function names",
+      "tests": [
+        "native/functions/call-name-for",
+        "native/functions/call-name-if"
+      ]
+    },
+    {
+      "id": "functions-call-name-literal-keywords",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "The identifiers true, false and null followed by parentheses are calls to functions with those names (disputed)",
+      "tests": [
+        "native/functions/call-name-null",
+        "native/functions/call-name-true"
+      ]
+    },
+    {
+      "id": "functions-call-name-characters",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "A function name is an identifier, so it can contain dashes and non-ASCII letters",
+      "tests": [
+        "native/functions/call-name-non-ascii",
+        "native/functions/call-name-with-dash"
+      ]
+    },
+    {
+      "id": "functions-namespaced-call",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "A function name can be several identifiers separated by ::, reported as one name joined with ::, with spaces allowed around :: and newlines only inside parentheses, tuple brackets, index brackets or function call parentheses (disputed)",
+      "tests": [
+        "native/functions/namespaced-call",
+        "native/functions/namespaced-call-multiple-levels",
+        "native/functions/namespaced-call-newlines-in-parentheses",
+        "native/functions/namespaced-call-spaces"
+      ]
+    },
+    {
+      "id": "functions-namespaced-call-malformed",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "Each :: in a function name must be preceded by an identifier and followed by an identifier, and a namespaced name must be followed by an argument list",
+      "tests": [
+        "native/functions/namespaced-call-leading-separator-is-error",
+        "native/functions/namespaced-call-missing-name-is-error",
+        "native/functions/namespaced-call-newline-after-separator-is-error",
+        "native/functions/namespaced-call-triple-colon-is-error",
+        "native/functions/namespaced-name-without-call-is-error"
+      ]
+    },
+    {
+      "id": "functions-unknown-function",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "Calling a name that is not in the application's function table is an error when the call is evaluated, not during parsing, so a call that is never evaluated causes no error",
+      "tests": [
+        "native/functions/namespaced-unknown-function-is-eval-error",
+        "native/functions/unknown-function-in-unselected-branch",
+        "native/functions/unknown-function-is-eval-error"
+      ]
+    },
+    {
+      "id": "functions-namespace-distinct-from-variables",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "Functions and variables are separate namespaces, so a variable does not make a function of the same name callable",
+      "tests": [
+        "native/functions/variable-is-not-a-function"
+      ]
+    },
+    {
+      "id": "functions-function-does-not-define-variable",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "A function does not define a variable of the same name, and a function and a variable can share a name and both be used",
+      "untested": "Needs test functions, which the protocol doesn't provide yet"
+    },
+    {
+      "id": "functions-call-returns-result",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "A function call evaluates to the named function's return value for the given arguments",
+      "untested": "Needs test functions, which the protocol doesn't provide yet"
+    },
+    {
+      "id": "functions-expand-final-requires-sequence",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "An argument marked with an ellipsis must evaluate to a list or tuple, otherwise the call is an error",
+      "untested": "Needs test functions, which the protocol doesn't provide yet (hashicorp/hcl looks the function up before evaluating the arguments, so this can't be reached with an empty function table; it also accepts sets and rejects null)"
+    },
+    {
+      "id": "functions-expand-final-maps-elements",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "The elements of an expanded final argument become separate arguments, mapped to the parameters after those taken by the earlier arguments",
+      "untested": "Needs test functions, which the protocol doesn't provide yet"
+    },
+    {
+      "id": "functions-positional-parameters",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "Arguments are mapped to a function's positional parameters in order",
+      "untested": "Needs test functions, which the protocol doesn't provide yet"
+    },
+    {
+      "id": "functions-missing-arguments",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "A call with fewer arguments than the function has positional parameters is an error",
+      "untested": "Needs test functions, which the protocol doesn't provide yet"
+    },
+    {
+      "id": "functions-variadic-parameter",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "A function's variadic parameter collects all arguments left after the positional parameters",
+      "untested": "Needs test functions, which the protocol doesn't provide yet"
+    },
+    {
+      "id": "functions-extra-arguments",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "A call with more arguments than positional parameters is an error when the function has no variadic parameter",
+      "untested": "Needs test functions, which the protocol doesn't provide yet"
+    },
+    {
+      "id": "functions-argument-type-mismatch",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "A call is an error when an argument does not match the type specification of its parameter",
+      "untested": "Needs test functions, which the protocol doesn't provide yet"
+    },
+    {
+      "id": "functions-literal-only-mode",
+      "spec": "spec.md#expression-evaluation",
+      "rule": "In literal-only evaluation mode no functions are available",
+      "untested": "The protocol always evaluates in full expression mode and has no way to request literal-only mode"
+    },
+    {
+      "id": "functions-static-call",
+      "spec": "hclsyntax/spec.md#static-call",
+      "rule": "A function call can be analyzed statically as a call, giving the function name verbatim and the argument expressions without evaluating them",
+      "untested": "Static analysis is not part of the protocol"
+    }
+  ]
+}

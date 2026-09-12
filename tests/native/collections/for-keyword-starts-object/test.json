@@ -1,0 +1,12 @@
+{
+  "description": "An object whose first key is the identifier for is read as a for expression",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "reference_error": "For expression requires variable name after 'for'",
+  "expect": {
+    "valid": false
+  }
+}

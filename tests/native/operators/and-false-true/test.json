@@ -1,0 +1,18 @@
+{
+  "description": "Logical AND of false and true is false",
+  "spec": [
+    "hclsyntax/spec.md#logic-operators"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

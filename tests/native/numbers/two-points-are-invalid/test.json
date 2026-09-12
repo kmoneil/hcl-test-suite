@@ -1,0 +1,11 @@
+{
+  "description": "Two points in a row are a parse error",
+  "spec": [
+    "hclsyntax/spec.md#numeric-literals"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid number literal",
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "description": "A null key cannot index a tuple",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#null-values"
+  ],
+  "op": "eval",
+  "variables": {
+    "t": {
+      "tuple": [
+        {
+          "string": "x"
+        },
+        {
+          "string": "y"
+        },
+        {
+          "string": "z"
+        }
+      ]
+    }
+  },
+  "reference_error": "Can't use a null value as an indexing key",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

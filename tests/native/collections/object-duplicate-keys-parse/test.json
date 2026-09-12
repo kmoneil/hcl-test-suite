@@ -1,0 +1,50 @@
+{
+  "description": "Duplicate keys in an object constructor are not a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec doesn't say whether duplicate keys in an object constructor are an error, or when. hashicorp/hcl parses every element and keeps both in the syntax tree (parseObjectCons in hclsyntax/parser.go), and only evaluation merges them.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "object",
+          "items": [
+            {
+              "key": {
+                "kind": "literal",
+                "value": {
+                  "string": "b"
+                }
+              },
+              "value": {
+                "kind": "literal",
+                "value": {
+                  "number": "1"
+                }
+              }
+            },
+            {
+              "key": {
+                "kind": "literal",
+                "value": {
+                  "string": "b"
+                }
+              },
+              "value": {
+                "kind": "literal",
+                "value": {
+                  "number": "2"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

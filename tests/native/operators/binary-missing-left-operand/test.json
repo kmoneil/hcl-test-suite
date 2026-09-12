@@ -1,0 +1,11 @@
+{
+  "description": "A binary operator with no left operand is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#operations"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

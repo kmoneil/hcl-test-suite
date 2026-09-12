@@ -1,0 +1,39 @@
+{
+  "description": "A for directive with one variable has only a value variable",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive"
+  ],
+  "op": "parse",
+  "notes": "The grammar in the spec writes the second identifier without a ?, but the prose defines the directive through the for expression, which takes one or two names, and the spec's own example %{ for v in [true] } uses one.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "template_for",
+              "key_var": null,
+              "value_var": "v",
+              "collection": {
+                "kind": "variable",
+                "name": "xs"
+              },
+              "body": [
+                {
+                  "kind": "interpolation",
+                  "expr": {
+                    "kind": "variable",
+                    "name": "v"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

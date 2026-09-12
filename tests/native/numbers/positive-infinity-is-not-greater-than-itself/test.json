@@ -1,0 +1,27 @@
+{
+  "description": "Positive infinity is not greater than positive infinity",
+  "spec": [
+    "spec.md#primitive-types",
+    "hclsyntax/spec.md#comparison-operators"
+  ],
+  "op": "eval",
+  "variables": {
+    "inf": {
+      "number": "Infinity"
+    },
+    "other_inf": {
+      "number": "Infinity"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

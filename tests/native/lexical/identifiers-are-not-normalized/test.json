@@ -1,0 +1,29 @@
+{
+  "description": "Identifiers that differ only in Unicode normalization form are different names",
+  "spec": [
+    "hclsyntax/spec.md#source-code-representation",
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "parse",
+  "notes": "The first name uses the precomposed U+00E9 and the second an e followed by U+0301 COMBINING ACUTE ACCENT, so defining both is not a redefinition.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "café": {
+          "kind": "literal",
+          "value": {
+            "number": "1"
+          }
+        },
+        "café": {
+          "kind": "literal",
+          "value": {
+            "number": "2"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

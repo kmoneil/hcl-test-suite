@@ -1,0 +1,20 @@
+{
+  "description": "An indented closing marker also ends a << heredoc",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec allows spaces before the closing marker only for heredocs introduced with <<-, which suggests that an indented marker line doesn't end a << heredoc, leaving it unterminated. hashicorp/hcl compares each candidate line with its leading and trailing Unicode whitespace removed by bytes.TrimSpace, for both heredoc forms (the heredocLiteralEOL action in hclsyntax/scan_tokens.rl).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "hello\n"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

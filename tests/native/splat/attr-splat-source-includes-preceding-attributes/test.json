@@ -1,0 +1,33 @@
+{
+  "description": "The source of an attribute-only splat includes the attribute accesses before it",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "splat",
+          "source": {
+            "kind": "get_attr",
+            "object": {
+              "kind": "variable",
+              "name": "o"
+            },
+            "name": "b"
+          },
+          "each": {
+            "kind": "get_attr",
+            "object": {
+              "kind": "splat_item"
+            },
+            "name": "c"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

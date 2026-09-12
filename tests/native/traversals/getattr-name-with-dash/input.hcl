@@ -1,0 +1,1 @@
+a = o.my-attr

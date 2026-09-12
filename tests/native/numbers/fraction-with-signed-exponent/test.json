@@ -1,0 +1,21 @@
+{
+  "description": "A numeric literal can have both a fractional part and a signed exponent",
+  "spec": [
+    "hclsyntax/spec.md#numeric-literals"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "literal",
+          "value": {
+            "number": "0.25"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

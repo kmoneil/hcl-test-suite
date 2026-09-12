@@ -1,0 +1,40 @@
+{
+  "description": "An index key can come from an attribute access",
+  "spec": [
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "eval",
+  "variables": {
+    "t": {
+      "tuple": [
+        {
+          "string": "x"
+        },
+        {
+          "string": "y"
+        },
+        {
+          "string": "z"
+        }
+      ]
+    },
+    "o": {
+      "object": {
+        "i": {
+          "number": "2"
+        }
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "z"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

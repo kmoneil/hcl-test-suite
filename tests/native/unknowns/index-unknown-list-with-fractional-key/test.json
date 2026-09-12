@@ -1,0 +1,33 @@
+{
+  "description": "Indexing an unknown list with 0.5 gives an unknown element",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says a list key must be a non-negative integer and that a key that doesn't correspond to an element is an error, and 0.5 corresponds to no element of any list. It also says that when the collection is an unknown value of a suitable type the result is an unknown value, which supports hashicorp/hcl: go-cty's HasIndex reports unknown for an unknown list before looking at the key (Index in ops.go, Value.HasIndex in cty/value_ops.go).",
+  "variables": {
+    "u": {
+      "unknown": [
+        "list",
+        "string"
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "string"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

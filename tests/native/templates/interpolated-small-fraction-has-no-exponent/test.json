@@ -1,0 +1,24 @@
+{
+  "description": "An interpolated number smaller than one millionth is written in plain decimal notation",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "variables": {
+    "v": {
+      "number": "0.00000095367431640625"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "<0.00000095367431640625>"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

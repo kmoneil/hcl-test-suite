@@ -1,0 +1,12 @@
+{
+  "description": "A newline between two function arguments does not separate them",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "reference_error": "Missing argument separator",
+  "expect": {
+    "valid": false
+  }
+}

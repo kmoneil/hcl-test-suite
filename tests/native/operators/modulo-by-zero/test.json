@@ -1,0 +1,20 @@
+{
+  "description": "The remainder of division by zero is the dividend",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec doesn't say what the remainder of division by zero is, and with no NaN value the natural reading is an error, as native/numbers/zero-divided-by-zero-is-an-error assumes for 0 / 0. hashicorp/hcl returns the dividend unchanged: Value.Modulo in cty/value_ops.go returns its receiver when the divisor is zero, although its doc comment says the result is an infinity.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "5"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

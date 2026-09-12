@@ -1,0 +1,27 @@
+{
+  "description": "Different unary operators can be stacked on one operand",
+  "spec": [
+    "hclsyntax/spec.md#operations"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "unary",
+          "operator": "-",
+          "operand": {
+            "kind": "unary",
+            "operator": "!",
+            "operand": {
+              "kind": "variable",
+              "name": "x"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "description": "A parenthesized term is represented by the term itself",
+  "spec": [
+    "hclsyntax/spec.md#expression-terms"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "variable",
+          "name": "x"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

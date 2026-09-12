@@ -17,6 +17,7 @@ import shlex
 import subprocess
 import sys
 import tempfile
+import unicodedata
 from collections import defaultdict
 from pathlib import Path
 
@@ -24,7 +25,7 @@ ROOT = Path(__file__).resolve().parent.parent
 TESTS_DIR = ROOT / "tests"
 SPEC_URL = "https://github.com/hashicorp/hcl/blob/v2.24.0/"
 OPERATIONS = ("parse", "eval")
-TEST_FIELDS = {"description", "spec", "op", "input", "features", "status", "notes", "variables", "expect"}
+TEST_FIELDS = {"description", "spec", "op", "input", "features", "status", "notes", "variables", "reference_error", "expect"}
 
 # Enough precision that normalizing a number never rounds it.
 decimal.getcontext().prec = 10_000
@@ -36,6 +37,11 @@ class TestError(Exception):
 
 class AdapterError(Exception):
     """The adapter crashed, hung, or printed output that breaks the protocol."""
+
+
+class KeyConflict(AdapterError):
+    """An object or map has two keys that are the same string under NFC, which no
+    correct implementation can produce. compare() reports it as a failure."""
 
 
 class Test:
@@ -67,6 +73,7 @@ class Test:
         self.disputed = meta.get("status") == "disputed"
         self.notes = meta.get("notes")
         self.variables = meta.get("variables")
+        self.reference_error = meta.get("reference_error")
         self.input = self.dir / meta.get("input", "input.hcl")
         if not self.input.is_file():
             raise TestError(f"{path}: input file {self.input.name} not found")
@@ -97,6 +104,8 @@ def main():
     parser.add_argument("-v", "--verbose", action="store_true", help="also list tests that passed or were skipped")
     parser.add_argument("--strict", action="store_true", help="fail the run when a disputed test fails")
     parser.add_argument("--timeout", type=float, default=10, help="seconds to allow each adapter call (default: 10)")
+    parser.add_argument("--reference-errors", action="store_true",
+                        help='check that errors match each test\'s "reference_error" (for the hashicorp/hcl adapter)')
     args = parser.parse_args()
 
     adapter = shlex.split(args.adapter)
@@ -109,7 +118,7 @@ def main():
 
     print(f"{caps['implementation']} {caps.get('version', '')}".rstrip())
     with tempfile.TemporaryDirectory(prefix="hcltest-") as tmp:
-        results = [run_test(test, adapter, caps, args.timeout, Path(tmp)) for test in tests]
+        results = [run_test(test, adapter, caps, args, Path(tmp)) for test in tests]
     for result in results:
         if args.verbose or result.outcome in ("fail", "error"):
             print_result(result)
@@ -152,26 +161,33 @@ def call_adapter(adapter, args, timeout):
     if proc.returncode != 0:
         raise AdapterError(f"adapter exited with status {proc.returncode}" + (f":\n{stderr}" if stderr else ""))
     try:
-        return json.loads(proc.stdout)
+        return json.loads(proc.stdout, object_pairs_hook=unique_keys)
     except ValueError as e:
         raise AdapterError(f"adapter printed invalid JSON ({e})")
 
 
-def run_test(test, adapter, caps, timeout, tmp):
+def unique_keys(pairs):
+    result = dict(pairs)
+    if len(result) != len(pairs):
+        raise ValueError("an object has the same key twice")
+    return result
+
+
+def run_test(test, adapter, caps, args, tmp):
     if test.op not in caps["operations"]:
         return Result(test, "skip", f'adapter does not support "{test.op}"')
     missing = sorted(set(test.features) - set(caps["features"]))
     if missing:
         return Result(test, "skip", f"adapter does not support {', '.join(missing)}")
 
-    args = [test.op, str(test.input)]
+    command = [test.op, str(test.input)]
     if test.variables is not None:
         variables = tmp / (test.name.replace("/", "__") + ".json")
         variables.write_text(json.dumps(test.variables, ensure_ascii=False), encoding="utf-8")
-        args.append(str(variables))
+        command.append(str(variables))
     try:
-        actual = call_adapter(adapter, args, timeout)
-        failure = compare(test, actual)
+        actual = call_adapter(adapter, command, args.timeout)
+        failure = compare(test, actual, args.reference_errors)
     except AdapterError as e:
         return Result(test, "error", str(e))
     if failure:
@@ -179,7 +195,7 @@ def run_test(test, adapter, caps, timeout, tmp):
     return Result(test, "pass")
 
 
-def compare(test, actual):
+def compare(test, actual, reference_errors=False):
     """Returns None if the adapter's output matches the test, or (message, detail)."""
     if not isinstance(actual, dict) or not isinstance(actual.get("valid"), bool):
         raise AdapterError('output must be a JSON object with a boolean "valid"')
@@ -189,11 +205,18 @@ def compare(test, actual):
         phase = test.expect.get("phase")
         if test.op == "eval" and phase and actual.get("phase") != phase:
             return f"expected an error during {phase}, but it was reported during {actual.get('phase')}", error_messages(actual)
+        if reference_errors and test.reference_error:
+            messages = [str(e.get("message", "")) for e in actual.get("errors") or []]
+            if not any(test.reference_error in m for m in messages):
+                return f'expected the reference error "{test.reference_error}"', error_messages(actual)
         return None
     if not actual["valid"]:
         during = f" during {actual['phase']}" if actual.get("phase") else ""
         return f"expected success, but got errors{during}", error_messages(actual)
-    body = normalize_body(actual.get("body"), test.op)
+    try:
+        body = normalize_body(actual.get("body"), test.op)
+    except KeyConflict as e:
+        return str(e), None
     if body != test.expected_body:
         return "output differs from expected", json_diff(test.expected_body, body)
     return None
@@ -258,12 +281,26 @@ def normalize_value(value):
             items.sort(key=lambda item: json.dumps(item, sort_keys=True))
         out = {kind: items}
     elif kind in ("object", "map"):
-        out = {kind: {key: normalize_value(item) for key, item in x.items()}}
+        items = {}
+        for key, item in x.items():
+            if nfc(key) in items:
+                raise KeyConflict(f"the {kind} has two keys that are equal under NFC: {nfc(key)!r}")
+            items[nfc(key)] = normalize_value(item)
+        out = {kind: items}
+    elif kind == "string":
+        return {"string": nfc(x)}
     else:
         return {kind: x}
     if kind in ("list", "set", "map"):
         out["element_type"] = value.get("element_type")
     return out
+
+
+def nfc(text):
+    """Strings are equal in HCL if their NFC normalizations are equal."""
+    if not isinstance(text, str):
+        raise AdapterError(f"strings must be JSON strings, got {text!r}")
+    return unicodedata.normalize("NFC", text)
 
 
 def normalize_number(text):
@@ -291,13 +328,16 @@ def normalize_expr(node):
         raise AdapterError(f"not an expression: {node!r}")
     kind = node["kind"]
     out = {}
+    had_text = False
     for field, x in node.items():
         if x is None:
             continue  # a null optional field is the same as a missing one
         if kind == "literal" and field == "value":
             out[field] = normalize_value(x)
         elif field in PART_LISTS.get(kind, ()):
-            out[field] = merge_text([normalize_expr(part) for part in x])
+            parts = [normalize_expr(part) for part in x]
+            had_text = had_text or any(is_text(part) for part in parts)
+            out[field] = merge_text(parts)
         elif kind == "object" and field == "items":
             out[field] = [{"key": normalize_expr(i["key"]), "value": normalize_expr(i["value"])} for i in x]
         elif isinstance(x, dict):
@@ -306,6 +346,10 @@ def normalize_expr(node):
             out[field] = [normalize_expr(item) for item in x]
         else:
             out[field] = x
+    if kind == "unary" and out.get("operator") == "-" and is_number(out.get("operand", {})):
+        # Negating a number literal is the same as a negative number literal.
+        number = normalize_number(str(-decimal.Decimal(out["operand"]["value"]["number"])))
+        return {"kind": "literal", "value": {"number": number}}
     if kind == "template":
         # A template with no interpolations or directives is just a string.
         parts = out.get("parts", [])
@@ -313,7 +357,15 @@ def normalize_expr(node):
             return {"kind": "literal", "value": {"string": ""}}
         if len(parts) == 1 and is_text(parts[0]):
             return parts[0]
+        if len(parts) == 1 and parts[0]["kind"] == "interpolation" and had_text:
+            # Text emptied by strip markers still stops the template from being
+            # unwrapped, so keep one empty part to tell it apart from "${x}".
+            out["parts"] = parts + [{"kind": "literal", "value": {"string": ""}}]
     return out
+
+
+def is_number(node):
+    return node.get("kind") == "literal" and "number" in node.get("value", {})
 
 
 def is_text(node):
@@ -330,7 +382,7 @@ def merge_text(parts):
                 continue
             if merged and is_text(merged[-1]):
                 text = merged.pop()["value"]["string"] + text
-            part = {"kind": "literal", "value": {"string": text}}
+            part = {"kind": "literal", "value": {"string": nfc(text)}}
         merged.append(part)
     return merged
 

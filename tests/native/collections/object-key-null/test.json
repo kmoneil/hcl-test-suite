@@ -1,0 +1,25 @@
+{
+  "description": "The bare key null names an attribute null",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#keywords"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says a bare identifier used as an object key is a literal attribute name, but also that a keyword's role supersedes any other interpretation where it is reserved, and true, false and null are literal values in expressions. Read as the null keyword, this key would be null, which is an error. hashicorp/hcl names the attribute null: ObjectConsKeyExpr.literalName uses hcl.ExprAsKeyword, and LiteralValueExpr.AsTraversal turns the null literal back into its name (hclsyntax/expression.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "null": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "description": "Text after the opening marker on the same line does not start a heredoc",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

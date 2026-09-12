@@ -1,0 +1,27 @@
+{
+  "description": "Whitespace is allowed between the last argument and the ellipsis",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "call",
+          "name": "f",
+          "args": [
+            {
+              "kind": "variable",
+              "name": "x"
+            }
+          ],
+          "expand_final": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

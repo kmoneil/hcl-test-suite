@@ -1,0 +1,42 @@
+{
+  "description": "Attribute accesses after the index that ends an attribute-only splat apply to the indexed result",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "get_attr",
+          "object": {
+            "kind": "index",
+            "collection": {
+              "kind": "splat",
+              "source": {
+                "kind": "variable",
+                "name": "t"
+              },
+              "each": {
+                "kind": "get_attr",
+                "object": {
+                  "kind": "splat_item"
+                },
+                "name": "b"
+              }
+            },
+            "key": {
+              "kind": "literal",
+              "value": {
+                "number": "0"
+              }
+            }
+          },
+          "name": "c"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

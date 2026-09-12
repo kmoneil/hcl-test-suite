@@ -1,0 +1,31 @@
+{
+  "description": "An index operation can follow a function call",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "index",
+          "collection": {
+            "kind": "call",
+            "name": "f",
+            "args": [],
+            "expand_final": false
+          },
+          "key": {
+            "kind": "literal",
+            "value": {
+              "number": "0"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

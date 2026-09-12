@@ -1,0 +1,11 @@
+{
+  "description": "A comma cannot follow the attribute in a one-line block",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "reference_error": "Single-line block syntax can include only one argument definition",
+  "expect": {
+    "valid": false
+  }
+}

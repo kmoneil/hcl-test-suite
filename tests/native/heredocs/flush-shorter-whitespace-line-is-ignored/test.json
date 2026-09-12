@@ -1,0 +1,20 @@
+{
+  "description": "<<- ignores a whitespace-only line that is less indented than the other lines",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says the leading spaces of the literal text starting each line are analyzed and that the minimum is removed from every such line, without mentioning blank lines. hashicorp/hcl skips lines that contain only whitespace, both when finding the minimum and when removing it (flushHeredocTemplateParts in hclsyntax/parser_template.go). Counting the whitespace-only line would make the minimum two spaces, giving \"  a\\n\\n  b\\n\".",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "a\n  \nb\n"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

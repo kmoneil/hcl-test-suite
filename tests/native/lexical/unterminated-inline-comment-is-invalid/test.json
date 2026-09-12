@@ -1,0 +1,12 @@
+{
+  "description": "An inline comment without a closing */ is a parse error",
+  "spec": [
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "notes": "hashicorp/hcl doesn't report unterminated comments as such: it reads the /* as the operators / and * and reports the unexpected /.",
+  "reference_error": "Argument or block definition required",
+  "expect": {
+    "valid": false
+  }
+}

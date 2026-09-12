@@ -1,0 +1,24 @@
+{
+  "description": "A variable expression evaluates to the number value of the variable",
+  "spec": [
+    "hclsyntax/spec.md#variables-and-variable-expressions",
+    "spec.md#expression-evaluation"
+  ],
+  "op": "eval",
+  "variables": {
+    "size": {
+      "number": "12.5"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "12.5"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

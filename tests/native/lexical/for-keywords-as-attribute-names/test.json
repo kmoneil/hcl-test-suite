@@ -1,0 +1,34 @@
+{
+  "description": "The keywords for, in and if can be attribute names",
+  "spec": [
+    "hclsyntax/spec.md#keywords",
+    "hclsyntax/spec.md#attribute-definitions"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "for": {
+          "kind": "literal",
+          "value": {
+            "number": "1"
+          }
+        },
+        "in": {
+          "kind": "literal",
+          "value": {
+            "number": "2"
+          }
+        },
+        "if": {
+          "kind": "literal",
+          "value": {
+            "number": "3"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

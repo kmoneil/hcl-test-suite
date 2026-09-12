@@ -1,0 +1,44 @@
+{
+  "description": "Nested full splats on a list are an error when the inner splats give tuples of different types",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators",
+    "spec.md#collection-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says a splat is approximately equivalent to a for expression, which would give [[\"x\"], []] here if the second splat were nested in the first, and its grammar doesn't nest splats at all, which would give [\"x\", null]. hashicorp/hcl nests the second splat, builds a list for a list source, and reports an error when the inner splats give values of different types, here a one-element tuple and an empty tuple (SplatExpr.Value in hclsyntax/expression.go).",
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "object": {
+            "b": {
+              "string": "x"
+            }
+          }
+        },
+        {
+          "object": {
+            "b": {
+              "null": "string"
+            }
+          }
+        }
+      ],
+      "element_type": [
+        "object",
+        {
+          "b": "string"
+        }
+      ]
+    }
+  },
+  "reference_error": "Invalid nested splat expressions",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

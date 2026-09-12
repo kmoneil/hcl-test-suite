@@ -1,0 +1,11 @@
+{
+  "description": "A colon is a parse error outside conditionals, objects and for expressions",
+  "spec": [
+    "hclsyntax/spec.md#operators-and-delimiters"
+  ],
+  "op": "parse",
+  "reference_error": "Missing newline after argument",
+  "expect": {
+    "valid": false
+  }
+}

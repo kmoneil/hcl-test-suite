@@ -1,0 +1,22 @@
+{
+  "description": "Adding a number to an unknown bool is an error",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "bool"
+    }
+  },
+  "reference_error": "left operand: number required, but have bool",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

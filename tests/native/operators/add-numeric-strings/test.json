@@ -1,0 +1,19 @@
+{
+  "description": "+ converts numeric strings to numbers and adds them instead of concatenating",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "3"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

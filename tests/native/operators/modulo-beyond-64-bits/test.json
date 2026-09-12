@@ -1,0 +1,19 @@
+{
+  "description": "The remainder is exact for a dividend that doesn't fit in 64 bits",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators",
+    "spec.md#primitive-types"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "7"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

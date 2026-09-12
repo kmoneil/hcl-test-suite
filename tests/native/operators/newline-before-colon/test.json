@@ -1,0 +1,13 @@
+{
+  "description": "Outside parentheses a newline before the colon leaves the conditional without a false result",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#comments-and-whitespace",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "parse",
+  "reference_error": "Missing false expression in conditional",
+  "expect": {
+    "valid": false
+  }
+}

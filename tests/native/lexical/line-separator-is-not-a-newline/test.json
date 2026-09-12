@@ -1,0 +1,11 @@
+{
+  "description": "U+2028 LINE SEPARATOR is not a newline sequence",
+  "spec": [
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "reference_error": "This character is not used within the language",
+  "expect": {
+    "valid": false
+  }
+}

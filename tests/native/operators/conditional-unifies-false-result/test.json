@@ -1,0 +1,19 @@
+{
+  "description": "A bool result is converted to string when the other result is a string",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator",
+    "spec.md#type-unification"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "true"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "description": "A minus sign right after a binary operator negates the right operand",
+  "spec": [
+    "hclsyntax/spec.md#operations"
+  ],
+  "op": "parse",
+  "notes": "The spec's grammar gives operators expression terms as operands, which would rule this out, but it can't express chains such as x + y + z either, which the prose allows. Read with the precedence rules, an operand can be any operation that binds tighter, and unary operations bind tightest.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "binary",
+          "operator": "-",
+          "left": {
+            "kind": "variable",
+            "name": "x"
+          },
+          "right": {
+            "kind": "unary",
+            "operator": "-",
+            "operand": {
+              "kind": "variable",
+              "name": "y"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

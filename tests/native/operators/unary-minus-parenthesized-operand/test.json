@@ -1,0 +1,19 @@
+{
+  "description": "Negating a parenthesized expression negates the whole group",
+  "spec": [
+    "hclsyntax/spec.md#operations",
+    "hclsyntax/spec.md#expression-terms"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "-5"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "description": "A list of numbers and a tuple holding a tuple fail to unify",
+  "spec": [
+    "spec.md#type-unification",
+    "spec.md#collection-and-structural-type-conversions",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "notes": "The tuple's only element is a tuple, which doesn't convert to number, so neither the list type nor the tuple type can be selected.",
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "number": "5"
+        }
+      ],
+      "element_type": "number"
+    }
+  },
+  "reference_error": "must have consistent types",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

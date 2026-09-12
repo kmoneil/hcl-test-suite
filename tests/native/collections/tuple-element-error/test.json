@@ -1,0 +1,12 @@
+{
+  "description": "An error while evaluating any tuple element fails the tuple constructor",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "eval",
+  "reference_error": "There is no variable named \"nope\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

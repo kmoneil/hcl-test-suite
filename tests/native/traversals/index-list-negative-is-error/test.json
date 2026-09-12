@@ -1,0 +1,29 @@
+{
+  "description": "Indexing a list with a negative number is an error",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#collection-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "string": "x"
+        },
+        {
+          "string": "y"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "reference_error": "a negative number is not a valid index",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "description": "Newlines inside a directive in a quoted template are ignored",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says newlines are ignored inside parentheses, brackets, braces and function call arguments, but doesn't say so for template directives, and it describes a quoted template as a single-line expression. hashicorp/hcl ignores newlines inside directives: parseTemplateParts in hclsyntax/parser_template.go calls PushIncludeNewlines(false) before reading the directive.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "yes"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

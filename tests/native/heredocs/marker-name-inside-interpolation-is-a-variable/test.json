@@ -1,0 +1,27 @@
+{
+  "description": "The marker alone on a line inside an interpolation is a variable reference",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions",
+    "hclsyntax/spec.md#template-interpolations",
+    "hclsyntax/spec.md#expression-terms"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says the heredoc ends when its identifier appears again on a line of its own, with no exception for lines inside an interpolation sequence. hashicorp/hcl only looks for the marker while scanning literal text; inside ${ ... } it scans ordinary expression tokens (the heredocTemplate and main machines in hclsyntax/scan_tokens.rl), so EOT here is a variable.",
+  "variables": {
+    "EOT": {
+      "string": "v"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "v\n"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

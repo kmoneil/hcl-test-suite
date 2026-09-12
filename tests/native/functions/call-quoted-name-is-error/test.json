@@ -1,0 +1,11 @@
+{
+  "description": "A quoted string cannot be used as a function name",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "parse",
+  "reference_error": "Missing newline after argument",
+  "expect": {
+    "valid": false
+  }
+}

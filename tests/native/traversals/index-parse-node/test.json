@@ -1,0 +1,28 @@
+{
+  "description": "An index operation parses as an index node with the key expression",
+  "spec": [
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "index",
+          "collection": {
+            "kind": "variable",
+            "name": "t"
+          },
+          "key": {
+            "kind": "literal",
+            "value": {
+              "number": "0"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "description": "Two commas in a row between function arguments are an error",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "description": "Objects with equal attributes are equal regardless of the order they are written in",
+  "spec": [
+    "hclsyntax/spec.md#comparison-operators",
+    "spec.md#structural-types"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

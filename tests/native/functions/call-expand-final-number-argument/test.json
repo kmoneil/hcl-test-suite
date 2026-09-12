@@ -1,0 +1,29 @@
+{
+  "description": "An ellipsis directly after a number argument is not read as part of the number",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#numeric-literals"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "call",
+          "name": "f",
+          "args": [
+            {
+              "kind": "literal",
+              "value": {
+                "number": "1"
+              }
+            }
+          ],
+          "expand_final": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

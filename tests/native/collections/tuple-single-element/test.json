@@ -1,0 +1,26 @@
+{
+  "description": "A tuple constructor can hold a single element",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "tuple",
+          "elements": [
+            {
+              "kind": "literal",
+              "value": {
+                "number": "1"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

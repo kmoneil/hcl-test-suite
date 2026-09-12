@@ -1,0 +1,66 @@
+{
+  "description": "Directives nested inside if branches appear inside the branch part lists",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive",
+    "hclsyntax/spec.md#template-for-directive"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "template_if",
+              "condition": {
+                "kind": "variable",
+                "name": "a"
+              },
+              "then": [
+                {
+                  "kind": "template_for",
+                  "key_var": null,
+                  "value_var": "v",
+                  "collection": {
+                    "kind": "variable",
+                    "name": "xs"
+                  },
+                  "body": [
+                    {
+                      "kind": "interpolation",
+                      "expr": {
+                        "kind": "variable",
+                        "name": "v"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "else": [
+                {
+                  "kind": "template_if",
+                  "condition": {
+                    "kind": "variable",
+                    "name": "b"
+                  },
+                  "then": [
+                    {
+                      "kind": "literal",
+                      "value": {
+                        "string": "x"
+                      }
+                    }
+                  ],
+                  "else": []
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

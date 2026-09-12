@@ -1,0 +1,11 @@
+{
+  "description": "A \\u escape cannot have a sign before its hex digits",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "reference_error": "The \\u escape sequence must be followed by four hexadecimal digits",
+  "expect": {
+    "valid": false
+  }
+}

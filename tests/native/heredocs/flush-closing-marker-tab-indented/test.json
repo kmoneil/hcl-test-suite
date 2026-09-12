@@ -1,0 +1,22 @@
+{
+  "description": "A <<- closing marker indented with a tab ends the heredoc",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions",
+    "hclsyntax/spec.md#comments-and-whitespace",
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec lets spaces precede the closing marker of a <<- heredoc without saying which characters count as spaces: Comments and Whitespace treats tabs as whitespace as well as U+0020, and Template Literals interprets space characters by Unicode's definition for strip markers. hashicorp/hcl compares each candidate line with its leading and trailing Unicode whitespace removed by bytes.TrimSpace, for both heredoc forms (the heredocLiteralEOL action in hclsyntax/scan_tokens.rl). If only U+0020 counted, this heredoc would be unterminated.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "a\n"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

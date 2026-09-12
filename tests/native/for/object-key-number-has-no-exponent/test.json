@@ -1,0 +1,23 @@
+{
+  "description": "A number key written with an exponent becomes a string of decimal digits without the exponent",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "1000": {
+              "number": "1000"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

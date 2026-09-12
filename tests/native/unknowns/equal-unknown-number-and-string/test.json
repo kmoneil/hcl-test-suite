@@ -1,0 +1,30 @@
+{
+  "description": "An unknown number compared with a string using == is false",
+  "spec": [
+    "hclsyntax/spec.md#comparison-operators",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says a comparison with a correctly typed unknown operand gives an unknown bool, and equality accepts operands of any type. hashicorp/hcl returns false because the types differ, so the values could never be equal (Value.Equals in cty/value_ops.go).",
+  "variables": {
+    "u": {
+      "unknown": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

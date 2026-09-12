@@ -1,0 +1,45 @@
+{
+  "description": "Newlines inside brackets nested in an object element are ignored",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "object",
+          "items": [
+            {
+              "key": {
+                "kind": "literal",
+                "value": {
+                  "string": "b"
+                }
+              },
+              "value": {
+                "kind": "tuple",
+                "elements": [
+                  {
+                    "kind": "literal",
+                    "value": {
+                      "number": "1"
+                    }
+                  },
+                  {
+                    "kind": "literal",
+                    "value": {
+                      "number": "2"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "description": "A function name can have a namespace prefix separated by a double colon",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec's function call grammar has a single identifier as the function name (FunctionCall = Identifier \"(\" arguments \")\"), and :: is not one of its tokens. hashicorp/hcl accepts names separated by :: and reports them joined with :: as the function name (finishParsingFunctionCall in hclsyntax/parser.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "call",
+          "name": "ns::f",
+          "args": [],
+          "expand_final": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

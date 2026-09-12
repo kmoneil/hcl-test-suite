@@ -1,0 +1,12 @@
+{
+  "description": "A block label cannot be an attribute access",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#blocks"
+  ],
+  "op": "parse",
+  "reference_error": "Either a quoted string block label or an opening brace (\"{\") is expected here",
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "description": "A number string with a trailing space doesn't convert to number",
+  "spec": [
+    "spec.md#primitive-type-conversions",
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "reference_error": "left operand: a number is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "description": "An object attribute whose value is null is kept in the object",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "spec.md#null-values"
+  ],
+  "op": "eval",
+  "notes": "Treating null as absent applies to body attributes, not to attributes of an object value.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "b": {
+              "null": "dynamic"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

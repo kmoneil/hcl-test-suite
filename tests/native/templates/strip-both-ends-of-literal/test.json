@@ -1,0 +1,18 @@
+{
+  "description": "Strip markers on both sides of a literal remove whitespace from both of its ends",
+  "spec": [
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "abc"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

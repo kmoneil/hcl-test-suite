@@ -1,0 +1,11 @@
+{
+  "description": "A single ampersand is not an operator",
+  "spec": [
+    "hclsyntax/spec.md#operators-and-delimiters"
+  ],
+  "op": "parse",
+  "reference_error": "Did you mean boolean AND",
+  "expect": {
+    "valid": false
+  }
+}

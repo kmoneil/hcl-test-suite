@@ -1,0 +1,28 @@
+{
+  "description": "A legacy index directly after an attribute-only splat selects from each element",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators",
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec's grammar lets an attribute-only splat consume only attribute accesses (attrSplat = \".\" \"*\" GetAttr*) and says a legacy index is an index operation, not an attribute access, so .0 would select the first element of the splat's result, [1, 2]. hashicorp/hcl deliberately includes legacy indexes in an attribute-only splat (parseExpressionTraversals in hclsyntax/parser.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "number": "1"
+            },
+            {
+              "number": "3"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

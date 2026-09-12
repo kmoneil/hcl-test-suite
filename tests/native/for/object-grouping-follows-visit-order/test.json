@@ -1,0 +1,32 @@
+{
+  "description": "Grouped values appear in the order their elements were visited",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "all": {
+              "tuple": [
+                {
+                  "string": "a"
+                },
+                {
+                  "string": "b"
+                },
+                {
+                  "string": "c"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

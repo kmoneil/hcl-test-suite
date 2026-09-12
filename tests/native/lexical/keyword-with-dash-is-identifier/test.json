@@ -1,0 +1,20 @@
+{
+  "description": "The name true-false is one variable, not a subtraction of two keywords",
+  "spec": [
+    "hclsyntax/spec.md#keywords",
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "variable",
+          "name": "true-false"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

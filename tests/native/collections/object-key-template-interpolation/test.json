@@ -1,0 +1,28 @@
+{
+  "description": "A key that is only an interpolation names the attribute with the interpolated value",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "variables": {
+    "k": {
+      "string": "x"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "x": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "description": "In a quoted block label, $${ and %%{ produce ${ and %{",
+  "spec": [
+    "hclsyntax/spec.md#blocks",
+    "hclsyntax/spec.md#template-expressions",
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "parse",
+  "notes": "A quoted label is a StringLit: a quoted template containing only a single literal string, and the template literals section makes $${ and %%{ the escapes for ${ and %{ in such literals. hashicorp/hcl decodes them in ParseStringLiteralToken (hclsyntax/parser.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "block",
+          "labels": [
+            "${x}",
+            "%{y}"
+          ],
+          "body": {
+            "attributes": {},
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

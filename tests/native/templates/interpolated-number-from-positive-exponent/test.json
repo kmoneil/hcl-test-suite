@@ -1,0 +1,19 @@
+{
+  "description": "A number written with an exponent is interpolated without an exponent",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "<1500>"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

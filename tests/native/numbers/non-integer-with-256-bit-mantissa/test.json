@@ -1,0 +1,20 @@
+{
+  "description": "A non-integer whose mantissa needs all of 256 bits keeps its value",
+  "spec": [
+    "spec.md#primitive-types",
+    "hclsyntax/spec.md#numeric-literals"
+  ],
+  "op": "eval",
+  "notes": "The left operand is (2^256 - 1) / 4 = 2^254 - 0.25, whose mantissa is 256 one bits. With fewer bits it would round to 2^254, the right operand, and the comparison would be false. The values are compared rather than printed because their decimal forms are too long to compare portably.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

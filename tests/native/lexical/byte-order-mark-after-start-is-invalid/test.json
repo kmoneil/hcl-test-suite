@@ -1,0 +1,11 @@
+{
+  "description": "A byte order mark that is not at the start of the file is a parse error",
+  "spec": [
+    "hclsyntax/spec.md#source-code-representation"
+  ],
+  "op": "parse",
+  "reference_error": "This character is not used within the language",
+  "expect": {
+    "valid": false
+  }
+}

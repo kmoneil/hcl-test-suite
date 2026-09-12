@@ -1,0 +1,30 @@
+{
+  "description": "The sum of an unknown number and 1 compared with null is false",
+  "spec": [
+    "hclsyntax/spec.md#comparison-operators",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says a comparison with an unknown operand gives an unknown bool. hashicorp/hcl returns false because go-cty refines the unknown result of arithmetic as never null, and Value.Equals (cty/value_ops.go) uses that to rule out null.",
+  "variables": {
+    "u": {
+      "unknown": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

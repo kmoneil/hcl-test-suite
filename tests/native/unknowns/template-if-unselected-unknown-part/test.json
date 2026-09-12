@@ -1,0 +1,28 @@
+{
+  "description": "An if directive whose false condition skips an unknown part gives a known string",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": ""
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "description": "A tilde separated from ${ by a space is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#template-literals",
+    "hclsyntax/spec.md#template-interpolations"
+  ],
+  "op": "parse",
+  "reference_error": "Did you mean boolean NOT",
+  "expect": {
+    "valid": false
+  }
+}

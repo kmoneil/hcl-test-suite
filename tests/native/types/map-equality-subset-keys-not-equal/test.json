@@ -1,0 +1,43 @@
+{
+  "description": "A map is not equal to a map holding the same entries plus another",
+  "spec": [
+    "spec.md#collection-types",
+    "hclsyntax/spec.md#comparison-operators"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "m": {
+      "map": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "element_type": "number"
+    },
+    "n": {
+      "map": {
+        "a": {
+          "number": "1"
+        },
+        "b": {
+          "number": "2"
+        }
+      },
+      "element_type": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

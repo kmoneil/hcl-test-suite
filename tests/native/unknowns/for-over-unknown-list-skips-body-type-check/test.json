@@ -1,0 +1,39 @@
+{
+  "description": "A for expression over an unknown list gives the dynamic value even if its body is invalid",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "hclsyntax/spec.md#attribute-access-operator",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec gives the dynamic value for an unknown collection only when the results are otherwise type-valid, and v.b is invalid for every element of this list type; a splat over the same list reports the error (splat-unknown-list-missing-attribute-fails). ForExpr.Value (hclsyntax/expression.go) returns the dynamic value for an unknown collection before it evaluates the body.",
+  "variables": {
+    "u": {
+      "unknown": [
+        "list",
+        [
+          "object",
+          {
+            "a": "string"
+          }
+        ]
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "description": "An unknown choice between 1 and 2 compared with < 5 is true",
+  "spec": [
+    "hclsyntax/spec.md#comparison-operators",
+    "hclsyntax/spec.md#conditional-operator",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says a comparison with an unknown operand gives an unknown bool. ConditionalExpr.Value (hclsyntax/expression.go) refines an unknown number result with the range between its two results, and Value.LessThan (cty/value_ops.go) uses that range to decide the comparison.",
+  "variables": {
+    "u": {
+      "unknown": "bool"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "description": "A unary operator applies to its whole operand term, including an index",
+  "spec": [
+    "hclsyntax/spec.md#operations"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "unary",
+          "operator": "!",
+          "operand": {
+            "kind": "index",
+            "collection": {
+              "kind": "variable",
+              "name": "x"
+            },
+            "key": {
+              "kind": "literal",
+              "value": {
+                "number": "0"
+              }
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

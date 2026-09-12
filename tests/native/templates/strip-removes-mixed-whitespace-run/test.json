@@ -1,0 +1,21 @@
+{
+  "description": "A strip marker removes a run mixing spaces, tabs, newlines and Unicode spaces",
+  "spec": [
+    "hclsyntax/spec.md#template-literals",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says strip markers remove spaces, \"interpreted as per Unicode's definition\", without saying which definition it means. The run mixes spaces, a tab, the ideographic space U+3000, an escaped line feed and the no-break space U+00A0; only U+0020 is in every candidate definition, since the tab and line feed are not space separators (category Zs) and U+3000 and U+00A0 are not in Pattern_White_Space. Stripping them all is hashicorp/hcl's reading: parseTemplateParts in hclsyntax/parser_template.go trims with Go's unicode.IsSpace, which follows the White_Space property. The spec also doesn't say whether escape sequences are decoded before stripping; hashicorp/hcl decodes them first, calling ParseStringLiteralToken before it trims.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "ab"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

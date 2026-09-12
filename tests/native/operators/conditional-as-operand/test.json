@@ -1,0 +1,19 @@
+{
+  "description": "(true ? 1 : 2) * 3 multiplies the selected result",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator",
+    "hclsyntax/spec.md#expression-terms"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "3"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

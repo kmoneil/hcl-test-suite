@@ -1,0 +1,29 @@
+{
+  "description": "Adding a number to the dynamic value gives an unknown number",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+    "spec.md#conversion-to-and-from-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "d": {
+      "unknown": "dynamic"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "number"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

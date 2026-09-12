@@ -1,0 +1,24 @@
+{
+  "description": "Spaces are allowed on both sides of the dot in an attribute access",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "get_attr",
+          "object": {
+            "kind": "variable",
+            "name": "o"
+          },
+          "name": "b"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

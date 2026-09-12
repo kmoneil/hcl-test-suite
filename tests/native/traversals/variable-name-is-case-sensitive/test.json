@@ -1,0 +1,18 @@
+{
+  "description": "Variable names are case-sensitive, so Name does not refer to a variable named name",
+  "spec": [
+    "hclsyntax/spec.md#variables-and-variable-expressions",
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "eval",
+  "variables": {
+    "name": {
+      "string": "x"
+    }
+  },
+  "reference_error": "Unknown variable: There is no variable named \"Name\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

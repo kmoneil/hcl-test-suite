@@ -1,0 +1,19 @@
+{
+  "description": "A $ or % at the end of a heredoc line does not combine with a { on the next line",
+  "spec": [
+    "hclsyntax/spec.md#template-literals",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "$\n{x}\n%\n{y}\n"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

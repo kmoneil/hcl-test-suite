@@ -1,0 +1,19 @@
+{
+  "description": "Two adjacent number interpolations are converted and concatenated into a string",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolation-unwrapping",
+    "hclsyntax/spec.md#template-interpolations"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "12"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

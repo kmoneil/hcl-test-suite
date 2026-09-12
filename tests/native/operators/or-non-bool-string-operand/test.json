@@ -1,0 +1,13 @@
+{
+  "description": "|| rejects a string that isn't a bool as an operand",
+  "spec": [
+    "hclsyntax/spec.md#logic-operators",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "reference_error": "Unsuitable value for left operand: a bool is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

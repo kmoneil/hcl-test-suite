@@ -1,0 +1,11 @@
+{
+  "description": "U+2212 MINUS SIGN is not the - operator",
+  "spec": [
+    "hclsyntax/spec.md#operators-and-delimiters"
+  ],
+  "op": "parse",
+  "reference_error": "This character is not used within the language",
+  "expect": {
+    "valid": false
+  }
+}

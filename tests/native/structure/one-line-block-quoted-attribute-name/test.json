@@ -1,0 +1,11 @@
+{
+  "description": "The attribute name in a one-line block cannot be quoted",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "reference_error": "Argument or block definition required",
+  "expect": {
+    "valid": false
+  }
+}

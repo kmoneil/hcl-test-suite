@@ -1,0 +1,36 @@
+{
+  "description": "The attribute value in a one-line block can span lines inside brackets",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "block",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "a": {
+                "kind": "tuple",
+                "elements": [
+                  {
+                    "kind": "literal",
+                    "value": {
+                      "number": "1"
+                    }
+                  }
+                ]
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

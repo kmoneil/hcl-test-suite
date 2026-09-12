@@ -1,0 +1,13 @@
+{
+  "description": "/ rejects a string that isn't a number as its right operand",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "reference_error": "Unsuitable value for right operand: a number is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

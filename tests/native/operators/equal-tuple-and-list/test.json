@@ -1,0 +1,35 @@
+{
+  "description": "A tuple is not equal to a list with the same elements, since their types differ",
+  "spec": [
+    "hclsyntax/spec.md#comparison-operators",
+    "spec.md#values-and-value-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "number": "1"
+        },
+        {
+          "number": "2"
+        }
+      ],
+      "element_type": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

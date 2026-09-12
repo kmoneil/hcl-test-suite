@@ -1,0 +1,19 @@
+{
+  "description": "<= converts numeric strings to numbers before comparing them",
+  "spec": [
+    "hclsyntax/spec.md#comparison-operators",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

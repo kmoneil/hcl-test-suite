@@ -1,0 +1,11 @@
+{
+  "description": "A CR that is not followed by LF does not end an attribute",
+  "spec": [
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "reference_error": "This character is not used within the language",
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "description": "A point directly before an exponent is read as part of the number",
+  "spec": [
+    "hclsyntax/spec.md#numeric-literals",
+    "hclsyntax/spec.md#attribute-access-operator"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The grammar requires a digit after the point, so the spec reads 1.e5 as the literal 1 followed by the attribute access .e5. The reference scanner's NumberLit rule in hclsyntax/scan_tokens.rl accepts any run of digits, points and exponents that doesn't end in a point, and cty.ParseNumberVal (math/big's ParseFloat) accepts \"1.e5\" as 100000.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "literal",
+          "value": {
+            "number": "100000"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "description": "Unary minus turns a negative number positive",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "variables": {
+    "x": {
+      "number": "-2.5"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "2.5"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

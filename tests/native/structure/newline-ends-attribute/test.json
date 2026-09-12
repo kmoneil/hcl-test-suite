@@ -1,0 +1,11 @@
+{
+  "description": "A newline ends an attribute, so an operator cannot start the next line",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "reference_error": "Argument or block definition required",
+  "expect": {
+    "valid": false
+  }
+}

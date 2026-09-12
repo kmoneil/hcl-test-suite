@@ -1,0 +1,33 @@
+{
+  "description": "An object constructor with an unknown value gives a known object holding it",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "notes": "An object constructor isn't one of the native syntax's operations; its attribute values are simply the given values. Only for expressions have a rule that makes the result dynamic when a value is unknown.",
+  "variables": {
+    "u": {
+      "unknown": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "a": {
+              "unknown": "string"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

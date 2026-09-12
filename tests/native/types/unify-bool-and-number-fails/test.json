@@ -1,0 +1,14 @@
+{
+  "description": "A conditional whose results are a bool and a number is an error",
+  "spec": [
+    "spec.md#type-unification",
+    "spec.md#primitive-type-conversions",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "reference_error": "must have consistent types",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

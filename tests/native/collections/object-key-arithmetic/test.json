@@ -1,0 +1,28 @@
+{
+  "description": "An unparenthesized arithmetic key is evaluated",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "eval",
+  "notes": "Only a bare identifier is a literal name. Any other expression is evaluated.",
+  "variables": {
+    "k": {
+      "number": "1"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "2": {
+              "string": "v"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

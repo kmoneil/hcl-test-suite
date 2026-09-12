@@ -1,0 +1,21 @@
+{
+  "description": "<<- removes no indentation when a line starts with an interpolation",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions",
+    "hclsyntax/spec.md#template-interpolations"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says the literal text at the start of each line is analyzed and doesn't say what happens when a line starts with an interpolation or directive instead. hashicorp/hcl counts such a line as having no leading spaces, so nothing is removed from any line (flushHeredocTemplateParts in hclsyntax/parser_template.go). Leaving the line out of the analysis would give \"a\\nb\\n\".",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "  a\nb\n"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

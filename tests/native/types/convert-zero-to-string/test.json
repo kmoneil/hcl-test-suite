@@ -1,0 +1,20 @@
+{
+  "description": "Zero converts to the string 0",
+  "spec": [
+    "spec.md#primitive-type-conversions",
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "0"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

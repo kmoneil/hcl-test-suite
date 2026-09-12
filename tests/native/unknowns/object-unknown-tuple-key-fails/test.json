@@ -1,0 +1,27 @@
+{
+  "description": "An object constructor with an unknown tuple as a key is an error",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "u": {
+      "unknown": [
+        "tuple",
+        [
+          "number"
+        ]
+      ]
+    }
+  },
+  "reference_error": "Incorrect key type",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

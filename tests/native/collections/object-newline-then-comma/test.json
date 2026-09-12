@@ -1,0 +1,14 @@
+{
+  "description": "A comma on the line after an object element is an error",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#syntax-notation"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The grammar allows a comma or a newline between elements but not both, while the prose says newlines between the braces are ignored as whitespace and has priority, so the newline before the comma shouldn't matter. hashicorp/hcl takes the newline as the separator and then rejects the comma where the next key should start (parseObjectCons in hclsyntax/parser.go).",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

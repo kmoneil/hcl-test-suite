@@ -1,0 +1,12 @@
+{
+  "description": "A byte that can never appear in UTF-8 is a parse error directly after an identifier",
+  "spec": [
+    "hclsyntax/spec.md#source-code-representation",
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid character encoding",
+  "expect": {
+    "valid": false
+  }
+}

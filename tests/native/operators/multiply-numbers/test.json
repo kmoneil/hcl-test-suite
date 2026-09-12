@@ -1,0 +1,18 @@
+{
+  "description": "6 * 7 is 42",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "42"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

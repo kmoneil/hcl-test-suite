@@ -1,0 +1,30 @@
+{
+  "description": "An || with an unknown bool on the left and true on the right is true",
+  "spec": [
+    "hclsyntax/spec.md#logic-operators",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says the result of a logic operator is unknown if either operand is unknown. hashicorp/hcl returns true, because anything || true is true (OpLogicalOr in hclsyntax/expression_ops.go).",
+  "variables": {
+    "u": {
+      "unknown": "bool"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "description": "A legacy index can have several digits",
+  "spec": [
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "index",
+          "collection": {
+            "kind": "variable",
+            "name": "t"
+          },
+          "key": {
+            "kind": "literal",
+            "value": {
+              "number": "10"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

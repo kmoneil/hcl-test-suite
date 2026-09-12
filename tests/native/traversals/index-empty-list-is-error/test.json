@@ -1,0 +1,22 @@
+{
+  "description": "Indexing an empty list is an error",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#collection-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "l": {
+      "list": [],
+      "element_type": "string"
+    }
+  },
+  "reference_error": "the collection has no elements",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

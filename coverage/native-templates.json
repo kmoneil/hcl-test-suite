@@ -1,0 +1,921 @@
+{
+  "area": "native/templates",
+  "rules": [
+    {
+      "id": "templates-literal-text-verbatim",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "Text outside interpolation and directive sequences, including its spaces, is copied into the result unchanged",
+      "tests": [
+        "native/templates/literal-text-around-interpolation-is-kept",
+        "native/templates/template-parts-parse-tree",
+        "native/templates/non-ascii-template-literal-text-is-kept"
+      ]
+    },
+    {
+      "id": "templates-literal-comment-markers-are-text",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "Comment introducers (#, // and /*) inside a template literal are literal text, in quoted templates and heredocs",
+      "tests": [
+        "native/templates/comment-markers-in-quoted-template-are-text",
+        "native/templates/comment-markers-in-heredoc-template-are-text"
+      ]
+    },
+    {
+      "id": "templates-escape-interpolation",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "$${ is an escape that produces the text ${ and does not start an interpolation",
+      "tests": [
+        "native/templates/escaped-sequence-starts",
+        "native/templates/escaped-interpolation-parse-tree",
+        "native/templates/escaped-interpolation-at-end-of-template",
+        "native/templates/escaped-interpolation-in-heredoc",
+        "native/templates/interpolation-right-after-escaped-interpolation",
+        "native/templates/escaped-interpolation-in-nested-template"
+      ]
+    },
+    {
+      "id": "templates-escape-directive",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "%%{ is an escape that produces the text %{ and does not start a directive",
+      "tests": [
+        "native/templates/escaped-sequence-starts",
+        "native/templates/escaped-directive-parse-tree",
+        "native/templates/escaped-directive-at-end-of-template",
+        "native/templates/escaped-directive-in-heredoc",
+        "native/templates/directive-right-after-escaped-directive"
+      ]
+    },
+    {
+      "id": "templates-escape-with-tilde",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "An escaped sequence followed by ~ is literal text; the ~ is not a strip marker",
+      "tests": [
+        "native/templates/escaped-interpolation-with-tilde-is-literal",
+        "native/templates/escaped-directive-with-tilde-is-literal"
+      ]
+    },
+    {
+      "id": "templates-escape-runs",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "In a run of three or more $ (or %) before {, the last two characters form the escape and the earlier ones are literal text, so no sequence starts",
+      "tests": [
+        "native/templates/three-dollars-before-brace",
+        "native/templates/four-dollars-before-brace",
+        "native/templates/three-percents-before-brace"
+      ]
+    },
+    {
+      "id": "templates-lone-introducer-characters",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "A $ or % that is not immediately followed by { (in the source text) is literal text, including at the end of a template or line",
+      "tests": [
+        "native/templates/dollar-at-end-of-template-is-literal",
+        "native/templates/percent-at-end-of-template-is-literal",
+        "native/templates/dollar-before-other-character-is-literal",
+        "native/templates/percent-before-other-character-is-literal",
+        "native/templates/doubled-dollar-and-percent-without-brace-are-literal",
+        "native/templates/dollar-right-before-directive-is-literal",
+        "native/templates/percent-right-before-interpolation-is-literal",
+        "native/templates/introducer-split-across-heredoc-lines-is-literal",
+        "native/templates/dollar-before-escaped-brace-is-literal"
+      ]
+    },
+    {
+      "id": "templates-braces-and-tildes-are-text",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "{, } and ~} outside a sequence are literal text",
+      "tests": [
+        "native/templates/braces-in-template-literal-are-text",
+        "native/templates/tilde-brace-in-template-literal-is-text"
+      ]
+    },
+    {
+      "id": "templates-standalone-literals",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "In a standalone template, literals can contain any character (including quotes and newlines) without escapes, except the sequence introducers",
+      "untested": "The protocol only evaluates native syntax files, so templates can't be used standalone"
+    },
+    {
+      "id": "templates-interpolation-evaluates-expression",
+      "spec": "hclsyntax/spec.md#template-interpolations",
+      "rule": "An interpolation sequence holds one expression of any kind; it is evaluated and its string form replaces the sequence",
+      "tests": [
+        "native/templates/interpolation-evaluates-expression",
+        "native/templates/interpolation-with-conditional-parse-tree"
+      ]
+    },
+    {
+      "id": "templates-interpolation-spaces",
+      "spec": "hclsyntax/spec.md#template-interpolations",
+      "rule": "Spaces and tabs between ${, the expression and } are ignored",
+      "tests": [
+        "native/templates/interpolation-allows-spaces-and-tabs"
+      ]
+    },
+    {
+      "id": "templates-interpolation-comments",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "Inline comments can appear inside an interpolation sequence and act as spaces; braces and quotes inside them don't end the interpolation or the template",
+      "tests": [
+        "native/templates/interpolation-allows-inline-comments",
+        "native/templates/comment-with-brace-inside-interpolation",
+        "native/templates/quote-in-comment-inside-interpolation"
+      ]
+    },
+    {
+      "id": "templates-interpolation-newlines",
+      "spec": "hclsyntax/spec.md#template-interpolations",
+      "rule": "Newlines and line comments inside an interpolation sequence are ignored, in quoted templates and heredocs (disputed)",
+      "tests": [
+        "native/templates/interpolation-allows-newlines-in-quoted-template",
+        "native/templates/interpolation-allows-newlines-in-heredoc",
+        "native/templates/interpolation-allows-hash-line-comment",
+        "native/templates/interpolation-allows-slash-line-comment-in-heredoc"
+      ]
+    },
+    {
+      "id": "templates-quoted-template-multiline-interpolation",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "An interpolation in a quoted template can span lines through constructs that allow line breaks: a heredoc, an inline comment or parentheses (disputed)",
+      "tests": [
+        "native/templates/heredoc-in-quoted-template-interpolation",
+        "native/templates/multiline-comment-in-quoted-template-interpolation",
+        "native/templates/parenthesized-newlines-in-quoted-template-interpolation"
+      ]
+    },
+    {
+      "id": "templates-interpolation-requires-expression",
+      "spec": "hclsyntax/spec.md#template-interpolations",
+      "rule": "An interpolation sequence without an expression (empty, blank, only a comment or only strip markers) is a syntax error",
+      "tests": [
+        "native/templates/empty-interpolation-is-error",
+        "native/templates/blank-interpolation-is-error",
+        "native/templates/comment-only-interpolation-is-error",
+        "native/templates/strip-markers-alone-are-not-an-interpolation"
+      ]
+    },
+    {
+      "id": "templates-interpolation-single-expression",
+      "spec": "hclsyntax/spec.md#template-interpolations",
+      "rule": "Only one expression is allowed in an interpolation; anything after it other than } is a syntax error",
+      "tests": [
+        "native/templates/interpolation-with-two-expressions-is-error",
+        "native/templates/interpolation-with-colon-is-error"
+      ]
+    },
+    {
+      "id": "templates-interpolation-must-be-closed",
+      "spec": "hclsyntax/spec.md#template-interpolations",
+      "rule": "An interpolation sequence without its closing } is a syntax error",
+      "tests": [
+        "native/templates/unclosed-interpolation-in-quoted-template-is-error",
+        "native/templates/unclosed-interpolation-in-heredoc-is-error"
+      ]
+    },
+    {
+      "id": "templates-interpolation-nesting",
+      "spec": "hclsyntax/spec.md#template-interpolations",
+      "rule": "The expression in an interpolation can contain templates with their own quotes, braces, escapes, interpolations and directives, which don't end the outer sequence",
+      "tests": [
+        "native/templates/nested-templates-in-interpolations",
+        "native/templates/nested-template-parse-tree",
+        "native/templates/closing-brace-in-nested-string-does-not-end-interpolation",
+        "native/templates/closing-brace-in-nested-heredoc-does-not-end-interpolation",
+        "native/templates/escaped-quote-in-nested-string",
+        "native/templates/object-braces-inside-interpolation",
+        "native/templates/directive-in-nested-template",
+        "native/templates/quoted-template-in-heredoc-interpolation",
+        "native/templates/directives-cannot-span-nested-templates",
+        "native/templates/directive-is-not-an-expression",
+        "native/templates/heredoc-in-quoted-template-interpolation"
+      ]
+    },
+    {
+      "id": "templates-convert-string",
+      "spec": "hclsyntax/spec.md#template-interpolations",
+      "rule": "An interpolated string is inserted as is: its whitespace is kept and template syntax inside it is not evaluated",
+      "tests": [
+        "native/templates/interpolated-string-is-inserted-unchanged",
+        "native/templates/interpolated-template-syntax-is-not-evaluated"
+      ]
+    },
+    {
+      "id": "templates-convert-number",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "An interpolated number becomes its decimal digits, with a - sign if negative, a period and fractional digits only if the fraction is non-zero, no exponent, and full precision",
+      "tests": [
+        "native/templates/interpolated-integer",
+        "native/templates/interpolated-negative-integer",
+        "native/templates/interpolated-fraction",
+        "native/templates/interpolated-negative-fraction",
+        "native/templates/interpolated-number-from-positive-exponent",
+        "native/templates/interpolated-number-from-negative-exponent",
+        "native/templates/interpolated-number-drops-trailing-zeros",
+        "native/templates/interpolated-whole-number-has-no-period",
+        "native/templates/interpolated-large-integer-keeps-all-digits",
+        "native/templates/interpolated-small-fraction-has-no-exponent",
+        "native/templates/interpolated-fraction-keeps-full-precision"
+      ]
+    },
+    {
+      "id": "templates-convert-negative-zero",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "Interpolating a negated zero produces -0 (disputed)",
+      "tests": [
+        "native/templates/interpolated-negative-zero"
+      ]
+    },
+    {
+      "id": "templates-convert-infinity",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "Interpolating positive infinity produces +Inf and negative infinity produces -Inf (disputed)",
+      "tests": [
+        "native/templates/interpolated-infinity",
+        "native/templates/interpolated-negative-infinity"
+      ]
+    },
+    {
+      "id": "templates-convert-bool",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "An interpolated bool becomes true or false",
+      "tests": [
+        "native/templates/interpolated-bools"
+      ]
+    },
+    {
+      "id": "templates-convert-null",
+      "spec": "hclsyntax/spec.md#template-interpolations",
+      "rule": "Interpolating a null value, typed or not, in a template that isn't unwrapped is an error (disputed)",
+      "tests": [
+        "native/templates/interpolated-null-is-error",
+        "native/templates/interpolated-typed-null-is-error",
+        "native/templates/for-body-null-is-error"
+      ]
+    },
+    {
+      "id": "templates-convert-collections",
+      "spec": "hclsyntax/spec.md#template-interpolations",
+      "rule": "Tuples, objects, lists, maps and sets have no conversion to string, so interpolating them in a template that isn't unwrapped is an error",
+      "tests": [
+        "native/templates/interpolated-tuple-is-error",
+        "native/templates/interpolated-empty-tuple-is-error",
+        "native/templates/interpolated-object-is-error",
+        "native/templates/interpolated-list-is-error",
+        "native/templates/interpolated-map-is-error",
+        "native/templates/interpolated-set-is-error"
+      ]
+    },
+    {
+      "id": "templates-unwrap-single-interpolation",
+      "spec": "hclsyntax/spec.md#template-interpolation-unwrapping",
+      "rule": "A template that is exactly one interpolation returns the expression's value unchanged, of any type, including null",
+      "tests": [
+        "native/templates/single-interpolation-unwraps",
+        "native/templates/unwrapped-template-parse-tree",
+        "native/templates/unwrapped-number-stays-number",
+        "native/templates/unwrapped-null-is-not-error",
+        "native/templates/unwrapped-typed-null-keeps-type",
+        "native/templates/unwrapped-tuple",
+        "native/templates/unwrapped-object",
+        "native/templates/unwrapped-list-keeps-type",
+        "native/templates/unwrapped-map-keeps-type",
+        "native/templates/unwrapped-set-keeps-type",
+        "native/templates/nested-templates-unwrap",
+        "native/templates/unwrapping-through-parentheses",
+        "native/templates/strip-markers-do-not-prevent-unwrapping",
+        "native/templates/comments-do-not-prevent-unwrapping"
+      ]
+    },
+    {
+      "id": "templates-unwrap-not-with-literals",
+      "spec": "hclsyntax/spec.md#template-interpolation-unwrapping",
+      "rule": "A template with any literal next to its interpolation produces a string, even if strip markers leave the literal empty",
+      "tests": [
+        "native/templates/literal-and-interpolation-produce-string",
+        "native/templates/leading-space-prevents-unwrapping",
+        "native/templates/trailing-space-prevents-unwrapping",
+        "native/templates/stripped-literals-still-prevent-unwrapping",
+        "native/templates/stripped-literals-parse-tree",
+        "native/templates/heredoc-final-newline-prevents-unwrapping",
+        "native/templates/heredoc-stripped-newline-still-prevents-unwrapping",
+        "native/templates/heredoc-stripped-newline-parse-tree"
+      ]
+    },
+    {
+      "id": "templates-unwrap-not-with-several-interpolations",
+      "spec": "hclsyntax/spec.md#template-interpolation-unwrapping",
+      "rule": "A template with two or more interpolations produces a string, even if some of them produce empty strings",
+      "tests": [
+        "native/templates/two-interpolations-do-not-unwrap",
+        "native/templates/adjacent-number-interpolations-concatenate"
+      ]
+    },
+    {
+      "id": "templates-unwrap-not-with-directives",
+      "spec": "hclsyntax/spec.md#template-interpolation-unwrapping",
+      "rule": "A template containing a directive produces a string, even if the directive yields a single interpolation's result",
+      "tests": [
+        "native/templates/for-directive-prevents-unwrapping",
+        "native/templates/if-directive-prevents-unwrapping",
+        "native/templates/template-of-only-directive-produces-empty-string"
+      ]
+    },
+    {
+      "id": "templates-result-concatenates-elements",
+      "spec": "hclsyntax/spec.md#templates",
+      "rule": "A template that isn't unwrapped evaluates its literals, interpolations and directives and joins their strings in source order into one string",
+      "tests": [
+        "native/templates/template-elements-concatenate-in-order",
+        "native/templates/template-of-only-directive-produces-empty-string"
+      ]
+    },
+    {
+      "id": "templates-unwrap-application-conversion",
+      "spec": "hclsyntax/spec.md#template-interpolation-unwrapping",
+      "rule": "An application can circumvent unwrapping by converting the template's result to string",
+      "untested": "The protocol evaluates attributes without a target type, so there is no way to request the conversion"
+    },
+    {
+      "id": "templates-if-parse-tree",
+      "spec": "hclsyntax/spec.md#template-if-directive",
+      "rule": "An if directive becomes a template_if part with its condition, then parts and else parts; an omitted or empty branch has no parts",
+      "tests": [
+        "native/templates/if-directive-syntax",
+        "native/templates/if-directive-without-else-parse-tree",
+        "native/templates/if-directive-with-empty-branches-parse-tree",
+        "native/templates/nested-directives-parse-tree"
+      ]
+    },
+    {
+      "id": "templates-if-selects-branch",
+      "spec": "hclsyntax/spec.md#template-if-directive",
+      "rule": "A true condition selects the first sub-template and a false one the else sub-template; a missing else produces an empty string",
+      "tests": [
+        "native/templates/if-true-selects-first-branch",
+        "native/templates/if-false-selects-else-branch",
+        "native/templates/if-false-without-else-produces-nothing",
+        "native/templates/if-true-without-else-produces-branch",
+        "native/templates/if-with-empty-selected-branch"
+      ]
+    },
+    {
+      "id": "templates-if-nesting",
+      "spec": "hclsyntax/spec.md#template-if-directive",
+      "rule": "If directives nest inside either branch of an if directive and inside for directive bodies, and can contain for directives",
+      "tests": [
+        "native/templates/if-nested-in-first-branch",
+        "native/templates/if-nested-in-else-branch",
+        "native/templates/if-inside-for-body",
+        "native/templates/for-inside-if-branch"
+      ]
+    },
+    {
+      "id": "templates-if-branches-are-strings",
+      "spec": "hclsyntax/spec.md#template-if-directive",
+      "rule": "Each branch of an if directive is a template that produces a string: values interpolated in it are converted to strings, so the branches' values need no common type, and a value without a string conversion is an error",
+      "tests": [
+        "native/templates/if-branch-values-are-converted-to-strings",
+        "native/templates/tuple-interpolation-in-if-branch-is-error"
+      ]
+    },
+    {
+      "id": "templates-if-unselected-branch-errors",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "Errors in the branch that isn't selected are not reported; errors in the selected branch are",
+      "tests": [
+        "native/templates/if-ignores-errors-in-unselected-first-branch",
+        "native/templates/if-ignores-errors-in-unselected-else-branch",
+        "native/templates/if-reports-errors-in-selected-branch"
+      ]
+    },
+    {
+      "id": "templates-if-predicate-bool",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "The condition can be any expression producing a bool, such as a variable or a comparison",
+      "tests": [
+        "native/templates/if-condition-from-variable",
+        "native/templates/if-condition-from-comparison"
+      ]
+    },
+    {
+      "id": "templates-if-predicate-string-conversion",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "A string condition is converted to bool: \"true\" and \"1\" are true, \"false\" and \"0\" are false, any other string is an error",
+      "tests": [
+        "native/templates/if-condition-string-true",
+        "native/templates/if-condition-string-false",
+        "native/templates/if-condition-strings-one-and-zero",
+        "native/templates/if-condition-other-string-is-error",
+        "native/templates/if-condition-uppercase-true-is-error"
+      ]
+    },
+    {
+      "id": "templates-if-predicate-invalid",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "A condition that is a number, tuple, object or other value without a conversion to bool is an error",
+      "tests": [
+        "native/templates/if-condition-number-is-error",
+        "native/templates/if-condition-tuple-is-error",
+        "native/templates/if-condition-object-is-error"
+      ]
+    },
+    {
+      "id": "templates-if-predicate-null",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "A null condition, from the null keyword or a typed null, is an error (disputed)",
+      "tests": [
+        "native/templates/if-condition-null-is-error",
+        "native/templates/if-condition-null-bool-is-error"
+      ]
+    },
+    {
+      "id": "templates-if-syntax",
+      "spec": "hclsyntax/spec.md#template-if-directive",
+      "rule": "An if directive needs a condition and a matching endif, allows at most one else, and its else and endif markers take nothing but the keyword",
+      "tests": [
+        "native/templates/if-without-endif-is-error",
+        "native/templates/if-else-without-endif-is-error",
+        "native/templates/else-without-if-is-error",
+        "native/templates/endif-without-if-is-error",
+        "native/templates/second-else-is-error",
+        "native/templates/endfor-cannot-close-if",
+        "native/templates/if-without-condition-is-error",
+        "native/templates/if-with-two-conditions-is-error",
+        "native/templates/else-if-is-error",
+        "native/templates/endif-with-extra-tokens-is-error",
+        "native/templates/unclosed-endif-marker-is-error",
+        "native/templates/interleaved-directives-are-error"
+      ]
+    },
+    {
+      "id": "templates-directive-keywords",
+      "spec": "hclsyntax/spec.md#template-if-directive",
+      "rule": "A directive starts with one of the lowercase keywords if, else, endif, for or endfor; anything else is a syntax error, while the same words are ordinary names inside interpolations",
+      "tests": [
+        "native/templates/directive-keywords-are-case-sensitive",
+        "native/templates/unknown-directive-keyword-is-error",
+        "native/templates/directive-without-keyword-is-error",
+        "native/templates/empty-directive-is-error",
+        "native/templates/directive-keywords-are-names-in-interpolations"
+      ]
+    },
+    {
+      "id": "templates-directive-whitespace",
+      "spec": "hclsyntax/spec.md#template-if-directive",
+      "rule": "Inside a directive, spaces, tabs and inline comments between tokens are optional and ignored",
+      "tests": [
+        "native/templates/directives-need-no-spaces",
+        "native/templates/directives-allow-tabs",
+        "native/templates/directives-allow-inline-comments"
+      ]
+    },
+    {
+      "id": "templates-directive-newlines",
+      "spec": "hclsyntax/spec.md#template-if-directive",
+      "rule": "Newlines and line comments inside a directive are ignored, in quoted templates and heredocs (disputed)",
+      "tests": [
+        "native/templates/directives-allow-newlines",
+        "native/templates/directives-allow-newlines-in-heredoc",
+        "native/templates/directives-allow-line-comments"
+      ]
+    },
+    {
+      "id": "templates-directive-expression-braces",
+      "spec": "hclsyntax/spec.md#template-if-directive",
+      "rule": "Braces inside strings, objects or other nested constructs in a directive's expression do not close the directive",
+      "tests": [
+        "native/templates/if-condition-can-contain-brace-in-string",
+        "native/templates/for-collection-can-contain-object-braces"
+      ]
+    },
+    {
+      "id": "templates-directive-expression-errors",
+      "spec": "hclsyntax/spec.md#template-if-directive",
+      "rule": "An error in an if condition or a for collection is reported even when the directive's branches or body are empty",
+      "tests": [
+        "native/templates/if-condition-error-with-empty-branches",
+        "native/templates/for-collection-error-with-empty-body"
+      ]
+    },
+    {
+      "id": "templates-for-parse-tree",
+      "spec": "hclsyntax/spec.md#template-for-directive",
+      "rule": "A for directive becomes a template_for part with an optional key variable, a value variable, the collection and the body parts",
+      "tests": [
+        "native/templates/for-directive-one-variable-parse-tree",
+        "native/templates/for-directive-two-variables-parse-tree",
+        "native/templates/for-directive-empty-body-parse-tree"
+      ]
+    },
+    {
+      "id": "templates-for-tuple",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "Iterating a tuple visits elements in order, with the zero-based index as the key",
+      "tests": [
+        "native/templates/for-over-tuple-in-order",
+        "native/templates/for-over-tuple-key-is-index",
+        "native/templates/for-over-tuple-index-is-number"
+      ]
+    },
+    {
+      "id": "templates-for-list",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "Iterating a list visits elements in order, with the zero-based index as the key",
+      "tests": [
+        "native/templates/for-over-list"
+      ]
+    },
+    {
+      "id": "templates-for-object",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "Iterating an object visits attributes in lexicographic order of their names, with the name as the key",
+      "tests": [
+        "native/templates/for-over-object-sorts-keys",
+        "native/templates/for-over-object-with-one-variable"
+      ]
+    },
+    {
+      "id": "templates-for-map",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "Iterating a map visits elements in lexicographic order of their keys, with the key as the key variable",
+      "tests": [
+        "native/templates/for-over-map-sorts-keys"
+      ]
+    },
+    {
+      "id": "templates-for-set",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "Iterating a set visits every element once, and the key and value are both the element",
+      "tests": [
+        "native/templates/for-over-set-key-is-element",
+        "native/templates/for-over-set-visits-every-element",
+        "native/templates/for-over-set-key-equals-value"
+      ]
+    },
+    {
+      "id": "templates-for-empty",
+      "spec": "hclsyntax/spec.md#template-for-directive",
+      "rule": "A for directive over an empty collection produces an empty string and never evaluates its body",
+      "tests": [
+        "native/templates/for-over-empty-tuple-produces-nothing",
+        "native/templates/for-over-empty-object-produces-nothing",
+        "native/templates/for-over-empty-collection-skips-body"
+      ]
+    },
+    {
+      "id": "templates-for-body",
+      "spec": "hclsyntax/spec.md#template-for-directive",
+      "rule": "The body is evaluated once per element and the results are concatenated in visit order; an empty body produces nothing",
+      "tests": [
+        "native/templates/for-repeats-literal-body",
+        "native/templates/for-with-empty-body-produces-nothing",
+        "native/templates/for-over-null-elements-without-interpolating-them"
+      ]
+    },
+    {
+      "id": "templates-for-results-are-strings",
+      "spec": "hclsyntax/spec.md#template-for-directive",
+      "rule": "The body of a for directive is a template that produces a string in each iteration: values interpolated in it are converted to strings, and a value without a string conversion is an error",
+      "tests": [
+        "native/templates/for-converts-each-result-to-string",
+        "native/templates/tuple-interpolation-in-for-body-is-error",
+        "native/templates/for-body-null-is-error"
+      ]
+    },
+    {
+      "id": "templates-for-scope",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "The key and value variables exist only inside the body, where they hide outer variables of the same names, including those of enclosing for directives",
+      "tests": [
+        "native/templates/for-value-variable-is-local-to-body",
+        "native/templates/for-key-variable-is-local-to-body",
+        "native/templates/for-variable-is-undefined-after-endfor",
+        "native/templates/nested-for-directives",
+        "native/templates/nested-for-variable-hides-outer-variable"
+      ]
+    },
+    {
+      "id": "templates-for-duplicate-names",
+      "spec": "hclsyntax/spec.md#template-for-directive",
+      "rule": "A for directive can give its key and value variables the same name, which then refers to the value (disputed)",
+      "tests": [
+        "native/templates/for-directive-duplicate-variable-names"
+      ]
+    },
+    {
+      "id": "templates-for-keyword-as-variable-name",
+      "spec": "hclsyntax/spec.md#keywords",
+      "rule": "The variable name of a for directive can be a word that is a keyword elsewhere, such as in (disputed)",
+      "tests": [
+        "native/templates/for-directive-variable-named-in"
+      ]
+    },
+    {
+      "id": "templates-for-non-iterable",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "Iterating a string, number or bool is an error",
+      "tests": [
+        "native/templates/for-over-string-is-error",
+        "native/templates/for-over-number-is-error",
+        "native/templates/for-over-bool-is-error"
+      ]
+    },
+    {
+      "id": "templates-for-null-collection",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "Iterating null, whether the null keyword or a null collection, is an error (disputed)",
+      "tests": [
+        "native/templates/for-over-null-is-error",
+        "native/templates/for-over-null-list-is-error"
+      ]
+    },
+    {
+      "id": "templates-for-syntax",
+      "spec": "hclsyntax/spec.md#template-for-directive",
+      "rule": "A for directive is for, one or two comma-separated identifiers, in and one expression, closed by a matching endfor; it has no else, no colon and no if clause",
+      "tests": [
+        "native/templates/for-without-endfor-is-error",
+        "native/templates/endfor-without-for-is-error",
+        "native/templates/else-in-for-is-error",
+        "native/templates/endif-cannot-close-for",
+        "native/templates/for-without-in-is-error",
+        "native/templates/for-in-keyword-is-case-sensitive",
+        "native/templates/for-without-variable-is-error",
+        "native/templates/for-without-key-variable-is-error",
+        "native/templates/for-variable-must-be-identifier",
+        "native/templates/for-without-value-variable-after-comma-is-error",
+        "native/templates/for-value-variable-must-be-identifier",
+        "native/templates/for-with-three-variables-is-error",
+        "native/templates/for-without-collection-is-error",
+        "native/templates/for-directive-with-colon-is-error",
+        "native/templates/for-directive-with-if-clause-is-error",
+        "native/templates/for-keyword-is-case-sensitive",
+        "native/templates/endfor-with-extra-tokens-is-error"
+      ]
+    },
+    {
+      "id": "templates-strip-interpolation-open",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "A ~ right after ${ removes the spaces at the end of the literal before the interpolation, and nothing else",
+      "tests": [
+        "native/templates/strip-marker",
+        "native/templates/strip-before-interpolation-keeps-following-literal",
+        "native/templates/strip-before-interpolation-parse-tree"
+      ]
+    },
+    {
+      "id": "templates-strip-interpolation-close",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "A ~ right before the } of an interpolation removes the spaces at the start of the literal after it, and nothing else",
+      "tests": [
+        "native/templates/strip-after-interpolation-keeps-preceding-literal",
+        "native/templates/strip-after-interpolation-parse-tree"
+      ]
+    },
+    {
+      "id": "templates-strip-if-open",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "A ~ right after the %{ of an if directive removes the spaces at the end of the literal before the directive",
+      "tests": [
+        "native/templates/strip-before-if",
+        "native/templates/strip-around-if-directive-parse-tree"
+      ]
+    },
+    {
+      "id": "templates-strip-if-close",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "A ~ right before the } of an if directive removes the spaces at the start of the first branch",
+      "tests": [
+        "native/templates/if-directive-strip-markers",
+        "native/templates/strip-after-if",
+        "native/templates/strip-after-if-parse-tree"
+      ]
+    },
+    {
+      "id": "templates-strip-else-open",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "A ~ right after the %{ of an else directive removes the spaces at the end of the first branch",
+      "tests": [
+        "native/templates/strip-before-else"
+      ]
+    },
+    {
+      "id": "templates-strip-else-close",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "A ~ right before the } of an else directive removes the spaces at the start of the else branch",
+      "tests": [
+        "native/templates/strip-after-else",
+        "native/templates/strip-around-else-parse-tree"
+      ]
+    },
+    {
+      "id": "templates-strip-endif-open",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "A ~ right after the %{ of an endif directive removes the spaces at the end of the last branch: the else branch if there is one, otherwise the first branch",
+      "tests": [
+        "native/templates/if-directive-strip-markers",
+        "native/templates/strip-before-endif-with-else",
+        "native/templates/strip-before-endif-without-else",
+        "native/templates/strip-around-if-directive-parse-tree"
+      ]
+    },
+    {
+      "id": "templates-strip-endif-close",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "A ~ right before the } of an endif directive removes the spaces at the start of the literal after the if directive",
+      "tests": [
+        "native/templates/strip-after-endif",
+        "native/templates/strip-around-if-directive-parse-tree"
+      ]
+    },
+    {
+      "id": "templates-strip-for-open",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "A ~ right after the %{ of a for directive removes the spaces at the end of the literal before the directive",
+      "tests": [
+        "native/templates/strip-before-for",
+        "native/templates/strip-around-for-directive-parse-tree"
+      ]
+    },
+    {
+      "id": "templates-strip-for-close",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "A ~ right before the } of a for directive removes the spaces at the start of the body, in every iteration",
+      "tests": [
+        "native/templates/strip-after-for-applies-to-every-iteration",
+        "native/templates/strip-in-for-body-parse-tree"
+      ]
+    },
+    {
+      "id": "templates-strip-endfor-open",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "A ~ right after the %{ of an endfor directive removes the spaces at the end of the body, in every iteration",
+      "tests": [
+        "native/templates/strip-before-endfor-applies-to-every-iteration"
+      ]
+    },
+    {
+      "id": "templates-strip-endfor-close",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "A ~ right before the } of an endfor directive removes the spaces at the start of the literal after the for directive",
+      "tests": [
+        "native/templates/strip-after-endfor",
+        "native/templates/strip-around-for-directive-parse-tree"
+      ]
+    },
+    {
+      "id": "templates-strip-extent",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "A strip marker removes the whole run of spaces next to it, up to the first other character, leaving the rest of the literal; with markers on both sides both ends go, and a literal of only spaces becomes empty",
+      "tests": [
+        "native/templates/strip-stops-at-first-non-whitespace",
+        "native/templates/strip-both-ends-of-literal",
+        "native/templates/strip-keeps-escaped-sequence-inside-literal",
+        "native/templates/strip-empties-whitespace-only-literal"
+      ]
+    },
+    {
+      "id": "templates-strip-only-adjacent-literal",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "A strip marker only changes a literal directly next to it: an interpolation or directive between the marker and a literal leaves that literal alone",
+      "tests": [
+        "native/templates/strip-before-interpolation-stops-at-interpolation",
+        "native/templates/strip-after-interpolation-stops-at-interpolation",
+        "native/templates/strip-after-if-stops-at-endif",
+        "native/templates/strip-before-endif-stops-at-if"
+      ]
+    },
+    {
+      "id": "templates-strip-values-not-affected",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "Stripping applies to literals in the source only: text produced by interpolations, directives or nested templates is never stripped",
+      "tests": [
+        "native/templates/strip-marker-only-strips-literals",
+        "native/templates/strip-keeps-trailing-space-of-interpolated-value",
+        "native/templates/strip-keeps-whitespace-produced-by-directive",
+        "native/templates/strip-before-directive-keeps-interpolated-value",
+        "native/templates/strip-after-directive-keeps-interpolated-value",
+        "native/templates/strip-keeps-interpolated-newline",
+        "native/templates/strip-does-not-reach-into-nested-template",
+        "native/templates/strip-in-nested-template-does-not-reach-outer-literal"
+      ]
+    },
+    {
+      "id": "templates-strip-whitespace-kinds",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "Besides U+0020, a strip marker removes the other characters with Unicode's White_Space property, which is hashicorp/hcl's reading of the spec's Unicode spaces: tabs, line breaks, vertical tabs, form feeds, NEXT LINE, the line and paragraph separators, and space separators such as no-break, typographic and ideographic spaces (disputed)",
+      "tests": [
+        "native/templates/strip-removes-tabs",
+        "native/templates/strip-removes-escaped-newlines",
+        "native/templates/strip-removes-escaped-crlf",
+        "native/templates/strip-removes-lone-carriage-return",
+        "native/templates/strip-removes-vertical-tab-and-form-feed",
+        "native/templates/strip-removes-next-line-character",
+        "native/templates/strip-removes-line-and-paragraph-separators",
+        "native/templates/strip-removes-no-break-space",
+        "native/templates/strip-removes-typographic-spaces",
+        "native/templates/strip-removes-figure-space",
+        "native/templates/strip-removes-ideographic-space",
+        "native/templates/strip-removes-other-unicode-spaces",
+        "native/templates/strip-removes-mixed-whitespace-run"
+      ]
+    },
+    {
+      "id": "templates-strip-after-escape-decoding",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "Strip markers apply to a quoted template's literal after its escape sequences are decoded, so whitespace written as an escape is removed too (disputed)",
+      "tests": [
+        "native/templates/strip-removes-escaped-space",
+        "native/templates/strip-removes-escaped-newlines",
+        "native/templates/strip-removes-escaped-crlf",
+        "native/templates/strip-removes-lone-carriage-return",
+        "native/templates/strip-removes-mixed-whitespace-run"
+      ]
+    },
+    {
+      "id": "templates-strip-keeps-non-white-space",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "A strip marker keeps characters without Unicode's White_Space property, even invisible ones such as zero width spaces, joiners, directional marks and control characters other than tabs and line breaks",
+      "tests": [
+        "native/templates/strip-keeps-zero-width-space",
+        "native/templates/strip-keeps-word-joiner",
+        "native/templates/strip-keeps-unit-separator",
+        "native/templates/strip-keeps-zero-width-no-break-space",
+        "native/templates/strip-keeps-left-to-right-mark"
+      ]
+    },
+    {
+      "id": "templates-strip-heredoc-line-end",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "In a heredoc, ~} removes the rest of its line including the line break, and a strip marker at the start of a line removes the previous line's trailing spaces, tabs and line break, for LF and CR LF line endings (disputed)",
+      "tests": [
+        "native/templates/strip-in-heredoc-removes-directive-line-ends",
+        "native/templates/strip-in-heredoc-parse-tree",
+        "native/templates/strip-in-heredoc-removes-spaces-before-newline",
+        "native/templates/strip-in-heredoc-removes-previous-line-end",
+        "native/templates/strip-in-heredoc-with-crlf-line-endings",
+        "native/templates/heredoc-stripped-newline-parse-tree"
+      ]
+    },
+    {
+      "id": "templates-strip-heredoc-multiple-lines",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "In a heredoc, a strip marker only strips the line token next to it: whitespace on the following line after ~}, and the newline before a marker that follows indentation or a blank line, are kept (disputed)",
+      "tests": [
+        "native/templates/strip-in-heredoc-keeps-next-line-indentation",
+        "native/templates/strip-in-heredoc-keeps-following-blank-line",
+        "native/templates/strip-in-heredoc-keeps-newline-before-indentation",
+        "native/templates/strip-in-heredoc-keeps-preceding-blank-line"
+      ]
+    },
+    {
+      "id": "templates-strip-heredoc-indented",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "In a <<- heredoc, strip markers apply before indentation is removed, so a line whose indentation a strip marker removed counts as unindented and no indentation is removed from any line (disputed)",
+      "tests": [
+        "native/templates/strip-in-indented-heredoc-happens-before-indentation-removal"
+      ]
+    },
+    {
+      "id": "templates-strip-marker-placement",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "A strip marker is a ~ immediately after the opening { or immediately before the closing }; a ~ separated from the brace by a space is a syntax error",
+      "tests": [
+        "native/templates/interpolation-strip-markers-need-no-spaces",
+        "native/templates/directive-strip-markers-need-no-spaces",
+        "native/templates/spaced-tilde-after-interpolation-opening-is-error",
+        "native/templates/spaced-tilde-before-interpolation-closing-is-error",
+        "native/templates/spaced-tilde-after-directive-opening-is-error",
+        "native/templates/spaced-tilde-before-directive-closing-is-error"
+      ]
+    },
+    {
+      "id": "templates-strip-applied-in-parse-tree",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "Stripping happens at the syntax level, so the parse tree shows literals with strip markers applied in every position, and a literal that stripping empties remains as an empty text part",
+      "tests": [
+        "native/templates/strip-around-if-directive-parse-tree",
+        "native/templates/strip-around-for-directive-parse-tree",
+        "native/templates/strip-before-interpolation-parse-tree",
+        "native/templates/strip-after-interpolation-parse-tree",
+        "native/templates/strip-after-if-parse-tree",
+        "native/templates/strip-around-else-parse-tree",
+        "native/templates/strip-in-for-body-parse-tree",
+        "native/templates/strip-in-heredoc-parse-tree",
+        "native/templates/stripped-literals-parse-tree",
+        "native/templates/heredoc-stripped-newline-parse-tree"
+      ]
+    },
+    {
+      "id": "templates-heredoc-sequences",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "Interpolations and directives work the same in heredoc templates as in quoted templates, and directive branches can span lines",
+      "tests": [
+        "native/templates/interpolation-in-heredoc",
+        "native/templates/heredoc-template-parse-tree",
+        "native/templates/if-else-directive-spanning-heredoc-lines",
+        "native/templates/for-directive-in-heredoc"
+      ]
+    }
+  ]
+}

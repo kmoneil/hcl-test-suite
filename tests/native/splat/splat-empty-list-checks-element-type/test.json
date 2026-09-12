@@ -1,0 +1,24 @@
+{
+  "description": "A full splat on an empty list is an error when its attribute access can't apply to the element type",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators",
+    "spec.md#collection-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says a splat is approximately equivalent to a for expression, which gives an empty result for an empty list without evaluating anything per element. hashicorp/hcl finds the element type of the empty result list by applying the traversal to an unknown value of the list's element type, so a traversal that can't apply to strings is an error (SplatExpr.Value in hclsyntax/expression.go).",
+  "variables": {
+    "l": {
+      "list": [],
+      "element_type": "string"
+    }
+  },
+  "reference_error": "primitive-typed value (string)",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

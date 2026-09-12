@@ -1,0 +1,22 @@
+{
+  "description": "A function name can contain non-ASCII letters",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "call",
+          "name": "café",
+          "args": [],
+          "expand_final": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

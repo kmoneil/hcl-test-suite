@@ -1,0 +1,24 @@
+{
+  "description": "A variable expression evaluates to the string value of the variable",
+  "spec": [
+    "hclsyntax/spec.md#variables-and-variable-expressions",
+    "spec.md#expression-evaluation"
+  ],
+  "op": "eval",
+  "variables": {
+    "name": {
+      "string": "web"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "web"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

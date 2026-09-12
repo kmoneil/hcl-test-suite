@@ -1,0 +1,21 @@
+{
+  "description": "${~ at the start of a heredoc line does not remove a blank line before the previous newline",
+  "spec": [
+    "hclsyntax/spec.md#template-literals",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says a strip marker removes the spaces adjacent to it in the literal, \"interpreted as per Unicode's definition\". Under the White_Space reading that hashicorp/hcl uses, line breaks count, so all of \"\\n\\n\" would go and the result would be \"ab\\n\". hashicorp/hcl scans each heredoc line as a separate literal token (the heredocLiteralEOL action in hclsyntax/scan_tokens.rl), and parseTemplateParts in hclsyntax/parser_template.go trims only the one token next to the marker, before meldConsecutiveStringLiterals joins the lines, so the whitespace in the neighboring line's token is kept.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "a\nb\n"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

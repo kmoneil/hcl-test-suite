@@ -1,0 +1,19 @@
+{
+  "description": "In 1--1 the first minus sign subtracts and the second negates",
+  "spec": [
+    "hclsyntax/spec.md#operations",
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "2"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

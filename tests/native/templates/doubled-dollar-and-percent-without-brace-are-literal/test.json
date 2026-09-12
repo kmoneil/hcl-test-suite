@@ -1,0 +1,18 @@
+{
+  "description": "$$ and %% without a following { are literal text, not escapes",
+  "spec": [
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "$$ and %%"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

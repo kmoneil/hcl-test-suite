@@ -1,0 +1,651 @@
+{
+  "area": "native/collections",
+  "rules": [
+    {
+      "id": "collections-tuple-empty",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "Brackets with nothing but whitespace or newlines between them form a tuple constructor with no elements",
+      "tests": [
+        "native/collections/tuple-empty",
+        "native/collections/tuple-empty-with-newlines"
+      ]
+    },
+    {
+      "id": "collections-tuple-single-element",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "A tuple constructor can hold exactly one element",
+      "tests": [
+        "native/collections/tuple-single-element"
+      ]
+    },
+    {
+      "id": "collections-tuple-comma-separator",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "Commas separate tuple elements, and the elements appear in source order",
+      "tests": [
+        "native/collections/tuple-comma-separated"
+      ]
+    },
+    {
+      "id": "collections-tuple-trailing-comma",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "One optional comma may follow the last tuple element, including when there is only one element",
+      "tests": [
+        "native/collections/tuple-trailing-comma",
+        "native/collections/tuple-single-element-trailing-comma"
+      ]
+    },
+    {
+      "id": "collections-tuple-comma-needs-element",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "Every comma in a tuple constructor must follow an element, so a lone comma or a leading comma is an error",
+      "tests": [
+        "native/collections/tuple-only-comma",
+        "native/collections/tuple-leading-comma"
+      ]
+    },
+    {
+      "id": "collections-tuple-doubled-comma",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "Two commas in a row are an error, whether between elements or at the end",
+      "tests": [
+        "native/collections/tuple-doubled-comma",
+        "native/collections/tuple-doubled-trailing-comma"
+      ]
+    },
+    {
+      "id": "collections-tuple-separator-required",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "Adjacent tuple elements need a comma between them, and no other token, such as a colon or an equals sign, can take its place",
+      "tests": [
+        "native/collections/tuple-missing-separator",
+        "native/collections/tuple-colon-not-separator",
+        "native/collections/tuple-equals-not-separator"
+      ]
+    },
+    {
+      "id": "collections-tuple-newlines-ignored",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "Newlines anywhere between the brackets of a tuple constructor are ignored: around elements, before commas and inside element expressions",
+      "tests": [
+        "native/collections/tuple-empty-with-newlines",
+        "native/collections/tuple-newlines-around-elements",
+        "native/collections/tuple-newline-before-close-bracket",
+        "native/collections/tuple-newline-before-comma",
+        "native/collections/tuple-newline-inside-element",
+        "native/collections/tuple-comma-after-heredoc-element"
+      ]
+    },
+    {
+      "id": "collections-tuple-newline-not-separator",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "Because the prose makes newlines inside brackets whitespace and prose outranks the grammar, a newline alone doesn't separate tuple elements",
+      "tests": [
+        "native/collections/tuple-newline-not-separator"
+      ]
+    },
+    {
+      "id": "collections-tuple-comments-ignored",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "Inline and line comments between the brackets of a tuple constructor are ignored",
+      "tests": [
+        "native/collections/tuple-inline-comment",
+        "native/collections/tuple-line-comment"
+      ]
+    },
+    {
+      "id": "collections-no-ellipsis",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "The ellipsis symbol can't follow a tuple element or an object value, since constructor elements are plain expressions",
+      "tests": [
+        "native/collections/tuple-ellipsis-not-allowed",
+        "native/collections/object-value-ellipsis-not-allowed"
+      ]
+    },
+    {
+      "id": "collections-tuple-must-close",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "A tuple constructor must end with a closing bracket, not the end of the file or another delimiter",
+      "tests": [
+        "native/collections/tuple-unterminated",
+        "native/collections/tuple-closed-with-brace"
+      ]
+    },
+    {
+      "id": "collections-object-empty",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "Braces with nothing but whitespace or newlines between them form an object constructor with no elements",
+      "tests": [
+        "native/collections/object-empty",
+        "native/collections/object-empty-with-newlines"
+      ]
+    },
+    {
+      "id": "collections-object-equals",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "An equals sign can separate an object element's key from its value",
+      "tests": [
+        "native/collections/object-equals"
+      ]
+    },
+    {
+      "id": "collections-object-colon",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "A colon can separate an object element's key from its value, even after a key that is a conditional expression",
+      "tests": [
+        "native/collections/object-colon",
+        "native/collections/object-colon-after-conditional-key"
+      ]
+    },
+    {
+      "id": "collections-object-mixed-assignment",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "Each object element chooses its own separator, so = and : can be mixed in one constructor",
+      "tests": [
+        "native/collections/object-mixed-equals-and-colon"
+      ]
+    },
+    {
+      "id": "collections-object-assignment-required",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "Every object element needs = or : between key and value; a key alone, a key followed directly by a value, or => is an error",
+      "tests": [
+        "native/collections/object-missing-key-value-separator",
+        "native/collections/object-key-without-value",
+        "native/collections/object-fat-arrow-not-separator",
+        "native/collections/object-two-identifiers-as-key"
+      ]
+    },
+    {
+      "id": "collections-object-value-required",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "An object element needs a value expression after its = or :",
+      "tests": [
+        "native/collections/object-missing-value"
+      ]
+    },
+    {
+      "id": "collections-object-key-required",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "An object element needs a key expression before its = or :",
+      "tests": [
+        "native/collections/object-missing-key"
+      ]
+    },
+    {
+      "id": "collections-object-comma-separator",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "Commas separate object elements, and the elements appear in source order in the syntax tree",
+      "tests": [
+        "native/collections/object-comma-separated"
+      ]
+    },
+    {
+      "id": "collections-object-newline-separator",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "A newline separates object elements, whether it is one newline, several, the end of a line comment or a CR LF sequence, mixed with commas, after a nested multi-line tuple, or inside another constructor (disputed)",
+      "tests": [
+        "native/collections/object-newline-separated",
+        "native/collections/object-blank-lines-between-elements",
+        "native/collections/object-line-comment-separator",
+        "native/collections/object-crlf-separator",
+        "native/collections/object-comma-and-newline-separators",
+        "native/collections/object-newline-separator-after-nested-tuple",
+        "native/collections/tuple-object-element-newline-separator"
+      ]
+    },
+    {
+      "id": "collections-object-comma-then-newline",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "A comma followed by newlines separates object elements",
+      "tests": [
+        "native/collections/object-comma-then-newline"
+      ]
+    },
+    {
+      "id": "collections-object-newline-then-comma",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "A comma on a later line than the element before it is an error, because the newline already separated the elements (disputed)",
+      "tests": [
+        "native/collections/object-newline-then-comma"
+      ]
+    },
+    {
+      "id": "collections-object-trailing-separator",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "The last object element can be followed by a comma or by a newline before the closing brace",
+      "tests": [
+        "native/collections/object-trailing-comma",
+        "native/collections/object-trailing-newline",
+        "native/collections/object-comma-then-newline"
+      ]
+    },
+    {
+      "id": "collections-object-newline-after-open-brace",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "Newlines after the opening brace, before the first element, are ignored",
+      "tests": [
+        "native/collections/object-newline-after-open-brace",
+        "native/collections/object-empty-with-newlines"
+      ]
+    },
+    {
+      "id": "collections-object-comma-needs-element",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "Every comma in an object constructor must follow an element, so a lone comma or a leading comma is an error",
+      "tests": [
+        "native/collections/object-only-comma",
+        "native/collections/object-leading-comma"
+      ]
+    },
+    {
+      "id": "collections-object-doubled-comma",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "Two commas in a row in an object constructor are an error, whether between elements or at the end",
+      "tests": [
+        "native/collections/object-doubled-comma",
+        "native/collections/object-doubled-trailing-comma"
+      ]
+    },
+    {
+      "id": "collections-object-separator-required",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "Object elements on the same line need a comma between them, and an inline comment containing a newline is not a separator",
+      "tests": [
+        "native/collections/object-missing-separator",
+        "native/collections/object-inline-comment-spanning-lines"
+      ]
+    },
+    {
+      "id": "collections-object-newline-inside-element",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "A newline inside an object element, before or after = or within the value expression, ends the element early and is an error (disputed)",
+      "tests": [
+        "native/collections/object-newline-before-equals",
+        "native/collections/object-newline-after-equals",
+        "native/collections/object-newline-inside-value"
+      ]
+    },
+    {
+      "id": "collections-object-nested-newlines",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "Newlines inside parentheses or brackets nested in an object element are ignored",
+      "tests": [
+        "native/collections/object-newline-inside-nested-brackets",
+        "native/collections/object-key-parentheses-allow-newlines"
+      ]
+    },
+    {
+      "id": "collections-object-inline-comments",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "Inline comments between object elements and inside an element are ignored like whitespace",
+      "tests": [
+        "native/collections/object-inline-comment-between-elements",
+        "native/collections/object-inline-comments-inside-element"
+      ]
+    },
+    {
+      "id": "collections-object-heredoc-element",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "Inside an object constructor the line break after an unparenthesized heredoc's closing marker ends the element: it separates a heredoc value from the next element, and a heredoc key can't be followed by = (disputed)",
+      "tests": [
+        "native/collections/object-heredoc-value-newline-separator",
+        "native/collections/object-heredoc-key"
+      ]
+    },
+    {
+      "id": "collections-object-must-close",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "An object constructor must end with a closing brace, not the end of the file or another delimiter",
+      "tests": [
+        "native/collections/object-unterminated",
+        "native/collections/object-closed-with-bracket"
+      ]
+    },
+    {
+      "id": "collections-nesting",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "Tuple and object constructors can appear as elements, keys and values of other constructors",
+      "tests": [
+        "native/collections/collections-nested",
+        "native/collections/collections-nested-value",
+        "native/collections/object-newline-inside-nested-brackets",
+        "native/collections/object-key-tuple-value",
+        "native/collections/object-key-object-value"
+      ]
+    },
+    {
+      "id": "collections-key-identifier-literal",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "A bare identifier key is a literal attribute name, never a variable reference, including identifiers with dashes",
+      "tests": [
+        "native/collections/object-equals",
+        "native/collections/object-key-identifier-is-literal",
+        "native/collections/object-key-identifier-with-dash"
+      ]
+    },
+    {
+      "id": "collections-key-true-false",
+      "spec": "hclsyntax/spec.md#keywords",
+      "rule": "The keywords true and false as bare keys name attributes true and false",
+      "tests": [
+        "native/collections/object-key-true",
+        "native/collections/object-key-false"
+      ]
+    },
+    {
+      "id": "collections-key-keyword-names",
+      "spec": "hclsyntax/spec.md#keywords",
+      "rule": "The keyword null as a bare key names an attribute null, and the bare keys true, false and null are literal names in the syntax tree (disputed)",
+      "tests": [
+        "native/collections/object-key-null",
+        "native/collections/object-key-keywords-tree"
+      ]
+    },
+    {
+      "id": "collections-key-quoted",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "A quoted string key names the attribute with its text, which can be empty or contain characters identifiers can't",
+      "tests": [
+        "native/collections/object-key-quoted-with-period",
+        "native/collections/object-key-empty-string",
+        "native/collections/for-keyword-quoted-object-key-value"
+      ]
+    },
+    {
+      "id": "collections-key-template",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "A template key is an expression: it is evaluated and the resulting string names the attribute",
+      "tests": [
+        "native/collections/object-key-template-tree",
+        "native/collections/object-key-template-interpolation",
+        "native/collections/object-key-template-with-literal"
+      ]
+    },
+    {
+      "id": "collections-key-parenthesized",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "A key that starts with parentheses is an expression whose value names the attribute, whether the traversal is inside the parentheses or follows them",
+      "tests": [
+        "native/collections/object-key-parenthesized-variable",
+        "native/collections/object-key-parenthesized-variable-value",
+        "native/collections/object-key-parenthesized-attribute-access",
+        "native/collections/object-key-parenthesized-root-traversal",
+        "native/collections/object-key-parentheses-allow-newlines"
+      ]
+    },
+    {
+      "id": "collections-key-expression",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "A key written as any expression other than a bare identifier or traversal is evaluated without needing parentheses",
+      "tests": [
+        "native/collections/object-key-arithmetic",
+        "native/collections/object-key-equality-expression",
+        "native/collections/object-key-index-with-variable",
+        "native/collections/object-key-function-call",
+        "native/collections/object-colon-after-conditional-key",
+        "native/collections/object-key-number-tree"
+      ]
+    },
+    {
+      "id": "collections-key-bare-traversal",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "A key that is a traversal of more than one step starting with an unparenthesized identifier, such as k.b or k[0], is an evaluation error (disputed)",
+      "tests": [
+        "native/collections/object-key-bare-attribute-access",
+        "native/collections/object-key-bare-index"
+      ]
+    },
+    {
+      "id": "collections-key-number",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "A number key is converted to a string of its decimal digits, without an exponent and without a period when the fractional part is zero",
+      "tests": [
+        "native/collections/object-key-integer",
+        "native/collections/object-key-exponent",
+        "native/collections/object-key-whole-number-with-fraction",
+        "native/collections/object-key-arithmetic"
+      ]
+    },
+    {
+      "id": "collections-key-bool",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "A bool key value becomes the attribute name true or false",
+      "tests": [
+        "native/collections/object-key-bool-value",
+        "native/collections/object-key-equality-expression",
+        "native/collections/object-key-true",
+        "native/collections/object-key-false"
+      ]
+    },
+    {
+      "id": "collections-key-null",
+      "spec": "spec.md#null-values",
+      "rule": "A key whose value is null is an error, whether the null is untyped or has type string",
+      "tests": [
+        "native/collections/object-key-null-value",
+        "native/collections/object-key-typed-null-value"
+      ]
+    },
+    {
+      "id": "collections-key-not-string",
+      "spec": "spec.md#structural-types",
+      "rule": "A key whose value can't be converted to a string (a tuple, object, list, map or set) is an error",
+      "tests": [
+        "native/collections/object-key-tuple-value",
+        "native/collections/object-key-object-value",
+        "native/collections/object-key-list-value",
+        "native/collections/object-key-map-value",
+        "native/collections/object-key-set-value"
+      ]
+    },
+    {
+      "id": "collections-key-error",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "An error while evaluating a key fails the whole object constructor",
+      "tests": [
+        "native/collections/object-key-error"
+      ]
+    },
+    {
+      "id": "collections-key-duplicate",
+      "spec": "spec.md#structural-types",
+      "rule": "When two elements produce the same attribute name, after converting keys to strings, the later value replaces the earlier one without an error (disputed)",
+      "tests": [
+        "native/collections/object-duplicate-key-last-wins",
+        "native/collections/object-duplicate-key-identifier-and-quoted",
+        "native/collections/object-duplicate-key-number-and-string",
+        "native/collections/object-duplicate-keys-parse"
+      ]
+    },
+    {
+      "id": "collections-key-duplicate-still-evaluated",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "The value of an element replaced by a later duplicate key is still evaluated, so its errors are reported (disputed)",
+      "tests": [
+        "native/collections/object-duplicate-key-value-still-evaluated"
+      ]
+    },
+    {
+      "id": "collections-key-nfc",
+      "spec": "spec.md#primitive-types",
+      "rule": "Keys whose names are equal after NFC normalization name the same attribute, whether quoted or bare (disputed)",
+      "tests": [
+        "native/collections/object-duplicate-key-nfc",
+        "native/collections/object-bare-key-matches-normalized-quoted-key"
+      ]
+    },
+    {
+      "id": "collections-for-first-tuple-element",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "The identifier for at the start of a tuple constructor starts a for expression, so a first element that is or begins with for is a syntax error",
+      "tests": [
+        "native/collections/for-keyword-starts-tuple",
+        "native/collections/for-keyword-alone-in-tuple",
+        "native/collections/for-keyword-attribute-access-starts-tuple",
+        "native/collections/for-keyword-nested-tuple"
+      ]
+    },
+    {
+      "id": "collections-for-first-object-key",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "The identifier for at the start of an object constructor starts a for expression, whether the first key is for followed by = or :, or begins with for",
+      "tests": [
+        "native/collections/for-keyword-starts-object",
+        "native/collections/for-keyword-colon-starts-object",
+        "native/collections/for-keyword-attribute-access-starts-object"
+      ]
+    },
+    {
+      "id": "collections-for-after-newline-or-comment",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "Newlines and comments before the first element don't stop for from starting a for expression",
+      "tests": [
+        "native/collections/for-keyword-after-newline-in-tuple",
+        "native/collections/for-keyword-after-newline-in-object",
+        "native/collections/for-keyword-after-comment"
+      ]
+    },
+    {
+      "id": "collections-for-parenthesized",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "Wrapping a first element or key for in parentheses makes it a reference to the variable for",
+      "tests": [
+        "native/collections/for-keyword-parenthesized-tuple-element",
+        "native/collections/for-keyword-parenthesized-tuple-element-value",
+        "native/collections/for-keyword-parenthesized-object-key",
+        "native/collections/for-keyword-parenthesized-object-key-value"
+      ]
+    },
+    {
+      "id": "collections-for-quoted-key",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "Quoting a first key \"for\" makes it a literal attribute name",
+      "tests": [
+        "native/collections/for-keyword-quoted-object-key",
+        "native/collections/for-keyword-quoted-object-key-value"
+      ]
+    },
+    {
+      "id": "collections-for-later-position",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "for is an ordinary identifier anywhere except at the start of a constructor: as a later key, a later tuple element or a value",
+      "tests": [
+        "native/collections/for-keyword-as-later-object-key",
+        "native/collections/for-keyword-as-later-object-key-value",
+        "native/collections/for-keyword-as-later-tuple-element",
+        "native/collections/for-keyword-as-later-tuple-element-value",
+        "native/collections/for-keyword-object-value"
+      ]
+    },
+    {
+      "id": "collections-for-whole-identifier",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "Only the exact identifier for starts a for expression: format, for_each, for-each and FOR are ordinary identifiers",
+      "tests": [
+        "native/collections/for-keyword-prefix-tuple-element",
+        "native/collections/for-keyword-prefix-object-key-underscore",
+        "native/collections/for-keyword-prefix-object-key-dash",
+        "native/collections/for-keyword-uppercase"
+      ]
+    },
+    {
+      "id": "collections-for-other-first-token",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "A first element that starts with a token other than the identifier for, such as an operator, is not a for expression",
+      "tests": [
+        "native/collections/for-keyword-negated-first-element"
+      ]
+    },
+    {
+      "id": "collections-tuple-result",
+      "spec": "spec.md#structural-types",
+      "rule": "A tuple constructor produces a tuple value, never a list, even when it is empty or all elements share a type",
+      "tests": [
+        "native/collections/tuple-empty-value",
+        "native/collections/tuple-value-is-tuple"
+      ]
+    },
+    {
+      "id": "collections-tuple-element-types",
+      "spec": "spec.md#structural-types",
+      "rule": "Tuple elements keep their own values and types: they are not unified or converted, and lists, sets and typed nulls stay as they are",
+      "tests": [
+        "native/collections/tuple-elements-keep-types",
+        "native/collections/tuple-collection-elements-kept",
+        "native/collections/tuple-typed-null-kept"
+      ]
+    },
+    {
+      "id": "collections-tuple-elements-evaluated",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "Each tuple element is an expression evaluated in the scope around the constructor",
+      "tests": [
+        "native/collections/tuple-elements-evaluated",
+        "native/collections/for-keyword-parenthesized-tuple-element-value"
+      ]
+    },
+    {
+      "id": "collections-tuple-element-error",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "An error in any tuple element fails the tuple constructor",
+      "tests": [
+        "native/collections/tuple-element-error"
+      ]
+    },
+    {
+      "id": "collections-object-result",
+      "spec": "spec.md#structural-types",
+      "rule": "An object constructor produces an object value, never a map, even when it is empty or all values share a type",
+      "tests": [
+        "native/collections/object-empty-value",
+        "native/collections/object-value-is-object"
+      ]
+    },
+    {
+      "id": "collections-object-attribute-types",
+      "spec": "spec.md#structural-types",
+      "rule": "Object attributes keep their own values and types: they are not unified, maps stay maps and null values are kept",
+      "tests": [
+        "native/collections/object-attributes-keep-types",
+        "native/collections/object-null-attribute-kept",
+        "native/collections/object-map-attribute-kept"
+      ]
+    },
+    {
+      "id": "collections-object-values-scope",
+      "spec": "hclsyntax/spec.md#variables-and-variable-expressions",
+      "rule": "Object values are evaluated in the scope around the constructor, where attributes of the object being built are not variables",
+      "tests": [
+        "native/collections/object-value-uses-variable-not-sibling",
+        "native/collections/object-sibling-attribute-not-variable"
+      ]
+    },
+    {
+      "id": "collections-object-value-error",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "An error in any object value fails the object constructor",
+      "tests": [
+        "native/collections/object-value-error"
+      ]
+    },
+    {
+      "id": "collections-static-list",
+      "spec": "hclsyntax/spec.md#static-list",
+      "rule": "Static list analysis of a tuple constructor returns its element expressions without evaluating them",
+      "untested": "Needs a static analysis operation, which the protocol doesn't have"
+    },
+    {
+      "id": "collections-static-map",
+      "spec": "hclsyntax/spec.md#static-map",
+      "rule": "Static map analysis of an object constructor returns each key and value as expressions without evaluating them",
+      "untested": "Needs a static analysis operation, which the protocol doesn't have"
+    },
+    {
+      "id": "collections-static-map-keys",
+      "spec": "hclsyntax/spec.md#static-map",
+      "rule": "Static map analysis doesn't require keys to be convertible to strings, so it accepts keys that evaluation would reject",
+      "untested": "Needs a static analysis operation, which the protocol doesn't have"
+    }
+  ]
+}

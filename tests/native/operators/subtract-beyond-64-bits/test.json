@@ -1,0 +1,19 @@
+{
+  "description": "Subtraction is exact when the difference is below the 64-bit signed range",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators",
+    "spec.md#primitive-types"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "-9223372036854775809"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

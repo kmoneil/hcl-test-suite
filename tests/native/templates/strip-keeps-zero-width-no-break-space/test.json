@@ -1,0 +1,20 @@
+{
+  "description": "A strip marker does not remove the zero width no-break space U+FEFF",
+  "spec": [
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says strip markers remove spaces, \"interpreted as per Unicode's definition\", without saying which definition it means. U+FEFF inside a string is a zero width no-break space, not a byte order mark; it has no White_Space property and is not a space separator (Zs), but some definitions count it as whitespace, such as ECMAScript's WhiteSpace. hashicorp/hcl keeps it: parseTemplateParts in hclsyntax/parser_template.go trims with Go's unicode.IsSpace, which follows the White_Space property.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "a﻿b"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

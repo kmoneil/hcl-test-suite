@@ -1,0 +1,27 @@
+{
+  "description": "Accessing an attribute that an unknown object's type lacks is an error",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "u": {
+      "unknown": [
+        "object",
+        {
+          "a": "string"
+        }
+      ]
+    }
+  },
+  "reference_error": "does not have an attribute named",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

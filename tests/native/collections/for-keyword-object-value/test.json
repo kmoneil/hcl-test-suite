@@ -1,0 +1,33 @@
+{
+  "description": "The identifier for as an object value is a variable reference",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "object",
+          "items": [
+            {
+              "key": {
+                "kind": "literal",
+                "value": {
+                  "string": "b"
+                }
+              },
+              "value": {
+                "kind": "variable",
+                "name": "for"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

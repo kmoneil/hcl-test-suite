@@ -1,0 +1,32 @@
+{
+  "description": "A splat can follow a function call",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#splat-operators"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "splat",
+          "source": {
+            "kind": "call",
+            "name": "f",
+            "args": [],
+            "expand_final": false
+          },
+          "each": {
+            "kind": "get_attr",
+            "object": {
+              "kind": "splat_item"
+            },
+            "name": "b"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

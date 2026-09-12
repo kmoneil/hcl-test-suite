@@ -1,0 +1,29 @@
+{
+  "description": "A known result converts to the unified type even if the other result is unknown",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+    "spec.md#type-unification"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "description": "!= is false for tuples with equal elements",
+  "spec": [
+    "hclsyntax/spec.md#comparison-operators",
+    "spec.md#structural-types"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

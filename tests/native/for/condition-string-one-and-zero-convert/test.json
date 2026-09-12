@@ -1,0 +1,25 @@
+{
+  "description": "The strings 1 and 0 are converted to true and false when used as an if condition",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#type-conversions-and-unification",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "notes": "The condition must be a bool. The information model attempts automatic conversion when a value doesn't have the type an operation expects, and defines the strings 1 and 0 as alternative forms of true and false.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "1"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

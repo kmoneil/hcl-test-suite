@@ -1,0 +1,366 @@
+{
+  "area": "native/heredocs",
+  "rules": [
+    {
+      "id": "heredocs-introduction",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "<< or <<- directly followed by an identifier and a newline starts a heredoc, whose value is the text of the lines after that line and before the closing marker line",
+      "tests": [
+        "native/heredocs/plain-heredoc",
+        "native/heredocs/plain-heredoc-parse",
+        "native/heredocs/multiple-lines",
+        "native/heredocs/flush-heredoc",
+        "native/heredocs/introducer-directly-after-equals"
+      ]
+    },
+    {
+      "id": "heredocs-marker-identifier-forms",
+      "spec": "hclsyntax/spec.md#identifiers",
+      "rule": "Any identifier can be the marker, including lowercase letters, digits, underscores, dashes (also at the end), non-ASCII letters and words that are keywords elsewhere",
+      "tests": [
+        "native/heredocs/marker-lowercase",
+        "native/heredocs/marker-with-underscores-and-digits",
+        "native/heredocs/marker-with-dashes",
+        "native/heredocs/marker-non-ascii",
+        "native/heredocs/marker-keyword"
+      ]
+    },
+    {
+      "id": "heredocs-marker-leading-underscore",
+      "spec": "hclsyntax/spec.md#identifiers",
+      "rule": "A marker may start with an underscore (disputed)",
+      "tests": [
+        "native/heredocs/marker-leading-underscore"
+      ]
+    },
+    {
+      "id": "heredocs-marker-must-be-identifier",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "What follows << or <<- must be an identifier: a quoted word, a word starting with a digit, a second dash, a tilde or nothing at all doesn't start a heredoc",
+      "tests": [
+        "native/heredocs/marker-quoted-is-invalid",
+        "native/heredocs/marker-leading-digit-is-invalid",
+        "native/heredocs/marker-missing-is-invalid",
+        "native/heredocs/flush-marker-missing-is-invalid",
+        "native/heredocs/marker-double-dash-is-invalid",
+        "native/heredocs/marker-tilde-is-invalid"
+      ]
+    },
+    {
+      "id": "heredocs-no-space-before-marker",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "Whitespace between << or <<- and the marker means no heredoc starts (disputed)",
+      "tests": [
+        "native/heredocs/space-before-marker-is-invalid",
+        "native/heredocs/flush-space-before-marker-is-invalid"
+      ]
+    },
+    {
+      "id": "heredocs-newline-after-marker",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "The opening marker must be followed by a newline, so other text after it on the same line, or the end of the file, means no heredoc starts",
+      "tests": [
+        "native/heredocs/text-after-marker-is-invalid",
+        "native/heredocs/marker-at-end-of-file-is-invalid"
+      ]
+    },
+    {
+      "id": "heredocs-nothing-between-marker-and-newline",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "Nothing may come between the opening marker and its newline, not even spaces or a comment, or no heredoc starts (disputed)",
+      "tests": [
+        "native/heredocs/space-after-marker-is-invalid",
+        "native/heredocs/comment-after-marker-is-invalid"
+      ]
+    },
+    {
+      "id": "heredocs-closing-marker-whole-line",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "A line ends the heredoc only if it is exactly the marker; the marker with other text before or after it, a longer identifier, a shorter prefix or a different letter case is ordinary content",
+      "tests": [
+        "native/heredocs/marker-within-line-is-content",
+        "native/heredocs/marker-at-line-start-is-content",
+        "native/heredocs/marker-at-line-end-is-content",
+        "native/heredocs/longer-identifier-is-content",
+        "native/heredocs/marker-prefix-is-content",
+        "native/heredocs/marker-in-other-case-is-content"
+      ]
+    },
+    {
+      "id": "heredocs-closing-marker-no-normalization",
+      "spec": "hclsyntax/spec.md#source-code-representation",
+      "rule": "The closing marker is compared code point by code point, so a differently normalized spelling of the marker is content",
+      "tests": [
+        "native/heredocs/marker-in-other-normalization-is-content"
+      ]
+    },
+    {
+      "id": "heredocs-closing-marker-is-literal-text",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "Only literal template text can form the closing marker line: text produced by an interpolation, or the marker with an interpolation before or after it on the line, is content",
+      "tests": [
+        "native/heredocs/interpolated-marker-is-content",
+        "native/heredocs/marker-joined-to-interpolation-is-content",
+        "native/heredocs/interpolation-before-marker-is-content"
+      ]
+    },
+    {
+      "id": "heredocs-closing-marker-inside-directive",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "A line holding only the marker ends the heredoc even inside the body of a template directive, which is then left unclosed",
+      "tests": [
+        "native/heredocs/closing-marker-inside-directive-ends-heredoc"
+      ]
+    },
+    {
+      "id": "heredocs-marker-inside-interpolation",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "A line holding only the marker inside an interpolation sequence belongs to that expression and doesn't end the heredoc, so it can be a variable name or close a nested heredoc that reuses the marker (disputed)",
+      "tests": [
+        "native/heredocs/marker-name-inside-interpolation-is-a-variable",
+        "native/heredocs/nested-heredoc-with-same-marker"
+      ]
+    },
+    {
+      "id": "heredocs-plain-closing-marker-indentation",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "A << heredoc also ends at a closing marker line that has leading whitespace (disputed)",
+      "tests": [
+        "native/heredocs/plain-indented-closing-marker"
+      ]
+    },
+    {
+      "id": "heredocs-closing-marker-trailing-whitespace",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "Whitespace after the closing marker on its line (spaces, tabs or other Unicode whitespace) doesn't stop it from ending the heredoc (disputed)",
+      "tests": [
+        "native/heredocs/closing-marker-trailing-spaces",
+        "native/heredocs/closing-marker-trailing-tab",
+        "native/heredocs/closing-marker-trailing-no-break-space"
+      ]
+    },
+    {
+      "id": "heredocs-closing-marker-comment",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "A comment right after the closing marker makes its line ordinary content, so a later marker line ends the heredoc (disputed)",
+      "tests": [
+        "native/heredocs/closing-marker-with-comment-is-content"
+      ]
+    },
+    {
+      "id": "heredocs-closing-marker-newline",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "A marker on the last line of the file with no newline after it doesn't end the heredoc, which is then unterminated (disputed)",
+      "tests": [
+        "native/heredocs/closing-marker-at-end-of-file-is-invalid"
+      ]
+    },
+    {
+      "id": "heredocs-closing-newline-belongs-to-context",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "A heredoc ends at its closing marker, so the newline after the marker belongs to what contains the heredoc: it ends the attribute, and the expression can only continue on the next line inside parentheses or brackets",
+      "tests": [
+        "native/heredocs/attribute-after-heredoc",
+        "native/heredocs/expression-cannot-continue-after-closing-marker",
+        "native/heredocs/expression-continues-after-closing-marker-in-parentheses",
+        "native/heredocs/heredoc-as-last-operand",
+        "native/heredocs/heredoc-in-block-body"
+      ]
+    },
+    {
+      "id": "heredocs-unterminated",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "A heredoc whose opening line isn't complete, or whose closing marker line never appears, is a syntax error",
+      "tests": [
+        "native/heredocs/unterminated-heredoc",
+        "native/heredocs/unterminated-empty-heredoc",
+        "native/heredocs/flush-unterminated-heredoc",
+        "native/heredocs/marker-at-end-of-file-is-invalid"
+      ]
+    },
+    {
+      "id": "heredocs-content-newlines",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "The newline ending the last content line is part of the value, blank lines before and after the text are kept, and the newline ending the opening line is not part of the value",
+      "tests": [
+        "native/heredocs/plain-heredoc",
+        "native/heredocs/blank-line-before-closing-marker",
+        "native/heredocs/blank-line-after-opening-marker",
+        "native/heredocs/only-empty-line"
+      ]
+    },
+    {
+      "id": "heredocs-empty",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "A heredoc whose closing marker line directly follows the opening line is the empty string",
+      "tests": [
+        "native/heredocs/empty-heredoc",
+        "native/heredocs/empty-heredoc-parse",
+        "native/heredocs/flush-empty-heredoc"
+      ]
+    },
+    {
+      "id": "heredocs-content-is-literal",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "Content lines are literal template text: indentation and trailing spaces are kept by <<, and quotes, an unclosed /* and heredoc introducers have no special meaning",
+      "tests": [
+        "native/heredocs/plain-heredoc-keeps-indentation",
+        "native/heredocs/plain-heredoc-keeps-tab-indentation",
+        "native/heredocs/trailing-spaces-are-kept",
+        "native/heredocs/quotes-are-literal",
+        "native/heredocs/unclosed-block-comment-is-literal",
+        "native/heredocs/heredoc-introducer-in-content-is-literal"
+      ]
+    },
+    {
+      "id": "heredocs-unicode-content",
+      "spec": "hclsyntax/spec.md#source-code-representation",
+      "rule": "Non-ASCII characters in heredoc content are kept",
+      "tests": [
+        "native/heredocs/unicode-content-is-preserved"
+      ]
+    },
+    {
+      "id": "heredocs-no-backslash-escapes",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "Heredoc text has no backslash escapes: every backslash is literal, including one at the end of a line, which neither joins lines nor prevents the next line from closing the heredoc",
+      "tests": [
+        "native/heredocs/no-escape-sequences",
+        "native/heredocs/quote-and-unicode-escapes-are-literal",
+        "native/heredocs/backslash-at-end-of-line-is-literal",
+        "native/heredocs/backslash-before-closing-marker-line",
+        "native/heredocs/escapes-work-in-quoted-string-inside-interpolation"
+      ]
+    },
+    {
+      "id": "heredocs-crlf",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "CR LF works as the newline after the opening marker, after each content line and after the closing marker, and content keeps each newline exactly as written",
+      "tests": [
+        "native/heredocs/crlf-line-endings",
+        "native/heredocs/crlf-line-endings-parse",
+        "native/heredocs/mixed-line-endings-are-kept",
+        "native/heredocs/flush-crlf-line-endings"
+      ]
+    },
+    {
+      "id": "heredocs-flush-removes-minimum-indentation",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "With <<-, the smallest number of leading spaces over the content lines is found and that many spaces are removed from the start of every line; spaces after other text are untouched",
+      "tests": [
+        "native/heredocs/flush-strips-common-indent",
+        "native/heredocs/flush-equal-indentation-is-removed",
+        "native/heredocs/flush-minimum-on-later-line",
+        "native/heredocs/flush-unindented-line-keeps-indentation",
+        "native/heredocs/flush-indentation-removed-in-parse-tree"
+      ]
+    },
+    {
+      "id": "heredocs-flush-only-empty-lines",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "A <<- heredoc whose lines are all empty is left unchanged",
+      "tests": [
+        "native/heredocs/flush-only-empty-lines"
+      ]
+    },
+    {
+      "id": "heredocs-flush-tabs",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "With <<-, a leading tab counts as one character of indentation, just like a space (disputed)",
+      "tests": [
+        "native/heredocs/flush-strips-tabs",
+        "native/heredocs/flush-tab-and-space-count-alike"
+      ]
+    },
+    {
+      "id": "heredocs-flush-unicode-whitespace",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "With <<-, other leading Unicode whitespace such as U+00A0 NO-BREAK SPACE counts as one character of indentation (disputed)",
+      "tests": [
+        "native/heredocs/flush-no-break-space-counts-as-indentation"
+      ]
+    },
+    {
+      "id": "heredocs-flush-removes-grapheme-clusters",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "With <<-, indentation is removed in whole grapheme clusters, so a combining mark attached to the last removed space is removed with it (disputed)",
+      "tests": [
+        "native/heredocs/flush-removes-combining-mark-after-indentation"
+      ]
+    },
+    {
+      "id": "heredocs-flush-blank-lines",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "With <<-, lines that are empty or hold only whitespace don't count when finding the minimum indentation and are left unchanged (disputed)",
+      "tests": [
+        "native/heredocs/flush-empty-line-is-ignored",
+        "native/heredocs/flush-shorter-whitespace-line-is-ignored",
+        "native/heredocs/flush-longer-whitespace-line-is-unchanged",
+        "native/heredocs/flush-only-whitespace-lines-are-unchanged"
+      ]
+    },
+    {
+      "id": "heredocs-flush-closing-marker-indentation",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "With <<-, the closing marker may be preceded by spaces, and its own indentation doesn't affect how much is removed from the content lines",
+      "tests": [
+        "native/heredocs/flush-strips-common-indent",
+        "native/heredocs/flush-closing-marker-less-indented",
+        "native/heredocs/flush-closing-marker-more-indented",
+        "native/heredocs/flush-closing-marker-unindented"
+      ]
+    },
+    {
+      "id": "heredocs-flush-closing-marker-other-whitespace",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "With <<-, the closing marker may also be preceded by tabs or other Unicode whitespace such as U+00A0 NO-BREAK SPACE (disputed)",
+      "tests": [
+        "native/heredocs/flush-closing-marker-tab-indented",
+        "native/heredocs/flush-closing-marker-no-break-space"
+      ]
+    },
+    {
+      "id": "heredocs-flush-sequence-at-line-start",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "With <<-, a line that starts with an interpolation or directive has no leading spaces, so no indentation is removed from any line (disputed)",
+      "tests": [
+        "native/heredocs/flush-interpolation-at-line-start",
+        "native/heredocs/flush-interpolation-at-line-start-parse",
+        "native/heredocs/flush-directive-at-line-start"
+      ]
+    },
+    {
+      "id": "heredocs-flush-indented-sequences",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "With <<-, the spaces before an interpolation or directive count as that line's indentation and are removed, spaces inside interpolated values are never removed, and lines inside a directive's body are treated like any other line",
+      "tests": [
+        "native/heredocs/flush-indented-interpolation",
+        "native/heredocs/flush-interpolated-spaces-are-kept",
+        "native/heredocs/flush-indented-interpolation-sets-minimum",
+        "native/heredocs/flush-lines-inside-directive"
+      ]
+    },
+    {
+      "id": "heredocs-expression-positions",
+      "spec": "hclsyntax/spec.md#expression-terms",
+      "rule": "A heredoc is an expression term, so it can be a tuple element, a function argument, an operand (as the last operand, or anywhere inside parentheses), a parenthesized object key, an attribute value inside a block or the expression of an interpolation",
+      "tests": [
+        "native/heredocs/heredoc-as-tuple-element",
+        "native/heredocs/heredoc-as-parenthesized-object-key",
+        "native/heredocs/heredoc-as-call-argument",
+        "native/heredocs/heredoc-as-operand",
+        "native/heredocs/heredoc-as-last-operand",
+        "native/heredocs/heredoc-in-block-body",
+        "native/heredocs/heredoc-nested-in-interpolation"
+      ]
+    },
+    {
+      "id": "heredocs-marker-reuse",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "A marker only matters until its own heredoc ends, so a later heredoc can use the same marker",
+      "tests": [
+        "native/heredocs/consecutive-heredocs-reuse-marker"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "description": "An error in the value expression of an object for expression is an evaluation error",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "reference_error": "There is no variable named \"nope\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

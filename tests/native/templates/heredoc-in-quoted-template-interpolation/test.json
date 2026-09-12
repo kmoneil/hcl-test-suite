@@ -1,0 +1,21 @@
+{
+  "description": "An interpolation in a quoted template can contain a heredoc",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec describes a quoted template as a single-line expression, but an interpolation may contain a heredoc, which always spans lines. That wording is the only conflict, since the newline after the heredoc's closing marker belongs to what contains the heredoc. hashicorp/hcl accepts it: its scanner (hclsyntax/scan_tokens.rl) reads the heredoc inside the interpolation, and parseTemplateParts in hclsyntax/parser_template.go ignores the newline after it.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "<hi\n>"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

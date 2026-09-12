@@ -1,0 +1,29 @@
+{
+  "description": "A block can have many labels, which keep their source order",
+  "spec": [
+    "hclsyntax/spec.md#blocks",
+    "spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "block",
+          "labels": [
+            "d",
+            "c",
+            "b",
+            "a"
+          ],
+          "body": {
+            "attributes": {},
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "description": "A for expression with three iteration variables is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "reference_error": "requires the 'in' keyword",
+  "expect": {
+    "valid": false
+  }
+}

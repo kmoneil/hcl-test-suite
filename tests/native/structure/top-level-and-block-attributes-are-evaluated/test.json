@@ -1,0 +1,32 @@
+{
+  "description": "Evaluating a file evaluates its top-level attributes and its block attributes alike",
+  "spec": [
+    "hclsyntax/spec.md#attribute-definitions",
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "2"
+        }
+      },
+      "blocks": [
+        {
+          "type": "block",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "b": {
+                "number": "4"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

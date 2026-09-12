@@ -1,0 +1,12 @@
+{
+  "description": "Indexing an empty tuple is an error",
+  "spec": [
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "eval",
+  "reference_error": "the collection has no elements",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

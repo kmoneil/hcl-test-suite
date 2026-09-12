@@ -1,0 +1,18 @@
+{
+  "description": "A heredoc holding one empty line is a single newline",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "\n"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

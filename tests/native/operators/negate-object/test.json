@@ -1,0 +1,12 @@
+{
+  "description": "Unary minus rejects an object",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "reference_error": "Unsuitable value for unary operand: number required, but have object",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

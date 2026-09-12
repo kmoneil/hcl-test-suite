@@ -1,0 +1,34 @@
+{
+  "description": "An unknown predicate with two tuple results gives an unknown of their unified tuple type",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator",
+    "spec.md#type-unification",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "bool"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": [
+            "tuple",
+            [
+              "string"
+            ]
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

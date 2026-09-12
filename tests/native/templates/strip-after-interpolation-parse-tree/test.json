@@ -1,0 +1,39 @@
+{
+  "description": "~} on an interpolation is applied to the following literal in the parse tree",
+  "spec": [
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "literal",
+              "value": {
+                "string": "a  "
+              }
+            },
+            {
+              "kind": "interpolation",
+              "expr": {
+                "kind": "variable",
+                "name": "x"
+              }
+            },
+            {
+              "kind": "literal",
+              "value": {
+                "string": "c"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

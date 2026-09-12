@@ -1,0 +1,18 @@
+{
+  "description": "The branches of an if directive can interpolate values of different types, which become strings",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "false"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

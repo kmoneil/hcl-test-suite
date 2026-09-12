@@ -1,0 +1,18 @@
+{
+  "description": "Objects with different attribute names and unrelated attribute types don't unify",
+  "spec": [
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec unifies two object types to an object type with the union of their attributes, so this should give {a = 1, b = null}. hashicorp/hcl tries to unify objects with different attribute names to a map, and a number and a tuple have no common element type (unifyObjectTypesToMap in cty/convert/unify.go).",
+  "reference_error": "must have consistent types",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

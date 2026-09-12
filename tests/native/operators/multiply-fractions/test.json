@@ -1,0 +1,18 @@
+{
+  "description": "1.5 * 1.5 is exactly 2.25",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "2.25"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

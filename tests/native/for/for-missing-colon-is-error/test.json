@@ -1,0 +1,11 @@
+{
+  "description": "A for expression without a colon after the collection is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "reference_error": "requires a colon after the collection expression",
+  "expect": {
+    "valid": false
+  }
+}

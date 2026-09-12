@@ -1,0 +1,30 @@
+{
+  "description": "A template with the dynamic value as a part gives an unknown string",
+  "spec": [
+    "hclsyntax/spec.md#templates",
+    "hclsyntax/spec.md#template-interpolations",
+    "spec.md#conversion-to-and-from-the-dynamic-pseudo-type",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "d": {
+      "unknown": "dynamic"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "string"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

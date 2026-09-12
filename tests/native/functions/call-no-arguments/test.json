@@ -1,0 +1,21 @@
+{
+  "description": "A function call with empty parentheses parses as a call with no arguments",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "call",
+          "name": "f",
+          "args": [],
+          "expand_final": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

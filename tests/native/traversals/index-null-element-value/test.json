@@ -1,0 +1,19 @@
+{
+  "description": "Indexing a tuple returns an element whose value is null",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#null-values"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "null": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

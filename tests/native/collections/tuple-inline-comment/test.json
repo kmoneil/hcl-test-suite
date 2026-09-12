@@ -1,0 +1,33 @@
+{
+  "description": "An inline comment between tuple elements is ignored",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "tuple",
+          "elements": [
+            {
+              "kind": "literal",
+              "value": {
+                "number": "1"
+              }
+            },
+            {
+              "kind": "literal",
+              "value": {
+                "number": "2"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

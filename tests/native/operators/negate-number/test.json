@@ -1,0 +1,23 @@
+{
+  "description": "Unary minus negates a positive number",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "variables": {
+    "x": {
+      "number": "7"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "-7"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

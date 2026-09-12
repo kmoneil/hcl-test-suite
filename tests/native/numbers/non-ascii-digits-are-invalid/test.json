@@ -1,0 +1,11 @@
+{
+  "description": "Digits other than ASCII 0 to 9, such as fullwidth digits, are not numbers",
+  "spec": [
+    "hclsyntax/spec.md#numeric-literals"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid character",
+  "expect": {
+    "valid": false
+  }
+}

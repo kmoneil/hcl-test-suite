@@ -1,0 +1,11 @@
+{
+  "description": "A \\u escape naming a high surrogate is an error",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "reference_error": "Cannot encode character U+d800 in UTF-8",
+  "expect": {
+    "valid": false
+  }
+}

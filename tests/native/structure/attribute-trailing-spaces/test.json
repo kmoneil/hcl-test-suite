@@ -1,0 +1,22 @@
+{
+  "description": "Spaces after an attribute's value on the same line are ignored",
+  "spec": [
+    "hclsyntax/spec.md#attribute-definitions",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "port": {
+          "kind": "literal",
+          "value": {
+            "number": "80"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

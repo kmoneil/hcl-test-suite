@@ -1,0 +1,11 @@
+{
+  "description": "An object element can't be a key alone",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "reference_error": "Missing key/value separator",
+  "expect": {
+    "valid": false
+  }
+}

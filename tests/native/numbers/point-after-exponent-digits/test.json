@@ -1,0 +1,14 @@
+{
+  "description": "A point and digits after an exponent make an invalid number literal",
+  "spec": [
+    "hclsyntax/spec.md#numeric-literals",
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "By the grammar, 1e5.5 is the literal 1e5 followed by the legacy index operator .5, which parses and only fails when evaluated. The reference scanner's NumberLit rule in hclsyntax/scan_tokens.rl reads 1e5.5 as one token, and numberLitValue in parser.go then rejects it.",
+  "reference_error": "Invalid number literal",
+  "expect": {
+    "valid": false
+  }
+}

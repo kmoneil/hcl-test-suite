@@ -1,0 +1,13 @@
+{
+  "description": "The string 1.0 doesn't convert to bool, although it is numerically 1",
+  "spec": [
+    "spec.md#primitive-type-conversions",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "reference_error": "Incorrect condition type",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

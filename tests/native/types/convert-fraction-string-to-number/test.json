@@ -1,0 +1,19 @@
+{
+  "description": "A string with a fractional part converts to that number",
+  "spec": [
+    "spec.md#primitive-type-conversions",
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "2.25"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

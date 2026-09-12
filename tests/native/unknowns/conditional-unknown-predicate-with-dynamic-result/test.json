@@ -1,0 +1,34 @@
+{
+  "description": "An unknown predicate with a dynamic and a number result gives the dynamic value",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator",
+    "spec.md#type-unification",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec unifies the dynamic pseudo-type and number to number, so an unknown predicate should give an unknown number. hashicorp/hcl skips unification when either result has the dynamic pseudo-type, leaving the result type dynamic (ConditionalExpr.Value in hclsyntax/expression.go).",
+  "variables": {
+    "u": {
+      "unknown": "bool"
+    },
+    "d": {
+      "unknown": "dynamic"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

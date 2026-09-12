@@ -1,0 +1,13 @@
+{
+  "description": "A full splat applies its attribute access to a null element too, which is an error",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators",
+    "spec.md#null-values"
+  ],
+  "op": "eval",
+  "reference_error": "Attempt to get attribute from null value",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

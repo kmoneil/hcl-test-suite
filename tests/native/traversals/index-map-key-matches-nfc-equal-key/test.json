@@ -1,0 +1,33 @@
+{
+  "description": "A string key with a combining accent selects the map element whose key is the precomposed form",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#primitive-types",
+    "spec.md#collection-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "m": {
+      "map": {
+        "café": {
+          "string": "x"
+        }
+      },
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

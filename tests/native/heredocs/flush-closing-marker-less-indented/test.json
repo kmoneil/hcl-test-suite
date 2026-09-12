@@ -1,0 +1,18 @@
+{
+  "description": "A <<- closing marker indented less than the content does not reduce removal",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "a\n"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "description": "In false ? [1] : true ? [2] : [3] the second conditional is the false result",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec's grammar (Conditional = Expression \"?\" Expression \":\" Expression) allows both groupings of a conditional after the colon, and no rule chooses one. hashicorp/hcl parses the condition without conditionals and the false result as a whole expression, so conditionals nest to the right (parseTernaryConditional in hclsyntax/parser.go). The tuples rule out the other readings: grouping to the left, or stopping after the first conditional, would have to unify a tuple with a bool.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "number": "2"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

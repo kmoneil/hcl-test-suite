@@ -1,0 +1,40 @@
+{
+  "description": "A tuple selected by a conditional whose other result is a list becomes a list",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says list and tuple types unify by preferring the tuple type, so the selected tuple would stay a tuple. hashicorp/hcl unifies to a list and converts the tuple to it (unifyTuplesAsList in cty/convert/unify.go), using the spec's tuple to list conversion.",
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "number": "5"
+        }
+      ],
+      "element_type": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [
+            {
+              "number": "1"
+            }
+          ],
+          "element_type": "number"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

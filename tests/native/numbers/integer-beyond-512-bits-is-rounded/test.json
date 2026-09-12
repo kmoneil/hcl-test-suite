@@ -1,0 +1,21 @@
+{
+  "description": "Integer literals beyond 512 bits are rounded without an error, so 2^600 + 1 equals 2^600",
+  "spec": [
+    "spec.md#primitive-types",
+    "hclsyntax/spec.md#comparison-operators"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec requires an error for an integer in source that can't be represented exactly, and an implementation with enough precision would compare the two integers as unequal. hashicorp/hcl parses every literal as a 512-bit math/big float (cty.ParseNumberVal in cty/value_init.go), rounds both 601-bit integers to the same value without an error, and reports them equal.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

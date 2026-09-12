@@ -1,0 +1,24 @@
+{
+  "description": "Whitespace may separate a unary operator from its operand",
+  "spec": [
+    "hclsyntax/spec.md#operations",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "unary",
+          "operator": "!",
+          "operand": {
+            "kind": "variable",
+            "name": "x"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

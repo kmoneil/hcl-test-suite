@@ -1,0 +1,14 @@
+{
+  "description": "An object value replaced by a later duplicate key is still evaluated",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec doesn't say what happens when two elements of an object constructor have the same key. hashicorp/hcl evaluates every key and value in order, so an error in a value that a later element replaces is still reported (ObjectConsExpr.Value in hclsyntax/expression.go). An implementation that rejects duplicate keys during evaluation passes too, so the test only tells apart implementations that accept duplicate keys.",
+  "reference_error": "There is no variable named \"nope\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

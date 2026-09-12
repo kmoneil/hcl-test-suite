@@ -1,0 +1,19 @@
+{
+  "description": "In 8 / 2 * 4 the / applies first, giving 16",
+  "spec": [
+    "hclsyntax/spec.md#operations",
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "16"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

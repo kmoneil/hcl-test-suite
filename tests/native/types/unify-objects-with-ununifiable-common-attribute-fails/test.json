@@ -1,0 +1,13 @@
+{
+  "description": "Objects whose common attribute types don't unify fail to unify",
+  "spec": [
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "reference_error": "must have consistent types",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

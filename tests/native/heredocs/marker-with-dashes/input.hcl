@@ -1,0 +1,3 @@
+a = <<END-OF-TEXT-
+x
+END-OF-TEXT-

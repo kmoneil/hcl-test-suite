@@ -1,0 +1,11 @@
+{
+  "description": "An else directive cannot have a condition, so else if is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive"
+  ],
+  "op": "parse",
+  "reference_error": "Extra characters in else marker",
+  "expect": {
+    "valid": false
+  }
+}

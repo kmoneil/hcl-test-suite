@@ -1,0 +1,26 @@
+{
+  "description": "A full splat on a tuple gives a tuple whose elements can have different types",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators",
+    "spec.md#structural-types"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "number": "1"
+            },
+            {
+              "string": "x"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

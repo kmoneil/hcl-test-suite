@@ -1,0 +1,19 @@
+{
+  "description": "A raw NUL character inside quotes is kept in the string",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions",
+    "spec.md#primitive-types"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "a\u0000b"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "description": "Nested constructors evaluate to nested tuples and objects",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "spec.md#structural-types"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "b": {
+              "tuple": [
+                {
+                  "number": "1"
+                },
+                {
+                  "object": {
+                    "c": {
+                      "tuple": []
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

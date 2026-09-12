@@ -1,0 +1,30 @@
+{
+  "description": "A null string is equal to a null string",
+  "spec": [
+    "spec.md#null-values",
+    "hclsyntax/spec.md#comparison-operators"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "n": {
+      "null": "string"
+    },
+    "m": {
+      "null": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

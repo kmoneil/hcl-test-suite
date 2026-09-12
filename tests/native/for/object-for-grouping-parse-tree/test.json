@@ -1,0 +1,35 @@
+{
+  "description": "An ellipsis right after the value of an object for expression turns on grouping",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "for",
+          "result": "object",
+          "key_var": "k",
+          "value_var": "v",
+          "collection": {
+            "kind": "variable",
+            "name": "xs"
+          },
+          "key": {
+            "kind": "variable",
+            "name": "k"
+          },
+          "value": {
+            "kind": "variable",
+            "name": "v"
+          },
+          "condition": null,
+          "grouping": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

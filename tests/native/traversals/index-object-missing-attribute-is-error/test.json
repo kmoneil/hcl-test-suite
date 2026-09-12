@@ -1,0 +1,24 @@
+{
+  "description": "Indexing an object with a name it doesn't have is an error",
+  "spec": [
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "eval",
+  "variables": {
+    "o": {
+      "object": {
+        "b": {
+          "string": "x"
+        },
+        "c": {
+          "string": "y"
+        }
+      }
+    }
+  },
+  "reference_error": "does not identify an element in this collection value.",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

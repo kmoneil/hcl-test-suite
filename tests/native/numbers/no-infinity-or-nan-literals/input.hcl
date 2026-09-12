@@ -1,0 +1,2 @@
+a = Infinity
+b = NaN

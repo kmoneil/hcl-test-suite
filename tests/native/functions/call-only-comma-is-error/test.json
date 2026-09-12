@@ -1,0 +1,11 @@
+{
+  "description": "A function call cannot contain a comma without an argument",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

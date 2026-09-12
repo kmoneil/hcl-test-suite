@@ -1,0 +1,561 @@
+{
+  "area": "native/traversals",
+  "rules": [
+    {
+      "id": "traversals-variable-parse",
+      "spec": "hclsyntax/spec.md#variables-and-variable-expressions",
+      "rule": "An identifier used as an expression term is a variable expression naming that identifier, except the keywords true, false and null, an identifier directly followed by ( or :: (a function call), and for directly after [ or { (a for expression)",
+      "tests": [
+        "native/traversals/variable-parse-node"
+      ]
+    },
+    {
+      "id": "traversals-variable-primitive-values",
+      "spec": "hclsyntax/spec.md#variables-and-variable-expressions",
+      "rule": "A variable expression evaluates to the value the application assigned to that name, for string, number and bool values",
+      "tests": [
+        "native/traversals/variable-bool-value",
+        "native/traversals/variable-number-value",
+        "native/traversals/variable-string-value"
+      ]
+    },
+    {
+      "id": "traversals-variable-structural-values",
+      "spec": "hclsyntax/spec.md#variables-and-variable-expressions",
+      "rule": "A variable holding a tuple or object evaluates to that value with its elements or attributes unchanged",
+      "tests": [
+        "native/traversals/variable-object-value",
+        "native/traversals/variable-tuple-value"
+      ]
+    },
+    {
+      "id": "traversals-variable-collection-values",
+      "spec": "hclsyntax/spec.md#variables-and-variable-expressions",
+      "rule": "A variable holding a list, set or map evaluates to a collection of the same kind and element type, including when it is empty or nested",
+      "tests": [
+        "native/traversals/variable-empty-list-keeps-element-type",
+        "native/traversals/variable-list-value",
+        "native/traversals/variable-map-value",
+        "native/traversals/variable-nested-collection-value",
+        "native/traversals/variable-set-value"
+      ]
+    },
+    {
+      "id": "traversals-variable-null-values",
+      "spec": "hclsyntax/spec.md#variables-and-variable-expressions",
+      "rule": "A variable holding a null value evaluates to null of the same type",
+      "tests": [
+        "native/traversals/variable-typed-null-value"
+      ]
+    },
+    {
+      "id": "traversals-variable-undefined",
+      "spec": "hclsyntax/spec.md#variables-and-variable-expressions",
+      "rule": "Referring to a name that has no variable in scope is an error during evaluation, not during parsing",
+      "tests": [
+        "native/traversals/variable-undefined-is-eval-error"
+      ]
+    },
+    {
+      "id": "traversals-variable-name-exact",
+      "spec": "hclsyntax/spec.md#variables-and-variable-expressions",
+      "rule": "A variable is found only by a name with exactly the same code points: names are case-sensitive and not Unicode-normalized",
+      "tests": [
+        "native/lexical/variable-names-are-not-normalized",
+        "native/traversals/variable-name-is-case-sensitive"
+      ]
+    },
+    {
+      "id": "traversals-variable-contextual-keywords",
+      "spec": "hclsyntax/spec.md#keywords",
+      "rule": "Identifiers that are keywords only inside for expressions or template directives (for, in, if, else, endif, endfor) are ordinary variable names in expressions",
+      "tests": [
+        "native/lexical/for-keywords-are-variables-in-expressions",
+        "native/traversals/variable-named-else",
+        "native/traversals/variable-named-endfor",
+        "native/traversals/variable-named-endif"
+      ]
+    },
+    {
+      "id": "traversals-variable-literal-keywords",
+      "spec": "hclsyntax/spec.md#literal-values",
+      "rule": "The identifiers true, false and null are always literal values in expressions, even when variables with those names are defined",
+      "tests": [
+        "native/lexical/literal-keywords-ignore-variables"
+      ]
+    },
+    {
+      "id": "traversals-variable-no-assignment",
+      "spec": "hclsyntax/spec.md#variables-and-variable-expressions",
+      "rule": "There is no syntax for defining variables, so an attribute of the body is not a variable that expressions can refer to",
+      "tests": [
+        "native/traversals/attribute-is-not-a-variable"
+      ]
+    },
+    {
+      "id": "traversals-variable-child-scope-hides",
+      "spec": "hclsyntax/spec.md#variables-and-variable-expressions",
+      "rule": "A variable defined in a child scope, such as a for expression's iteration variable, hides a variable of the same name from an ancestor scope",
+      "tests": [
+        "native/for/value-variable-hides-outer-variable"
+      ]
+    },
+    {
+      "id": "traversals-variable-child-scope-inherits",
+      "spec": "hclsyntax/spec.md#variables-and-variable-expressions",
+      "rule": "A child scope includes all variables of its parent scope that it does not redefine",
+      "tests": [
+        "native/for/outer-variables-visible-inside"
+      ]
+    },
+    {
+      "id": "traversals-variable-child-scope-limited",
+      "spec": "hclsyntax/spec.md#variables-and-variable-expressions",
+      "rule": "A child scope only applies within the expression that creates it, so the variables it defines are not visible outside that expression",
+      "tests": [
+        "native/for/iteration-variable-undefined-outside"
+      ]
+    },
+    {
+      "id": "traversals-variable-literal-only-mode",
+      "spec": "spec.md#expression-evaluation",
+      "rule": "In literal-only evaluation mode no variables are available",
+      "untested": "The protocol always evaluates in full expression mode and has no way to request literal-only mode"
+    },
+    {
+      "id": "traversals-literal-only-mode-with-scope",
+      "spec": "spec.md#expression-evaluation",
+      "rule": "Enabling literal-only evaluation mode while also providing a variable scope or a function table is an error",
+      "untested": "The protocol has no command for choosing the evaluation mode, so it can't combine literal-only mode with variables or functions"
+    },
+    {
+      "id": "traversals-static-traversal",
+      "spec": "hclsyntax/spec.md#static-traversal",
+      "rule": "A variable expression with attached attribute accesses and constant index operations can be analyzed statically as a traversal, and true, false and null can be analyzed as traversals of those names",
+      "untested": "Static analysis is not part of the protocol"
+    },
+    {
+      "id": "traversals-getattr-parse",
+      "spec": "hclsyntax/spec.md#attribute-access-operator",
+      "rule": "A dot followed by an identifier parses as an attribute access of that name, and chained accesses apply from left to right",
+      "tests": [
+        "native/traversals/getattr-chain-parse-left-to-right",
+        "native/traversals/getattr-parse-node"
+      ]
+    },
+    {
+      "id": "traversals-getattr-object",
+      "spec": "hclsyntax/spec.md#attribute-access-operator",
+      "rule": "Attribute access on an object returns the value of the attribute with the given name, even when that value is null, and chained accesses reach into nested objects",
+      "tests": [
+        "native/traversals/getattr-nested-chain",
+        "native/traversals/getattr-null-attribute-value",
+        "native/traversals/getattr-object-attribute"
+      ]
+    },
+    {
+      "id": "traversals-getattr-missing",
+      "spec": "hclsyntax/spec.md#attribute-access-operator",
+      "rule": "Attribute access is an error when the object has no attribute with the given name, including a name that differs only in letter case",
+      "tests": [
+        "native/traversals/getattr-missing-attribute-is-error",
+        "native/traversals/getattr-name-is-case-sensitive",
+        "native/traversals/getattr-on-empty-object-is-error"
+      ]
+    },
+    {
+      "id": "traversals-getattr-non-object",
+      "spec": "hclsyntax/spec.md#attribute-access-operator",
+      "rule": "Attribute access is an error on tuples, lists, sets, strings, numbers and bools",
+      "tests": [
+        "native/traversals/getattr-on-bool-is-error",
+        "native/traversals/getattr-on-list-is-error",
+        "native/traversals/getattr-on-number-is-error",
+        "native/traversals/getattr-on-set-is-error",
+        "native/traversals/getattr-on-string-is-error",
+        "native/traversals/getattr-on-tuple-is-error"
+      ]
+    },
+    {
+      "id": "traversals-getattr-null",
+      "spec": "hclsyntax/spec.md#attribute-access-operator",
+      "rule": "Attribute access on a null value is an error, including a null of an object type that has the attribute",
+      "tests": [
+        "native/traversals/getattr-on-null-is-error",
+        "native/traversals/getattr-on-null-object-is-error"
+      ]
+    },
+    {
+      "id": "traversals-getattr-map",
+      "spec": "hclsyntax/spec.md#attribute-access-operator",
+      "rule": "Attribute access on a map returns the element whose key is the attribute name (disputed)",
+      "tests": [
+        "native/traversals/getattr-on-map-element"
+      ]
+    },
+    {
+      "id": "traversals-getattr-map-missing",
+      "spec": "hclsyntax/spec.md#attribute-access-operator",
+      "rule": "Attribute access on a map that has no element with that key is an error",
+      "tests": [
+        "native/traversals/getattr-on-map-missing-key-is-error"
+      ]
+    },
+    {
+      "id": "traversals-getattr-any-term",
+      "spec": "hclsyntax/spec.md#expression-terms",
+      "rule": "Attribute access applies to the result of any expression term, not only to variables",
+      "tests": [
+        "native/functions/call-result-attribute-access",
+        "native/traversals/getattr-on-object-literal"
+      ]
+    },
+    {
+      "id": "traversals-getattr-name-forms",
+      "spec": "hclsyntax/spec.md#attribute-access-operator",
+      "rule": "Any identifier can follow the dot, including keywords, names with dashes and names with non-ASCII letters",
+      "tests": [
+        "native/lexical/keywords-as-attribute-access-names",
+        "native/traversals/getattr-name-for",
+        "native/traversals/getattr-name-non-ascii",
+        "native/traversals/getattr-name-null",
+        "native/traversals/getattr-name-with-dash"
+      ]
+    },
+    {
+      "id": "traversals-getattr-name-normalization",
+      "spec": "hclsyntax/spec.md#attribute-access-operator",
+      "rule": "An attribute name written with a combining accent finds an attribute whose name is the precomposed form of the same string (disputed)",
+      "tests": [
+        "native/traversals/getattr-name-matches-normalized-attribute"
+      ]
+    },
+    {
+      "id": "traversals-getattr-requires-name",
+      "spec": "hclsyntax/spec.md#attribute-access-operator",
+      "rule": "The dot of an attribute access must follow an expression and be followed by an identifier, digits or a star; a quoted string, another dot, a bracket or nothing is a syntax error",
+      "tests": [
+        "native/traversals/getattr-bracket-after-dot-is-error",
+        "native/traversals/getattr-double-dot-is-error",
+        "native/traversals/getattr-missing-name-is-error",
+        "native/traversals/getattr-quoted-name-is-error",
+        "native/traversals/getattr-without-object-is-error"
+      ]
+    },
+    {
+      "id": "traversals-getattr-newlines",
+      "spec": "hclsyntax/spec.md#expression-terms",
+      "rule": "A newline before or after the dot of an attribute access is ignored only inside parentheses, tuple brackets, index brackets or function call parentheses; at the top level of an attribute it ends the expression",
+      "tests": [
+        "native/traversals/getattr-newline-after-dot-is-error",
+        "native/traversals/getattr-newline-before-dot-is-error",
+        "native/traversals/getattr-newlines-in-parentheses"
+      ]
+    },
+    {
+      "id": "traversals-getattr-whitespace",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "Spaces and inline comments are allowed on both sides of the dot of an attribute access",
+      "tests": [
+        "native/traversals/getattr-comments-around-dot",
+        "native/traversals/getattr-spaces-around-dot"
+      ]
+    },
+    {
+      "id": "traversals-index-parse",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "An expression in brackets after a term parses as an index operation with that key, never as an attribute access, and chained indexes apply from left to right",
+      "tests": [
+        "native/traversals/index-chain-parse-left-to-right",
+        "native/traversals/index-parse-node",
+        "native/traversals/index-string-key-parse-node"
+      ]
+    },
+    {
+      "id": "traversals-index-sequence-element",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "Indexing a tuple or list with a non-negative integer returns the element at that zero-based position, even when that element is null",
+      "tests": [
+        "native/traversals/index-list-element",
+        "native/traversals/index-null-element-value",
+        "native/traversals/index-tuple-last-element",
+        "native/traversals/index-tuple-zero-is-first-element"
+      ]
+    },
+    {
+      "id": "traversals-index-sequence-out-of-range",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "Indexing a tuple or list with an integer equal to or greater than its length is an error, including for empty sequences and for indexes too large for 32 or 64 bits",
+      "tests": [
+        "native/traversals/index-empty-list-is-error",
+        "native/traversals/index-empty-tuple-is-error",
+        "native/traversals/index-list-out-of-range-is-error",
+        "native/traversals/index-tuple-beyond-length-is-error",
+        "native/traversals/index-tuple-index-past-32-bits-is-error",
+        "native/traversals/index-tuple-index-past-64-bits-is-error",
+        "native/traversals/index-tuple-length-is-out-of-range"
+      ]
+    },
+    {
+      "id": "traversals-index-sequence-negative",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "Indexing a tuple or list with a negative number is an error, while negative zero is the index zero",
+      "tests": [
+        "native/traversals/index-list-negative-is-error",
+        "native/traversals/index-tuple-negative-is-error",
+        "native/traversals/index-tuple-negative-zero-is-first-element"
+      ]
+    },
+    {
+      "id": "traversals-index-sequence-fractional",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "Indexing a tuple or list with a number that has a fractional part is an error, while a number written with only zero fraction digits is an integer",
+      "tests": [
+        "native/traversals/index-list-fractional-is-error",
+        "native/traversals/index-tuple-fractional-is-error",
+        "native/traversals/index-tuple-whole-number-with-fraction-digits"
+      ]
+    },
+    {
+      "id": "traversals-index-sequence-key-conversion",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "A string key for a tuple or list is converted to a number, so a numeric string selects an element and any other string is an error",
+      "tests": [
+        "native/traversals/index-list-string-key-converted",
+        "native/traversals/index-tuple-non-numeric-string-is-error",
+        "native/traversals/index-tuple-string-key-converted"
+      ]
+    },
+    {
+      "id": "traversals-index-sequence-key-wrong-type",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "A key that cannot be converted to a number, such as a bool or a tuple, cannot index a tuple or list",
+      "tests": [
+        "native/traversals/index-tuple-bool-key-is-error",
+        "native/traversals/index-tuple-tuple-key-is-error"
+      ]
+    },
+    {
+      "id": "traversals-index-null-key",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "A null key does not identify any element, so indexing with null is an error",
+      "tests": [
+        "native/traversals/index-map-null-key-is-error",
+        "native/traversals/index-tuple-null-key-is-error"
+      ]
+    },
+    {
+      "id": "traversals-index-object",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "Indexing an object with a string returns the attribute of that name, including names that aren't identifiers, and a name the object lacks is an error",
+      "tests": [
+        "native/traversals/index-object-attribute",
+        "native/traversals/index-object-missing-attribute-is-error",
+        "native/traversals/index-object-non-identifier-name"
+      ]
+    },
+    {
+      "id": "traversals-index-object-key-conversion",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "A key for an object is converted to a string, so numbers, including fractions, and bools select the attribute named by their string form; the converted name must exist, and unconvertible keys are an error",
+      "tests": [
+        "native/traversals/index-object-bool-key-converted",
+        "native/traversals/index-object-fractional-number-key-converted",
+        "native/traversals/index-object-number-key-converted",
+        "native/traversals/index-object-number-key-missing-is-error",
+        "native/traversals/index-object-tuple-key-is-error"
+      ]
+    },
+    {
+      "id": "traversals-index-map",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "Indexing a map with a string returns the element with that key, and a key the map lacks is an error",
+      "tests": [
+        "native/traversals/index-map-element",
+        "native/traversals/index-map-missing-key-is-error"
+      ]
+    },
+    {
+      "id": "traversals-index-map-key-conversion",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "A key for a map is converted to a string, so numbers, including negative ones, and bools select the element named by their string form, and unconvertible keys are an error",
+      "tests": [
+        "native/traversals/index-map-bool-key-converted",
+        "native/traversals/index-map-negative-number-key-converted",
+        "native/traversals/index-map-number-key-converted",
+        "native/traversals/index-map-object-key-is-error"
+      ]
+    },
+    {
+      "id": "traversals-index-key-normalization",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "A string key selects the object attribute or map element whose name is equal to it under NFC normalization, even when the code points differ",
+      "tests": [
+        "native/traversals/index-map-key-matches-nfc-equal-key",
+        "native/traversals/index-object-key-matches-nfc-equal-name"
+      ]
+    },
+    {
+      "id": "traversals-index-set",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "Sets cannot be indexed, neither by position nor by an element's value",
+      "tests": [
+        "native/traversals/index-set-by-element-value-is-error",
+        "native/traversals/index-set-is-error"
+      ]
+    },
+    {
+      "id": "traversals-index-primitive",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "Strings, numbers and bools cannot be indexed",
+      "tests": [
+        "native/traversals/index-bool-is-error",
+        "native/traversals/index-number-is-error",
+        "native/traversals/index-string-is-error"
+      ]
+    },
+    {
+      "id": "traversals-index-null-collection",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "Indexing a null value is an error, including a null of a list or map type",
+      "tests": [
+        "native/traversals/index-null-is-error",
+        "native/traversals/index-null-list-is-error",
+        "native/traversals/index-null-map-is-error"
+      ]
+    },
+    {
+      "id": "traversals-index-dynamic-key",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "The key can be any expression, evaluated to find the element: a variable, an operation, an attribute access, another index or a template",
+      "tests": [
+        "native/traversals/index-dynamic-key-parse-node",
+        "native/traversals/index-expression-key-parse-node",
+        "native/traversals/index-key-from-arithmetic",
+        "native/traversals/index-key-from-attribute-access",
+        "native/traversals/index-key-from-index",
+        "native/traversals/index-key-from-template",
+        "native/traversals/index-key-from-variable"
+      ]
+    },
+    {
+      "id": "traversals-index-any-term",
+      "spec": "hclsyntax/spec.md#expression-terms",
+      "rule": "The index operator applies to the result of any expression term, such as tuple and object constructors",
+      "tests": [
+        "native/functions/call-result-index",
+        "native/traversals/index-object-literal",
+        "native/traversals/index-tuple-literal"
+      ]
+    },
+    {
+      "id": "traversals-index-mixed-chains",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "Index operations and attribute accesses can be chained in any order, each applying to the result of the previous one",
+      "tests": [
+        "native/traversals/index-mixed-chain",
+        "native/traversals/index-mixed-chain-parse"
+      ]
+    },
+    {
+      "id": "traversals-index-newlines-in-brackets",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "Newlines and comments between the brackets of an index operation are ignored",
+      "tests": [
+        "native/traversals/index-line-comment-inside-brackets",
+        "native/traversals/index-newlines-inside-brackets"
+      ]
+    },
+    {
+      "id": "traversals-index-newline-before-bracket",
+      "spec": "hclsyntax/spec.md#expression-terms",
+      "rule": "A newline before the opening bracket of an index is ignored only inside parentheses, tuple brackets, index brackets or function call parentheses; at the top level of an attribute it ends the expression",
+      "tests": [
+        "native/traversals/index-newline-before-bracket-in-parentheses",
+        "native/traversals/index-newline-before-bracket-is-error"
+      ]
+    },
+    {
+      "id": "traversals-index-whitespace-before-bracket",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "Spaces between a term and the opening bracket of an index are allowed",
+      "tests": [
+        "native/traversals/index-space-before-bracket"
+      ]
+    },
+    {
+      "id": "traversals-index-malformed",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "The brackets of an index operation must contain exactly one expression and be closed",
+      "tests": [
+        "native/traversals/index-empty-brackets-is-error",
+        "native/traversals/index-two-keys-is-error",
+        "native/traversals/index-unclosed-bracket-is-error"
+      ]
+    },
+    {
+      "id": "traversals-legacy-index-parse",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "A dot followed by digits is a legacy index: an index operation whose key is the number the digits spell, not an attribute access",
+      "tests": [
+        "native/traversals/legacy-index-leading-zero",
+        "native/traversals/legacy-index-multi-digit",
+        "native/traversals/legacy-index-parse-node"
+      ]
+    },
+    {
+      "id": "traversals-legacy-index-eval",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "A legacy index evaluates exactly like the index operator with that number as the key, including on objects, where the number is converted to a string, on constructed values and when out of range",
+      "tests": [
+        "native/traversals/legacy-index-is-not-attribute-name",
+        "native/traversals/legacy-index-object-number-name",
+        "native/traversals/legacy-index-on-tuple-literal",
+        "native/traversals/legacy-index-out-of-range-is-error",
+        "native/traversals/legacy-index-tuple-element"
+      ]
+    },
+    {
+      "id": "traversals-legacy-index-no-chaining",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "Two legacy indexes cannot be written directly after each other, because digits, a dot and digits read as one number",
+      "tests": [
+        "native/traversals/legacy-index-chain"
+      ]
+    },
+    {
+      "id": "traversals-legacy-index-with-other-steps",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "A legacy index can be combined with attribute accesses and bracketed indexes before and after it",
+      "tests": [
+        "native/traversals/legacy-index-after-bracket-index",
+        "native/traversals/legacy-index-around-attribute",
+        "native/traversals/legacy-index-then-bracket-index"
+      ]
+    },
+    {
+      "id": "traversals-legacy-index-space-separated",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "Two legacy indexes separated by whitespace are scanned as separate steps and both apply (disputed)",
+      "tests": [
+        "native/traversals/legacy-index-chain-separated-by-space"
+      ]
+    },
+    {
+      "id": "traversals-legacy-index-exponent",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "A number with an exponent but no fraction after a dot is accepted as a legacy index with that number's value (disputed)",
+      "tests": [
+        "native/traversals/legacy-index-exponent"
+      ]
+    },
+    {
+      "id": "traversals-legacy-index-no-sign",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "A minus sign cannot follow the dot of a legacy index, so a legacy index can't be negative",
+      "tests": [
+        "native/traversals/legacy-index-negative-is-error"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "description": "An inline comment containing a newline does not end an attribute",
+  "spec": [
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "reference_error": "Missing newline after argument",
+  "expect": {
+    "valid": false
+  }
+}

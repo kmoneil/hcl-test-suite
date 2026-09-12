@@ -1,0 +1,14 @@
+{
+  "description": "A space between the opening marker and the newline does not start a heredoc",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec's grammar puts a Newline after the opening identifier but doesn't say whether whitespace may come before it, while whitespace between lexical elements is generally ignored. hashicorp/hcl requires the newline right after the identifier (BeginHeredocTmpl in hclsyntax/scan_tokens.rl) and otherwise doesn't recognize a heredoc.",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

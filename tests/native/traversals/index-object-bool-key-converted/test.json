@@ -1,0 +1,28 @@
+{
+  "description": "A bool key is converted to a string to select an object attribute",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "variables": {
+    "o": {
+      "object": {
+        "true": {
+          "string": "yes"
+        }
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "yes"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

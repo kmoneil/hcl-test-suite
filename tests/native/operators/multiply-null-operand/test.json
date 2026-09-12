@@ -1,0 +1,16 @@
+{
+  "description": "* rejects null as its left operand",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators",
+    "spec.md#null-values",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec contradicts itself here. The Arithmetic Operators section says that an operand of the dynamic pseudo-type makes the result unknown, and the null keyword is a null of that type, but the section on unknown values says: \"Calling applications are guaranteed that unless the global scope includes unknown values, or the function table includes functions that return unknown values, no expression will evaluate to an unknown value.\" hashicorp/hcl reports an error: cty's MultiplyFunc (cty/function/stdlib/number.go) doesn't accept null arguments, which function.Call checks (cty/function/function.go).",
+  "reference_error": "argument must not be null",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

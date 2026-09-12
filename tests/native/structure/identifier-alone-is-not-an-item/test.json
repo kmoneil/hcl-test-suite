@@ -1,0 +1,12 @@
+{
+  "description": "An identifier alone on a line is neither an attribute nor a block",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#bodies"
+  ],
+  "op": "parse",
+  "reference_error": "use the equals sign \"=\" to introduce the argument value",
+  "expect": {
+    "valid": false
+  }
+}

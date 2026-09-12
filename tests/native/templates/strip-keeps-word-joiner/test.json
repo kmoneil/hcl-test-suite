@@ -1,0 +1,19 @@
+{
+  "description": "A strip marker does not remove the word joiner U+2060",
+  "spec": [
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "notes": "The word joiner U+2060 is a format character (category Cf): it has no White_Space property, is not a space separator (Zs) and is not in Pattern_White_Space, so no reading of Unicode's definition of spaces includes it.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "a⁠b"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

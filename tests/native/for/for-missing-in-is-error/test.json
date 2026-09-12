@@ -1,0 +1,11 @@
+{
+  "description": "A for expression without the in keyword is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "reference_error": "requires the 'in' keyword",
+  "expect": {
+    "valid": false
+  }
+}

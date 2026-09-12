@@ -1,0 +1,31 @@
+{
+  "description": "A name in an object value refers to a variable, not to an attribute of the object",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#variables-and-variable-expressions"
+  ],
+  "op": "eval",
+  "variables": {
+    "b": {
+      "number": "5"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "b": {
+              "number": "1"
+            },
+            "c": {
+              "number": "5"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

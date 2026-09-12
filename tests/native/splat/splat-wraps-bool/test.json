@@ -1,0 +1,24 @@
+{
+  "description": "A full splat applied to a bool gives a tuple containing the bool",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec's prose says a value that isn't a tuple, list or set is coerced into a single-value list, but its examples say any_object.*.id is equivalent to [any_object.id] and any_number.* to [any_number], which are tuples. hashicorp/hcl wraps the value in a one-element tuple (SplatExpr.Value in hclsyntax/expression.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "bool": true
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

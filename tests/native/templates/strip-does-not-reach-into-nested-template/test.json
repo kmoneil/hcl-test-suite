@@ -1,0 +1,19 @@
+{
+  "description": "${~ does not strip the literal of a template nested in the interpolation",
+  "spec": [
+    "hclsyntax/spec.md#template-literals",
+    "hclsyntax/spec.md#template-interpolations"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "a b"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

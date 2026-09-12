@@ -1,0 +1,20 @@
+{
+  "description": "A { produced by an escape sequence does not form an interpolation with a preceding $",
+  "spec": [
+    "hclsyntax/spec.md#template-literals",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "notes": "The { comes from the \\u007B escape sequence, so the source text contains no ${ sequence.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "${x}"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

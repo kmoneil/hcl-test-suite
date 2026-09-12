@@ -1,0 +1,3 @@
+a = <<EOT
+${true ~}
+EOT

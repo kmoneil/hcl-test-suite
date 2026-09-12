@@ -1,0 +1,30 @@
+{
+  "description": "The tuple of grouped values keeps each value's own type",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#structural-types"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "k": {
+              "tuple": [
+                {
+                  "number": "1"
+                },
+                {
+                  "string": "a"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "description": "An interpolation missing its closing brace in a heredoc is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "notes": "The only mistake is the missing }. hashicorp/hcl ignores newlines inside interpolations (see the disputed interpolation-allows-newlines-in-heredoc), so it reports the closing EOT line as extra characters after the expression, while a parser that doesn't allow newlines there fails at the newline instead. No heredoc input avoids this, because a line break always follows the unclosed expression.",
+  "reference_error": "Expected a closing brace to end the interpolation expression",
+  "expect": {
+    "valid": false
+  }
+}

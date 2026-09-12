@@ -1,0 +1,25 @@
+{
+  "description": "A template that is only a tuple interpolation produces the tuple",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolation-unwrapping"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "x"
+            },
+            {
+              "number": "1"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

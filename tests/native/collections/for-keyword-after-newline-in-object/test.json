@@ -1,0 +1,13 @@
+{
+  "description": "The identifier for on the line after an object's open brace starts a for expression",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "notes": "Newlines inside the braces are ignored, so for is still the first key.",
+  "reference_error": "For expression requires variable name after 'for'",
+  "expect": {
+    "valid": false
+  }
+}

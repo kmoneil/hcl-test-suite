@@ -1,0 +1,21 @@
+{
+  "description": "U+00B7 MIDDLE DOT, which has Other_ID_Continue, can continue an identifier",
+  "spec": [
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "l·l": {
+          "kind": "literal",
+          "value": {
+            "number": "1"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

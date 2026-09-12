@@ -1,0 +1,56 @@
+{
+  "description": "A newline after a multi-line tuple value separates object elements",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#syntax-notation"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The grammar lists Newline as a separator between object elements, but the prose says newlines inside collection constructors are ignored as whitespace, with priority over the grammar. hashicorp/hcl ignores newlines inside the nested tuple and makes them significant again once it closes, so the newline after ] separates the elements (parseTupleCons and parseObjectCons in hclsyntax/parser.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "object",
+          "items": [
+            {
+              "key": {
+                "kind": "literal",
+                "value": {
+                  "string": "b"
+                }
+              },
+              "value": {
+                "kind": "tuple",
+                "elements": [
+                  {
+                    "kind": "literal",
+                    "value": {
+                      "number": "1"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "key": {
+                "kind": "literal",
+                "value": {
+                  "string": "c"
+                }
+              },
+              "value": {
+                "kind": "literal",
+                "value": {
+                  "number": "2"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

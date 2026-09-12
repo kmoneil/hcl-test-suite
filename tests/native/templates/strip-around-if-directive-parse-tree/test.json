@@ -1,0 +1,49 @@
+{
+  "description": "Strip markers on if and endif apply to the literals in and around the directive in the parse tree",
+  "spec": [
+    "hclsyntax/spec.md#template-literals",
+    "hclsyntax/spec.md#template-if-directive"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "literal",
+              "value": {
+                "string": "a"
+              }
+            },
+            {
+              "kind": "template_if",
+              "condition": {
+                "kind": "variable",
+                "name": "c"
+              },
+              "then": [
+                {
+                  "kind": "literal",
+                  "value": {
+                    "string": "  b"
+                  }
+                }
+              ],
+              "else": []
+            },
+            {
+              "kind": "literal",
+              "value": {
+                "string": "d"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

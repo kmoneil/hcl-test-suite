@@ -1,0 +1,22 @@
+{
+  "description": "An object for expression whose condition is an unknown number for an element is an error",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "number"
+    }
+  },
+  "reference_error": "bool required, but have number",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

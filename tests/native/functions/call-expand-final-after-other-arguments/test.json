@@ -1,0 +1,32 @@
+{
+  "description": "An ellipsis can follow the last of several function arguments",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "call",
+          "name": "f",
+          "args": [
+            {
+              "kind": "literal",
+              "value": {
+                "number": "1"
+              }
+            },
+            {
+              "kind": "variable",
+              "name": "x"
+            }
+          ],
+          "expand_final": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

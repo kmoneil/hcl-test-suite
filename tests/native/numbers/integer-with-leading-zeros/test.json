@@ -1,0 +1,21 @@
+{
+  "description": "Leading zeros are allowed and do not make a literal octal",
+  "spec": [
+    "hclsyntax/spec.md#numeric-literals"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "literal",
+          "value": {
+            "number": "10"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

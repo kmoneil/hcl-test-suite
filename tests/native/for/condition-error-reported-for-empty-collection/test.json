@@ -1,0 +1,14 @@
+{
+  "description": "An undefined variable in the if clause is an error even when the collection is empty",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says the if condition is evaluated once for each source element, so with an empty collection it is never evaluated and the result is an empty tuple. hashicorp/hcl first evaluates the condition once with the key and value variables set to unknown values, and returns the error for the undefined variable from that check even when there are no elements (ForExpr.Value in hclsyntax/expression.go).",
+  "reference_error": "There is no variable named \"nope\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

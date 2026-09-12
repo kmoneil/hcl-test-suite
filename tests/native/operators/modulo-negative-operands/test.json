@@ -1,0 +1,20 @@
+{
+  "description": "The remainder with two negative operands is negative",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec calls % the remainder (modulo) without saying which sign the result takes. hashicorp/hcl computes a - b * trunc(a / b), so the result takes the sign of the dividend (Value.Modulo in cty/value_ops.go). For -7 % -3 truncated and floored remainders both give -1, and only a Euclidean remainder, which is never negative, gives 2, so this test tells a Euclidean remainder apart.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "-1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

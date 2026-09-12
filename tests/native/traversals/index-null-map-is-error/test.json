@@ -1,0 +1,24 @@
+{
+  "description": "Indexing a null map is an error",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#null-values"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "m": {
+      "null": [
+        "map",
+        "string"
+      ]
+    }
+  },
+  "reference_error": "Attempt to index null value",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

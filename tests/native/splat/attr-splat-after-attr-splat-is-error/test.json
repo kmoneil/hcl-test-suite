@@ -1,0 +1,13 @@
+{
+  "description": "An attribute-only splat cannot follow the attribute accesses of another one",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec's grammar (ExprTerm = ExprTerm Splat) allows a second splat operator after an attribute-only splat, which would apply it to the first splat's result. hashicorp/hcl rejects a .* inside an attribute-only splat as a nested splat (parseExpressionTraversals in hclsyntax/parser.go).",
+  "reference_error": "Nested splat expression not allowed",
+  "expect": {
+    "valid": false
+  }
+}

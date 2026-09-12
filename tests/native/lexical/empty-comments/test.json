@@ -1,0 +1,33 @@
+{
+  "description": "Comments can be empty",
+  "spec": [
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "literal",
+          "value": {
+            "number": "1"
+          }
+        },
+        "b": {
+          "kind": "literal",
+          "value": {
+            "number": "2"
+          }
+        },
+        "c": {
+          "kind": "literal",
+          "value": {
+            "number": "3"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

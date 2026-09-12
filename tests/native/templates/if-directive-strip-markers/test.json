@@ -1,5 +1,5 @@
 {
-  "description": "Strip markers work on directives",
+  "description": "Strip markers inside an if directive remove the whitespace at both ends of its branch",
   "spec": [
     "hclsyntax/spec.md#template-literals",
     "hclsyntax/spec.md#template-if-directive"

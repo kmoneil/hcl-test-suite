@@ -1,0 +1,32 @@
+{
+  "description": "A parenthesized variable key is a variable reference in the syntax tree",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "object",
+          "items": [
+            {
+              "key": {
+                "kind": "variable",
+                "name": "foo"
+              },
+              "value": {
+                "kind": "literal",
+                "value": {
+                  "string": "baz"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

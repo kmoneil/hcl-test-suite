@@ -1,0 +1,14 @@
+{
+  "description": "A block's label does not define a variable for the expressions in its body",
+  "spec": [
+    "hclsyntax/spec.md#variables-and-variable-expressions",
+    "hclsyntax/spec.md#blocks"
+  ],
+  "op": "eval",
+  "notes": "Variables come only from the scope the calling application provides, and the test gives none.",
+  "reference_error": "There is no variable named \"x\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

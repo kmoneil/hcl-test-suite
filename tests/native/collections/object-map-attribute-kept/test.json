@@ -1,0 +1,41 @@
+{
+  "description": "A map value stays a map inside an object",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "spec.md#structural-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "m": {
+      "map": {
+        "k": {
+          "number": "1"
+        }
+      },
+      "element_type": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "b": {
+              "map": {
+                "k": {
+                  "number": "1"
+                }
+              },
+              "element_type": "number"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

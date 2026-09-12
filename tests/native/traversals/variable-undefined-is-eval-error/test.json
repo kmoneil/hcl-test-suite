@@ -1,0 +1,12 @@
+{
+  "description": "Referring to a variable that is not defined is an evaluation error",
+  "spec": [
+    "hclsyntax/spec.md#variables-and-variable-expressions"
+  ],
+  "op": "eval",
+  "reference_error": "Unknown variable: There is no variable named \"nope\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

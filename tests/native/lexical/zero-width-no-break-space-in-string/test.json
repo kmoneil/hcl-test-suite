@@ -1,0 +1,23 @@
+{
+  "description": "U+FEFF inside a quoted string is an ordinary character",
+  "spec": [
+    "hclsyntax/spec.md#source-code-representation",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "notes": "Unicode reads U+FEFF anywhere but at the start of a text as ZERO WIDTH NO-BREAK SPACE, so the spec's ban on byte order marks doesn't cover it.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "literal",
+          "value": {
+            "string": "﻿"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

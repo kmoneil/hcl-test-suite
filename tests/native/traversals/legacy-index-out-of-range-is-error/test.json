@@ -1,0 +1,27 @@
+{
+  "description": "A legacy index past the end of a tuple is an error",
+  "spec": [
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "eval",
+  "variables": {
+    "t": {
+      "tuple": [
+        {
+          "string": "x"
+        },
+        {
+          "string": "y"
+        },
+        {
+          "string": "z"
+        }
+      ]
+    }
+  },
+  "reference_error": "greater than or equal to the length of the collection",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

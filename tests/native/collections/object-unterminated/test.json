@@ -1,0 +1,11 @@
+{
+  "description": "An object constructor without a closing brace is an error",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "reference_error": "Missing expression",
+  "expect": {
+    "valid": false
+  }
+}

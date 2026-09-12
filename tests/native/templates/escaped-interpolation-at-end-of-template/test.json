@@ -1,0 +1,18 @@
+{
+  "description": "An escaped ${ at the end of a template needs no closing brace",
+  "spec": [
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "cost ${"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

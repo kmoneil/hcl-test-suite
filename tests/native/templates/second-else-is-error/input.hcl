@@ -1,0 +1,1 @@
+a = "%{ if true }a%{ else }b%{ else }c%{ endif }"

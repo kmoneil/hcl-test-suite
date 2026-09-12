@@ -1,0 +1,13 @@
+{
+  "description": "An if condition that can't be converted to bool for a later element is an error",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "reference_error": "The 'if' clause value is invalid: a bool is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

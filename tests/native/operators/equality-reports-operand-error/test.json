@@ -1,0 +1,12 @@
+{
+  "description": "An error in an operand of == is reported",
+  "spec": [
+    "hclsyntax/spec.md#comparison-operators"
+  ],
+  "op": "eval",
+  "reference_error": "Unknown variable",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "description": "Indexing a tuple with a number that has a fractional part is an error",
+  "spec": [
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "eval",
+  "variables": {
+    "t": {
+      "tuple": [
+        {
+          "string": "x"
+        },
+        {
+          "string": "y"
+        },
+        {
+          "string": "z"
+        }
+      ]
+    }
+  },
+  "reference_error": "requires a whole number",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

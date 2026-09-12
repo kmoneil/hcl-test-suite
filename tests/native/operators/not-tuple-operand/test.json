@@ -1,0 +1,12 @@
+{
+  "description": "! rejects a tuple as its operand",
+  "spec": [
+    "hclsyntax/spec.md#logic-operators"
+  ],
+  "op": "eval",
+  "reference_error": "Unsuitable value for unary operand: bool required, but have tuple",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

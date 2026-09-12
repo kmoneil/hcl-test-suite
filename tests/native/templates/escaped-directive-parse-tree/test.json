@@ -1,0 +1,21 @@
+{
+  "description": "An escaped directive parses as literal text",
+  "spec": [
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "literal",
+          "value": {
+            "string": "%{ for v in x }"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

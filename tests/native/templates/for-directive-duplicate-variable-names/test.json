@@ -1,0 +1,21 @@
+{
+  "description": "A for directive whose key and value variables share a name binds the name to the value",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec doesn't say whether the key and value variables may share a name. hashicorp/hcl accepts it: parseTemplateParts (hclsyntax/parser_template.go) doesn't compare the names, and ForExpr.Value (hclsyntax/expression.go) assigns the key and then the value to the same variable, so the value wins.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "a"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

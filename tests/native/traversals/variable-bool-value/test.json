@@ -1,0 +1,24 @@
+{
+  "description": "A variable expression evaluates to the bool value of the variable",
+  "spec": [
+    "hclsyntax/spec.md#variables-and-variable-expressions",
+    "spec.md#expression-evaluation"
+  ],
+  "op": "eval",
+  "variables": {
+    "enabled": {
+      "bool": false
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

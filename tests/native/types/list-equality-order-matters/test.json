@@ -1,0 +1,46 @@
+{
+  "description": "Lists with the same elements in a different order are not equal",
+  "spec": [
+    "spec.md#collection-types",
+    "hclsyntax/spec.md#comparison-operators"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "number": "1"
+        },
+        {
+          "number": "2"
+        }
+      ],
+      "element_type": "number"
+    },
+    "k": {
+      "list": [
+        {
+          "number": "2"
+        },
+        {
+          "number": "1"
+        }
+      ],
+      "element_type": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

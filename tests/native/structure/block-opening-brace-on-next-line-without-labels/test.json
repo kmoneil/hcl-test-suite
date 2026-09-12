@@ -1,0 +1,12 @@
+{
+  "description": "A block's opening brace must be on the same line as its type",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#blocks"
+  ],
+  "op": "parse",
+  "reference_error": "use the equals sign \"=\" to introduce the argument value",
+  "expect": {
+    "valid": false
+  }
+}

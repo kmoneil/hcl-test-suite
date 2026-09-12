@@ -1,0 +1,19 @@
+{
+  "description": "An interpolated integer becomes its decimal digits",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "<42>"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

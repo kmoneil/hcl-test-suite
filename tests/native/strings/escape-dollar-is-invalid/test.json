@@ -1,0 +1,11 @@
+{
+  "description": "A backslash cannot escape the $ of an interpolation",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "reference_error": "The symbol \"$\" is not a valid escape sequence selector",
+  "expect": {
+    "valid": false
+  }
+}

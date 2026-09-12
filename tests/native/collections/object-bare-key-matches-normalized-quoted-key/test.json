@@ -1,0 +1,22 @@
+{
+  "description": "A bare key and a quoted key that are equal after NFC normalization name one attribute",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "spec.md#primitive-types",
+    "hclsyntax/spec.md#source-code-representation"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says identifiers are sequences of code points without Unicode normalization, which would make the bare key a different name from the quoted one, but also that object attribute names are strings and that two strings are equal when their NFC forms are. hashicorp/hcl makes the two objects equal, because go-cty normalizes the bare key's name to NFC when it becomes a string (cty.StringVal and cty.ObjectVal call NormalizeString in cty/value_init.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

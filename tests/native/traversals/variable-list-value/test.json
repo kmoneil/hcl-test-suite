@@ -1,0 +1,43 @@
+{
+  "description": "A variable holding a list evaluates to a list with the same element type",
+  "spec": [
+    "hclsyntax/spec.md#variables-and-variable-expressions",
+    "spec.md#collection-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "number": "1"
+        },
+        {
+          "number": "2"
+        }
+      ],
+      "element_type": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [
+            {
+              "number": "1"
+            },
+            {
+              "number": "2"
+            }
+          ],
+          "element_type": "number"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

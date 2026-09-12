@@ -1,0 +1,37 @@
+{
+  "description": "A minus before a number applies to the whole term, so -1[0] negates the result of indexing 1",
+  "spec": [
+    "hclsyntax/spec.md#numeric-literals",
+    "hclsyntax/spec.md#operations",
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "parse",
+  "notes": "A numeric literal has no sign, and the unary operator applies to an expression term, which includes the index operator after the number.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "unary",
+          "operator": "-",
+          "operand": {
+            "kind": "index",
+            "collection": {
+              "kind": "literal",
+              "value": {
+                "number": "1"
+              }
+            },
+            "key": {
+              "kind": "literal",
+              "value": {
+                "number": "0"
+              }
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

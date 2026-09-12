@@ -1,0 +1,16 @@
+{
+  "description": "A null condition is an error",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator",
+    "spec.md#null-values",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec contradicts itself here. The Conditional Operator section says that a condition of the dynamic pseudo-type makes the result unknown, and the null keyword is a null of that type, but the section on unknown values says: \"Calling applications are guaranteed that unless the global scope includes unknown values, or the function table includes functions that return unknown values, no expression will evaluate to an unknown value.\" hashicorp/hcl reports a \"Null condition\" error (ConditionalExpr.Value in hclsyntax/expression.go).",
+  "reference_error": "Null condition",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

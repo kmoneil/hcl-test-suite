@@ -1,0 +1,18 @@
+{
+  "description": "A $ at the end of a quoted template is literal text",
+  "spec": [
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "cost 5$"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

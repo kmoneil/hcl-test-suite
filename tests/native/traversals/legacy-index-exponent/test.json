@@ -1,0 +1,31 @@
+{
+  "description": "A number with an exponent after a dot is accepted as a legacy index",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "hclsyntax/spec.md#numeric-literals"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec's grammar allows only digits after the dot (LegacyIndex = '.' digit+), so 1e0 is not a legacy index. hashicorp/hcl accepts any number token after a dot that contains no period, including one with an exponent, and uses its value as the key (parseExpressionTraversals in hclsyntax/parser.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "index",
+          "collection": {
+            "kind": "variable",
+            "name": "t"
+          },
+          "key": {
+            "kind": "literal",
+            "value": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

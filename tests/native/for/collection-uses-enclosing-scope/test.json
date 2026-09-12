@@ -1,0 +1,32 @@
+{
+  "description": "The collection expression sees the outer variable that the value variable hides",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "hclsyntax/spec.md#variables-and-variable-expressions"
+  ],
+  "op": "eval",
+  "variables": {
+    "v": {
+      "tuple": [
+        {
+          "string": "x"
+        }
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "x"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

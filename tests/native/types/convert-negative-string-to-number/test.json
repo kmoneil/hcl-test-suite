@@ -1,0 +1,20 @@
+{
+  "description": "A string with a leading minus sign converts to a negative number",
+  "spec": [
+    "spec.md#primitive-type-conversions",
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "notes": "The spec describes string to number conversion as the reverse of number to string conversion, which writes negative numbers with a minus sign.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "-2.5"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

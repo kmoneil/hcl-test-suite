@@ -1,0 +1,22 @@
+{
+  "description": "A heredoc interpolation whose strip marker removes the final newline still produces a string",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolation-unwrapping",
+    "hclsyntax/spec.md#template-expressions",
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says strip markers remove spaces, \"interpreted as per Unicode's definition\", without saying which definition it means. The line feed U+000A has the White_Space property but is not a space separator (category Zs), and hclsyntax/spec.md says newline sequences are not whitespace. Stripping it is hashicorp/hcl's reading: parseTemplateParts in hclsyntax/parser_template.go trims with Go's unicode.IsSpace, which follows the White_Space property. Either way the literal that held the newline is still part of the template, so the template is not a single interpolation.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "true"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

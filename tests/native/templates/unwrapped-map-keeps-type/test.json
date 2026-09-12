@@ -1,0 +1,36 @@
+{
+  "description": "A template that is only an interpolation of a map produces the map",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolation-unwrapping"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "v": {
+      "map": {
+        "k": {
+          "number": "1"
+        }
+      },
+      "element_type": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "map": {
+            "k": {
+              "number": "1"
+            }
+          },
+          "element_type": "number"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

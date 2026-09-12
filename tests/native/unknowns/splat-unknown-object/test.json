@@ -1,0 +1,34 @@
+{
+  "description": "A splat over an unknown object gives the dynamic value",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "notes": "The unknown object might be null, which gives an empty tuple, or not, which gives a one-element tuple.",
+  "variables": {
+    "u": {
+      "unknown": [
+        "object",
+        {
+          "a": "string"
+        }
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

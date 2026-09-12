@@ -1,0 +1,18 @@
+{
+  "description": "The \\r escape produces a carriage return",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "a\rb"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "description": "Adding a number to a null number is an error",
+  "spec": [
+    "spec.md#null-values",
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec doesn't say what arithmetic operators do with a null operand. A typed null avoids the question of whether the null keyword, a value of the dynamic pseudo-type, makes the result unknown. hashicorp/hcl reports an error because go-cty's AddFunc (cty/function/stdlib/number.go) doesn't accept null arguments, which Function.Call checks (cty/function/function.go).",
+  "variables": {
+    "n": {
+      "null": "number"
+    }
+  },
+  "reference_error": "argument must not be null",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

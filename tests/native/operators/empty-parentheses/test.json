@@ -1,0 +1,11 @@
+{
+  "description": "Empty parentheses are a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#expression-terms"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

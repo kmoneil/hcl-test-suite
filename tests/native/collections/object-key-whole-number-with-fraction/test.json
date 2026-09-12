@@ -1,0 +1,24 @@
+{
+  "description": "A whole number key written with a zero fraction is converted without a period",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "notes": "The period and fraction digits only appear when the fractional part is non-zero.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "2": {
+              "string": "x"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "description": "A CR that is not followed by LF is rejected inside a heredoc",
+  "spec": [
+    "hclsyntax/spec.md#comments-and-whitespace",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec defines the newline sequences as LF and CR LF, so a lone CR should be literal heredoc text and the value \"x\\ry\\n\". In the reference scanner, heredoc text excludes CR and LF (StringLiteralChars in hclsyntax/scan_tokens.rl) and may only be followed by an optional CR and an LF, so nothing matches the lone CR and scanTokens turns the rest of the file into a TokenInvalid.",
+  "reference_error": "This character is not used within the language",
+  "expect": {
+    "valid": false
+  }
+}

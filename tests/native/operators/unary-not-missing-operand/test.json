@@ -1,0 +1,11 @@
+{
+  "description": "An exclamation mark with no operand is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#operations"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

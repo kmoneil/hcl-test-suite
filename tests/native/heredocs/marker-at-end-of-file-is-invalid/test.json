@@ -1,0 +1,11 @@
+{
+  "description": "An opening marker at the end of the file without a newline is an error",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

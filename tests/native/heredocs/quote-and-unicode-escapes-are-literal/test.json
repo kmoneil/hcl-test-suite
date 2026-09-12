@@ -1,0 +1,18 @@
+{
+  "description": "Sequences like \\\", \\\\ and \\u00e9 in a heredoc are kept as written",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "\\\"\\\\\\u00e9\n"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

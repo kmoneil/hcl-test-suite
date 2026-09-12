@@ -4,6 +4,7 @@
     "hclsyntax/spec.md#attribute-definitions"
   ],
   "op": "parse",
+  "reference_error": "Attribute redefined",
   "expect": {
     "valid": false
   }

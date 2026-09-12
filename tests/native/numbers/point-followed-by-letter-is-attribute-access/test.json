@@ -1,0 +1,26 @@
+{
+  "description": "A point and a letter after a number are attribute access, not part of the number",
+  "spec": [
+    "hclsyntax/spec.md#numeric-literals",
+    "hclsyntax/spec.md#attribute-access-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "get_attr",
+          "object": {
+            "kind": "literal",
+            "value": {
+              "number": "1"
+            }
+          },
+          "name": "e"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

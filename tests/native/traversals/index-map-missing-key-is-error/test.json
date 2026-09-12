@@ -1,0 +1,29 @@
+{
+  "description": "Indexing a map with a key it doesn't have is an error",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#collection-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "m": {
+      "map": {
+        "k": {
+          "string": "v"
+        },
+        "l": {
+          "string": "w"
+        }
+      },
+      "element_type": "string"
+    }
+  },
+  "reference_error": "does not identify an element in this collection value.",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

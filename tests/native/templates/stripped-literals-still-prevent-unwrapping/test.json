@@ -1,0 +1,20 @@
+{
+  "description": "Literals emptied by strip markers still make the template produce a string",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolation-unwrapping",
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "notes": "The strip markers empty both literals, but the template still contains literals, so it is not a single interpolation with no surrounding literals.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "1.5"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

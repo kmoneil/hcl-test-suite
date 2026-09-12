@@ -1,0 +1,19 @@
+{
+  "description": "An empty pair of braces is an object constructor with no elements",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "object",
+          "items": []
+        }
+      },
+      "blocks": []
+    }
+  }
+}

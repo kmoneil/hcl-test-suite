@@ -1,0 +1,19 @@
+{
+  "description": "A template made only of an if directive that selects nothing produces an empty string",
+  "spec": [
+    "hclsyntax/spec.md#templates",
+    "hclsyntax/spec.md#template-if-directive"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": ""
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "description": "The if keyword of a for expression is case-sensitive, so IF is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "hclsyntax/spec.md#keywords"
+  ],
+  "op": "parse",
+  "reference_error": "Extra characters after the end of the 'for' expression",
+  "expect": {
+    "valid": false
+  }
+}

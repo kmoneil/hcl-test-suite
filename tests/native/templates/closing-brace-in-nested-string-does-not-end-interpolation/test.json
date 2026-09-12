@@ -1,0 +1,18 @@
+{
+  "description": "A } inside a string nested in an interpolation does not close the interpolation",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "<}>"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

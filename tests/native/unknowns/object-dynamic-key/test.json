@@ -1,0 +1,28 @@
+{
+  "description": "An object constructor whose key is the dynamic value gives the dynamic value",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "spec.md#conversion-to-and-from-the-dynamic-pseudo-type",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "unknown-values"
+  ],
+  "variables": {
+    "d": {
+      "unknown": "dynamic"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

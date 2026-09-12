@@ -1,0 +1,19 @@
+{
+  "description": "An escaped quote in a string nested in an interpolation does not end the outer template",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "<\">"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

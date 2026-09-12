@@ -1,0 +1,48 @@
+{
+  "description": "A conditional expression can be an object key followed by a colon",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "notes": "The key is the whole conditional expression, and the colon after it separates the key from the value.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "object",
+          "items": [
+            {
+              "key": {
+                "kind": "conditional",
+                "condition": {
+                  "kind": "variable",
+                  "name": "x"
+                },
+                "true_result": {
+                  "kind": "literal",
+                  "value": {
+                    "string": "p"
+                  }
+                },
+                "false_result": {
+                  "kind": "literal",
+                  "value": {
+                    "string": "q"
+                  }
+                }
+              },
+              "value": {
+                "kind": "literal",
+                "value": {
+                  "number": "1"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

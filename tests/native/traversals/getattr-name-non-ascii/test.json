@@ -1,0 +1,28 @@
+{
+  "description": "An attribute name after a dot can contain non-ASCII letters",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator",
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "eval",
+  "variables": {
+    "o": {
+      "object": {
+        "café": {
+          "string": "x"
+        }
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "description": "A number as the if condition is an error even when the collection is empty",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says the if condition is evaluated once for each source element, so with an empty collection it is never evaluated and the result is an empty tuple. hashicorp/hcl first evaluates the condition once with the key and value variables set to unknown values, and returns a conversion error from that check even when there are no elements (ForExpr.Value in hclsyntax/expression.go).",
+  "reference_error": "bool required, but have number",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "description": "Indexing an unknown object by a name its type lacks is an error",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "u": {
+      "unknown": [
+        "object",
+        {
+          "a": "string"
+        }
+      ]
+    }
+  },
+  "reference_error": "does not identify an element in this collection value.",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

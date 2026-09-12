@@ -1,0 +1,12 @@
+{
+  "description": "The => symbol can't separate an object key from its value",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "notes": "=> only appears in object for expressions.",
+  "reference_error": "Missing key/value separator",
+  "expect": {
+    "valid": false
+  }
+}

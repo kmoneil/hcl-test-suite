@@ -1,0 +1,41 @@
+{
+  "description": "A list holding an unknown compared with a list of the same type gives an unknown bool",
+  "spec": [
+    "hclsyntax/spec.md#comparison-operators",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "unknown": "number"
+        }
+      ],
+      "element_type": "number"
+    },
+    "k": {
+      "list": [
+        {
+          "number": "1"
+        }
+      ],
+      "element_type": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "bool"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

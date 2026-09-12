@@ -1,0 +1,20 @@
+{
+  "description": "Numbers around 10^-9000 are not rounded to zero, since binary exponents have at least 16 bits",
+  "spec": [
+    "spec.md#primitive-types",
+    "hclsyntax/spec.md#comparison-operators"
+  ],
+  "op": "eval",
+  "notes": "10^-9000 is about 2^-29897, below the range of 64-bit and 80-bit floating point but within a 16-bit signed binary exponent.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

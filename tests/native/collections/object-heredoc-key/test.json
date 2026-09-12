@@ -1,0 +1,15 @@
+{
+  "description": "An unparenthesized heredoc can't be an object key, since the line break after it ends the element",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#syntax-notation",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The grammar allows any expression as a key, and the prose says newlines between the braces are ignored as whitespace, so = can follow on the line after the closing marker. hashicorp/hcl's scanner emits the line break after the closing marker as a separate newline token (the heredocLiteralEOL action in hclsyntax/scan_tokens.rl), and parseObjectCons in hclsyntax/parser.go treats it as the end of the element, before its =, as it does any newline inside an object constructor. Inside parentheses, where newlines are ignored, a heredoc key works.",
+  "reference_error": "Missing attribute value",
+  "expect": {
+    "valid": false
+  }
+}

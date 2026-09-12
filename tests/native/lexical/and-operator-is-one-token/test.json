@@ -1,0 +1,31 @@
+{
+  "description": "The && operator is one token even without spaces around it",
+  "spec": [
+    "hclsyntax/spec.md#operators-and-delimiters"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "binary",
+          "operator": "&&",
+          "left": {
+            "kind": "literal",
+            "value": {
+              "bool": true
+            }
+          },
+          "right": {
+            "kind": "literal",
+            "value": {
+              "bool": false
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

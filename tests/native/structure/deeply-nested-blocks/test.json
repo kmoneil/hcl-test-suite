@@ -1,0 +1,58 @@
+{
+  "description": "Blocks can be nested several levels deep",
+  "spec": [
+    "hclsyntax/spec.md#blocks",
+    "spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "a",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": [
+              {
+                "type": "b",
+                "labels": [],
+                "body": {
+                  "attributes": {},
+                  "blocks": [
+                    {
+                      "type": "c",
+                      "labels": [],
+                      "body": {
+                        "attributes": {},
+                        "blocks": [
+                          {
+                            "type": "d",
+                            "labels": [],
+                            "body": {
+                              "attributes": {
+                                "e": {
+                                  "kind": "literal",
+                                  "value": {
+                                    "number": "1"
+                                  }
+                                }
+                              },
+                              "blocks": []
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

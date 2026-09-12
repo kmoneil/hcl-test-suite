@@ -1,0 +1,11 @@
+{
+  "description": "A full splat cannot contain two stars",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators"
+  ],
+  "op": "parse",
+  "reference_error": "Missing close bracket on splat index",
+  "expect": {
+    "valid": false
+  }
+}

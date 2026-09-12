@@ -1,0 +1,19 @@
+{
+  "description": "A heredoc marker can contain dashes, including a trailing dash",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions",
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x\n"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

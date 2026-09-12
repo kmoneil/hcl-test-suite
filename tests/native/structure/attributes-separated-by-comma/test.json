@@ -1,0 +1,12 @@
+{
+  "description": "Attributes cannot be separated by commas",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#attribute-definitions"
+  ],
+  "op": "parse",
+  "reference_error": "Unexpected comma after argument",
+  "expect": {
+    "valid": false
+  }
+}

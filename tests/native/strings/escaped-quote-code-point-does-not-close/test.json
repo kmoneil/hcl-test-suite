@@ -1,0 +1,18 @@
+{
+  "description": "A quote written as \\u0022 does not end the string",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "\""
+        }
+      },
+      "blocks": []
+    }
+  }
+}

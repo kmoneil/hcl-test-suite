@@ -1,0 +1,41 @@
+{
+  "description": "A splat over an unknown list of objects gives an unknown list of the attribute type",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec doesn't give the result type of a splat over a list, and it calls a splat approximately equivalent to a for expression, which over an unknown collection gives the dynamic value. hashicorp/hcl gives a list for a list source, and for an unknown list an unknown list of the attribute's type (SplatExpr.Value in hclsyntax/expression.go).",
+  "variables": {
+    "u": {
+      "unknown": [
+        "list",
+        [
+          "object",
+          {
+            "a": "string"
+          }
+        ]
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": [
+            "list",
+            "string"
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

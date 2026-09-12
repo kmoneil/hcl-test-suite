@@ -1,0 +1,27 @@
+{
+  "description": "Redundant nested parentheses around an operation leave just the operation",
+  "spec": [
+    "hclsyntax/spec.md#expression-terms"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "binary",
+          "operator": "+",
+          "left": {
+            "kind": "variable",
+            "name": "x"
+          },
+          "right": {
+            "kind": "variable",
+            "name": "y"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

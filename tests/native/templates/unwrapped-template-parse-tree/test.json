@@ -1,0 +1,27 @@
+{
+  "description": "A template that is only an interpolation parses as a template with one interpolation part",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolation-unwrapping"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "interpolation",
+              "expr": {
+                "kind": "variable",
+                "name": "x"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

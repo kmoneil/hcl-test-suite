@@ -1,0 +1,17 @@
+{
+  "description": "A variable does not make a function of the same name callable",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "variables": {
+    "f": {
+      "string": "x"
+    }
+  },
+  "reference_error": "Call to unknown function: There is no function named \"f\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

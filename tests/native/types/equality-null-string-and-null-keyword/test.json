@@ -1,0 +1,31 @@
+{
+  "description": "A null string is equal to the null keyword",
+  "spec": [
+    "spec.md#values-and-value-types",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+    "spec.md#null-values",
+    "hclsyntax/spec.md#comparison-operators"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says equal values must have identical types, and the null keyword has the dynamic pseudo-type, which is identical only to itself, so the result should be false (read literally, the comparison operator rule for operands of the dynamic pseudo-type would even make it unknown). hashicorp/hcl returns true because go-cty treats any two nulls as equal regardless of type (Value.Equals in cty/value_ops.go). Inside a tuple the types are compared (equality-nested-null-string-and-null-keyword).",
+  "variables": {
+    "n": {
+      "null": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "description": "A block's closing brace cannot be on the same line as a nested block's closing brace",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#blocks"
+  ],
+  "op": "parse",
+  "reference_error": "Missing newline after block definition",
+  "expect": {
+    "valid": false
+  }
+}

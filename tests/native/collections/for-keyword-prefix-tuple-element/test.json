@@ -1,0 +1,31 @@
+{
+  "description": "An identifier that only begins with for, like format, can be the first tuple element",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "tuple",
+          "elements": [
+            {
+              "kind": "variable",
+              "name": "format"
+            },
+            {
+              "kind": "literal",
+              "value": {
+                "number": "1"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

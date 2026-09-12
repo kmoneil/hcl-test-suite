@@ -1,0 +1,11 @@
+{
+  "description": "An object key followed directly by its value is an error",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "reference_error": "Missing key/value separator",
+  "expect": {
+    "valid": false
+  }
+}

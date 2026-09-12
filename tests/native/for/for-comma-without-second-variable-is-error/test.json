@@ -1,0 +1,12 @@
+{
+  "description": "A comma after the only iteration variable is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "notes": "hashicorp/hcl lets in name a variable (see for-variable-named-in), so it reads in as the second variable and then reports the missing in keyword. Either way the input has one mistake.",
+  "reference_error": "requires the 'in' keyword",
+  "expect": {
+    "valid": false
+  }
+}

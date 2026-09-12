@@ -1,0 +1,24 @@
+{
+  "description": "A null number as an operand of || is an error, since number doesn't convert to bool",
+  "spec": [
+    "spec.md#conversion-of-null-values",
+    "hclsyntax/spec.md#logic-operators",
+    "spec.md#null-values"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says a null converts to a null of any other type, regardless of the other conversion rules, so the null number should convert to a null bool (what || then does with a null is a separate question). go-cty passes a null through a conversion only when the types themselves convert (getConversion in cty/convert/conversion.go finds the conversion by type before looking at the value), so hashicorp/hcl reports that a bool is required. The null keyword, a null bool and a null string all convert, and || true then gives true.",
+  "variables": {
+    "n": {
+      "null": "number"
+    }
+  },
+  "reference_error": "bool required, but have number",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

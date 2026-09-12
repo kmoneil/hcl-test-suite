@@ -1,0 +1,18 @@
+{
+  "description": "Directives need no spaces around their keywords and conditions",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "yes"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

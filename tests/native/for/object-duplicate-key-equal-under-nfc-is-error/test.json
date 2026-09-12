@@ -1,0 +1,13 @@
+{
+  "description": "Keys that are equal after NFC normalization are duplicates",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#primitive-types"
+  ],
+  "op": "eval",
+  "reference_error": "produced the key \"é\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "description": "A tuple constructor can't contain just a comma",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "notes": "The optional trailing comma in the grammar only follows an element.",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

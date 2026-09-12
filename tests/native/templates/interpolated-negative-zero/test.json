@@ -1,0 +1,22 @@
+{
+  "description": "Interpolating a negated zero produces -0",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations",
+    "spec.md#primitive-type-conversions",
+    "spec.md#primitive-types"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec's number to string conversion writes the digits of the integer part and any non-zero fractional part, and says nothing about negative zero; numbers are equal when numerically equal, so -0 is arguably the value 0 and would convert to \"0\". hashicorp/hcl negates 0 into a negative zero big.Float, and go-cty's number to string conversion (cty/convert/conversion_primitive.go) formats it with big.Float.Text, which writes \"-0\".",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "<-0>"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

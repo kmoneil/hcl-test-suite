@@ -1,0 +1,21 @@
+{
+  "description": "A # line comment inside an interpolation in a quoted template is ignored",
+  "spec": [
+    "hclsyntax/spec.md#comments-and-whitespace",
+    "hclsyntax/spec.md#template-interpolations"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec allows comments inside interpolation sequences, but a line comment counts as a newline, and the spec doesn't say newlines are ignored inside interpolations. hashicorp/hcl ignores them: parseTemplateParts in hclsyntax/parser_template.go calls PushIncludeNewlines(false) before parsing the expression, and its peeker skips comments.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "<x>"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

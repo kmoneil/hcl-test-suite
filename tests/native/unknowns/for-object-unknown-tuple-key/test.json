@@ -1,0 +1,35 @@
+{
+  "description": "An object for expression whose key is an unknown tuple gives the dynamic value",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec gives the dynamic value only for unknowns that are otherwise type-valid, and a tuple can't convert to a string attribute name, so this should be an error. hashicorp/hcl returns the dynamic value because ForExpr.Value (hclsyntax/expression.go) checks whether the key is known before converting it to a string.",
+  "variables": {
+    "u": {
+      "unknown": [
+        "tuple",
+        [
+          "number"
+        ]
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

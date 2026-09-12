@@ -1,0 +1,25 @@
+{
+  "description": "An attribute-only splat with nothing after it parses as a splat whose each is the splat item",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "splat",
+          "source": {
+            "kind": "variable",
+            "name": "t"
+          },
+          "each": {
+            "kind": "splat_item"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

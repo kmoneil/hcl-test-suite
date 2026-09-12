@@ -1,0 +1,23 @@
+{
+  "description": "A for directive over an unknown number is an error",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive",
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "number"
+    }
+  },
+  "reference_error": "Iteration over non-iterable value",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

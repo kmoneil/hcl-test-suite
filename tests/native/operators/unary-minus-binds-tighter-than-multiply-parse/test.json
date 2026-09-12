@@ -1,0 +1,31 @@
+{
+  "description": "Unary minus binds tighter than the highest binary precedence level",
+  "spec": [
+    "hclsyntax/spec.md#operations"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "binary",
+          "operator": "*",
+          "left": {
+            "kind": "unary",
+            "operator": "-",
+            "operand": {
+              "kind": "variable",
+              "name": "x"
+            }
+          },
+          "right": {
+            "kind": "variable",
+            "name": "y"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

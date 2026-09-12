@@ -1,0 +1,11 @@
+{
+  "description": "An identifier cannot start with U+00B7 MIDDLE DOT, which is only in ID_Continue",
+  "spec": [
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "parse",
+  "reference_error": "This character is not used within the language",
+  "expect": {
+    "valid": false
+  }
+}

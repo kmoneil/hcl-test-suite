@@ -1,0 +1,32 @@
+{
+  "description": "A line comment can appear inside parentheses, where newlines are ignored",
+  "spec": [
+    "hclsyntax/spec.md#comments-and-whitespace",
+    "hclsyntax/spec.md#expression-terms"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "binary",
+          "operator": "+",
+          "left": {
+            "kind": "literal",
+            "value": {
+              "number": "1"
+            }
+          },
+          "right": {
+            "kind": "literal",
+            "value": {
+              "number": "2"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

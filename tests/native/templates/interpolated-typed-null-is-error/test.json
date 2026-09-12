@@ -1,0 +1,23 @@
+{
+  "description": "Interpolating a null string next to other template parts is an error",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations",
+    "spec.md#conversion-of-null-values"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec makes an interpolation an error when its value can't be converted to string; a null string needs no conversion, and the spec doesn't say what inserting it produces. hashicorp/hcl reports an error for any null part in TemplateExpr.Value (hclsyntax/expression_template.go).",
+  "variables": {
+    "v": {
+      "null": "string"
+    }
+  },
+  "reference_error": "The expression result is null",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

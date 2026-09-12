@@ -1,0 +1,37 @@
+{
+  "description": "The identifier for-each can be the first key of an object constructor",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#for-expressions",
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "parse",
+  "notes": "Identifiers can contain dashes, so for-each is one identifier and not the keyword for.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "object",
+          "items": [
+            {
+              "key": {
+                "kind": "literal",
+                "value": {
+                  "string": "for-each"
+                }
+              },
+              "value": {
+                "kind": "literal",
+                "value": {
+                  "number": "1"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

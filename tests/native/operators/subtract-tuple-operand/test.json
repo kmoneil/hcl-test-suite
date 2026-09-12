@@ -1,0 +1,12 @@
+{
+  "description": "- rejects a tuple as its left operand",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "reference_error": "Unsuitable value for left operand: number required, but have tuple",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

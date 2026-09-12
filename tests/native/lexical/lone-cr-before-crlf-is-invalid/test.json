@@ -1,0 +1,11 @@
+{
+  "description": "A CR directly before a CR LF sequence is a parse error",
+  "spec": [
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "reference_error": "This character is not used within the language",
+  "expect": {
+    "valid": false
+  }
+}

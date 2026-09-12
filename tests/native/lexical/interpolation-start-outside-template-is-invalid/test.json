@@ -1,0 +1,11 @@
+{
+  "description": "An interpolation sequence cannot start outside a template",
+  "spec": [
+    "hclsyntax/spec.md#operators-and-delimiters"
+  ],
+  "op": "parse",
+  "reference_error": "This character is not used within the language",
+  "expect": {
+    "valid": false
+  }
+}

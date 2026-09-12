@@ -1,0 +1,11 @@
+{
+  "description": "Legacy index syntax cannot be chained, because 0.0 reads as a number",
+  "spec": [
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid legacy index syntax",
+  "expect": {
+    "valid": false
+  }
+}

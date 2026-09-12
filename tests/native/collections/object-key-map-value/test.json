@@ -1,0 +1,27 @@
+{
+  "description": "A key that evaluates to a map is an error",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "spec.md#collection-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "notes": "Attribute names are strings, and there is no conversion from a map to a string.",
+  "variables": {
+    "k": {
+      "map": {
+        "x": {
+          "string": "y"
+        }
+      },
+      "element_type": "string"
+    }
+  },
+  "reference_error": "string required, but have map of string",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "description": "Indexing an unknown set is an error",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "u": {
+      "unknown": [
+        "set",
+        "string"
+      ]
+    }
+  },
+  "reference_error": "Elements of a set are identified only by their value",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

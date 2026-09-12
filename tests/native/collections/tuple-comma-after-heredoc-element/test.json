@@ -1,0 +1,34 @@
+{
+  "description": "A comma can follow a heredoc tuple element on the line after its closing marker",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "notes": "The newline after the closing marker belongs to the tuple constructor, not to the heredoc, and newlines inside the brackets are ignored, so the comma on the next line separates the elements.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "tuple",
+          "elements": [
+            {
+              "kind": "literal",
+              "value": {
+                "string": "x\n"
+              }
+            },
+            {
+              "kind": "literal",
+              "value": {
+                "number": "1"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

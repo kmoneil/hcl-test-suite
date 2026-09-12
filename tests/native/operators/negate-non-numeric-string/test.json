@@ -1,0 +1,13 @@
+{
+  "description": "Unary minus rejects a string that isn't a number",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "reference_error": "Unsuitable value for unary operand: a number is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

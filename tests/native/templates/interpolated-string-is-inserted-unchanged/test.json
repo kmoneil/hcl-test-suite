@@ -1,0 +1,23 @@
+{
+  "description": "An interpolated string value is inserted with its spaces and tabs unchanged",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations"
+  ],
+  "op": "eval",
+  "variables": {
+    "v": {
+      "string": " x\ty "
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "< x\ty >"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "description": "-7 / 2 is exactly -3.5, neither rounded down nor truncated",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "-3.5"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

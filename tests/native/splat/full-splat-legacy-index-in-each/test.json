@@ -1,0 +1,35 @@
+{
+  "description": "A legacy index after a full splat is part of its each expression",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators",
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "splat",
+          "source": {
+            "kind": "variable",
+            "name": "t"
+          },
+          "each": {
+            "kind": "index",
+            "collection": {
+              "kind": "splat_item"
+            },
+            "key": {
+              "kind": "literal",
+              "value": {
+                "number": "0"
+              }
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

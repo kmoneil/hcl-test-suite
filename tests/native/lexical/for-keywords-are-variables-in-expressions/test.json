@@ -1,0 +1,36 @@
+{
+  "description": "The words for, in and if are ordinary variable names outside for expressions",
+  "spec": [
+    "hclsyntax/spec.md#keywords",
+    "hclsyntax/spec.md#variables-and-variable-expressions"
+  ],
+  "op": "eval",
+  "variables": {
+    "for": {
+      "number": "1"
+    },
+    "in": {
+      "number": "2"
+    },
+    "if": {
+      "number": "3"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        },
+        "b": {
+          "number": "2"
+        },
+        "c": {
+          "number": "3"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

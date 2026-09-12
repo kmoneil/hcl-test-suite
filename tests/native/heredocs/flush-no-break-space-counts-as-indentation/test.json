@@ -1,0 +1,22 @@
+{
+  "description": "<<- counts a leading no-break space as one character of indentation",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions",
+    "hclsyntax/spec.md#comments-and-whitespace",
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says <<- removes leading spaces without saying which characters count as spaces: Comments and Whitespace treats tabs as whitespace as well as U+0020, and Template Literals interprets space characters by Unicode's definition for strip markers, which includes U+00A0 NO-BREAK SPACE. hashicorp/hcl counts any leading Unicode whitespace as indentation (flushHeredocTemplateParts in hclsyntax/parser_template.go uses unicode.IsSpace), so U+00A0 is one character and one character is removed from each line. If only U+0020 and tabs counted, the first line would have no indentation and nothing would be removed.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "a\n b\n"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

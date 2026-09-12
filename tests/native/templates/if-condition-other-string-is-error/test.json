@@ -1,0 +1,14 @@
+{
+  "description": "A string other than true, false, 1 or 0 as an if condition is an error",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive",
+    "hclsyntax/spec.md#conditional-operator",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "reference_error": "Incorrect condition type",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "description": "~} strips the literal after the interpolation but not the one before it",
+  "spec": [
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "a  bc"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

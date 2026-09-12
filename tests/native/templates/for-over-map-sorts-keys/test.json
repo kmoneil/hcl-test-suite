@@ -1,0 +1,35 @@
+{
+  "description": "A for directive over a map visits elements sorted by key",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "m": {
+      "map": {
+        "b": {
+          "string": "1"
+        },
+        "a": {
+          "string": "2"
+        }
+      },
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "a=2;b=1;"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

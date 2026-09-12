@@ -1,5 +1,5 @@
 {
-  "description": "CR LF is a newline sequence",
+  "description": "CR LF ends an attribute like LF",
   "spec": [
     "hclsyntax/spec.md#comments-and-whitespace"
   ],

@@ -1,0 +1,12 @@
+{
+  "description": "An attribute name can be defined only once in a block's body",
+  "spec": [
+    "hclsyntax/spec.md#attribute-definitions",
+    "spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "reference_error": "Attribute redefined",
+  "expect": {
+    "valid": false
+  }
+}

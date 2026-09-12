@@ -1,0 +1,12 @@
+{
+  "description": "A tuple element can't be followed by an ellipsis",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "notes": "Tuple elements are plain expressions. The ellipsis only appears after function call arguments and in object for expressions.",
+  "reference_error": "Missing item separator",
+  "expect": {
+    "valid": false
+  }
+}

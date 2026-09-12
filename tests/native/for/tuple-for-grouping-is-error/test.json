@@ -1,0 +1,11 @@
+{
+  "description": "A grouping ellipsis in a tuple for expression is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "reference_error": "Grouping ellipsis (...) cannot be used when building a tuple",
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "description": "In x == y && z, x == y is the left operand of &&",
+  "spec": [
+    "hclsyntax/spec.md#operations"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "binary",
+          "operator": "&&",
+          "left": {
+            "kind": "binary",
+            "operator": "==",
+            "left": {
+              "kind": "variable",
+              "name": "x"
+            },
+            "right": {
+              "kind": "variable",
+              "name": "y"
+            }
+          },
+          "right": {
+            "kind": "variable",
+            "name": "z"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

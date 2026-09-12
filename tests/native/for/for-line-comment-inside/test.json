@@ -1,0 +1,38 @@
+{
+  "description": "A line comment inside a for expression is ignored like a newline",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The Collection Values section says newlines are ignored between the delimiters of \"these sequences\", which refers to the tuple and object productions. ForExpr is a separate production whose grammar has no Newline, and the spec repeats the newline rule for parentheses, function call arguments and index brackets but never for for expressions. hashicorp/hcl ignores newlines everywhere inside a for expression: finishParsingForExpr in hclsyntax/parser.go calls PushIncludeNewlines(false). A line comment counts as a newline.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "for",
+          "result": "tuple",
+          "key_var": null,
+          "value_var": "v",
+          "collection": {
+            "kind": "variable",
+            "name": "xs"
+          },
+          "key": null,
+          "value": {
+            "kind": "variable",
+            "name": "v"
+          },
+          "condition": {
+            "kind": "variable",
+            "name": "c"
+          },
+          "grouping": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

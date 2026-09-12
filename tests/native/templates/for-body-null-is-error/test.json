@@ -1,0 +1,17 @@
+{
+  "description": "Interpolating null in the body of a for directive is an error",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive",
+    "hclsyntax/spec.md#template-interpolations",
+    "hclsyntax/spec.md#templates",
+    "spec.md#conversion-of-null-values"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The body is a template of its own and v is a null of the dynamic pseudo-type, so this is the same case as interpolated-null-is-error: the spec makes an interpolation an error when its value can't be converted to string, but null converts to any type (Conversion of Null Values), and it says a template with an element of the dynamic pseudo-type, which includes the null keyword, produces an unknown string. hashicorp/hcl reports an error for any null part in TemplateExpr.Value (hclsyntax/expression_template.go).",
+  "reference_error": "The expression result is null",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "description": "An index of negative zero selects the first element of a tuple",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#primitive-types"
+  ],
+  "op": "eval",
+  "variables": {
+    "t": {
+      "tuple": [
+        {
+          "string": "x"
+        },
+        {
+          "string": "y"
+        },
+        {
+          "string": "z"
+        }
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

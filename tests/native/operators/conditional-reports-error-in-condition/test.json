@@ -1,0 +1,12 @@
+{
+  "description": "An error in the condition is reported",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "reference_error": "Unknown variable",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "description": "A conditional whose results have the same list type returns the list unchanged",
+  "spec": [
+    "spec.md#type-conversions-and-unification",
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "string": "x"
+        }
+      ],
+      "element_type": "string"
+    },
+    "k": {
+      "list": [
+        {
+          "string": "y"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [
+            {
+              "string": "x"
+            }
+          ],
+          "element_type": "string"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

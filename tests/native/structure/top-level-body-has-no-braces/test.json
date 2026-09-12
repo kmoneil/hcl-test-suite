@@ -1,0 +1,12 @@
+{
+  "description": "The top-level body of a file is not enclosed in braces",
+  "spec": [
+    "hclsyntax/spec.md#configuration-files",
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "reference_error": "Argument or block definition required",
+  "expect": {
+    "valid": false
+  }
+}

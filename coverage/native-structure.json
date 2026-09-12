@@ -1,0 +1,568 @@
+{
+  "area": "native/structure",
+  "rules": [
+    {
+      "id": "structure-empty-file",
+      "spec": "hclsyntax/spec.md#configuration-files",
+      "rule": "A file with no content is a valid configuration whose body has no attributes and no blocks",
+      "tests": [
+        "native/structure/empty-file"
+      ]
+    },
+    {
+      "id": "structure-file-without-items",
+      "spec": "hclsyntax/spec.md#configuration-files",
+      "rule": "A file with only spaces, tabs or inline comments, and no newline, has an empty body",
+      "tests": [
+        "native/structure/file-with-only-spaces",
+        "native/structure/file-with-only-inline-comment"
+      ]
+    },
+    {
+      "id": "structure-blank-lines-ignored",
+      "spec": "hclsyntax/spec.md#structural-elements",
+      "rule": "Blank lines are ignored before, between and after the items of the top-level body and of block bodies, and in bodies with no items (disputed)",
+      "tests": [
+        "native/structure/file-with-only-newlines",
+        "native/structure/blank-lines-before-first-item",
+        "native/structure/blank-lines-after-last-item",
+        "native/structure/blank-lines-between-attributes",
+        "native/structure/blank-lines-inside-block-body",
+        "native/structure/empty-block-with-blank-line"
+      ]
+    },
+    {
+      "id": "structure-comment-lines-ignored",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "A line comment on a line of its own is ignored like a blank line in a body (disputed)",
+      "tests": [
+        "native/structure/file-with-only-line-comments",
+        "native/structure/comment-line-between-attributes",
+        "native/structure/comment-line-inside-block-body"
+      ]
+    },
+    {
+      "id": "structure-leading-spaces-ignored",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "Spaces before an item at the start of its line are ignored",
+      "tests": [
+        "native/structure/indented-attribute"
+      ]
+    },
+    {
+      "id": "structure-top-level-body-unbraced",
+      "spec": "hclsyntax/spec.md#configuration-files",
+      "rule": "The top level of a file is a body without enclosing braces, so a brace cannot open or close it",
+      "tests": [
+        "native/structure/top-level-body-has-no-braces",
+        "native/structure/stray-closing-brace"
+      ]
+    },
+    {
+      "id": "structure-items-in-any-order",
+      "spec": "hclsyntax/spec.md#bodies",
+      "rule": "A body, at the top level or in a block, can mix attributes and blocks in any order",
+      "tests": [
+        "native/structure/attributes-and-blocks-interleaved",
+        "native/structure/block-body-mixes-attributes-and-blocks"
+      ]
+    },
+    {
+      "id": "structure-attribute-form",
+      "spec": "hclsyntax/spec.md#attribute-definitions",
+      "rule": "An attribute is a name, an equals sign and an expression, with any number of spaces between them and after the value",
+      "tests": [
+        "native/structure/attribute",
+        "native/structure/attribute-with-extra-spaces",
+        "native/structure/attribute-trailing-spaces"
+      ]
+    },
+    {
+      "id": "structure-attribute-name-is-one-identifier",
+      "spec": "hclsyntax/spec.md#structural-elements",
+      "rule": "An attribute name is exactly one bare identifier: not a quoted string, a number, a traversal, an index or two identifiers",
+      "tests": [
+        "native/structure/attribute-name-cannot-be-quoted",
+        "native/structure/attribute-name-cannot-be-number",
+        "native/structure/attribute-name-cannot-be-traversal",
+        "native/structure/attribute-name-cannot-be-index",
+        "native/structure/attribute-name-cannot-be-two-identifiers"
+      ]
+    },
+    {
+      "id": "structure-attribute-needs-name",
+      "spec": "hclsyntax/spec.md#structural-elements",
+      "rule": "An attribute without a name before its equals sign is an error",
+      "tests": [
+        "native/structure/attribute-missing-name"
+      ]
+    },
+    {
+      "id": "structure-attribute-needs-equals",
+      "spec": "hclsyntax/spec.md#structural-elements",
+      "rule": "A single equals sign must follow an attribute name; a missing sign, a colon or == is an error, and an identifier alone is not a body item",
+      "tests": [
+        "native/structure/attribute-missing-equals",
+        "native/structure/attribute-colon-instead-of-equals",
+        "native/structure/attribute-double-equals",
+        "native/structure/identifier-alone-is-not-an-item"
+      ]
+    },
+    {
+      "id": "structure-attribute-needs-value",
+      "spec": "hclsyntax/spec.md#structural-elements",
+      "rule": "An attribute without an expression after its equals sign is an error, at the end of a line or of the file",
+      "tests": [
+        "native/structure/attribute-missing-value",
+        "native/structure/attribute-missing-value-at-end-of-file"
+      ]
+    },
+    {
+      "id": "structure-attribute-head-on-one-line",
+      "spec": "hclsyntax/spec.md#structural-elements",
+      "rule": "An attribute's name, equals sign and the start of its value must be on one line",
+      "tests": [
+        "native/structure/newline-between-name-and-equals",
+        "native/structure/newline-between-equals-and-value"
+      ]
+    },
+    {
+      "id": "structure-attribute-ends-at-newline",
+      "spec": "hclsyntax/spec.md#structural-elements",
+      "rule": "A newline outside brackets ends an attribute, so the next line cannot continue its expression, while newlines inside brackets don't end it",
+      "tests": [
+        "native/structure/newline-ends-attribute",
+        "native/structure/attribute-value-spans-lines-inside-brackets"
+      ]
+    },
+    {
+      "id": "structure-attribute-nothing-else-on-line",
+      "spec": "hclsyntax/spec.md#structural-elements",
+      "rule": "Nothing but whitespace and comments can follow an attribute's value on its line, so neither another attribute nor a comma can",
+      "tests": [
+        "native/structure/two-attributes-on-one-line",
+        "native/structure/attributes-separated-by-comma",
+        "native/structure/attribute-trailing-comma"
+      ]
+    },
+    {
+      "id": "structure-attribute-comments-after-value",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "A line comment or an inline comment can follow an attribute's value; a line comment ends the attribute like a newline, and an inline comment spanning lines doesn't, though a newline after it does",
+      "tests": [
+        "native/lexical/comments",
+        "native/lexical/empty-comments",
+        "native/lexical/inline-comment-spanning-lines-does-not-end-attribute",
+        "native/structure/newline-after-inline-comment-ends-attribute"
+      ]
+    },
+    {
+      "id": "structure-attribute-end-of-file",
+      "spec": "hclsyntax/spec.md#structural-elements",
+      "rule": "The end of the file can take the place of the newline after the last attribute (disputed)",
+      "tests": [
+        "native/structure/no-final-newline"
+      ]
+    },
+    {
+      "id": "structure-attribute-value-kept-unevaluated",
+      "spec": "hclsyntax/spec.md#attribute-definitions",
+      "rule": "Parsing keeps an attribute's expression for the application to evaluate later, so evaluation errors are not parse errors",
+      "tests": [
+        "native/structure/attribute-value-not-evaluated-when-parsed"
+      ]
+    },
+    {
+      "id": "structure-block-attributes-evaluated",
+      "spec": "hclsyntax/spec.md#attribute-definitions",
+      "rule": "Attributes inside blocks, at any depth, are evaluated like top-level attributes, and an error in one of them makes evaluation fail",
+      "tests": [
+        "native/structure/block-attribute-is-evaluated",
+        "native/structure/nested-block-attribute-is-evaluated",
+        "native/structure/top-level-and-block-attributes-are-evaluated",
+        "native/structure/block-attribute-evaluation-error"
+      ]
+    },
+    {
+      "id": "structure-block-labels-not-variables",
+      "spec": "hclsyntax/spec.md#variables-and-variable-expressions",
+      "rule": "A block's labels don't define variables, so an expression in the block's body cannot refer to a label",
+      "tests": [
+        "native/structure/block-label-is-not-a-variable"
+      ]
+    },
+    {
+      "id": "structure-attribute-unique-in-body",
+      "spec": "hclsyntax/spec.md#attribute-definitions",
+      "rule": "An attribute name can be defined only once in a body, whatever the values and whatever comes between the definitions, in the top-level body and in block bodies",
+      "tests": [
+        "native/structure/attribute-redefined",
+        "native/structure/attribute-redefined-with-same-value",
+        "native/structure/attribute-redefined-after-block",
+        "native/structure/attribute-redefined-in-block-body"
+      ]
+    },
+    {
+      "id": "structure-model-attribute-names-unique",
+      "spec": "spec.md#structural-elements",
+      "rule": "Attribute names are unique within a body in the information model, so a native body, at the top level or in a block, that defines a name twice is an error",
+      "tests": [
+        "native/structure/attribute-redefined",
+        "native/structure/attribute-redefined-in-block-body"
+      ]
+    },
+    {
+      "id": "structure-attribute-unique-per-body",
+      "spec": "hclsyntax/spec.md#attribute-definitions",
+      "rule": "Uniqueness applies to each body separately, so a parent body, a nested block body and sibling block bodies can each define the same name",
+      "tests": [
+        "native/structure/same-attribute-name-in-block-and-parent",
+        "native/structure/same-attribute-name-in-sibling-blocks",
+        "native/structure/same-attribute-name-in-one-line-block-and-parent"
+      ]
+    },
+    {
+      "id": "structure-block-label-count",
+      "spec": "hclsyntax/spec.md#blocks",
+      "rule": "A block has zero or more labels, quoted or bare in any mix, kept in source order",
+      "tests": [
+        "native/structure/empty-block",
+        "native/structure/block-with-quoted-label",
+        "native/structure/block-with-identifier-label",
+        "native/structure/block-with-many-labels"
+      ]
+    },
+    {
+      "id": "structure-block-type-is-identifier",
+      "spec": "hclsyntax/spec.md#structural-elements",
+      "rule": "A block type is a bare identifier, which may contain dashes, and cannot be a quoted string or a number",
+      "tests": [
+        "native/structure/block-type-with-dash",
+        "native/structure/block-type-cannot-be-quoted",
+        "native/structure/block-type-cannot-be-number"
+      ]
+    },
+    {
+      "id": "structure-block-label-kinds",
+      "spec": "hclsyntax/spec.md#blocks",
+      "rule": "A block label is a quoted string or a bare identifier (which may contain dashes and non-ASCII letters); a number, a single-quoted string, a traversal, an operation or a heredoc is an error",
+      "tests": [
+        "native/structure/block-bare-label-with-dash",
+        "native/structure/block-bare-label-non-ascii",
+        "native/structure/block-label-cannot-be-number",
+        "native/structure/block-label-after-label-cannot-be-number",
+        "native/structure/block-label-cannot-be-single-quoted",
+        "native/structure/block-label-cannot-be-traversal",
+        "native/structure/block-label-cannot-be-operation",
+        "native/structure/block-label-cannot-be-heredoc"
+      ]
+    },
+    {
+      "id": "structure-quoted-label-content",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "A quoted label can be empty or contain any text, including non-ASCII characters and characters that mean something outside strings, but not a literal newline",
+      "tests": [
+        "native/structure/block-label-empty-string",
+        "native/structure/block-label-with-special-characters",
+        "native/structure/block-label-with-non-ascii",
+        "native/structure/block-label-cannot-contain-newline"
+      ]
+    },
+    {
+      "id": "structure-quoted-label-not-normalized",
+      "spec": "hclsyntax/spec.md#blocks",
+      "rule": "A quoted label keeps its code points as written, without Unicode normalization (disputed)",
+      "tests": [
+        "native/structure/block-label-not-normalized"
+      ]
+    },
+    {
+      "id": "structure-quoted-label-escapes",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "Escape sequences in a quoted label are decoded, and a backslash sequence that is not one of them is an error",
+      "tests": [
+        "native/structure/block-label-escape-sequences",
+        "native/structure/block-label-unknown-escape",
+        "native/structure/block-label-json-escape-not-supported"
+      ]
+    },
+    {
+      "id": "structure-quoted-label-no-templates",
+      "spec": "hclsyntax/spec.md#template-expressions",
+      "rule": "A quoted label cannot contain interpolations or directives, while a $ or % that starts no sequence is text",
+      "tests": [
+        "native/structure/block-label-cannot-contain-interpolation",
+        "native/structure/block-label-cannot-contain-directive",
+        "native/structure/block-label-dollar-and-percent"
+      ]
+    },
+    {
+      "id": "structure-quoted-label-escaped-template-sequences",
+      "spec": "hclsyntax/spec.md#template-literals",
+      "rule": "In a quoted label, $${ and %%{ are read as the text ${ and %{, while $$ and %% not followed by { stay as written",
+      "tests": [
+        "native/structure/block-label-escaped-template-sequences",
+        "native/structure/block-label-doubled-dollar-and-percent"
+      ]
+    },
+    {
+      "id": "structure-block-header-spacing",
+      "spec": "hclsyntax/spec.md#structural-elements",
+      "rule": "No whitespace is needed between a block's type, quoted labels and opening brace",
+      "tests": [
+        "native/structure/block-labels-without-spaces"
+      ]
+    },
+    {
+      "id": "structure-block-header-on-one-line",
+      "spec": "hclsyntax/spec.md#structural-elements",
+      "rule": "A block's type, labels and opening brace are on one line; a line comment ends that line, while inline comments spanning lines are whitespace",
+      "tests": [
+        "native/structure/block-opening-brace-on-next-line",
+        "native/structure/block-opening-brace-on-next-line-without-labels",
+        "native/structure/block-label-on-next-line",
+        "native/structure/block-header-line-comment",
+        "native/structure/block-header-inline-comment-spanning-lines"
+      ]
+    },
+    {
+      "id": "structure-block-header-no-equals",
+      "spec": "hclsyntax/spec.md#structural-elements",
+      "rule": "An equals sign between a block's labels and its opening brace is an error",
+      "tests": [
+        "native/structure/block-equals-before-brace"
+      ]
+    },
+    {
+      "id": "structure-block-body-after-newline",
+      "spec": "hclsyntax/spec.md#structural-elements",
+      "rule": "A multi-line block's opening brace is followed by a newline, which a line comment provides and an inline comment spanning lines doesn't, and the body after it can be empty",
+      "tests": [
+        "native/structure/empty-block",
+        "native/lexical/line-comment-after-block-open-brace",
+        "native/structure/inline-comment-after-opening-brace-is-not-a-newline"
+      ]
+    },
+    {
+      "id": "structure-block-closing-brace-placement",
+      "spec": "hclsyntax/spec.md#structural-elements",
+      "rule": "A multi-line block's closing brace follows the newline that ends the body's last item, so it cannot share that item's line, though it can be indented",
+      "tests": [
+        "native/structure/block-closing-brace-on-attribute-line",
+        "native/structure/block-closing-brace-on-nested-block-line",
+        "native/structure/block-closing-brace-indented",
+        "native/structure/block-closing-brace-after-inline-comment"
+      ]
+    },
+    {
+      "id": "structure-block-ends-at-newline",
+      "spec": "hclsyntax/spec.md#structural-elements",
+      "rule": "A newline or a line comment must follow a block's closing brace, so no other item can follow on that line",
+      "tests": [
+        "native/structure/block-followed-by-item-on-same-line",
+        "native/structure/block-closing-brace-followed-by-comment",
+        "native/structure/one-line-block-followed-by-block",
+        "native/structure/one-line-block-followed-by-comment"
+      ]
+    },
+    {
+      "id": "structure-block-end-of-file",
+      "spec": "hclsyntax/spec.md#structural-elements",
+      "rule": "The end of the file can take the place of the newline after the last block's closing brace (disputed)",
+      "tests": [
+        "native/structure/block-at-end-of-file",
+        "native/structure/one-line-block-at-end-of-file"
+      ]
+    },
+    {
+      "id": "structure-block-braces-balanced",
+      "spec": "hclsyntax/spec.md#structural-elements",
+      "rule": "A block, multi-line or one-line, needs a closing brace before the end of the file",
+      "tests": [
+        "native/structure/block-missing-closing-brace",
+        "native/structure/one-line-block-unclosed"
+      ]
+    },
+    {
+      "id": "structure-nested-blocks",
+      "spec": "hclsyntax/spec.md#blocks",
+      "rule": "A block's body can contain blocks, including one-line blocks, to any depth",
+      "tests": [
+        "native/structure/nested-blocks",
+        "native/structure/deeply-nested-blocks",
+        "native/structure/one-line-block-inside-block"
+      ]
+    },
+    {
+      "id": "structure-repeated-blocks",
+      "spec": "hclsyntax/spec.md#blocks",
+      "rule": "A body can contain any number of blocks of one type, including with identical labels or with different numbers of labels",
+      "tests": [
+        "native/structure/repeated-block-type",
+        "native/structure/repeated-block-with-same-labels",
+        "native/structure/repeated-block-type-with-different-label-counts"
+      ]
+    },
+    {
+      "id": "structure-block-order",
+      "spec": "spec.md#schema-driven-processing",
+      "rule": "The blocks of a body form a sequence in source order",
+      "tests": [
+        "native/structure/blocks-keep-source-order"
+      ]
+    },
+    {
+      "id": "structure-one-line-block-form",
+      "spec": "hclsyntax/spec.md#structural-elements",
+      "rule": "A one-line block has a header, then braces on the same line around nothing or one attribute, with or without spaces",
+      "tests": [
+        "native/structure/one-line-block",
+        "native/structure/one-line-block-empty",
+        "native/structure/one-line-block-empty-with-space",
+        "native/structure/one-line-block-without-spaces",
+        "native/structure/one-line-block-with-labels"
+      ]
+    },
+    {
+      "id": "structure-one-line-block-value",
+      "spec": "hclsyntax/spec.md#structural-elements",
+      "rule": "The attribute value in a one-line block can be any expression, including one with braces, a template or brackets spanning lines",
+      "tests": [
+        "native/structure/one-line-block-value-with-braces",
+        "native/structure/one-line-block-value-with-interpolation",
+        "native/structure/one-line-block-value-spans-lines-inside-brackets"
+      ]
+    },
+    {
+      "id": "structure-one-line-block-inline-comments",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "Inline comments, even ones spanning lines, are whitespace inside a one-line block",
+      "tests": [
+        "native/structure/one-line-block-inline-comment",
+        "native/structure/one-line-block-inline-comment-spanning-lines"
+      ]
+    },
+    {
+      "id": "structure-one-line-block-one-attribute",
+      "spec": "hclsyntax/spec.md#structural-elements",
+      "rule": "A one-line block holds at most one attribute, so a second attribute or a comma after the first is an error",
+      "tests": [
+        "native/structure/one-line-block-two-attributes",
+        "native/structure/one-line-block-two-attributes-without-comma",
+        "native/structure/one-line-block-trailing-comma"
+      ]
+    },
+    {
+      "id": "structure-one-line-block-no-blocks",
+      "spec": "hclsyntax/spec.md#structural-elements",
+      "rule": "A one-line block cannot contain a nested block",
+      "tests": [
+        "native/structure/one-line-block-cannot-contain-block"
+      ]
+    },
+    {
+      "id": "structure-one-line-block-content-is-attribute",
+      "spec": "hclsyntax/spec.md#structural-elements",
+      "rule": "The content of a one-line block must be a whole attribute: a bare name, an equals sign and a value",
+      "tests": [
+        "native/structure/one-line-block-missing-attribute-name",
+        "native/structure/one-line-block-missing-value",
+        "native/structure/one-line-block-identifier-without-value",
+        "native/structure/one-line-block-expression-without-name",
+        "native/structure/one-line-block-quoted-attribute-name",
+        "native/structure/one-line-block-colon-instead-of-equals"
+      ]
+    },
+    {
+      "id": "structure-one-line-block-closes-on-its-line",
+      "spec": "hclsyntax/spec.md#structural-elements",
+      "rule": "A block whose opening brace is followed by an attribute on the same line must close right after that attribute, with no newline or line comment in between, which rules out a heredoc value",
+      "tests": [
+        "native/structure/one-line-block-closing-brace-on-next-line",
+        "native/lexical/line-comment-ends-one-line-block",
+        "native/structure/one-line-block-heredoc-value"
+      ]
+    },
+    {
+      "id": "structure-attribute-and-block-share-names",
+      "spec": "hclsyntax/spec.md#attribute-definitions",
+      "rule": "Attribute names and block types are separate, so an attribute and a block can share a name in either order, and a block's body can define an attribute named like the block",
+      "tests": [
+        "native/structure/attribute-and-block-with-same-name",
+        "native/structure/block-and-attribute-with-same-name",
+        "native/structure/block-attribute-named-like-block"
+      ]
+    },
+    {
+      "id": "structure-equals-means-attribute",
+      "spec": "hclsyntax/spec.md#structural-elements",
+      "rule": "An equals sign after a name makes an attribute, so name = { ... } is an attribute with an object value",
+      "tests": [
+        "native/structure/equals-sign-makes-attribute-with-object-value"
+      ]
+    },
+    {
+      "id": "structure-crlf-newlines",
+      "spec": "hclsyntax/spec.md#comments-and-whitespace",
+      "rule": "CR LF works as the newline that ends attributes and follows block braces",
+      "tests": [
+        "native/structure/crlf-line-endings",
+        "native/structure/crlf-block-braces"
+      ]
+    },
+    {
+      "id": "structure-body-content-through-schema",
+      "spec": "spec.md#body-content",
+      "rule": "A body's content is reached by giving a schema of the attributes and blocks the application expects",
+      "untested": "Needs schema-driven processing, which the protocol has no way to request"
+    },
+    {
+      "id": "structure-schema-unique-attribute-names",
+      "spec": "spec.md#schema-driven-processing",
+      "rule": "A body schema that requests the same attribute name twice is an error",
+      "untested": "Needs schema-driven processing, which the protocol has no way to request"
+    },
+    {
+      "id": "structure-schema-attribute-and-block-type-distinct",
+      "spec": "spec.md#schema-driven-processing",
+      "rule": "A body schema that requests a block type with the same name as a requested attribute is an error",
+      "untested": "Needs schema-driven processing, which the protocol has no way to request"
+    },
+    {
+      "id": "structure-schema-required-attribute",
+      "spec": "spec.md#schema-driven-processing",
+      "rule": "Schema-driven processing reports an error when an attribute the schema marks as required is missing",
+      "untested": "Needs schema-driven processing, which the protocol has no way to request"
+    },
+    {
+      "id": "structure-schema-block-labels",
+      "spec": "spec.md#schema-driven-processing",
+      "rule": "A block header schema names each label of its block type, and blocks are matched against that header",
+      "untested": "Needs schema-driven processing, which the protocol has no way to request"
+    },
+    {
+      "id": "structure-schema-exhaustive",
+      "spec": "spec.md#partial-processing-of-body-content",
+      "rule": "By default, schema-driven processing reports an error for each attribute or block the schema does not mention",
+      "untested": "Needs schema-driven processing, which the protocol has no way to request"
+    },
+    {
+      "id": "structure-partial-processing-remainder",
+      "spec": "spec.md#partial-processing-of-body-content",
+      "rule": "Partial processing returns the attributes and blocks that the schema does not mention as a new body",
+      "untested": "Needs partial processing with a schema, which the protocol has no way to request"
+    },
+    {
+      "id": "structure-partial-processing-two-steps",
+      "spec": "spec.md#partial-processing-of-body-content",
+      "rule": "Partial processing followed by exhaustive processing of the remainder equals one pass with the union of both schemas",
+      "untested": "Needs partial processing with a schema, which the protocol has no way to request"
+    },
+    {
+      "id": "structure-dynamic-attributes",
+      "spec": "spec.md#dynamic-attributes-processing",
+      "rule": "Dynamic attributes processing returns one attribute per distinct name in the body and no blocks",
+      "untested": "Needs dynamic attributes processing, which the protocol has no way to request separately from parsing"
+    }
+  ]
+}

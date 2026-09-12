@@ -1,0 +1,15 @@
+{
+  "description": "Dividing zero by zero is an evaluation error rather than a number",
+  "spec": [
+    "spec.md#primitive-types",
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says arithmetic operators always produce numbers and that the number type has no NaN value, which can't both hold for 0 / 0, and it never says division can fail. hashicorp/hcl reports an error: DivideFunc in cty/function/stdlib/number.go recovers the big.ErrNaN panic from math/big and returns an error, which BinaryOpExpr.Value in hclsyntax/expression_ops.go reports as \"Operation failed\".",
+  "reference_error": "can't divide zero by zero",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

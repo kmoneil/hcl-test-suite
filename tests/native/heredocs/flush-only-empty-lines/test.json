@@ -1,0 +1,18 @@
+{
+  "description": "A <<- heredoc holding only empty lines keeps them",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "\n\n"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

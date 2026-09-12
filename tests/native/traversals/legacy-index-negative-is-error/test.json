@@ -1,0 +1,11 @@
+{
+  "description": "A minus sign after a dot is not a legacy index",
+  "spec": [
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid attribute name",
+  "expect": {
+    "valid": false
+  }
+}

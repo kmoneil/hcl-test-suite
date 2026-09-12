@@ -1,0 +1,14 @@
+{
+  "description": "Results whose types can't unify are an error even if the bad one isn't selected",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator",
+    "spec.md#type-unification"
+  ],
+  "op": "eval",
+  "notes": "The spec requires both results to unify even though only one is selected, and number and tuple types don't unify.",
+  "reference_error": "The 'true' value is number, but the 'false' value is tuple",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

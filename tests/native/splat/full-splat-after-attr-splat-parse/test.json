@@ -1,0 +1,39 @@
+{
+  "description": "A full splat after an attribute-only splat takes the attribute-only splat as its source",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "splat",
+          "source": {
+            "kind": "splat",
+            "source": {
+              "kind": "variable",
+              "name": "t"
+            },
+            "each": {
+              "kind": "get_attr",
+              "object": {
+                "kind": "splat_item"
+              },
+              "name": "b"
+            }
+          },
+          "each": {
+            "kind": "get_attr",
+            "object": {
+              "kind": "splat_item"
+            },
+            "name": "c"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

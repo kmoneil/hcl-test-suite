@@ -1,0 +1,11 @@
+{
+  "description": "A parenthesized expression cannot be called like a function",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "parse",
+  "reference_error": "Missing newline after argument",
+  "expect": {
+    "valid": false
+  }
+}

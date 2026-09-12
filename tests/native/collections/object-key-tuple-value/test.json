@@ -1,0 +1,14 @@
+{
+  "description": "A key that evaluates to a tuple is an error",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "spec.md#structural-types"
+  ],
+  "op": "eval",
+  "notes": "Attribute names are strings, and there is no conversion from a tuple to a string.",
+  "reference_error": "string required, but have tuple",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

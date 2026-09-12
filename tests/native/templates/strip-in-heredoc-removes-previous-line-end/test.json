@@ -1,0 +1,21 @@
+{
+  "description": "${~ at the start of a heredoc line removes the previous line's trailing spaces and newline",
+  "spec": [
+    "hclsyntax/spec.md#template-literals",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says strip markers remove spaces, \"interpreted as per Unicode's definition\", without saying which definition it means. The tab U+0009 and line feed U+000A have the White_Space property but are not space separators (category Zs), and hclsyntax/spec.md says newline sequences are not whitespace. Stripping them is hashicorp/hcl's reading: parseTemplateParts in hclsyntax/parser_template.go trims with Go's unicode.IsSpace, which follows the White_Space property.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "ab\n"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

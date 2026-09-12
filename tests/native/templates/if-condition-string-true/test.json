@@ -1,0 +1,21 @@
+{
+  "description": "The string \"true\" as an if condition selects the first branch",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive",
+    "hclsyntax/spec.md#conditional-operator",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "notes": "The information model converts strings to bool where a bool is needed: \"true\" and \"1\" become true, \"false\" and \"0\" become false, and other strings are an error.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "yes"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

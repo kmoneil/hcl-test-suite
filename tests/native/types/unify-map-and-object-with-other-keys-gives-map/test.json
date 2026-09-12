@@ -1,0 +1,40 @@
+{
+  "description": "A map whose keys don't match the other result's attributes unifies to a map",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec unifies a map and an object to the object type, and converting a map whose keys don't exactly match the object's attributes is an error, so this should fail. hashicorp/hcl unifies to a map (unifyObjectsAsMaps in cty/convert/unify.go) and returns the map.",
+  "variables": {
+    "m": {
+      "map": {
+        "b": {
+          "number": "5"
+        }
+      },
+      "element_type": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "map": {
+            "b": {
+              "number": "5"
+            }
+          },
+          "element_type": "number"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

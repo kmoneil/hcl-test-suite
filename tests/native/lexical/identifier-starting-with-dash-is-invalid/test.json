@@ -1,0 +1,11 @@
+{
+  "description": "An identifier cannot start with a dash",
+  "spec": [
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "parse",
+  "reference_error": "Argument or block definition required",
+  "expect": {
+    "valid": false
+  }
+}

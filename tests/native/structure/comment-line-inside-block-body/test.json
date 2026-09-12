@@ -1,0 +1,26 @@
+{
+  "description": "A block body containing only a line comment is empty",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "A line comment is equivalent to a newline, and the Body production (Attribute | Block | OneLineBlock)* has no place for a newline that doesn't end an item. hashicorp/hcl turns the comment into a newline token (peeker.nextToken in hclsyntax/peeker.go) and skips newline tokens wherever a body item may start: before the first item, between items, after the last one and in a body with no items (parser.ParseBody in hclsyntax/parser.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "block",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

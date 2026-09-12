@@ -1,0 +1,19 @@
+{
+  "description": "An error in the else branch of an if directive is ignored when the condition is true",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "ok"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

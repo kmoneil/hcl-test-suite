@@ -1,0 +1,34 @@
+{
+  "description": "A for expression whose element is unknown gives a tuple holding the unknown",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says that if a for expression's element expression returns an unknown value, the result is a value of the dynamic pseudo-type. hashicorp/hcl returns a known tuple holding the unknown value (ForExpr.Value in hclsyntax/expression.go).",
+  "variables": {
+    "u": {
+      "unknown": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "unknown": "number"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

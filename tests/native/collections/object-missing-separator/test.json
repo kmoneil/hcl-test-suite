@@ -1,0 +1,11 @@
+{
+  "description": "Object elements on one line with no comma between them are an error",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "reference_error": "Missing attribute separator",
+  "expect": {
+    "valid": false
+  }
+}

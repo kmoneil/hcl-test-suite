@@ -1,0 +1,37 @@
+{
+  "description": "Inside parentheses newlines may surround the ? and : of a conditional",
+  "spec": [
+    "hclsyntax/spec.md#expression-terms",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "conditional",
+          "condition": {
+            "kind": "literal",
+            "value": {
+              "bool": true
+            }
+          },
+          "true_result": {
+            "kind": "literal",
+            "value": {
+              "number": "1"
+            }
+          },
+          "false_result": {
+            "kind": "literal",
+            "value": {
+              "number": "2"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

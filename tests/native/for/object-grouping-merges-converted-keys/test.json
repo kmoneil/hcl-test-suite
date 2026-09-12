@@ -1,0 +1,31 @@
+{
+  "description": "With grouping, a number key and a string key that convert to the same string share a group",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "notes": "The spec groups the values produced for each distinct key. 1 and \"1\" are unequal values, but the key becomes an attribute name, which is always a string, so what counts is the name after conversion to string, and both give \"1\".",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "1": {
+              "tuple": [
+                {
+                  "number": "1"
+                },
+                {
+                  "string": "1"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

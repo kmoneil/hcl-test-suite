@@ -1,0 +1,11 @@
+{
+  "description": "A double colon in a function name must be followed by a name",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "parse",
+  "reference_error": "Missing function name",
+  "expect": {
+    "valid": false
+  }
+}

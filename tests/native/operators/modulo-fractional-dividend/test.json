@@ -1,0 +1,18 @@
+{
+  "description": "The remainder of a fractional dividend keeps its fraction",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1.5"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "description": "A for expression can't iterate over null",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#null-values",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec lists tuple, object, list, map and set types as iterable but doesn't say what iterating a null value does; treating it as empty would also be reasonable. The null keyword is a null of the dynamic pseudo-type, which a for expression otherwise accepts (over the dynamic value it gives the dynamic value), so only being null makes it fail. hashicorp/hcl reports an error for any null collection: ForExpr.Value in hclsyntax/expression.go checks IsNull before anything else.",
+  "reference_error": "Iteration over null value",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

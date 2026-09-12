@@ -1,0 +1,26 @@
+{
+  "description": "An index key can be a variable expression",
+  "spec": [
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "index",
+          "collection": {
+            "kind": "variable",
+            "name": "t"
+          },
+          "key": {
+            "kind": "variable",
+            "name": "i"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

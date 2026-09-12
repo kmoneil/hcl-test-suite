@@ -1,0 +1,21 @@
+{
+  "description": "A for directive can name its variable in",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive",
+    "hclsyntax/spec.md#keywords"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says that where an identifier works as a keyword, its keyword role supersedes any other interpretation, which suggests the first in ends the variable list and the directive is invalid. hashicorp/hcl takes whatever identifier follows for as the variable name: parseTemplateParts in hclsyntax/parser_template.go only checks for TokenIdent there.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

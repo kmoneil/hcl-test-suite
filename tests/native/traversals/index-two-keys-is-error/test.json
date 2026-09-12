@@ -1,0 +1,11 @@
+{
+  "description": "An index operation cannot have two comma-separated keys",
+  "spec": [
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "parse",
+  "reference_error": "Missing close bracket on index",
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,708 @@
+{
+  "area": "native/unknowns",
+  "rules": [
+    {
+      "id": "unknowns-operation-gives-typed-unknown",
+      "spec": "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+      "rule": "An operation on an unknown operand gives an unknown value of the type the operation produces, converting unknown operands like known ones",
+      "tests": [
+        "native/unknowns/add-unknown-number",
+        "native/unknowns/subtract-unknown-number",
+        "native/unknowns/multiply-unknown-number-by-zero",
+        "native/unknowns/divide-unknown-number",
+        "native/unknowns/modulo-unknown-number",
+        "native/unknowns/negate-unknown-number",
+        "native/unknowns/add-two-unknown-numbers",
+        "native/unknowns/add-unknown-string",
+        "native/unknowns/less-than-unknown-number",
+        "native/unknowns/greater-or-equal-unknown-number",
+        "native/unknowns/less-than-unknown-string",
+        "native/unknowns/equal-unknown-number-and-number",
+        "native/unknowns/not-equal-unknown-number-and-number",
+        "native/unknowns/equal-unknown-number-and-itself",
+        "native/unknowns/equal-unknowns-of-different-types",
+        "native/unknowns/equal-unknown-number-and-null",
+        "native/unknowns/or-unknown-bool-with-false",
+        "native/unknowns/or-false-with-unknown-bool",
+        "native/unknowns/or-two-unknown-bools",
+        "native/unknowns/and-unknown-bool-with-true",
+        "native/unknowns/and-true-with-unknown-bool",
+        "native/unknowns/and-two-unknown-bools",
+        "native/unknowns/not-unknown-bool",
+        "native/unknowns/not-unknown-string",
+        "native/unknowns/conditional-converts-selected-unknown-result",
+        "native/unknowns/template-unknown-number-part"
+      ]
+    },
+    {
+      "id": "unknowns-each-type-has-own-unknown",
+      "spec": "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+      "rule": "Each type has its own unknown value, and an unknown keeps its type, so type rules still apply to it",
+      "tests": [
+        "native/unknowns/add-unknown-number",
+        "native/unknowns/add-unknown-bool-fails",
+        "native/unknowns/tuple-with-unknown-element"
+      ]
+    },
+    {
+      "id": "unknowns-dynamic-treated-as-expected-type",
+      "spec": "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+      "rule": "An operation on the dynamic value treats it as a value of the type the operation expects and gives an unknown of the operation's result type",
+      "tests": [
+        "native/unknowns/add-dynamic-value",
+        "native/unknowns/negate-dynamic-value",
+        "native/unknowns/equal-dynamic-value-and-number",
+        "native/unknowns/less-than-dynamic-value",
+        "native/unknowns/not-dynamic-value",
+        "native/unknowns/and-dynamic-value-with-true",
+        "native/unknowns/conditional-dynamic-predicate",
+        "native/unknowns/template-dynamic-part",
+        "native/unknowns/index-dynamic-value",
+        "native/unknowns/attribute-of-dynamic-value",
+        "native/unknowns/splat-dynamic-value",
+        "native/unknowns/for-over-dynamic-value",
+        "native/unknowns/object-dynamic-key"
+      ]
+    },
+    {
+      "id": "unknowns-partial-type-checking",
+      "spec": "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+      "rule": "Evaluating with unknown variables gives an unknown of the right type for a valid expression, and an error for an operation that type information alone proves invalid",
+      "tests": [
+        "native/unknowns/add-unknown-bool-fails",
+        "native/unknowns/add-unknown-number-to-non-numeric-string-fails",
+        "native/unknowns/less-than-unknown-bool-fails",
+        "native/unknowns/or-unknown-number-fails",
+        "native/unknowns/conditional-unknown-predicate-results-must-unify",
+        "native/unknowns/template-for-over-unknown-number-fails",
+        "native/unknowns/index-list-with-unknown-bool-key-fails",
+        "native/unknowns/index-unknown-list-with-bool-key-fails",
+        "native/unknowns/index-unknown-tuple-out-of-range-fails",
+        "native/unknowns/index-unknown-object-missing-attribute-fails",
+        "native/unknowns/index-unknown-number-fails",
+        "native/unknowns/index-unknown-set-fails",
+        "native/unknowns/attribute-missing-from-unknown-object-fails",
+        "native/unknowns/attribute-of-unknown-string-fails",
+        "native/unknowns/splat-unknown-list-missing-attribute-fails",
+        "native/unknowns/splat-unknown-object-missing-attribute-fails",
+        "native/unknowns/for-over-unknown-number-fails",
+        "native/unknowns/for-unknown-number-condition-fails",
+        "native/unknowns/for-object-unknown-number-condition-per-element-fails",
+        "native/unknowns/object-unknown-tuple-key-fails",
+        "native/unknowns/compound-expression-with-unknowns-gives-typed-unknown"
+      ]
+    },
+    {
+      "id": "unknowns-only-from-unknown-operands",
+      "spec": "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+      "rule": "An expression gives an unknown or dynamic result only if an unknown or dynamic value takes part in computing it; an unknown in an unselected result doesn't count",
+      "tests": [
+        "native/unknowns/conditional-unselected-unknown-result",
+        "native/unknowns/conditional-unselected-unknown-result-converted",
+        "native/unknowns/conditional-unselected-dynamic-result",
+        "native/unknowns/template-if-unselected-unknown-part",
+        "native/collections/object-key-parenthesized-variable-value"
+      ]
+    },
+    {
+      "id": "unknowns-dynamic-pseudo-type-values",
+      "spec": "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+      "rule": "The dynamic pseudo-type's only values are its null, which the null keyword gives, and its unknown value, the dynamic value",
+      "tests": [
+        "native/types/unify-two-null-keywords-gives-dynamic",
+        "native/unknowns/conditional-unknown-predicate-with-only-dynamic-results",
+        "native/unknowns/template-single-dynamic-interpolation-stays-dynamic"
+      ]
+    },
+    {
+      "id": "unknowns-dynamic-identical-only-to-itself",
+      "spec": "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+      "rule": "The dynamic pseudo-type is identical only to itself, so a type containing it is identical only to the same type",
+      "tests": [
+        "native/types/equality-nested-null-string-and-null-keyword",
+        "native/types/tuple-equality-null-keyword-elements"
+      ]
+    },
+    {
+      "id": "unknowns-function-unknown-argument",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "An unknown argument for a parameter that doesn't accept unknowns makes the call's result an unknown of the result type",
+      "untested": "Needs test functions: the adapter's function table is empty, so every call fails as a call to an unknown function"
+    },
+    {
+      "id": "unknowns-function-dynamic-argument",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "The dynamic value as an argument for a parameter that doesn't accept the dynamic pseudo-type makes the call's result type the dynamic pseudo-type",
+      "untested": "Needs test functions: the adapter's function table is empty, so every call fails as a call to an unknown function"
+    },
+    {
+      "id": "unknowns-conversion-from-dynamic",
+      "spec": "spec.md#conversion-to-and-from-the-dynamic-pseudo-type",
+      "rule": "Converting a value of the dynamic pseudo-type to another type succeeds and gives an unknown of that type",
+      "tests": [
+        "native/unknowns/add-dynamic-value",
+        "native/unknowns/negate-dynamic-value",
+        "native/unknowns/less-than-dynamic-value",
+        "native/unknowns/not-dynamic-value",
+        "native/unknowns/and-dynamic-value-with-true",
+        "native/unknowns/conditional-dynamic-element-unifies-with-number",
+        "native/unknowns/template-dynamic-part"
+      ]
+    },
+    {
+      "id": "unknowns-conversion-to-dynamic",
+      "spec": "spec.md#conversion-to-and-from-the-dynamic-pseudo-type",
+      "rule": "Converting any value to the dynamic pseudo-type returns the value unchanged",
+      "untested": "hashicorp/hcl does convert to the dynamic pseudo-type, for example the object element of true ? [{a = 1}] : [d], but a conversion that returns its input unchanged gives the same result as the spec's conversion to the object type would, so the protocol can't tell them apart"
+    },
+    {
+      "id": "unknowns-arithmetic-unknown-operand",
+      "spec": "hclsyntax/spec.md#arithmetic-operators",
+      "rule": "An arithmetic operator with an unknown number operand gives an unknown number, whichever operand is unknown and whatever the other operand is, even zero",
+      "tests": [
+        "native/unknowns/add-unknown-number",
+        "native/unknowns/subtract-unknown-number",
+        "native/unknowns/multiply-unknown-number-by-zero",
+        "native/unknowns/divide-unknown-number",
+        "native/unknowns/modulo-unknown-number",
+        "native/unknowns/negate-unknown-number",
+        "native/unknowns/add-two-unknown-numbers",
+        "native/unknowns/add-unknown-string"
+      ]
+    },
+    {
+      "id": "unknowns-arithmetic-dynamic-operand",
+      "spec": "hclsyntax/spec.md#arithmetic-operators",
+      "rule": "An arithmetic operator with the dynamic value as an operand gives an unknown number",
+      "tests": [
+        "native/unknowns/add-dynamic-value",
+        "native/unknowns/negate-dynamic-value"
+      ]
+    },
+    {
+      "id": "unknowns-arithmetic-type-errors",
+      "spec": "hclsyntax/spec.md#arithmetic-operators",
+      "rule": "An arithmetic operand whose type can't convert to number is an error even when it is unknown, and an unknown operand doesn't hide an invalid known operand",
+      "tests": [
+        "native/unknowns/add-unknown-bool-fails",
+        "native/unknowns/add-unknown-number-to-non-numeric-string-fails"
+      ]
+    },
+    {
+      "id": "unknowns-comparison-unknown-operand",
+      "spec": "hclsyntax/spec.md#comparison-operators",
+      "rule": "A comparison with a correctly typed unknown operand gives an unknown bool, including an unknown compared with itself, with null or with an unknown of another type",
+      "tests": [
+        "native/unknowns/less-than-unknown-number",
+        "native/unknowns/greater-or-equal-unknown-number",
+        "native/unknowns/less-than-unknown-string",
+        "native/unknowns/equal-unknown-number-and-number",
+        "native/unknowns/not-equal-unknown-number-and-number",
+        "native/unknowns/equal-unknown-number-and-itself",
+        "native/unknowns/equal-unknowns-of-different-types",
+        "native/unknowns/equal-unknown-number-and-null"
+      ]
+    },
+    {
+      "id": "unknowns-comparison-dynamic-operand",
+      "spec": "hclsyntax/spec.md#comparison-operators",
+      "rule": "A comparison with the dynamic value as an operand gives an unknown bool",
+      "tests": [
+        "native/unknowns/equal-dynamic-value-and-number",
+        "native/unknowns/less-than-dynamic-value"
+      ]
+    },
+    {
+      "id": "unknowns-equality-unknown-and-other-type",
+      "spec": "hclsyntax/spec.md#comparison-operators",
+      "rule": "Equality between an unknown and a known value of a different type is false (disputed)",
+      "tests": [
+        "native/unknowns/equal-unknown-number-and-string"
+      ]
+    },
+    {
+      "id": "unknowns-comparison-refined-unknown",
+      "spec": "hclsyntax/spec.md#comparison-operators",
+      "rule": "A comparison with an unknown gives a known result when hashicorp/hcl can decide it from what it knows about the unknown: an arithmetic result is never null, a template result has a known start, and a conditional's number result lies between its two results (disputed)",
+      "tests": [
+        "native/unknowns/equal-unknown-sum-and-null",
+        "native/unknowns/equal-template-with-known-prefix",
+        "native/unknowns/less-than-conditional-with-known-range"
+      ]
+    },
+    {
+      "id": "unknowns-equality-collections-with-unknowns",
+      "spec": "hclsyntax/spec.md#comparison-operators",
+      "rule": "Equality of collections holding unknown elements gives false when a pair of known elements differs before any unknown element, and an unknown bool when the unknown elements decide the result",
+      "tests": [
+        "native/unknowns/equal-tuple-with-unknown-element",
+        "native/unknowns/equal-object-with-unknown-attribute",
+        "native/unknowns/equal-list-with-unknown-element",
+        "native/unknowns/equal-tuples-differing-before-unknown"
+      ]
+    },
+    {
+      "id": "unknowns-equality-unknown-before-known-difference",
+      "spec": "hclsyntax/spec.md#comparison-operators",
+      "rule": "Tuples whose unknown element comes before a known difference compare as an unknown bool, not false (disputed)",
+      "tests": [
+        "native/unknowns/equal-tuples-differing-after-unknown"
+      ]
+    },
+    {
+      "id": "unknowns-comparison-type-errors",
+      "spec": "hclsyntax/spec.md#comparison-operators",
+      "rule": "An ordering comparison with an unknown operand whose type can't convert to number is an error",
+      "tests": [
+        "native/unknowns/less-than-unknown-bool-fails"
+      ]
+    },
+    {
+      "id": "unknowns-logic-unknown-operand",
+      "spec": "hclsyntax/spec.md#logic-operators",
+      "rule": "A logic operator with an unknown bool operand gives an unknown bool when the other operand doesn't decide the result",
+      "tests": [
+        "native/unknowns/or-unknown-bool-with-false",
+        "native/unknowns/or-false-with-unknown-bool",
+        "native/unknowns/or-two-unknown-bools",
+        "native/unknowns/and-unknown-bool-with-true",
+        "native/unknowns/and-true-with-unknown-bool",
+        "native/unknowns/and-two-unknown-bools",
+        "native/unknowns/not-unknown-bool",
+        "native/unknowns/not-unknown-string"
+      ]
+    },
+    {
+      "id": "unknowns-logic-decided-by-known-operand",
+      "spec": "hclsyntax/spec.md#logic-operators",
+      "rule": "A logic operator with an unknown or dynamic operand gives the known result when its other operand decides it: true for || with true, and false for && with false (disputed)",
+      "tests": [
+        "native/unknowns/or-unknown-bool-with-true",
+        "native/unknowns/or-true-with-unknown-bool",
+        "native/unknowns/and-unknown-bool-with-false",
+        "native/unknowns/and-false-with-unknown-bool",
+        "native/unknowns/or-dynamic-value-with-true"
+      ]
+    },
+    {
+      "id": "unknowns-logic-dynamic-operand",
+      "spec": "hclsyntax/spec.md#logic-operators",
+      "rule": "A logic operator with the dynamic value as an operand gives an unknown bool when the other operand doesn't decide the result",
+      "tests": [
+        "native/unknowns/not-dynamic-value",
+        "native/unknowns/and-dynamic-value-with-true"
+      ]
+    },
+    {
+      "id": "unknowns-logic-type-errors",
+      "spec": "hclsyntax/spec.md#logic-operators",
+      "rule": "A logic operand whose type can't convert to bool is an error even when it is unknown",
+      "tests": [
+        "native/unknowns/or-unknown-number-fails"
+      ]
+    },
+    {
+      "id": "unknowns-conditional-unknown-predicate",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "A conditional with an unknown bool predicate gives an unknown value of the unified type of its results",
+      "tests": [
+        "native/unknowns/conditional-unknown-predicate",
+        "native/unknowns/conditional-unknown-predicate-unifies-results",
+        "native/unknowns/conditional-unknown-predicate-with-null-result",
+        "native/unknowns/conditional-unknown-predicate-with-tuple-results"
+      ]
+    },
+    {
+      "id": "unknowns-conditional-dynamic-predicate",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "A conditional whose predicate is the dynamic value gives an unknown value of the unified type of its results",
+      "tests": [
+        "native/unknowns/conditional-dynamic-predicate"
+      ]
+    },
+    {
+      "id": "unknowns-conditional-convertible-unknown-predicate",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "An unknown string predicate converts to an unknown bool, so the conditional gives an unknown value of the unified type",
+      "tests": [
+        "native/unknowns/conditional-unknown-string-predicate"
+      ]
+    },
+    {
+      "id": "unknowns-conditional-unsuitable-unknown-predicate",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "A conditional whose predicate is an unknown number gives an unknown result instead of an error (disputed)",
+      "tests": [
+        "native/unknowns/conditional-unknown-number-predicate"
+      ]
+    },
+    {
+      "id": "unknowns-conditional-unknown-predicate-null-results",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "With an unknown predicate and two null results, the result is a null of the unified type (disputed)",
+      "tests": [
+        "native/unknowns/conditional-unknown-predicate-with-null-results"
+      ]
+    },
+    {
+      "id": "unknowns-conditional-unknown-predicate-results-unify",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "With an unknown predicate the two results must still unify",
+      "tests": [
+        "native/unknowns/conditional-unknown-predicate-results-must-unify"
+      ]
+    },
+    {
+      "id": "unknowns-conditional-unknown-predicate-result-errors",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "With an unknown predicate errors in the results aren't reported, and a failed arithmetic result takes part in unification as a number (disputed)",
+      "tests": [
+        "native/unknowns/conditional-unknown-predicate-ignores-result-errors"
+      ]
+    },
+    {
+      "id": "unknowns-conditional-unknown-result",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "A known predicate that selects an unknown result gives it converted to the unified type, and an unknown or dynamic value in the unselected result doesn't affect a known result",
+      "tests": [
+        "native/unknowns/conditional-selects-unknown-result",
+        "native/unknowns/conditional-converts-selected-unknown-result",
+        "native/unknowns/conditional-unselected-unknown-result",
+        "native/unknowns/conditional-unselected-unknown-result-converted",
+        "native/unknowns/conditional-unselected-dynamic-result"
+      ]
+    },
+    {
+      "id": "unknowns-conditional-dynamic-element",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "A dynamic tuple element unified with a number element converts to an unknown number when selected",
+      "tests": [
+        "native/unknowns/conditional-dynamic-element-unifies-with-number"
+      ]
+    },
+    {
+      "id": "unknowns-conditional-only-dynamic-results",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "Results that all have the dynamic pseudo-type give the dynamic value when the predicate is unknown",
+      "tests": [
+        "native/unknowns/conditional-unknown-predicate-with-only-dynamic-results"
+      ]
+    },
+    {
+      "id": "unknowns-conditional-dynamic-result-unconverted",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "A result that is the dynamic value isn't unified with the other result, so the conditional gives the dynamic value when it selects that result or the predicate is unknown (disputed)",
+      "tests": [
+        "native/unknowns/conditional-selects-dynamic-result",
+        "native/unknowns/conditional-unknown-predicate-with-dynamic-result"
+      ]
+    },
+    {
+      "id": "unknowns-template-unknown-part",
+      "spec": "hclsyntax/spec.md#templates",
+      "rule": "A template with an unknown or dynamic part gives an unknown string",
+      "tests": [
+        "native/unknowns/template-unknown-string-part",
+        "native/unknowns/template-unknown-number-part",
+        "native/unknowns/template-dynamic-part",
+        "native/unknowns/template-if-selects-unknown-part"
+      ]
+    },
+    {
+      "id": "unknowns-template-unconvertible-unknown-part",
+      "spec": "hclsyntax/spec.md#template-interpolations",
+      "rule": "A template with an unknown part whose type can't convert to string gives an unknown string instead of an error (disputed)",
+      "tests": [
+        "native/unknowns/template-unknown-list-part"
+      ]
+    },
+    {
+      "id": "unknowns-template-other-parts-checked",
+      "spec": "hclsyntax/spec.md#template-interpolations",
+      "rule": "An unknown part doesn't hide an error in another part of the template",
+      "tests": [
+        "native/unknowns/template-error-after-unknown-part"
+      ]
+    },
+    {
+      "id": "unknowns-template-unwrapping",
+      "spec": "hclsyntax/spec.md#template-interpolation-unwrapping",
+      "rule": "A template that is a single interpolation returns the unknown or dynamic value itself, keeping its type",
+      "tests": [
+        "native/unknowns/template-single-unknown-interpolation-keeps-type",
+        "native/unknowns/template-single-dynamic-interpolation-stays-dynamic"
+      ]
+    },
+    {
+      "id": "unknowns-template-if-directive",
+      "spec": "hclsyntax/spec.md#template-if-directive",
+      "rule": "An if directive with an unknown condition, or selecting a part that is unknown, gives an unknown string, while an unknown part it skips doesn't matter",
+      "tests": [
+        "native/unknowns/template-if-unknown-condition",
+        "native/unknowns/template-if-selects-unknown-part",
+        "native/unknowns/template-if-unselected-unknown-part"
+      ]
+    },
+    {
+      "id": "unknowns-template-for-directive",
+      "spec": "hclsyntax/spec.md#template-for-directive",
+      "rule": "A for directive over an unknown or dynamic collection, or producing an unknown element, gives an unknown string",
+      "tests": [
+        "native/unknowns/template-for-unknown-collection",
+        "native/unknowns/template-for-dynamic-collection",
+        "native/unknowns/template-for-unknown-element"
+      ]
+    },
+    {
+      "id": "unknowns-template-for-non-iterable",
+      "spec": "hclsyntax/spec.md#template-for-directive",
+      "rule": "A for directive over an unknown value of a type that can't be iterated is an error",
+      "tests": [
+        "native/unknowns/template-for-over-unknown-number-fails"
+      ]
+    },
+    {
+      "id": "unknowns-index-unknown-collection",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "Indexing an unknown list, map, tuple or object with a valid known key gives an unknown of the selected element's type",
+      "tests": [
+        "native/unknowns/index-unknown-list",
+        "native/unknowns/index-unknown-map",
+        "native/unknowns/index-unknown-tuple",
+        "native/unknowns/index-unknown-object",
+        "native/unknowns/index-unknown-list-with-unknown-key"
+      ]
+    },
+    {
+      "id": "unknowns-index-unknown-key",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "Indexing a list or map with an unknown key gives an unknown of the element type, converting the unknown key like a known one",
+      "tests": [
+        "native/unknowns/index-list-with-unknown-key",
+        "native/unknowns/index-list-with-unknown-string-key",
+        "native/unknowns/index-map-with-unknown-key",
+        "native/unknowns/index-unknown-list-with-unknown-key"
+      ]
+    },
+    {
+      "id": "unknowns-index-type-undetermined",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "Indexing gives the dynamic value when type information alone can't determine the result type, as for the dynamic value or a tuple or object of mixed element types with an unknown key",
+      "tests": [
+        "native/unknowns/index-mixed-tuple-with-unknown-key",
+        "native/unknowns/index-mixed-object-with-unknown-key",
+        "native/unknowns/index-dynamic-value"
+      ]
+    },
+    {
+      "id": "unknowns-index-type-determined",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "Indexing a tuple or object with an unknown key, or a list with a dynamic key, gives the dynamic value even when every possible element has the same type (disputed)",
+      "tests": [
+        "native/unknowns/index-number-tuple-with-unknown-key",
+        "native/unknowns/index-number-object-with-unknown-key",
+        "native/unknowns/index-list-with-dynamic-key"
+      ]
+    },
+    {
+      "id": "unknowns-index-invalid-by-type",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "An index that type information alone proves invalid is an error even if the collection or key is unknown: a key of an unconvertible type, a tuple index out of range, a missing attribute, or a collection that can't be indexed",
+      "tests": [
+        "native/unknowns/index-list-with-unknown-bool-key-fails",
+        "native/unknowns/index-unknown-list-with-bool-key-fails",
+        "native/unknowns/index-unknown-tuple-out-of-range-fails",
+        "native/unknowns/index-unknown-object-missing-attribute-fails",
+        "native/unknowns/index-unknown-number-fails",
+        "native/unknowns/index-unknown-set-fails"
+      ]
+    },
+    {
+      "id": "unknowns-index-unsuitable-key",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "Indexing an unknown list with a negative or fractional number gives an unknown element instead of an error (disputed)",
+      "tests": [
+        "native/unknowns/index-unknown-list-with-negative-key",
+        "native/unknowns/index-unknown-list-with-fractional-key"
+      ]
+    },
+    {
+      "id": "unknowns-attribute-unknown-object",
+      "spec": "hclsyntax/spec.md#attribute-access-operator",
+      "rule": "Accessing an attribute of an unknown object whose type has that attribute gives an unknown of the attribute's type, also through nested objects",
+      "tests": [
+        "native/unknowns/attribute-of-unknown-object",
+        "native/unknowns/attribute-of-attribute-of-unknown-object"
+      ]
+    },
+    {
+      "id": "unknowns-attribute-dynamic",
+      "spec": "hclsyntax/spec.md#attribute-access-operator",
+      "rule": "Accessing an attribute of the dynamic value gives the dynamic value",
+      "tests": [
+        "native/unknowns/attribute-of-dynamic-value"
+      ]
+    },
+    {
+      "id": "unknowns-attribute-invalid-by-type",
+      "spec": "hclsyntax/spec.md#attribute-access-operator",
+      "rule": "Accessing an attribute that an unknown value's type doesn't have is an error",
+      "tests": [
+        "native/unknowns/attribute-missing-from-unknown-object-fails",
+        "native/unknowns/attribute-of-unknown-string-fails"
+      ]
+    },
+    {
+      "id": "unknowns-splat-unknown-sequence",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "A splat over an unknown tuple or list gives an unknown of the type the splat gives for a known value: a tuple of the traversal's result types for a tuple, a list for a list",
+      "tests": [
+        "native/unknowns/splat-unknown-tuple",
+        "native/unknowns/splat-unknown-list"
+      ]
+    },
+    {
+      "id": "unknowns-splat-dynamic",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "A splat over the dynamic value gives the dynamic value",
+      "tests": [
+        "native/unknowns/splat-dynamic-value"
+      ]
+    },
+    {
+      "id": "unknowns-splat-unknown-scalar",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "A splat over an unknown non-sequence value that might be null gives the dynamic value, since a null gives an empty tuple and anything else a one-element one",
+      "tests": [
+        "native/unknowns/splat-unknown-number",
+        "native/unknowns/splat-unknown-object"
+      ]
+    },
+    {
+      "id": "unknowns-splat-unknown-non-null-scalar",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "A splat over an unknown number that can't be null, such as an arithmetic result, gives a one-element tuple holding it (disputed)",
+      "tests": [
+        "native/unknowns/splat-unknown-sum"
+      ]
+    },
+    {
+      "id": "unknowns-splat-invalid-by-type",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "A splat whose traversal is invalid for the element type is an error even if the source is unknown",
+      "tests": [
+        "native/unknowns/splat-unknown-list-missing-attribute-fails",
+        "native/unknowns/splat-unknown-object-missing-attribute-fails"
+      ]
+    },
+    {
+      "id": "unknowns-for-unknown-collection",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "A for expression over an unknown or dynamic collection gives the dynamic value",
+      "tests": [
+        "native/unknowns/for-over-unknown-list",
+        "native/unknowns/for-over-unknown-tuple",
+        "native/unknowns/for-object-over-unknown-map",
+        "native/unknowns/for-over-dynamic-value"
+      ]
+    },
+    {
+      "id": "unknowns-for-unknown-collection-body-unchecked",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "A for expression over an unknown collection gives the dynamic value without checking its body, even when the body uses an attribute the element type lacks (disputed)",
+      "tests": [
+        "native/unknowns/for-over-unknown-list-skips-body-type-check"
+      ]
+    },
+    {
+      "id": "unknowns-for-non-iterable",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "A for expression over an unknown value of a type that can't be iterated is an error",
+      "tests": [
+        "native/unknowns/for-over-unknown-number-fails"
+      ]
+    },
+    {
+      "id": "unknowns-for-unknown-element",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "A for expression whose element or value expression gives an unknown gives a known tuple or object holding it (disputed)",
+      "tests": [
+        "native/unknowns/for-unknown-element",
+        "native/unknowns/for-object-unknown-value"
+      ]
+    },
+    {
+      "id": "unknowns-for-unknown-key",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "An object for expression whose key expression gives an unknown or dynamic value gives the dynamic value",
+      "tests": [
+        "native/unknowns/for-object-unknown-key",
+        "native/unknowns/for-object-dynamic-key"
+      ]
+    },
+    {
+      "id": "unknowns-for-unknown-condition",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "A for expression whose condition gives an unknown bool, an unknown string or the dynamic value gives the dynamic value",
+      "tests": [
+        "native/unknowns/for-unknown-condition",
+        "native/unknowns/for-object-unknown-condition",
+        "native/unknowns/for-dynamic-condition",
+        "native/unknowns/for-unknown-string-condition"
+      ]
+    },
+    {
+      "id": "unknowns-for-unsuitable-unknown-condition",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "A for condition that is an unknown number is an error when it doesn't depend on the element, and in an object for expression also when it does",
+      "tests": [
+        "native/unknowns/for-unknown-number-condition-fails",
+        "native/unknowns/for-object-unknown-number-condition-per-element-fails"
+      ]
+    },
+    {
+      "id": "unknowns-for-tuple-unsuitable-condition-per-element",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "A tuple for expression whose condition gives an unknown number for an element gives the dynamic value instead of an error (disputed)",
+      "tests": [
+        "native/unknowns/for-unknown-number-condition-per-element"
+      ]
+    },
+    {
+      "id": "unknowns-for-unsuitable-unknown-key",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "An object for expression whose key gives an unknown tuple gives the dynamic value instead of an error (disputed)",
+      "tests": [
+        "native/unknowns/for-object-unknown-tuple-key"
+      ]
+    },
+    {
+      "id": "unknowns-object-unknown-key",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "An object constructor with an unknown or dynamic key gives the dynamic value, even if its other keys are known",
+      "tests": [
+        "native/unknowns/object-unknown-key",
+        "native/unknowns/object-unknown-key-among-known-keys",
+        "native/unknowns/object-dynamic-key",
+        "native/unknowns/object-unknown-number-key"
+      ]
+    },
+    {
+      "id": "unknowns-object-unsuitable-unknown-key",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "An object constructor key giving an unknown value whose type can't convert to string is an error",
+      "tests": [
+        "native/unknowns/object-unknown-tuple-key-fails"
+      ]
+    },
+    {
+      "id": "unknowns-collection-unknown-elements",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "Tuple and object constructors whose element values are unknown give known collections holding the unknown values",
+      "tests": [
+        "native/unknowns/tuple-with-unknown-element",
+        "native/unknowns/object-with-unknown-attribute-value"
+      ]
+    }
+  ]
+}

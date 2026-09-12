@@ -1,0 +1,22 @@
+{
+  "description": "An identifier named if followed by parentheses is a function call",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#keywords"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "call",
+          "name": "if",
+          "args": [],
+          "expand_final": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "description": "An index key can be a string built by a template",
+  "spec": [
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "eval",
+  "variables": {
+    "o": {
+      "object": {
+        "ab": {
+          "string": "x"
+        }
+      }
+    },
+    "k": {
+      "string": "b"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

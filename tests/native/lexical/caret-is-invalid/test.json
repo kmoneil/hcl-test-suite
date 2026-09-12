@@ -1,0 +1,11 @@
+{
+  "description": "The caret is not an operator",
+  "spec": [
+    "hclsyntax/spec.md#operators-and-delimiters"
+  ],
+  "op": "parse",
+  "reference_error": "Bitwise operators are not supported",
+  "expect": {
+    "valid": false
+  }
+}

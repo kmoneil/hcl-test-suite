@@ -1,0 +1,11 @@
+{
+  "description": "A backslash before a newline inside quotes is not a line continuation",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid multi-line string",
+  "expect": {
+    "valid": false
+  }
+}

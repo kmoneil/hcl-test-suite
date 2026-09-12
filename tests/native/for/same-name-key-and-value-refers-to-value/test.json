@@ -1,0 +1,24 @@
+{
+  "description": "When the key and value variables have the same name, the name refers to the value",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec doesn't say whether the key and value variables may share a name. hashicorp/hcl accepts it (finishParsingForExpr in hclsyntax/parser.go doesn't compare the names), and ForExpr.Value in hclsyntax/expression.go defines the key variable and then the value variable under the same name, so the value wins.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "a"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

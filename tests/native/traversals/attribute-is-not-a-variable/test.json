@@ -1,0 +1,13 @@
+{
+  "description": "An attribute defined in the body is not a variable that expressions can refer to",
+  "spec": [
+    "hclsyntax/spec.md#variables-and-variable-expressions",
+    "hclsyntax/spec.md#attribute-definitions"
+  ],
+  "op": "eval",
+  "reference_error": "Unknown variable: There is no variable named \"a\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

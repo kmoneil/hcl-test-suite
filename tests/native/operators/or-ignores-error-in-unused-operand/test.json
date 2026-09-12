@@ -5,7 +5,7 @@
   ],
   "op": "eval",
   "status": "disputed",
-  "notes": "The spec doesn't say whether logic operators short-circuit. The reference implementation evaluates both operands but drops the error from the one that didn't decide the result.",
+  "notes": "The spec gives logic operators no short-circuit rule (the conditional operator section, by contrast, says when errors are suppressed), so the plain reading reports this error. hashicorp/hcl evaluates both operands and converts each to bool before its short-circuit check (BinaryOpExpr.Value in hclsyntax/expression_ops.go): the undefined variable leaves an unknown value, which converts, and the ShortCircuit function of OpLogicalOr then returns the result with only the left operand's errors. A failed operand that doesn't convert to bool, such as a failed addition, is still reported.",
   "expect": {
     "valid": true,
     "body": {

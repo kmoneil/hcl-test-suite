@@ -1,0 +1,42 @@
+{
+  "description": "An object for expression over a set can use each element as both key and value",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#collection-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "s": {
+      "set": [
+        {
+          "string": "x"
+        },
+        {
+          "string": "y"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "x": {
+              "string": "x"
+            },
+            "y": {
+              "string": "y"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

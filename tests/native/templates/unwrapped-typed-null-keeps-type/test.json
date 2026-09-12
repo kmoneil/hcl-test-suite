@@ -1,0 +1,26 @@
+{
+  "description": "A template that is only an interpolation of a null string produces that typed null",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolation-unwrapping"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "v": {
+      "null": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "null": "string"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

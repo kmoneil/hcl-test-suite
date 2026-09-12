@@ -1,0 +1,24 @@
+{
+  "description": "The newline after a closing marker ends the attribute, so another can follow directly",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions",
+    "hclsyntax/spec.md#attribute-definitions",
+    "hclsyntax/spec.md#syntax-notation"
+  ],
+  "op": "eval",
+  "notes": "The prose says a heredoc ends when its marker appears on a line of its own, and prose outranks the grammar's Newline at the end of the heredoc production, so the newline after the closing marker is the one that ends the attribute.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x\n"
+        },
+        "b": {
+          "string": "y"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

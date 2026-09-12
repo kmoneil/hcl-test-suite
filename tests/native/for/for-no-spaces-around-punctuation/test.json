@@ -1,0 +1,38 @@
+{
+  "description": "A for expression needs no spaces around its comma, colon, => or ellipsis",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "for",
+          "result": "object",
+          "key_var": "k",
+          "value_var": "v",
+          "collection": {
+            "kind": "variable",
+            "name": "xs"
+          },
+          "key": {
+            "kind": "variable",
+            "name": "k"
+          },
+          "value": {
+            "kind": "variable",
+            "name": "v"
+          },
+          "condition": {
+            "kind": "variable",
+            "name": "c"
+          },
+          "grouping": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

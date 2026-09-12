@@ -1,0 +1,52 @@
+{
+  "description": "The line break after a heredoc object value's closing marker separates elements",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#syntax-notation",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The newline after the closing marker belongs to the object constructor, and the prose says newlines between the braces are ignored as whitespace, with priority over the grammar's Newline separator, which leaves no separator between these elements. hashicorp/hcl's scanner emits that line break as a separate newline token (the heredocLiteralEOL action in hclsyntax/scan_tokens.rl), and parseObjectCons in hclsyntax/parser.go takes it as the separator, as it does any newline inside an object constructor.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "object",
+          "items": [
+            {
+              "key": {
+                "kind": "literal",
+                "value": {
+                  "string": "b"
+                }
+              },
+              "value": {
+                "kind": "literal",
+                "value": {
+                  "string": "x\n"
+                }
+              }
+            },
+            {
+              "key": {
+                "kind": "literal",
+                "value": {
+                  "string": "c"
+                }
+              },
+              "value": {
+                "kind": "literal",
+                "value": {
+                  "number": "1"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

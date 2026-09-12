@@ -1,0 +1,12 @@
+{
+  "description": "A quoted block label cannot contain a literal newline",
+  "spec": [
+    "hclsyntax/spec.md#blocks",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid multi-line string",
+  "expect": {
+    "valid": false
+  }
+}

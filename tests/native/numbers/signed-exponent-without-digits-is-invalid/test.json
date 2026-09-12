@@ -1,0 +1,11 @@
+{
+  "description": "An exponent sign must be followed by a digit",
+  "spec": [
+    "hclsyntax/spec.md#numeric-literals"
+  ],
+  "op": "parse",
+  "reference_error": "Missing newline after argument",
+  "expect": {
+    "valid": false
+  }
+}

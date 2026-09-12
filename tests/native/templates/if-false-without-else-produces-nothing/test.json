@@ -1,0 +1,18 @@
+{
+  "description": "An if directive without else produces nothing when its condition is false",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "<>"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

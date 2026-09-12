@@ -1,0 +1,29 @@
+{
+  "description": "A quoted block label keeps its Unicode code points without normalization",
+  "spec": [
+    "hclsyntax/spec.md#blocks",
+    "hclsyntax/spec.md#source-code-representation",
+    "spec.md#primitive-types"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The label is e followed by U+0301 COMBINING ACUTE ACCENT, whose NFC form is U+00E9. The spec says the language does not normalize identifiers and promises special handling of normalization for string literals that it never describes, and string values compare equal after NFC normalization, so it doesn't decide whether a quoted label is normalized. hashicorp/hcl keeps the label as written: parser.parseQuotedStringLiteral in hclsyntax/parser.go returns a plain Go string, while quoted templates become cty strings, which are NFC-normalized.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "block",
+          "labels": [
+            "é"
+          ],
+          "body": {
+            "attributes": {},
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

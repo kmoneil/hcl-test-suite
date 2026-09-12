@@ -1,0 +1,12 @@
+{
+  "description": "A block's closing brace cannot be on the same line as its last attribute",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#blocks"
+  ],
+  "op": "parse",
+  "reference_error": "Missing newline after argument",
+  "expect": {
+    "valid": false
+  }
+}

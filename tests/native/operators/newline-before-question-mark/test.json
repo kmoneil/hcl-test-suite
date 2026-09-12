@@ -1,0 +1,13 @@
+{
+  "description": "Outside parentheses a newline before the question mark ends the attribute",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#comments-and-whitespace",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "parse",
+  "reference_error": "Argument or block definition required",
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "description": "Indexing a map of numbers with an unknown string gives an unknown number",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "m": {
+      "map": {
+        "k": {
+          "number": "1"
+        }
+      },
+      "element_type": "number"
+    },
+    "u": {
+      "unknown": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "number"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

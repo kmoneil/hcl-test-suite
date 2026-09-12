@@ -1,0 +1,12 @@
+{
+  "description": "Attribute access on a string is an error",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator"
+  ],
+  "op": "eval",
+  "reference_error": "primitive-typed value (string)",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

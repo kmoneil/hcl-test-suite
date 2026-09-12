@@ -1,0 +1,40 @@
+{
+  "description": "Keywords after a dot are attribute names",
+  "spec": [
+    "hclsyntax/spec.md#keywords",
+    "hclsyntax/spec.md#attribute-access-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "get_attr",
+          "object": {
+            "kind": "variable",
+            "name": "x"
+          },
+          "name": "true"
+        },
+        "b": {
+          "kind": "get_attr",
+          "object": {
+            "kind": "variable",
+            "name": "x"
+          },
+          "name": "null"
+        },
+        "c": {
+          "kind": "get_attr",
+          "object": {
+            "kind": "variable",
+            "name": "x"
+          },
+          "name": "for"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

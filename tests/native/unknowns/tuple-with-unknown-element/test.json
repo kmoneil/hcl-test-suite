@@ -1,0 +1,36 @@
+{
+  "description": "A tuple constructor with an unknown element gives a known tuple holding it",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "notes": "A tuple constructor isn't one of the native syntax's operations; its elements are simply the element values. Only for expressions have a rule that makes the result dynamic when an element is unknown.",
+  "variables": {
+    "u": {
+      "unknown": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "unknown": "number"
+            },
+            {
+              "string": "x"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

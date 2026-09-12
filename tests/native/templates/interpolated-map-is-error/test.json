@@ -1,0 +1,26 @@
+{
+  "description": "Interpolating a map of strings next to other template parts is an error",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "v": {
+      "map": {
+        "k": {
+          "string": "a"
+        }
+      },
+      "element_type": "string"
+    }
+  },
+  "reference_error": "string required, but have map of string",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

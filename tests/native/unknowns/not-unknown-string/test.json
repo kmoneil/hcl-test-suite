@@ -1,0 +1,29 @@
+{
+  "description": "! applied to an unknown string gives an unknown bool",
+  "spec": [
+    "hclsyntax/spec.md#logic-operators",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "notes": "A string converts to bool (unsafely), so an unknown string converts to an unknown bool.",
+  "variables": {
+    "u": {
+      "unknown": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "bool"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

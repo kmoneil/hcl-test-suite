@@ -1,0 +1,14 @@
+{
+  "description": "A comment directly after the opening marker does not start a heredoc",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec's grammar puts a Newline after the opening identifier, and a line comment is equivalent to a newline, so a comment could stand in for it. hashicorp/hcl requires an actual newline right after the identifier (BeginHeredocTmpl in hclsyntax/scan_tokens.rl) and otherwise doesn't recognize a heredoc, so << becomes two less-than symbols.",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "description": "Outside templates, %{ is a modulo operator followed by an object constructor",
+  "spec": [
+    "hclsyntax/spec.md#operators-and-delimiters",
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec lists %{ among its operators and delimiters without limiting it to templates, so read as one token it would make x %{} a syntax error. hashicorp/hcl only recognizes %{ inside templates: TemplateControl in hclsyntax/scan_tokens.rl belongs to the template scanners, so the main scanner reads % and { as separate tokens and this is x modulo an empty object.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "binary",
+          "operator": "%",
+          "left": {
+            "kind": "variable",
+            "name": "x"
+          },
+          "right": {
+            "kind": "object",
+            "items": []
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

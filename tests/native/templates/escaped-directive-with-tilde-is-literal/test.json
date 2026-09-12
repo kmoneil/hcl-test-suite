@@ -1,0 +1,18 @@
+{
+  "description": "%%{~ is literal text, and the tilde does not strip anything",
+  "spec": [
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "a %{~ if b ~} c"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

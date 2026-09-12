@@ -1,0 +1,40 @@
+{
+  "description": "A heredoc with an interpolation parses into literal and interpolation parts",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions",
+    "hclsyntax/spec.md#template-interpolations"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "literal",
+              "value": {
+                "string": "Hi "
+              }
+            },
+            {
+              "kind": "interpolation",
+              "expr": {
+                "kind": "variable",
+                "name": "x"
+              }
+            },
+            {
+              "kind": "literal",
+              "value": {
+                "string": "!\n"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

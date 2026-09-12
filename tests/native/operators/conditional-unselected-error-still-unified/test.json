@@ -1,0 +1,15 @@
+{
+  "description": "A failed result that isn't selected still has to unify with the selected one",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator",
+    "spec.md#type-unification"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says errors in a result that isn't selected aren't passed through, and that both results must unify. hashicorp/hcl evaluates and unifies both results before it evaluates the condition (ConditionalExpr.Value in hclsyntax/expression.go): the failed !nope still yields an unknown bool, and cty's unification (convert.UnifyUnsafe) finds no common type for bool and number, so the conditional fails although the failed result isn't selected. false ? !true : 1 fails the same way, although the spec's rule that number and bool both unify with string suggests string as their common type.",
+  "reference_error": "The 'true' value is bool, but the 'false' value is number",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

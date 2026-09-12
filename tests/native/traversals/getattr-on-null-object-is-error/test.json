@@ -1,0 +1,26 @@
+{
+  "description": "Attribute access on a null object is an error, even when its type has that attribute",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator",
+    "spec.md#null-values"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "o": {
+      "null": [
+        "object",
+        {
+          "b": "string"
+        }
+      ]
+    }
+  },
+  "reference_error": "Attempt to get attribute from null value",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

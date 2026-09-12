@@ -1,0 +1,37 @@
+{
+  "description": "A ~} on if is applied to the first branch's leading literal in the parse tree",
+  "spec": [
+    "hclsyntax/spec.md#template-literals",
+    "hclsyntax/spec.md#template-if-directive"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "template_if",
+              "condition": {
+                "kind": "variable",
+                "name": "c"
+              },
+              "then": [
+                {
+                  "kind": "literal",
+                  "value": {
+                    "string": "b  "
+                  }
+                }
+              ],
+              "else": []
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

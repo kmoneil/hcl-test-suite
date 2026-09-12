@@ -1,0 +1,26 @@
+{
+  "description": "An interpolated non-integer needing more than 64 bits of precision keeps all of its digits",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations",
+    "spec.md#primitive-type-conversions",
+    "spec.md#primitive-types"
+  ],
+  "op": "eval",
+  "notes": "The value is 1 + 2^-60, which is exact in binary with a 61-bit mantissa, within the 256 bits the spec requires.",
+  "variables": {
+    "v": {
+      "number": "1.000000000000000000867361737988403547205962240695953369140625"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "<1.000000000000000000867361737988403547205962240695953369140625>"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

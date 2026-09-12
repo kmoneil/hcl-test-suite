@@ -1,0 +1,11 @@
+{
+  "description": "A space between = and > makes two tokens rather than the => symbol",
+  "spec": [
+    "hclsyntax/spec.md#operators-and-delimiters"
+  ],
+  "op": "parse",
+  "reference_error": "Key expression is required when building an object",
+  "expect": {
+    "valid": false
+  }
+}

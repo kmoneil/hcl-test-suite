@@ -1,0 +1,12 @@
+{
+  "description": "A for directive with a comma but no value variable is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive"
+  ],
+  "op": "parse",
+  "notes": "The only mistake is the missing value variable. hashicorp/hcl accepts in as a variable name (see the disputed for-directive-variable-named-in), so it takes in as the value variable and then reports the missing in keyword; a parser that treats in as a keyword there reports the missing name instead.",
+  "reference_error": "requires 'in' keyword after names",
+  "expect": {
+    "valid": false
+  }
+}

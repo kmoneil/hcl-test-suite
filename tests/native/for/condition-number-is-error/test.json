@@ -1,0 +1,13 @@
+{
+  "description": "An if condition that is a number is an error, because numbers don't convert to bool",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "reference_error": "bool required, but have number",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

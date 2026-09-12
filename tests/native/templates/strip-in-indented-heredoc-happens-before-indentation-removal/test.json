@@ -1,0 +1,21 @@
+{
+  "description": "In a <<- heredoc, stripping a line's indentation makes it count as unindented",
+  "spec": [
+    "hclsyntax/spec.md#template-literals",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says <<- removes the smallest number of leading spaces from all line-leading literals, and that strip markers remove adjacent spaces, without saying which happens first. Removing indentation first gives \"b\\na\\n\", since the marker then has no spaces left to strip. hashicorp/hcl strips first, in parseTemplateParts (hclsyntax/parser_template.go): the two spaces before ${~ become an empty line-leading literal, which flushHeredocTemplateParts counts as a line with no indentation, so it removes none.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "b\n  a\n"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "description": "A splat applied to null produces an empty tuple",
+  "description": "A full splat applied to null produces an empty tuple",
   "spec": [
     "hclsyntax/spec.md#splat-operators"
   ],

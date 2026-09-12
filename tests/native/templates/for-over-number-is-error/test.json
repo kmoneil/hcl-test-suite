@@ -1,0 +1,13 @@
+{
+  "description": "A for directive over a number is an error",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "reference_error": "value of type number cannot be used as the collection",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

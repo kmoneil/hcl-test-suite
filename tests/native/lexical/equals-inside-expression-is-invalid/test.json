@@ -1,0 +1,11 @@
+{
+  "description": "An equals sign cannot appear inside an attribute's expression",
+  "spec": [
+    "hclsyntax/spec.md#operators-and-delimiters"
+  ],
+  "op": "parse",
+  "reference_error": "Missing newline after argument",
+  "expect": {
+    "valid": false
+  }
+}

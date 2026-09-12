@@ -1,0 +1,12 @@
+{
+  "description": "An endfor directive cannot close an if directive",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive",
+    "hclsyntax/spec.md#template-for-directive"
+  ],
+  "op": "parse",
+  "reference_error": "Unexpected endfor directive: Expecting an endif directive",
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "description": "A null keyword element unified with an object element stays a null of the dynamic pseudo-type",
+  "spec": [
+    "spec.md#type-unification",
+    "spec.md#conversion-of-null-values",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says the dynamic pseudo-type unifies with any other type to that type, so the element should become a null object. go-cty gives up on element types that are all objects or dynamic and chooses the dynamic pseudo-type (unifyAllAsDynamic, called from unifyObjectTypes in cty/convert/unify.go), while a number element and a dynamic element unify to number (unify-null-keyword-element-with-number). An implementation whose nulls all have the dynamic pseudo-type would pass regardless, hence typed-values.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "null": "dynamic"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

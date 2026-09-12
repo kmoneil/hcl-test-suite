@@ -1,0 +1,37 @@
+{
+  "description": "An attribute-only splat after a full splat is nested in the full splat's each expression",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec's grammar lets a full splat consume only attribute accesses and index operations (fullSplat = \"[\" \"*\" \"]\" (GetAttr | Index)*), so a second splat operator would start a new splat on the first splat's whole result, and the prose doesn't mention nesting. hashicorp/hcl makes everything after [*], including further splats, part of the first splat's each expression (parseExpressionTraversals in hclsyntax/parser.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "splat",
+          "source": {
+            "kind": "variable",
+            "name": "t"
+          },
+          "each": {
+            "kind": "splat",
+            "source": {
+              "kind": "splat_item"
+            },
+            "each": {
+              "kind": "get_attr",
+              "object": {
+                "kind": "splat_item"
+              },
+              "name": "b"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

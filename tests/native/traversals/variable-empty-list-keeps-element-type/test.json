@@ -1,0 +1,29 @@
+{
+  "description": "An empty list variable keeps its element type when evaluated",
+  "spec": [
+    "hclsyntax/spec.md#variables-and-variable-expressions",
+    "spec.md#collection-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "l": {
+      "list": [],
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [],
+          "element_type": "string"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

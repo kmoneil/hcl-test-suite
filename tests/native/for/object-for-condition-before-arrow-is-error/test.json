@@ -1,0 +1,11 @@
+{
+  "description": "An if clause between the key expression and => is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "reference_error": "Key expression is required when building an object",
+  "expect": {
+    "valid": false
+  }
+}

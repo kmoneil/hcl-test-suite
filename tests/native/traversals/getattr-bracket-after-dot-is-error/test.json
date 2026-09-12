@@ -1,0 +1,11 @@
+{
+  "description": "A dot cannot be followed by an index in brackets",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid attribute name",
+  "expect": {
+    "valid": false
+  }
+}

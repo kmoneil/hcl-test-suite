@@ -1,0 +1,29 @@
+{
+  "description": "Grouping keeps every value produced for a key, including equal ones",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "a": {
+              "tuple": [
+                {
+                  "number": "1"
+                },
+                {
+                  "number": "1"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

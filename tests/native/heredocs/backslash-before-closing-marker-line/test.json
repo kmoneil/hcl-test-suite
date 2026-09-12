@@ -1,0 +1,18 @@
+{
+  "description": "A backslash ending the last heredoc line does not stop the heredoc from closing",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x\\\n"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

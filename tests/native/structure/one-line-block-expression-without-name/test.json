@@ -1,0 +1,11 @@
+{
+  "description": "A one-line block cannot contain a value without a name",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "reference_error": "Argument or block definition required",
+  "expect": {
+    "valid": false
+  }
+}

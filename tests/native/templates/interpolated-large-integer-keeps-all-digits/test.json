@@ -1,0 +1,25 @@
+{
+  "description": "An interpolated integer too large for 64 bits keeps all of its digits",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations",
+    "spec.md#primitive-type-conversions",
+    "spec.md#primitive-types"
+  ],
+  "op": "eval",
+  "variables": {
+    "v": {
+      "number": "-123456789012345678901234567890"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "<-123456789012345678901234567890>"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

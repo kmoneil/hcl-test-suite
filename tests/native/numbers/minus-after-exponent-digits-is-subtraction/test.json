@@ -1,0 +1,32 @@
+{
+  "description": "A numeric literal ends after its exponent digits, so a minus sign that follows is subtraction",
+  "spec": [
+    "hclsyntax/spec.md#numeric-literals",
+    "hclsyntax/spec.md#operations"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "binary",
+          "operator": "-",
+          "left": {
+            "kind": "literal",
+            "value": {
+              "number": "0.25"
+            }
+          },
+          "right": {
+            "kind": "literal",
+            "value": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

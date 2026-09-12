@@ -1,0 +1,36 @@
+{
+  "description": "A first tuple element that starts with an operator, like -for, is not a for expression",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "notes": "The ambiguity only concerns an element that starts with the identifier for.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "tuple",
+          "elements": [
+            {
+              "kind": "unary",
+              "operator": "-",
+              "operand": {
+                "kind": "variable",
+                "name": "for"
+              }
+            },
+            {
+              "kind": "literal",
+              "value": {
+                "number": "1"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

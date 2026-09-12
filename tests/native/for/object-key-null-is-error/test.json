@@ -1,0 +1,13 @@
+{
+  "description": "A key expression that produces null is an error",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#null-values"
+  ],
+  "op": "eval",
+  "reference_error": "must not produce a null value",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

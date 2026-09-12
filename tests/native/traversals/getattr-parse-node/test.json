@@ -1,0 +1,23 @@
+{
+  "description": "An attribute access parses as a get_attr node naming the attribute",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "get_attr",
+          "object": {
+            "kind": "variable",
+            "name": "o"
+          },
+          "name": "b"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

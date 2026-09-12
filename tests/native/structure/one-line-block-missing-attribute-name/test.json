@@ -1,0 +1,11 @@
+{
+  "description": "The attribute in a one-line block needs a name",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "reference_error": "Argument or block definition required",
+  "expect": {
+    "valid": false
+  }
+}

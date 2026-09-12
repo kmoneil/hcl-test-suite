@@ -1,0 +1,21 @@
+{
+  "description": "The exponent can be introduced by an uppercase E",
+  "spec": [
+    "hclsyntax/spec.md#numeric-literals"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "literal",
+          "value": {
+            "number": "1500"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

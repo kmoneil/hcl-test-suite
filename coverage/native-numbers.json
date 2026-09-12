@@ -1,0 +1,265 @@
+{
+  "area": "native/numbers",
+  "rules": [
+    {
+      "id": "numbers-integer-literal",
+      "spec": "hclsyntax/spec.md#numeric-literals",
+      "rule": "A numeric literal can be one or more decimal digits",
+      "tests": [
+        "native/numbers/integer-literal"
+      ]
+    },
+    {
+      "id": "numbers-leading-zeros",
+      "spec": "hclsyntax/spec.md#numeric-literals",
+      "rule": "A literal may start with zeros, which don't make it octal or change its value",
+      "tests": [
+        "native/numbers/integer-with-leading-zeros",
+        "native/numbers/leading-zeros-do-not-change-value"
+      ]
+    },
+    {
+      "id": "numbers-fractional-part",
+      "spec": "hclsyntax/spec.md#numeric-literals",
+      "rule": "A point followed by one or more digits adds a fractional part",
+      "tests": [
+        "native/numbers/fractional-literal"
+      ]
+    },
+    {
+      "id": "numbers-exponent",
+      "spec": "hclsyntax/spec.md#numeric-literals",
+      "rule": "An exponent is e or E, an optional + or -, and one or more digits, which may have leading zeros",
+      "tests": [
+        "native/numbers/exponent-with-uppercase-e",
+        "native/numbers/exponent-with-plus-sign",
+        "native/numbers/exponent-with-minus-sign",
+        "native/numbers/exponent-with-leading-zeros"
+      ]
+    },
+    {
+      "id": "numbers-fraction-and-exponent",
+      "spec": "hclsyntax/spec.md#numeric-literals",
+      "rule": "A literal can have both a fractional part and an exponent, in that order",
+      "tests": [
+        "native/numbers/fraction-with-exponent",
+        "native/numbers/fraction-with-signed-exponent"
+      ]
+    },
+    {
+      "id": "numbers-no-sign",
+      "spec": "hclsyntax/spec.md#numeric-literals",
+      "rule": "A literal has no sign of its own: a minus before it is a unary operator applying to the whole term, a minus after it is subtraction and a plus before it is an error; the only sign inside a literal follows its exponent mark",
+      "tests": [
+        "native/numbers/negation-applies-to-whole-term",
+        "native/numbers/minus-after-number-is-subtraction",
+        "native/numbers/minus-after-exponent-digits-is-subtraction",
+        "native/operators/minus-after-operand-is-subtraction",
+        "native/operators/no-unary-plus"
+      ]
+    },
+    {
+      "id": "numbers-point-needs-digits",
+      "spec": "hclsyntax/spec.md#numeric-literals",
+      "rule": "A point is part of a literal only with digits on both sides, so 1. and .5 are errors and 1.e is attribute access on 1",
+      "tests": [
+        "native/numbers/trailing-point-is-invalid",
+        "native/numbers/leading-point-is-invalid",
+        "native/numbers/point-followed-by-letter-is-attribute-access"
+      ]
+    },
+    {
+      "id": "numbers-point-before-exponent",
+      "spec": "hclsyntax/spec.md#numeric-literals",
+      "rule": "A point directly followed by an exponent is read as part of the literal, so 1.e5 is 100000 (disputed)",
+      "tests": [
+        "native/numbers/point-before-exponent"
+      ]
+    },
+    {
+      "id": "numbers-exponent-needs-digits",
+      "spec": "hclsyntax/spec.md#numeric-literals",
+      "rule": "An exponent mark, with or without a sign, must be followed by at least one digit",
+      "tests": [
+        "native/numbers/exponent-without-digits-is-invalid",
+        "native/numbers/signed-exponent-without-digits-is-invalid"
+      ]
+    },
+    {
+      "id": "numbers-single-fraction-and-exponent",
+      "spec": "hclsyntax/spec.md#numeric-literals",
+      "rule": "A literal has at most one point and one exponent, so 1..5 and 1e5e5 are errors",
+      "tests": [
+        "native/numbers/two-points-are-invalid",
+        "native/numbers/two-exponents-are-invalid"
+      ]
+    },
+    {
+      "id": "numbers-trailing-point-and-digits",
+      "spec": "hclsyntax/spec.md#numeric-literals",
+      "rule": "A point and digits directly after a complete literal make one invalid number literal instead of a legacy index, so 1.2.3 and 1e5.5 are errors (disputed)",
+      "tests": [
+        "native/numbers/second-fractional-part",
+        "native/numbers/point-after-exponent-digits"
+      ]
+    },
+    {
+      "id": "numbers-decimal-only",
+      "spec": "hclsyntax/spec.md#numeric-literals",
+      "rule": "Literals are decimal only: there are no base prefixes, digit separators, type suffixes or digits other than ASCII 0 to 9",
+      "tests": [
+        "native/numbers/hexadecimal-is-invalid",
+        "native/numbers/digit-separator-is-invalid",
+        "native/numbers/type-suffix-is-invalid",
+        "native/numbers/non-ascii-digits-are-invalid"
+      ]
+    },
+    {
+      "id": "numbers-single-token",
+      "spec": "hclsyntax/spec.md#numeric-literals",
+      "rule": "A literal is a single token, so whitespace cannot appear inside it",
+      "tests": [
+        "native/numbers/space-inside-number-is-invalid"
+      ]
+    },
+    {
+      "id": "numbers-no-special-literals",
+      "spec": "hclsyntax/spec.md#numeric-literals",
+      "rule": "There are no literals for infinity or NaN; words like Infinity and NaN are identifiers",
+      "tests": [
+        "native/numbers/no-infinity-or-nan-literals"
+      ]
+    },
+    {
+      "id": "numbers-integers-256-bits",
+      "spec": "spec.md#primitive-types",
+      "rule": "Integers of at least 256 bits are represented exactly, and their full value is available",
+      "tests": [
+        "native/numbers/integer-beyond-64-bits",
+        "native/numbers/integer-of-255-bits",
+        "native/numbers/negative-integer-of-255-bits"
+      ]
+    },
+    {
+      "id": "numbers-integer-precision-error",
+      "spec": "spec.md#primitive-types",
+      "rule": "An integer literal too large for hashicorp/hcl's 512-bit precision is rounded without an error (disputed)",
+      "tests": [
+        "native/numbers/integer-beyond-512-bits-is-rounded"
+      ]
+    },
+    {
+      "id": "numbers-non-integer-mantissa",
+      "spec": "spec.md#primitive-types",
+      "rule": "Non-integers have a mantissa of at least 256 bits, so values that fit keep their exact value",
+      "tests": [
+        "native/numbers/non-integer-beyond-64-bit-precision",
+        "native/numbers/non-integer-with-256-bit-mantissa",
+        "native/numbers/fraction-beyond-64-bit-precision"
+      ]
+    },
+    {
+      "id": "numbers-non-integer-exponent",
+      "spec": "spec.md#primitive-types",
+      "rule": "Non-integers have a signed binary exponent of at least 16 bits, so a non-integer as small as 10^-9000 doesn't round to zero",
+      "tests": [
+        "native/numbers/negative-exponent-beyond-extended-precision"
+      ]
+    },
+    {
+      "id": "numbers-large-exponent-literal",
+      "spec": "spec.md#primitive-types",
+      "rule": "A literal written with a large exponent, such as 1e9000, keeps a large magnitude instead of being rejected as an integer too large to represent (disputed)",
+      "tests": [
+        "native/numbers/exponent-beyond-extended-precision"
+      ]
+    },
+    {
+      "id": "numbers-overflow-error",
+      "spec": "spec.md#primitive-types",
+      "rule": "A literal too large for hashicorp/hcl's exponent range evaluates to positive infinity instead of producing an error (disputed)",
+      "tests": [
+        "native/numbers/exponent-overflow-becomes-infinity"
+      ]
+    },
+    {
+      "id": "numbers-non-integer-rounding",
+      "spec": "spec.md#primitive-types",
+      "rule": "A non-integer with more precision than the implementation keeps is rounded to the nearest representable value",
+      "untested": "The rounded value depends on each implementation's precision, so no rounded result is portable"
+    },
+    {
+      "id": "numbers-infinity",
+      "spec": "spec.md#primitive-types",
+      "rule": "The number type includes positive and negative infinity, which variables can hold and which hashicorp/hcl also produces for division by zero and the string inf",
+      "tests": [
+        "native/numbers/positive-infinity-value",
+        "native/numbers/negative-infinity-value",
+        "native/operators/divide-by-zero",
+        "native/types/convert-inf-string-to-number"
+      ]
+    },
+    {
+      "id": "numbers-infinity-ordering",
+      "spec": "spec.md#primitive-types",
+      "rule": "Positive infinity is greater than every other number and negative infinity is less than every other number, but neither is greater or less than itself",
+      "tests": [
+        "native/numbers/positive-infinity-is-greater-than-finite-numbers",
+        "native/numbers/negative-infinity-is-less-than-finite-numbers",
+        "native/numbers/negative-infinity-is-less-than-positive-infinity",
+        "native/numbers/positive-infinity-is-not-greater-than-itself"
+      ]
+    },
+    {
+      "id": "numbers-infinity-equality",
+      "spec": "spec.md#primitive-types",
+      "rule": "Each infinity equals itself, and positive and negative infinity are not equal",
+      "tests": [
+        "native/numbers/positive-infinity-equals-itself",
+        "native/numbers/negative-infinity-equals-itself",
+        "native/numbers/opposite-infinities-are-not-equal"
+      ]
+    },
+    {
+      "id": "numbers-no-nan",
+      "spec": "spec.md#primitive-types",
+      "rule": "The number type has no NaN value, so the string NaN doesn't convert to a number",
+      "tests": [
+        "native/types/convert-nan-string-to-number-fails"
+      ]
+    },
+    {
+      "id": "numbers-zero-divided-by-zero",
+      "spec": "spec.md#primitive-types",
+      "rule": "Dividing zero by zero is an error rather than producing a value (disputed)",
+      "tests": [
+        "native/numbers/zero-divided-by-zero-is-an-error"
+      ]
+    },
+    {
+      "id": "numbers-equal-by-value",
+      "spec": "spec.md#primitive-types",
+      "rule": "Numbers are equal when their values are equal, however the literals are written",
+      "tests": [
+        "native/numbers/integer-equals-fraction-with-zero-part",
+        "native/numbers/exponent-equals-plain-integer",
+        "native/numbers/exponent-mark-case-does-not-matter",
+        "native/numbers/exponent-plus-sign-does-not-matter",
+        "native/numbers/negative-exponent-equals-fraction",
+        "native/numbers/leading-zeros-do-not-change-value",
+        "native/numbers/trailing-fraction-zeros-do-not-change-value",
+        "native/numbers/zero-written-with-exponent-equals-zero",
+        "native/numbers/negative-zero-equals-zero",
+        "native/numbers/large-exponent-equals-integer-written-out"
+      ]
+    },
+    {
+      "id": "numbers-equality-uses-full-precision",
+      "spec": "spec.md#primitive-types",
+      "rule": "Equality compares numbers at their full precision, so large integers that differ by one are not equal",
+      "tests": [
+        "native/numbers/large-integers-differing-by-one-are-not-equal"
+      ]
+    }
+  ]
+}

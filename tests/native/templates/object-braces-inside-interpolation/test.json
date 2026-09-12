@@ -1,0 +1,18 @@
+{
+  "description": "The braces of an object constructor inside an interpolation do not close the interpolation",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "<v>"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

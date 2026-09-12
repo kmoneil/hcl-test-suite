@@ -1,0 +1,11 @@
+{
+  "description": "An enclosing mark such as U+20DD COMBINING ENCLOSING CIRCLE cannot continue an identifier",
+  "spec": [
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "parse",
+  "reference_error": "This character is not used within the language",
+  "expect": {
+    "valid": false
+  }
+}

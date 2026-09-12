@@ -1,0 +1,39 @@
+{
+  "description": "Binary operators before the question mark are all part of the condition",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator",
+    "hclsyntax/spec.md#operations"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "conditional",
+          "condition": {
+            "kind": "binary",
+            "operator": "||",
+            "left": {
+              "kind": "variable",
+              "name": "x"
+            },
+            "right": {
+              "kind": "variable",
+              "name": "y"
+            }
+          },
+          "true_result": {
+            "kind": "variable",
+            "name": "z"
+          },
+          "false_result": {
+            "kind": "variable",
+            "name": "w"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "description": "Indexing an unknown list with a bool is an error",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "u": {
+      "unknown": [
+        "list",
+        "string"
+      ]
+    }
+  },
+  "reference_error": "number required, but have bool",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

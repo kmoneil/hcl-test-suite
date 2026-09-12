@@ -1,0 +1,33 @@
+{
+  "description": "Parentheses make a first tuple element for a reference to the variable for",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "tuple",
+          "elements": [
+            {
+              "kind": "variable",
+              "name": "for"
+            },
+            {
+              "kind": "variable",
+              "name": "foo"
+            },
+            {
+              "kind": "variable",
+              "name": "baz"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

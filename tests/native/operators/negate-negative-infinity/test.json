@@ -1,0 +1,24 @@
+{
+  "description": "Negating negative infinity gives positive infinity",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators",
+    "spec.md#primitive-types"
+  ],
+  "op": "eval",
+  "variables": {
+    "neg_inf": {
+      "number": "-Infinity"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "Infinity"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

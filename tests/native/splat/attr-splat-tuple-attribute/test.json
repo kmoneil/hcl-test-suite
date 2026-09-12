@@ -1,0 +1,25 @@
+{
+  "description": "An attribute-only splat on a tuple of objects gives a tuple of each object's attribute",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "x"
+            },
+            {
+              "string": "y"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

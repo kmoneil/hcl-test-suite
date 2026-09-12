@@ -1,0 +1,11 @@
+{
+  "description": "An object for expression that separates key and value with = instead of => is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "reference_error": "Key expression is required when building an object",
+  "expect": {
+    "valid": false
+  }
+}

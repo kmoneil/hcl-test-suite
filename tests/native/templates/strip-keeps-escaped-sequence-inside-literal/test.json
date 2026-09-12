@@ -1,0 +1,18 @@
+{
+  "description": "Stripping a literal removes the whitespace around an escaped sequence but not the sequence itself",
+  "spec": [
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "a${b}c"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

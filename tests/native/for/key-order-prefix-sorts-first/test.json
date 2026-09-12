@@ -1,0 +1,28 @@
+{
+  "description": "A key sorts before longer keys that start with it",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "a"
+            },
+            {
+              "string": "ab"
+            },
+            {
+              "string": "b"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "description": "In true || true && false the && applies first, giving true",
+  "spec": [
+    "hclsyntax/spec.md#operations",
+    "hclsyntax/spec.md#logic-operators"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

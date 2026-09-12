@@ -1,0 +1,54 @@
+{
+  "description": "A block body can contain attributes and nested blocks in any order",
+  "spec": [
+    "hclsyntax/spec.md#bodies",
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "outer",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "a": {
+                "kind": "literal",
+                "value": {
+                  "number": "1"
+                }
+              },
+              "b": {
+                "kind": "literal",
+                "value": {
+                  "number": "2"
+                }
+              }
+            },
+            "blocks": [
+              {
+                "type": "first",
+                "labels": [],
+                "body": {
+                  "attributes": {},
+                  "blocks": []
+                }
+              },
+              {
+                "type": "second",
+                "labels": [],
+                "body": {
+                  "attributes": {},
+                  "blocks": []
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

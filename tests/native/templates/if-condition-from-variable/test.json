@@ -1,0 +1,24 @@
+{
+  "description": "The condition of an if directive can be a bool variable",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "variables": {
+    "v": {
+      "bool": false
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "no"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

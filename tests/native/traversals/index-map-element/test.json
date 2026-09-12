@@ -1,0 +1,35 @@
+{
+  "description": "Indexing a map with a string selects the element with that key",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#collection-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "m": {
+      "map": {
+        "k": {
+          "string": "v"
+        },
+        "l": {
+          "string": "w"
+        }
+      },
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "v"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

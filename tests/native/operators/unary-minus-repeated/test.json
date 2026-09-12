@@ -1,0 +1,19 @@
+{
+  "description": "Two minus signs in a row are two negations",
+  "spec": [
+    "hclsyntax/spec.md#operations",
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "5"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

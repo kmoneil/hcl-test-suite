@@ -1,0 +1,30 @@
+{
+  "description": "Tuples that differ after an unknown element compare as an unknown bool",
+  "spec": [
+    "hclsyntax/spec.md#comparison-operators",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says tuples are equal only if all corresponding elements are equal; the second elements differ, so the result should be false whatever the unknown is. hashicorp/hcl compares elements in order and stops at the first unknown one (Value.Equals in cty/value_ops.go), so it returns an unknown bool, while a difference before the unknown gives false (equal-tuples-differing-before-unknown).",
+  "variables": {
+    "u": {
+      "unknown": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "bool"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

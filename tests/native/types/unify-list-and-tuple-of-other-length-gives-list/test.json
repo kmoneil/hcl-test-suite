@@ -1,0 +1,40 @@
+{
+  "description": "A list and a tuple of another length unify to a list",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec unifies a list and a tuple to the tuple type, and converting a list to a tuple of a different length is an error, so this should fail. go-cty has no conversion from a list or set to a tuple at all; hashicorp/hcl unifies to a list instead (unifyTuplesAsList in cty/convert/unify.go) and returns the one-element list.",
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "number": "5"
+        }
+      ],
+      "element_type": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [
+            {
+              "number": "5"
+            }
+          ],
+          "element_type": "number"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

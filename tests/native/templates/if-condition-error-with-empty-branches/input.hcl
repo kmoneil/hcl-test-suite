@@ -1,0 +1,1 @@
+a = "%{ if nope }%{ endif }"

@@ -2,3 +2,4 @@
 /adapters/hcl-rs/target/
 __pycache__/
 .mypy_cache/
+.vscode/

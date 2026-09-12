@@ -1,0 +1,15 @@
+{
+  "description": "A file containing only spaces and tabs has an empty body",
+  "spec": [
+    "hclsyntax/spec.md#configuration-files",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": []
+    }
+  }
+}

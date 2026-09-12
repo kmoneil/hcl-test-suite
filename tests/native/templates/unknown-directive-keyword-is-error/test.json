@@ -1,0 +1,12 @@
+{
+  "description": "A directive with an unknown keyword is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive",
+    "hclsyntax/spec.md#keywords"
+  ],
+  "op": "parse",
+  "reference_error": "\"elif\" is not a valid template control keyword",
+  "expect": {
+    "valid": false
+  }
+}

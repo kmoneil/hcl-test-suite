@@ -1,0 +1,27 @@
+{
+  "description": "A parenthesized variable key names the attribute with the variable's value",
+  "spec": [
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "eval",
+  "variables": {
+    "foo": {
+      "string": "x"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "x": {
+              "string": "baz"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

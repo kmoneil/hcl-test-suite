@@ -1,0 +1,33 @@
+{
+  "description": "Attribute access on a map returns the element with that key",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec defines attribute access for values of object type only, while it explicitly lists maps for the index operator. hashicorp/hcl also accepts attribute access on a map and returns the element with that key (GetAttr in ops.go).",
+  "variables": {
+    "m": {
+      "map": {
+        "k": {
+          "string": "v"
+        }
+      },
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "v"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

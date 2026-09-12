@@ -1,0 +1,18 @@
+{
+  "description": "A \\U escape with eight hex digits produces a supplementary-plane character",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "😀"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

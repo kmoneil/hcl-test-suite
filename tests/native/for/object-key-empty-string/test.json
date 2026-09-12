@@ -1,0 +1,23 @@
+{
+  "description": "A key expression may produce the empty string as an attribute name",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#structural-types"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

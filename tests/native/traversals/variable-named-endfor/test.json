@@ -1,0 +1,24 @@
+{
+  "description": "An identifier named endfor is an ordinary variable reference outside template directives",
+  "spec": [
+    "hclsyntax/spec.md#variables-and-variable-expressions",
+    "hclsyntax/spec.md#keywords"
+  ],
+  "op": "eval",
+  "variables": {
+    "endfor": {
+      "string": "value"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "value"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

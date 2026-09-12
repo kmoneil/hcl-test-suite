@@ -1,0 +1,13 @@
+{
+  "description": "An error in the operand of a unary operator is reported",
+  "spec": [
+    "hclsyntax/spec.md#operations",
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "reference_error": "Unknown variable",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

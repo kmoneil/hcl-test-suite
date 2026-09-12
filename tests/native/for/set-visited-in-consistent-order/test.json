@@ -1,0 +1,39 @@
+{
+  "description": "Iterating the same set twice visits its elements in the same order",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#collection-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "notes": "The order itself is unspecified, so the test only compares two iterations of the same set.",
+  "variables": {
+    "s": {
+      "set": [
+        {
+          "string": "b"
+        },
+        {
+          "string": "c"
+        },
+        {
+          "string": "a"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

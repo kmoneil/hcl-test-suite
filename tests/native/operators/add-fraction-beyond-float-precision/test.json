@@ -1,0 +1,19 @@
+{
+  "description": "Adding a fraction to a large integer keeps every digit of the sum",
+  "spec": [
+    "hclsyntax/spec.md#arithmetic-operators",
+    "spec.md#primitive-types"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "9007199254740993.5"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

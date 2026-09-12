@@ -1,0 +1,18 @@
+{
+  "description": "A strip marker removes whitespace only up to the nearest non-whitespace character",
+  "spec": [
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x yz"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

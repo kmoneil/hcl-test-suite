@@ -1,0 +1,13 @@
+{
+  "description": "Interpolating a tuple in the selected branch of an if directive is an error",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive",
+    "hclsyntax/spec.md#template-interpolations"
+  ],
+  "op": "eval",
+  "reference_error": "string required, but have tuple",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

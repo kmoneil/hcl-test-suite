@@ -1,0 +1,11 @@
+{
+  "description": "A tilde is not an operator outside template sequences",
+  "spec": [
+    "hclsyntax/spec.md#operators-and-delimiters"
+  ],
+  "op": "parse",
+  "reference_error": "Did you mean boolean NOT",
+  "expect": {
+    "valid": false
+  }
+}

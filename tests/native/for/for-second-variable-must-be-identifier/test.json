@@ -1,0 +1,11 @@
+{
+  "description": "A for expression whose second variable is a string instead of an identifier is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "reference_error": "requires value variable name after comma",
+  "expect": {
+    "valid": false
+  }
+}

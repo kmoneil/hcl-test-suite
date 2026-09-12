@@ -1,0 +1,35 @@
+{
+  "description": "The => symbol is one token even without spaces around it",
+  "spec": [
+    "hclsyntax/spec.md#operators-and-delimiters",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "for",
+          "result": "object",
+          "key_var": "k",
+          "value_var": "v",
+          "collection": {
+            "kind": "variable",
+            "name": "x"
+          },
+          "key": {
+            "kind": "variable",
+            "name": "k"
+          },
+          "value": {
+            "kind": "variable",
+            "name": "v"
+          },
+          "grouping": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

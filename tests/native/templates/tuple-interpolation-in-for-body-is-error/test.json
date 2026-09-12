@@ -1,0 +1,13 @@
+{
+  "description": "Interpolating a tuple in the body of a for directive is an error",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive",
+    "hclsyntax/spec.md#template-interpolations"
+  ],
+  "op": "eval",
+  "reference_error": "string required, but have tuple",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

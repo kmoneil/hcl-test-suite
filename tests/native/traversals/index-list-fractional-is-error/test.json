@@ -1,0 +1,29 @@
+{
+  "description": "Indexing a list with a number that has a fractional part is an error",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#collection-types"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "string": "x"
+        },
+        {
+          "string": "y"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "reference_error": "requires a whole number",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

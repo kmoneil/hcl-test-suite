@@ -1,0 +1,13 @@
+{
+  "description": "Outside parentheses a newline can't follow the question mark of a conditional",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#comments-and-whitespace",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

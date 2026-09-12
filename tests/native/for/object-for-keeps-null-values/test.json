@@ -1,0 +1,23 @@
+{
+  "description": "Null values produced by an object for expression are kept as attributes",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#null-values"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "a": {
+              "null": "dynamic"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "description": "Inside parentheses a newline may separate a unary operator from its operand",
+  "spec": [
+    "hclsyntax/spec.md#expression-terms",
+    "hclsyntax/spec.md#operations"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "unary",
+          "operator": "-",
+          "operand": {
+            "kind": "variable",
+            "name": "x"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

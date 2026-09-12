@@ -1,0 +1,11 @@
+{
+  "description": "Backticks do not delimit strings",
+  "spec": [
+    "hclsyntax/spec.md#operators-and-delimiters"
+  ],
+  "op": "parse",
+  "reference_error": "The \"`\" character is not valid",
+  "expect": {
+    "valid": false
+  }
+}

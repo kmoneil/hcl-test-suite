@@ -1,0 +1,13 @@
+{
+  "description": "A key expression that produces an object is an error",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#type-conversions-and-unification"
+  ],
+  "op": "eval",
+  "reference_error": "string required, but have object",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

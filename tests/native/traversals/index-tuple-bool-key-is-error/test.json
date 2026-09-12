@@ -1,0 +1,28 @@
+{
+  "description": "A bool key cannot index a tuple, because bools don't convert to numbers",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "variables": {
+    "t": {
+      "tuple": [
+        {
+          "string": "x"
+        },
+        {
+          "string": "y"
+        },
+        {
+          "string": "z"
+        }
+      ]
+    }
+  },
+  "reference_error": "number required, but have bool",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

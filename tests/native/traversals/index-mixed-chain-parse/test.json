@@ -1,0 +1,37 @@
+{
+  "description": "A chain of attribute accesses and indexes parses as nested nodes from left to right",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "hclsyntax/spec.md#attribute-access-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "get_attr",
+          "object": {
+            "kind": "index",
+            "collection": {
+              "kind": "get_attr",
+              "object": {
+                "kind": "variable",
+                "name": "o"
+              },
+              "name": "b"
+            },
+            "key": {
+              "kind": "literal",
+              "value": {
+                "number": "1"
+              }
+            }
+          },
+          "name": "c"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

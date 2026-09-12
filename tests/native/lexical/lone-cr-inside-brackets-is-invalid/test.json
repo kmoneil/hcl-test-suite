@@ -1,0 +1,13 @@
+{
+  "description": "A CR that is not followed by LF is not ignored inside tuple brackets",
+  "spec": [
+    "hclsyntax/spec.md#comments-and-whitespace",
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "parse",
+  "notes": "The tuple grammar ignores newline sequences between its brackets, and a lone CR is not a newline sequence. (For parentheses the spec says newline characters, which could include CR.)",
+  "reference_error": "This character is not used within the language",
+  "expect": {
+    "valid": false
+  }
+}

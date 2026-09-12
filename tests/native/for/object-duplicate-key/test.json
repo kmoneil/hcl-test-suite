@@ -4,6 +4,7 @@
     "hclsyntax/spec.md#for-expressions"
   ],
   "op": "eval",
+  "reference_error": "Duplicate object key",
   "expect": {
     "valid": false,
     "phase": "eval"

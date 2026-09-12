@@ -1,0 +1,23 @@
+{
+  "description": "An if condition that is a null bool is an error",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#null-values"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec only says the if condition must evaluate to a boolean value and what true and false do; it doesn't say whether a null condition is an error. hashicorp/hcl reports one: ForExpr.Value in hclsyntax/expression.go reports \"Condition is null\" when its check before iteration already gets null, and \"Invalid 'for' condition\" when the condition is null for a particular element.",
+  "variables": {
+    "c": {
+      "null": "bool"
+    }
+  },
+  "reference_error": "Condition is null",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "description": "A tuple with equal elements converted to a set keeps one of them",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec unifies a set and a tuple to the tuple type, which would keep both elements. hashicorp/hcl unifies to a set (unify in cty/convert/unify.go), and converting the tuple to a set merges the equal elements, as the spec describes for list to set conversion.",
+  "variables": {
+    "s": {
+      "set": [
+        {
+          "number": "5"
+        }
+      ],
+      "element_type": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "set": [
+            {
+              "number": "1"
+            }
+          ],
+          "element_type": "number"
+        }
+      },
+      "blocks": []
+    }
+  }
+}
