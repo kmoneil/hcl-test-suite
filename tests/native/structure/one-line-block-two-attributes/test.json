@@ -1,0 +1,10 @@
+{
+  "description": "A one-line block cannot contain two attributes",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": false
+  }
+}

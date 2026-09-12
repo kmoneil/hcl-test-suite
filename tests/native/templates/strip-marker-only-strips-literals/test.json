@@ -1,0 +1,18 @@
+{
+  "description": "A strip marker does not remove whitespace produced by an interpolation",
+  "spec": [
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "hello world"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

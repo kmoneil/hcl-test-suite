@@ -1,0 +1,41 @@
+{
+  "description": "* binds tighter than +",
+  "spec": [
+    "hclsyntax/spec.md#operations"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "binary",
+          "operator": "+",
+          "left": {
+            "kind": "literal",
+            "value": {
+              "number": "1"
+            }
+          },
+          "right": {
+            "kind": "binary",
+            "operator": "*",
+            "left": {
+              "kind": "literal",
+              "value": {
+                "number": "2"
+              }
+            },
+            "right": {
+              "kind": "literal",
+              "value": {
+                "number": "3"
+              }
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

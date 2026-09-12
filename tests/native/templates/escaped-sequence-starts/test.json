@@ -1,0 +1,18 @@
+{
+  "description": "$${ and %%{ produce a literal ${ and %{",
+  "spec": [
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "${name} and %{if}"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

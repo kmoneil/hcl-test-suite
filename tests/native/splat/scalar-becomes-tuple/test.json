@@ -1,0 +1,24 @@
+{
+  "description": "A splat applied to a value that isn't a sequence wraps it in a tuple",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec's prose says the value becomes a single-value list, but its example says the result is equivalent to [value], which is a tuple. The reference implementation returns a tuple.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "number": "5"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

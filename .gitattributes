@@ -1,0 +1,3 @@
+# Test inputs are exact bytes (CR LF endings, missing final newlines, invalid
+# UTF-8). Never convert their line endings.
+tests/** -text

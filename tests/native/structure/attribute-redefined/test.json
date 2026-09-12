@@ -1,0 +1,10 @@
+{
+  "description": "An attribute name can be defined only once in a body",
+  "spec": [
+    "hclsyntax/spec.md#attribute-definitions"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "description": "An if directive has a condition and two sub-templates",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "template_if",
+              "condition": {
+                "kind": "variable",
+                "name": "c"
+              },
+              "then": [
+                {
+                  "kind": "literal",
+                  "value": {
+                    "string": "yes"
+                  }
+                }
+              ],
+              "else": [
+                {
+                  "kind": "literal",
+                  "value": {
+                    "string": "no"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

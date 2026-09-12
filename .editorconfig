@@ -1,0 +1,9 @@
+root = true
+
+# Test inputs are exact bytes. Editors must not add final newlines, trim
+# whitespace or change line endings in them.
+[tests/**/input.*]
+charset = unset
+end_of_line = unset
+insert_final_newline = unset
+trim_trailing_whitespace = unset

@@ -1,0 +1,27 @@
+{
+  "description": "Line comments start with # or //, and inline comments are delimited by /* */",
+  "spec": [
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "literal",
+          "value": {
+            "number": "1"
+          }
+        },
+        "b": {
+          "kind": "literal",
+          "value": {
+            "number": "2"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

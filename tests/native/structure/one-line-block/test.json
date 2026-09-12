@@ -1,0 +1,30 @@
+{
+  "description": "A block can be written on one line if it has at most one attribute",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "settings",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "enabled": {
+                "kind": "literal",
+                "value": {
+                  "bool": true
+                }
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

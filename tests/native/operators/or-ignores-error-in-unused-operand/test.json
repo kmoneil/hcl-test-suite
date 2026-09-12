@@ -1,0 +1,20 @@
+{
+  "description": "|| ignores an error in its second operand when the first is true",
+  "spec": [
+    "hclsyntax/spec.md#logic-operators"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec doesn't say whether logic operators short-circuit. The reference implementation evaluates both operands but drops the error from the one that didn't decide the result.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

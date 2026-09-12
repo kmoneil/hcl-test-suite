@@ -1,0 +1,19 @@
+{
+  "description": "Strip markers work on directives",
+  "spec": [
+    "hclsyntax/spec.md#template-literals",
+    "hclsyntax/spec.md#template-if-directive"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "hello"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

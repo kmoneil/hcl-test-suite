@@ -1,0 +1,10 @@
+{
+  "description": "A newline ends an attribute, so an operator cannot start the next line",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": false
+  }
+}

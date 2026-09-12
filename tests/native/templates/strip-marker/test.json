@@ -1,0 +1,18 @@
+{
+  "description": "A strip marker removes adjacent whitespace from template literals",
+  "spec": [
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "helloworld"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

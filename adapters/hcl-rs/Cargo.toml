@@ -1,0 +1,9 @@
+[package]
+name = "hcl-rs-adapter"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+hcl-rs = "=0.19.8"
+serde_json = "1.0.151"

@@ -1,0 +1,23 @@
+{
+  "description": "The last attribute in a file does not need a trailing newline",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The grammar ends every Attribute with a Newline and says nothing about end of file. The reference implementation accepts end of file instead, and real files depend on it.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "literal",
+          "value": {
+            "number": "1"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

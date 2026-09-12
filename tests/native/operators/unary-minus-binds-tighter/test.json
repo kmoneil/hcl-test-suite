@@ -1,0 +1,18 @@
+{
+  "description": "Unary operators bind tighter than binary operators",
+  "spec": [
+    "hclsyntax/spec.md#operations"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "description": "Operators of the same precedence associate left to right",
+  "spec": [
+    "hclsyntax/spec.md#operations"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "3"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

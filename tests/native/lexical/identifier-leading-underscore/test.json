@@ -1,0 +1,23 @@
+{
+  "description": "Identifiers may start with an underscore",
+  "spec": [
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec defines Identifier as ID_Start (ID_Continue | '-')*, and '_' is not ID_Start, so this should be invalid. The reference scanner explicitly allows it: Ident = (ID_Start | '_') (ID_Continue | '-')* in hclsyntax/scan_tokens.rl.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "_private": {
+          "kind": "literal",
+          "value": {
+            "number": "1"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "description": "Integers of at least 256 bits are represented exactly",
+  "spec": [
+    "spec.md#primitive-types",
+    "hclsyntax/spec.md#numeric-literals"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "18446744073709551617"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

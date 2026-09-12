@@ -1,0 +1,21 @@
+{
+  "description": "An attribute assigns an expression to a name",
+  "spec": [
+    "hclsyntax/spec.md#attribute-definitions"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "name": {
+          "kind": "literal",
+          "value": {
+            "string": "web"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "description": "Two elements producing the same key is an error without grouping",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}
