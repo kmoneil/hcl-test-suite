@@ -1,0 +1,30 @@
+{
+  "description": "A legacy index in a JSON string makes static traversal analysis an error",
+  "spec": [
+    "json/spec.md#static-traversal",
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "status": "disputed",
+  "notes": "The spec reads the string as a native syntax expression and delegates to its static traversal analysis, where the legacy index .0 is an index step. hashicorp/hcl parses the string with hclsyntax.ParseTraversalAbs instead of as an expression (expression.AsTraversal in json/structure.go), and that parser requires an attribute name after a dot (parseTraversal in hclsyntax/parser_traversal.go).",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-traversal"
+        }
+      }
+    ]
+  },
+  "reference_error": "A single static variable reference is required",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

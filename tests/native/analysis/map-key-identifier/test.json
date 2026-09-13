@@ -1,0 +1,47 @@
+{
+  "description": "A bare identifier key in a static map is its name, even when a variable has that name",
+  "spec": [
+    "hclsyntax/spec.md#static-map",
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "variables": {
+    "k": {
+      "string": "v"
+    }
+  },
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_map": [
+            {
+              "key": {
+                "string": "k"
+              },
+              "value": {
+                "number": "1"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

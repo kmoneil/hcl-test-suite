@@ -1,0 +1,31 @@
+{
+  "description": "A quoted argument in a JSON static call is not a static traversal",
+  "spec": [
+    "json/spec.md#static-call",
+    "hclsyntax/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-call",
+          "arguments": {
+            "kind": "static-traversal"
+          }
+        }
+      }
+    ]
+  },
+  "reference_error": "A single static variable reference is required",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

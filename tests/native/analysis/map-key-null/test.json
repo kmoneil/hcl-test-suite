@@ -1,0 +1,41 @@
+{
+  "description": "A parenthesized null key in a static map is null",
+  "spec": [
+    "hclsyntax/spec.md#static-map"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_map": [
+            {
+              "key": {
+                "null": "dynamic"
+              },
+              "value": {
+                "string": "x"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

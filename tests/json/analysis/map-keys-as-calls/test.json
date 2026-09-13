@@ -1,0 +1,53 @@
+{
+  "description": "JSON static map keys can be analyzed as static calls",
+  "spec": [
+    "json/spec.md#static-map",
+    "json/spec.md#static-call"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map",
+          "keys": {
+            "kind": "static-call"
+          }
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_map": [
+            {
+              "key": {
+                "static_call": {
+                  "name": "f",
+                  "arguments": [
+                    {
+                      "number": "1"
+                    }
+                  ]
+                }
+              },
+              "value": {
+                "number": "2"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "description": "A U+FEFF before a traversal in a JSON string is ignored in static analysis",
+  "spec": [
+    "json/spec.md#static-traversal",
+    "hclsyntax/spec.md#source-code-representation"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "status": "disputed",
+  "notes": "The spec reads the string's content as a native syntax expression, and the native syntax doesn't permit byte order marks (hclsyntax/spec.md, Source Code Representation), so the content isn't a valid traversal. hashicorp/hcl reads the content with hclsyntax.ParseTraversalAbs (expression.AsTraversal in json/structure.go), whose scanner removes a leading UTF-8 byte order mark from any source (stripUTF8BOM in hclsyntax/token.go).",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-traversal"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_traversal": [
+            {
+              "root": "x"
+            },
+            {
+              "attr": "y"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

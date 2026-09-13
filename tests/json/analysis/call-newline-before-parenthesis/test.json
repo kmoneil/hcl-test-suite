@@ -1,0 +1,43 @@
+{
+  "description": "A newline before the parenthesis of a JSON static call is ignored",
+  "spec": [
+    "json/spec.md#static-call",
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "status": "disputed",
+  "notes": "The spec reads the string as a native syntax expression, where a newline between a function name and its opening parenthesis is only ignored inside parentheses, brackets and braces (native/functions/call-newline-before-parenthesis-is-error), without saying whether a string's content is such a context. hashicorp/hcl parses the string with hclsyntax.ParseExpression (expression.ExprCall in json/structure.go), which ignores newlines as if the content were in parentheses (hclsyntax/public.go).",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-call"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_call": {
+            "name": "f",
+            "arguments": [
+              {
+                "number": "1"
+              }
+            ]
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

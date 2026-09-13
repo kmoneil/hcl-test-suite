@@ -628,24 +628,6 @@
       "tests": [
         "native/collections/object-value-error"
       ]
-    },
-    {
-      "id": "collections-static-list",
-      "spec": "hclsyntax/spec.md#static-list",
-      "rule": "Static list analysis of a tuple constructor returns its element expressions without evaluating them",
-      "untested": "Needs a static analysis operation, which the protocol doesn't have"
-    },
-    {
-      "id": "collections-static-map",
-      "spec": "hclsyntax/spec.md#static-map",
-      "rule": "Static map analysis of an object constructor returns each key and value as expressions without evaluating them",
-      "untested": "Needs a static analysis operation, which the protocol doesn't have"
-    },
-    {
-      "id": "collections-static-map-keys",
-      "spec": "hclsyntax/spec.md#static-map",
-      "rule": "Static map analysis doesn't require keys to be convertible to strings, so it accepts keys that evaluation would reject",
-      "untested": "Needs a static analysis operation, which the protocol doesn't have"
     }
   ]
 }

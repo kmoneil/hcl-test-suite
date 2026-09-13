@@ -1,0 +1,50 @@
+{
+  "description": "A JSON string containing a traversal analyzed as a static traversal gives its root and steps",
+  "spec": [
+    "json/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-traversal"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_traversal": [
+            {
+              "root": "x"
+            },
+            {
+              "attr": "y"
+            },
+            {
+              "index": {
+                "number": "0"
+              }
+            },
+            {
+              "index": {
+                "string": "z"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

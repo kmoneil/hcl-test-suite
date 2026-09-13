@@ -1,0 +1,32 @@
+{
+  "description": "An empty tuple constructor analyzed as a static list gives no elements",
+  "spec": [
+    "hclsyntax/spec.md#static-list"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-list"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_list": []
+        }
+      },
+      "blocks": []
+    }
+  }
+}

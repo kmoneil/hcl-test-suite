@@ -1,0 +1,35 @@
+{
+  "description": "A function call without arguments analyzed as a static call gives no arguments",
+  "spec": [
+    "hclsyntax/spec.md#static-call"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-call"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_call": {
+            "name": "f",
+            "arguments": []
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

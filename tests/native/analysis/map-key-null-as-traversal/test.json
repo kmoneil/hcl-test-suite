@@ -1,0 +1,52 @@
+{
+  "description": "A bare null static map key analyzed as a static traversal is the root null",
+  "spec": [
+    "hclsyntax/spec.md#static-map",
+    "hclsyntax/spec.md#static-traversal",
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "status": "disputed",
+  "notes": "Read as the keyword, null is a static traversal rooted at null, but read as a literal attribute name, as hashicorp/hcl evaluates this key (native/analysis/map-key-null-keyword), the spec doesn't say whether a bare key is a variable expression that can be a static traversal. hashicorp/hcl's ObjectConsKeyExpr.AsTraversal (hclsyntax/expression.go) gives the traversal of the wrapped null literal, which LiteralValueExpr.AsTraversal turns back into a root named null.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map",
+          "keys": {
+            "kind": "static-traversal"
+          }
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_map": [
+            {
+              "key": {
+                "static_traversal": [
+                  {
+                    "root": "null"
+                  }
+                ]
+              },
+              "value": {
+                "number": "1"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

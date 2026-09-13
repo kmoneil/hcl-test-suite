@@ -1,0 +1,42 @@
+{
+  "description": "A quoted key in a static map is its text",
+  "spec": [
+    "hclsyntax/spec.md#static-map",
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_map": [
+            {
+              "key": {
+                "string": "b c"
+              },
+              "value": {
+                "number": "1"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

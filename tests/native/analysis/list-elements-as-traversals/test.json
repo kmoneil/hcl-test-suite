@@ -1,0 +1,59 @@
+{
+  "description": "Static list elements can be analyzed as static traversals",
+  "spec": [
+    "hclsyntax/spec.md#static-list",
+    "hclsyntax/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-list",
+          "elements": {
+            "kind": "static-traversal"
+          }
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_list": [
+            {
+              "static_traversal": [
+                {
+                  "root": "x"
+                },
+                {
+                  "attr": "y"
+                }
+              ]
+            },
+            {
+              "static_traversal": [
+                {
+                  "root": "z"
+                },
+                {
+                  "index": {
+                    "number": "0"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

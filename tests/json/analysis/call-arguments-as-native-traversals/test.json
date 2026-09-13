@@ -1,0 +1,77 @@
+{
+  "description": "JSON static call arguments as static traversals accept legacy indexes and true and null keys",
+  "spec": [
+    "json/spec.md#static-call",
+    "hclsyntax/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-call",
+          "arguments": {
+            "kind": "static-traversal"
+          }
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_call": {
+            "name": "f",
+            "arguments": [
+              {
+                "static_traversal": [
+                  {
+                    "root": "x"
+                  },
+                  {
+                    "index": {
+                      "number": "0"
+                    }
+                  }
+                ]
+              },
+              {
+                "static_traversal": [
+                  {
+                    "root": "y"
+                  },
+                  {
+                    "index": {
+                      "bool": true
+                    }
+                  }
+                ]
+              },
+              {
+                "static_traversal": [
+                  {
+                    "root": "z"
+                  },
+                  {
+                    "index": {
+                      "null": "dynamic"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "description": "Evaluating a bare static map key of two traversal steps is an error",
+  "spec": [
+    "hclsyntax/spec.md#static-map",
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "status": "disputed",
+  "notes": "The grammar allows any expression as a key and the prose only makes a bare identifier a literal name, so evaluating the key k.b would give \"x\". hashicorp/hcl rejects a bare traversal of more than one step when it evaluates a key, because it could be meant as a dotted name, and leaves such keys to static analysis (ObjectConsKeyExpr.Value in hclsyntax/expression.go).",
+  "variables": {
+    "k": {
+      "object": {
+        "b": {
+          "string": "x"
+        }
+      }
+    }
+  },
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map"
+        }
+      }
+    ]
+  },
+  "reference_error": "Ambiguous attribute key",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

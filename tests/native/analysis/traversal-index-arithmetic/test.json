@@ -1,0 +1,28 @@
+{
+  "description": "An index with an arithmetic key makes static traversal analysis an error",
+  "spec": [
+    "hclsyntax/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "status": "disputed",
+  "notes": "The spec allows constant index operations in a static traversal without defining constant, and 1 + 1 has a constant value, though it is an operation. hashicorp/hcl only makes an index a traversal step when its key is a literal value or a string literal (parseExpressionTraversals in hclsyntax/parser.go); any other key gives an IndexExpr, which has no AsTraversal method.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-traversal"
+        }
+      }
+    ]
+  },
+  "reference_error": "A single static variable reference is required",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

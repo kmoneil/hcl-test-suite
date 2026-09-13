@@ -1,0 +1,42 @@
+{
+  "description": "Attribute accesses in a static traversal give attribute steps in order",
+  "spec": [
+    "hclsyntax/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-traversal"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_traversal": [
+            {
+              "root": "x"
+            },
+            {
+              "attr": "y"
+            },
+            {
+              "attr": "z"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

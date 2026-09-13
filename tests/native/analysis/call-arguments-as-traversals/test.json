@@ -1,0 +1,57 @@
+{
+  "description": "Static call arguments can be analyzed as static traversals",
+  "spec": [
+    "hclsyntax/spec.md#static-call",
+    "hclsyntax/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-call",
+          "arguments": {
+            "kind": "static-traversal"
+          }
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_call": {
+            "name": "f",
+            "arguments": [
+              {
+                "static_traversal": [
+                  {
+                    "root": "x"
+                  },
+                  {
+                    "attr": "y"
+                  }
+                ]
+              },
+              {
+                "static_traversal": [
+                  {
+                    "root": "z"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "description": "In literal-only mode a JSON string is still analyzed as a static call",
+  "spec": [
+    "json/spec.md#static-call",
+    "spec.md#expression-evaluation"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "evaluation_mode": "literal-only",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-call"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_call": {
+            "name": "f",
+            "arguments": [
+              {
+                "number": "1"
+              }
+            ]
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

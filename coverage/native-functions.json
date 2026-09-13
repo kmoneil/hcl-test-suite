@@ -410,12 +410,6 @@
       "tests": [
         "native/functions/call-literal-only-mode-is-error"
       ]
-    },
-    {
-      "id": "functions-static-call",
-      "spec": "hclsyntax/spec.md#static-call",
-      "rule": "A function call can be analyzed statically as a call, giving the function name verbatim and the argument expressions without evaluating them",
-      "untested": "Static analysis is not part of the protocol"
     }
   ]
 }

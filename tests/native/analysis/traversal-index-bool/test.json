@@ -1,0 +1,41 @@
+{
+  "description": "A true index in a static traversal gives an index step with the bool",
+  "spec": [
+    "hclsyntax/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-traversal"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_traversal": [
+            {
+              "root": "x"
+            },
+            {
+              "index": {
+                "bool": true
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

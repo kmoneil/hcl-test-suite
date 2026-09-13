@@ -1,0 +1,36 @@
+{
+  "description": "An analyzed optional attribute that isn't defined is absent without an analysis error",
+  "spec": [
+    "spec.md#static-analysis",
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-list"
+        }
+      },
+      {
+        "name": "b"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "b": {
+          "number": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

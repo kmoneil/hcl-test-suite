@@ -1,0 +1,36 @@
+{
+  "description": "A variable whose value is an object is not a static map",
+  "spec": [
+    "hclsyntax/spec.md#static-map",
+    "spec.md#static-analysis"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "variables": {
+    "x": {
+      "object": {
+        "b": {
+          "number": "1"
+        }
+      }
+    }
+  },
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map"
+        }
+      }
+    ]
+  },
+  "reference_error": "A static map expression is required",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

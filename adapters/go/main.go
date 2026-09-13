@@ -94,7 +94,7 @@ func capabilities() object {
 		"implementation": "hashicorp/hcl",
 		"version":        version,
 		"operations":     []string{"parse", "eval", "decode"},
-		"features":       []string{"typed-values", "unknown-values", "functions", "json-syntax"},
+		"features":       []string{"typed-values", "unknown-values", "functions", "json-syntax", "static-analysis"},
 	}
 }
 
@@ -149,9 +149,10 @@ func eval(path, contextPath string) (any, error) {
 	return object{"valid": true, "body": body}, nil
 }
 
-// decode applies a schema to a file's body, then evaluates the attributes the
-// schema selected. It applies the whole schema, including to nested blocks,
-// before evaluating anything, so that schema errors are reported as such.
+// decode applies a schema to a file's body, then the static analyses the schema
+// asks for, then evaluates the attributes the schema selected. Each step covers
+// the whole body, including nested blocks, before the next one starts, so that
+// an input with errors in several phases reports the earliest phase.
 func decode(path, contextPath string) (any, error) {
 	src, err := os.ReadFile(path)
 	if err != nil {
@@ -182,6 +183,9 @@ func decode(path, contextPath string) (any, error) {
 	if diags.HasErrors() {
 		return invalid("schema", diags), nil
 	}
+	if diags := analyzeContent(content); diags.HasErrors() {
+		return invalid("analysis", diags), nil
+	}
 	body, diags := evalContent(content, settings.ctx)
 	if diags.HasErrors() {
 		return invalid("eval", diags), nil
@@ -198,8 +202,9 @@ type bodySchemaDecl struct {
 }
 
 type attributeSchemaDecl struct {
-	Name     *string `json:"name"`
-	Required bool    `json:"required"`
+	Name     *string         `json:"name"`
+	Required bool            `json:"required"`
+	Analysis json.RawMessage `json:"analysis"`
 }
 
 type blockSchemaDecl struct {
@@ -212,10 +217,11 @@ type blockSchemaDecl struct {
 // PartialContent or JustAttributes, and how to process the bodies that
 // produces.
 type bodySchema struct {
-	mode   string
-	schema *hcl.BodySchema
-	blocks map[string]*bodySchema // by block type
-	remain *bodySchema            // for the body PartialContent leaves, if any
+	mode     string
+	schema   *hcl.BodySchema
+	analyses map[string]*analysis   // by attribute name, for attributes that are analyzed
+	blocks   map[string]*bodySchema // by block type
+	remain   *bodySchema            // for the body PartialContent leaves, if any
 }
 
 func newBodySchema(data json.RawMessage) (*bodySchema, error) {
@@ -223,7 +229,7 @@ func newBodySchema(data json.RawMessage) (*bodySchema, error) {
 	if err := unmarshalObject(data, &decl); err != nil {
 		return nil, err
 	}
-	s := &bodySchema{mode: decl.Mode, schema: &hcl.BodySchema{}, blocks: map[string]*bodySchema{}}
+	s := &bodySchema{mode: decl.Mode, schema: &hcl.BodySchema{}, analyses: map[string]*analysis{}, blocks: map[string]*bodySchema{}}
 	switch decl.Mode {
 	case "exhaustive", "partial":
 	case "dynamic-attributes":
@@ -234,6 +240,7 @@ func newBodySchema(data json.RawMessage) (*bodySchema, error) {
 	default:
 		return nil, fmt.Errorf("unknown mode %q", decl.Mode)
 	}
+	listed := map[string]int{}
 	for _, raw := range decl.Attributes {
 		var attr attributeSchemaDecl
 		if err := unmarshalObject(raw, &attr); err != nil {
@@ -242,7 +249,20 @@ func newBodySchema(data json.RawMessage) (*bodySchema, error) {
 		if attr.Name == nil {
 			return nil, errors.New(`attribute without a "name"`)
 		}
+		listed[*attr.Name]++
+		if attr.Analysis != nil {
+			a, err := newAnalysis(attr.Analysis)
+			if err != nil {
+				return nil, fmt.Errorf("attribute %q: analysis: %w", *attr.Name, err)
+			}
+			s.analyses[*attr.Name] = a
+		}
 		s.schema.Attributes = append(s.schema.Attributes, hcl.AttributeSchema{Name: *attr.Name, Required: attr.Required})
+	}
+	for name := range s.analyses {
+		if listed[name] > 1 {
+			return nil, fmt.Errorf("attribute %q has an analysis, so it can only be listed once", name)
+		}
 	}
 	for _, raw := range decl.Blocks {
 		var block blockSchemaDecl
@@ -288,6 +308,8 @@ func newBodySchema(data json.RawMessage) (*bodySchema, error) {
 // decodedBody is the result of applying a bodySchema to a body.
 type decodedBody struct {
 	attributes hcl.Attributes
+	analyses   map[string]*analysis // from the schema
+	analyzed   map[string]*analyzed // the results of analyzing those attributes
 	blocks     []decodedBlock
 	remain     *decodedBody
 }
@@ -298,7 +320,7 @@ type decodedBlock struct {
 }
 
 func applySchema(body hcl.Body, s *bodySchema) (*decodedBody, hcl.Diagnostics) {
-	out := &decodedBody{}
+	out := &decodedBody{analyses: s.analyses}
 	var content *hcl.BodyContent
 	var diags hcl.Diagnostics
 	switch s.mode {
@@ -325,16 +347,46 @@ func applySchema(body hcl.Body, s *bodySchema) (*decodedBody, hcl.Diagnostics) {
 	return out, diags
 }
 
-func evalContent(d *decodedBody, ctx *hcl.EvalContext) (object, hcl.Diagnostics) {
-	var diags hcl.Diagnostics
-	names := make([]string, 0, len(d.attributes))
-	for name := range d.attributes {
+func sortedNames(attrs hcl.Attributes) []string {
+	names := make([]string, 0, len(attrs))
+	for name := range attrs {
 		names = append(names, name)
 	}
 	sort.Strings(names) // keeps the order of reported errors stable
+	return names
+}
 
+// analyzeContent statically analyzes the attributes whose schema asks for it,
+// in the body, its blocks and its remaining body, without evaluating anything.
+func analyzeContent(d *decodedBody) hcl.Diagnostics {
+	var diags hcl.Diagnostics
+	d.analyzed = map[string]*analyzed{}
+	for _, name := range sortedNames(d.attributes) {
+		if a, ok := d.analyses[name]; ok {
+			result, analysisDiags := analyze(d.attributes[name].Expr, a)
+			diags = append(diags, analysisDiags...)
+			d.analyzed[name] = result
+		}
+	}
+	for _, b := range d.blocks {
+		diags = append(diags, analyzeContent(b.body)...)
+	}
+	if d.remain != nil {
+		diags = append(diags, analyzeContent(d.remain)...)
+	}
+	return diags
+}
+
+func evalContent(d *decodedBody, ctx *hcl.EvalContext) (object, hcl.Diagnostics) {
+	var diags hcl.Diagnostics
 	attrs := object{}
-	for _, name := range names {
+	for _, name := range sortedNames(d.attributes) {
+		if result, ok := d.analyzed[name]; ok {
+			encoded, resultDiags := result.eval(ctx)
+			diags = append(diags, resultDiags...)
+			attrs[name] = encoded
+			continue
+		}
 		val, valDiags := d.attributes[name].Expr.Value(ctx)
 		diags = append(diags, valDiags...)
 		attrs[name] = encodeValue(val)
@@ -356,6 +408,166 @@ func evalContent(d *decodedBody, ctx *hcl.EvalContext) (object, hcl.Diagnostics)
 		out["remain"] = remain
 	}
 	return out, diags
+}
+
+// The analysis format of attribute schemata.
+type analysisDecl struct {
+	Kind      string          `json:"kind"`
+	Elements  json.RawMessage `json:"elements"`
+	Keys      json.RawMessage `json:"keys"`
+	Values    json.RawMessage `json:"values"`
+	Arguments json.RawMessage `json:"arguments"`
+}
+
+// analysis says how to analyze an expression statically. A nil analysis, like
+// one of kind "value", evaluates the expression instead.
+type analysis struct {
+	kind                              string
+	elements, keys, values, arguments *analysis
+}
+
+func newAnalysis(data json.RawMessage) (*analysis, error) {
+	var decl analysisDecl
+	if err := unmarshalObject(data, &decl); err != nil {
+		return nil, err
+	}
+	a := &analysis{kind: decl.Kind}
+	parts := []struct {
+		field string
+		raw   json.RawMessage
+		into  **analysis
+		kind  string
+	}{
+		{"elements", decl.Elements, &a.elements, "static-list"},
+		{"keys", decl.Keys, &a.keys, "static-map"},
+		{"values", decl.Values, &a.values, "static-map"},
+		{"arguments", decl.Arguments, &a.arguments, "static-call"},
+	}
+	switch decl.Kind {
+	case "value", "static-list", "static-map", "static-call", "static-traversal":
+	default:
+		return nil, fmt.Errorf("unknown analysis kind %q", decl.Kind)
+	}
+	for _, part := range parts {
+		if part.raw == nil {
+			continue
+		}
+		if part.kind != decl.Kind {
+			return nil, fmt.Errorf("%s analysis has no %q", decl.Kind, part.field)
+		}
+		inner, err := newAnalysis(part.raw)
+		if err != nil {
+			return nil, fmt.Errorf("%s: %w", part.field, err)
+		}
+		*part.into = inner
+	}
+	return a, nil
+}
+
+// analyzed is the result of analyzing an expression: the expressions the
+// analysis found are evaluated later, or analyzed further.
+type analyzed struct {
+	kind      string
+	expr      hcl.Expression // for "value"
+	items     []*analyzed    // list elements or call arguments
+	pairs     [][2]*analyzed // map keys and values
+	name      string         // the called function
+	traversal hcl.Traversal
+}
+
+func analyze(expr hcl.Expression, a *analysis) (*analyzed, hcl.Diagnostics) {
+	if a == nil || a.kind == "value" {
+		return &analyzed{kind: "value", expr: expr}, nil
+	}
+	out := &analyzed{kind: a.kind}
+	var diags hcl.Diagnostics
+	switch a.kind {
+	case "static-list":
+		exprs, listDiags := hcl.ExprList(expr)
+		if listDiags.HasErrors() {
+			return nil, listDiags
+		}
+		for _, element := range exprs {
+			item, itemDiags := analyze(element, a.elements)
+			diags = append(diags, itemDiags...)
+			out.items = append(out.items, item)
+		}
+	case "static-map":
+		pairs, mapDiags := hcl.ExprMap(expr)
+		if mapDiags.HasErrors() {
+			return nil, mapDiags
+		}
+		for _, pair := range pairs {
+			key, keyDiags := analyze(pair.Key, a.keys)
+			value, valueDiags := analyze(pair.Value, a.values)
+			diags = append(diags, keyDiags...)
+			diags = append(diags, valueDiags...)
+			out.pairs = append(out.pairs, [2]*analyzed{key, value})
+		}
+	case "static-call":
+		call, callDiags := hcl.ExprCall(expr)
+		if callDiags.HasErrors() {
+			return nil, callDiags
+		}
+		out.name = call.Name
+		for _, argument := range call.Arguments {
+			item, itemDiags := analyze(argument, a.arguments)
+			diags = append(diags, itemDiags...)
+			out.items = append(out.items, item)
+		}
+	case "static-traversal":
+		traversal, traversalDiags := hcl.AbsTraversalForExpr(expr)
+		if traversalDiags.HasErrors() {
+			return nil, traversalDiags
+		}
+		out.traversal = traversal
+	}
+	return out, diags
+}
+
+func (n *analyzed) eval(ctx *hcl.EvalContext) (any, hcl.Diagnostics) {
+	var diags hcl.Diagnostics
+	evalItems := func(items []*analyzed) []any {
+		out := []any{}
+		for _, item := range items {
+			encoded, itemDiags := item.eval(ctx)
+			diags = append(diags, itemDiags...)
+			out = append(out, encoded)
+		}
+		return out
+	}
+	switch n.kind {
+	case "value":
+		val, valDiags := n.expr.Value(ctx)
+		return encodeValue(val), valDiags
+	case "static-list":
+		items := evalItems(n.items)
+		return object{"static_list": items}, diags
+	case "static-map":
+		pairs := []any{}
+		for _, pair := range n.pairs {
+			kv := evalItems(pair[:])
+			pairs = append(pairs, object{"key": kv[0], "value": kv[1]})
+		}
+		return object{"static_map": pairs}, diags
+	case "static-call":
+		arguments := evalItems(n.items)
+		return object{"static_call": object{"name": n.name, "arguments": arguments}}, diags
+	}
+	steps := []any{}
+	for _, step := range n.traversal {
+		switch step := step.(type) {
+		case hcl.TraverseRoot:
+			steps = append(steps, object{"root": step.Name})
+		case hcl.TraverseAttr:
+			steps = append(steps, object{"attr": step.Name})
+		case hcl.TraverseIndex:
+			steps = append(steps, object{"index": encodeValue(step.Key)})
+		default:
+			panic(unsupported{fmt.Sprintf("traversal step %T", step)})
+		}
+	}
+	return object{"static_traversal": steps}, diags
 }
 
 func evalBody(body *hclsyntax.Body, ctx *hcl.EvalContext) (object, hcl.Diagnostics) {

@@ -1,0 +1,29 @@
+{
+  "description": "Evaluating a variable JSON static call argument in literal-only mode is an error",
+  "spec": [
+    "json/spec.md#static-call",
+    "spec.md#expression-evaluation"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "evaluation_mode": "literal-only",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-call"
+        }
+      }
+    ]
+  },
+  "reference_error": "Variables not allowed",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

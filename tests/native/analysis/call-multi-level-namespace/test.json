@@ -1,0 +1,42 @@
+{
+  "description": "A static call of a function with two namespace levels gives the whole name",
+  "spec": [
+    "hclsyntax/spec.md#static-call",
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "status": "disputed",
+  "notes": "The spec's function call grammar has a single identifier as the function name (FunctionCall = Identifier \"(\" arguments \")\"), and :: is not one of its tokens. hashicorp/hcl accepts names separated by :: and gives them joined with :: as the static call's name (finishParsingFunctionCall in hclsyntax/parser.go, FunctionCallExpr.ExprCall in hclsyntax/expression.go).",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-call"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_call": {
+            "name": "provider::aws::arn",
+            "arguments": [
+              {
+                "number": "1"
+              }
+            ]
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

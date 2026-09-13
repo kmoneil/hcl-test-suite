@@ -1,0 +1,53 @@
+{
+  "description": "Static list elements can be analyzed as static lists",
+  "spec": [
+    "hclsyntax/spec.md#static-list"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-list",
+          "elements": {
+            "kind": "static-list"
+          }
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_list": [
+            {
+              "static_list": [
+                {
+                  "number": "1"
+                }
+              ]
+            },
+            {
+              "static_list": [
+                {
+                  "number": "2"
+                },
+                {
+                  "number": "3"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

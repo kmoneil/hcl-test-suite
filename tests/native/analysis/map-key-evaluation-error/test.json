@@ -1,0 +1,27 @@
+{
+  "description": "Evaluating a static map key with an undefined variable is an evaluation error",
+  "spec": [
+    "spec.md#static-analysis",
+    "hclsyntax/spec.md#static-map"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map"
+        }
+      }
+    ]
+  },
+  "reference_error": "There is no variable named \"nope\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

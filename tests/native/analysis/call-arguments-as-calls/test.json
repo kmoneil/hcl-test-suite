@@ -1,0 +1,49 @@
+{
+  "description": "Static call arguments can be analyzed as static calls",
+  "spec": [
+    "hclsyntax/spec.md#static-call"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-call",
+          "arguments": {
+            "kind": "static-call"
+          }
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_call": {
+            "name": "f",
+            "arguments": [
+              {
+                "static_call": {
+                  "name": "g",
+                  "arguments": [
+                    {
+                      "number": "1"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

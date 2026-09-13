@@ -1,0 +1,32 @@
+{
+  "description": "A parenthesized static map key is not a static traversal",
+  "spec": [
+    "hclsyntax/spec.md#static-traversal",
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "status": "disputed",
+  "notes": "In an object key the spec gives parentheses a meaning beyond grouping: {(foo) = \"baz\"} takes its key from the variable foo, while a bare foo is a literal name. So (b) is the key form that refers to a variable, which a static traversal needs, but the spec doesn't say whether the parentheses stop it being a variable expression for static analysis. hashicorp/hcl splits keys the other way: parseObjectCons (hclsyntax/parser.go) marks a key that starts with a parenthesis ForceNonLiteral, so ObjectConsKeyExpr.AsTraversal (hclsyntax/expression.go) gives no traversal, while a bare identifier key gives one.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map",
+          "keys": {
+            "kind": "static-traversal"
+          }
+        }
+      }
+    ]
+  },
+  "reference_error": "A single static variable reference is required",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

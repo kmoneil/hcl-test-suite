@@ -24,7 +24,7 @@ TESTS = ROOT / "tests"
 COVERAGE = ROOT / "coverage"
 KEY_ORDER = ["description", "spec", "op", "input", "features", "status", "notes", "variables", "functions",
              "evaluation_mode", "schema", "reference_error", "expect"]
-FEATURES = {"unknown-values", "typed-values", "functions", "json-syntax"}
+FEATURES = {"unknown-values", "typed-values", "functions", "json-syntax", "static-analysis"}
 NAME = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 MAX_INPUT_BYTES = 2048
 MAX_DESCRIPTION = 100
@@ -68,6 +68,9 @@ def needs_typed_values(value):
 def decode_body_problems(body, schema, where="expected body"):
     """Lists the ways an expected decode result couldn't come from applying its schema."""
     problems = []
+    analyses = {attr["name"]: attr["analysis"] for attr in schema.get("attributes", []) if "analysis" in attr}
+    for name, result in body.get("attributes", {}).items():
+        problems.extend(analysis_result_problems(result, analyses.get(name), f"{where}: attribute {name!r}"))
     if schema["mode"] == "dynamic-attributes":
         if body.get("blocks"):
             problems.append(f"{where} has blocks, but dynamic attributes processing gives none")
@@ -96,6 +99,43 @@ def decode_body_problems(body, schema, where="expected body"):
     return problems
 
 
+RESULT_KEYS = {"static-list": "static_list", "static-map": "static_map", "static-call": "static_call",
+               "static-traversal": "static_traversal"}
+
+
+def analysis_result_problems(result, analysis, where):
+    """Lists the ways an expected result couldn't come from an analysis."""
+    kind = analysis["kind"] if analysis else "value"
+    got = next(iter(result)) if isinstance(result, dict) and len(result) == 1 else None
+    if kind == "value":
+        return [f"{where} is a {got} result, but it is evaluated, not analyzed"] if got in hcltest.ANALYSIS_RESULTS else []
+    if got != RESULT_KEYS[kind]:
+        return [f"{where} must be a {RESULT_KEYS[kind]} result for its {kind} analysis"]
+    x = result[got]
+    problems = []
+    if kind == "static-list":
+        for i, item in enumerate(x):
+            problems.extend(analysis_result_problems(item, analysis.get("elements"), f"{where}: element {i}"))
+    elif kind == "static-map":
+        for i, pair in enumerate(x):
+            problems.extend(analysis_result_problems(pair["key"], analysis.get("keys"), f"{where}: key {i}"))
+            problems.extend(analysis_result_problems(pair["value"], analysis.get("values"), f"{where}: value {i}"))
+    elif kind == "static-call":
+        for i, item in enumerate(x["arguments"]):
+            problems.extend(analysis_result_problems(item, analysis.get("arguments"), f"{where}: argument {i}"))
+    return problems
+
+
+def analysis_default_problems(analysis, where):
+    problems = []
+    for part in hcltest.ANALYSIS_PARTS[analysis["kind"]]:
+        if analysis.get(part) == {"kind": "value"}:
+            problems.append(f'{where}: leave out "{part}", which evaluates the expressions anyway')
+        elif part in analysis:
+            problems.extend(analysis_default_problems(analysis[part], f"{where}: {part}"))
+    return problems
+
+
 def schema_default_problems(schema, where="schema"):
     """Lists fields of a schema that only repeat their default, which would hide duplicate tests."""
     problems = []
@@ -105,6 +145,10 @@ def schema_default_problems(schema, where="schema"):
     for attr in schema.get("attributes", []):
         if attr.get("required") is False:
             problems.append(f'{where}: leave out "required": false for {attr["name"]!r}')
+        if attr.get("analysis") == {"kind": "value"}:
+            problems.append(f'{where}: leave out the analysis of {attr["name"]!r}, which evaluates it anyway')
+        elif "analysis" in attr:
+            problems.extend(analysis_default_problems(attr["analysis"], f"{where}: analysis of {attr['name']!r}"))
     for block in schema.get("blocks", []):
         if "labels" in block and not block["labels"]:
             problems.append(f'{where}: leave out the empty "labels" of block type {block["type"]!r}')
@@ -114,9 +158,36 @@ def schema_default_problems(schema, where="schema"):
     return problems
 
 
+def result_values(result):
+    """The values in a decoded attribute: the attribute value, or the values inside an analysis result."""
+    kind = next(iter(result)) if isinstance(result, dict) and len(result) == 1 else None
+    if kind == "static_list":
+        for item in result[kind]:
+            yield from result_values(item)
+    elif kind == "static_map":
+        for pair in result[kind]:
+            yield from result_values(pair["key"])
+            yield from result_values(pair["value"])
+    elif kind == "static_call":
+        for item in result[kind]["arguments"]:
+            yield from result_values(item)
+    elif kind == "static_traversal":
+        for step in result[kind]:
+            if "index" in step:
+                yield step["index"]
+    else:
+        yield result
+
+
+def schema_has_analysis(schema):
+    return (any("analysis" in attr for attr in schema.get("attributes", []))
+            or any(schema_has_analysis(block["body"]) for block in schema.get("blocks", []))
+            or ("remain" in schema and schema_has_analysis(schema["remain"])))
+
+
 def body_values(body):
-    for value in body.get("attributes", {}).values():
-        yield value
+    for result in body.get("attributes", {}).values():
+        yield from result_values(result)
     for block in body.get("blocks", []):
         yield from body_values(block.get("body", {}))
     if body.get("remain") is not None:
@@ -157,7 +228,7 @@ class Linter:
         try:
             meta = json.loads(test_json.read_text(encoding="utf-8"))
             self.disputed[where] = isinstance(meta, dict) and meta.get("status") == "disputed"
-        except (OSError, ValueError):
+        except (OSError, ValueError, RecursionError):
             pass
         if not self.in_scope(where):
             return self.register_only(test_json, where, descriptions, inputs)
@@ -245,6 +316,10 @@ class Linter:
             needs["json-syntax"] = "the input is in the JSON syntax"
         elif "json-syntax" in features:
             self.problem(where, 'lists the "json-syntax" feature, but the input is in the native syntax')
+        if "schema" in test.context and schema_has_analysis(test.context["schema"]):
+            needs["static-analysis"] = "the schema analyzes an attribute"
+        elif "static-analysis" in features:
+            self.problem(where, 'lists the "static-analysis" feature, but its schema analyzes no attribute')
         if "functions" in test.context:
             needs["functions"] = "the test declares functions"
             for name, decl in test.context["functions"].items():
@@ -306,6 +381,8 @@ class Linter:
                                     f'{" or ".join(json.dumps(p) for p in phases)}')
             if test.op == "parse" and "phase" in expect:
                 self.problem(where, 'parse tests don\'t need a "phase"')
+            if expect.get("phase") == "analysis" and not schema_has_analysis(test.context.get("schema", {})):
+                self.problem(where, 'expects an error in the "analysis" phase, but its schema analyzes no attribute')
 
         data = test.input.read_bytes()
         if len(data) > MAX_INPUT_BYTES:

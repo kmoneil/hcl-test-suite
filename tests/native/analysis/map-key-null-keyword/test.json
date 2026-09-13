@@ -1,0 +1,45 @@
+{
+  "description": "A bare null key in a static map is the string null",
+  "spec": [
+    "hclsyntax/spec.md#static-map",
+    "hclsyntax/spec.md#keywords",
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "status": "disputed",
+  "notes": "The spec makes a bare identifier key a literal name, but in expressions null is the keyword for a null value, and a keyword's role supersedes other interpretations. A static map doesn't convert keys to strings, so the two readings give the string \"null\" or a null value. hashicorp/hcl gives the string: ObjectConsKeyExpr.Value names the key with hcl.ExprAsKeyword, and LiteralValueExpr.AsTraversal turns the null literal back into its name (hclsyntax/expression.go).",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_map": [
+            {
+              "key": {
+                "string": "null"
+              },
+              "value": {
+                "number": "1"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

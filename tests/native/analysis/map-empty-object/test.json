@@ -1,0 +1,32 @@
+{
+  "description": "An empty object constructor analyzed as a static map gives no pairs",
+  "spec": [
+    "hclsyntax/spec.md#static-map"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_map": []
+        }
+      },
+      "blocks": []
+    }
+  }
+}

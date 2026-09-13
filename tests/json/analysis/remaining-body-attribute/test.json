@@ -1,0 +1,57 @@
+{
+  "description": "An attribute in the JSON body left by partial processing can be analyzed statically",
+  "spec": [
+    "json/spec.md#static-analysis",
+    "spec.md#partial-processing-of-body-content"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "partial",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ],
+    "remain": {
+      "mode": "exhaustive",
+      "attributes": [
+        {
+          "name": "c",
+          "analysis": {
+            "kind": "static-call"
+          }
+        }
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": [],
+      "remain": {
+        "attributes": {
+          "c": {
+            "static_call": {
+              "name": "f",
+              "arguments": [
+                {
+                  "number": "2"
+                }
+              ]
+            }
+          }
+        },
+        "blocks": []
+      }
+    }
+  }
+}

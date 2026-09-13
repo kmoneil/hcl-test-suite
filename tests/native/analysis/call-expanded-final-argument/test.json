@@ -1,0 +1,58 @@
+{
+  "description": "A static call gives an expanded final argument without its expansion",
+  "spec": [
+    "hclsyntax/spec.md#static-call",
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "status": "disputed",
+  "notes": "The spec says a static call returns the argument expressions, but not what becomes of the ... after the final one, which changes how the arguments map to parameters. hashicorp/hcl's hcl.StaticCall has no field for it, and FunctionCallExpr.ExprCall (hclsyntax/expression.go) gives the final argument like the others.",
+  "variables": {
+    "xs": {
+      "tuple": [
+        {
+          "number": "2"
+        }
+      ]
+    }
+  },
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-call"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_call": {
+            "name": "f",
+            "arguments": [
+              {
+                "number": "1"
+              },
+              {
+                "tuple": [
+                  {
+                    "number": "2"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

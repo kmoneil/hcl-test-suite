@@ -1,0 +1,41 @@
+{
+  "description": "A parenthesized bool key in a static map stays a bool",
+  "spec": [
+    "hclsyntax/spec.md#static-map"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_map": [
+            {
+              "key": {
+                "bool": true
+              },
+              "value": {
+                "string": "x"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "description": "A newline in a JSON string analyzed as a static traversal is ignored",
+  "spec": [
+    "json/spec.md#static-traversal",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "status": "disputed",
+  "notes": "The spec reads the string as a native syntax expression, where a newline is not whitespace and is only ignored in some contexts, such as inside parentheses and brackets, without saying whether a string's content is one. hashicorp/hcl reads string content for static analysis with newlines ignored, as if in parentheses: expression.AsTraversal (json/structure.go) calls hclsyntax.ParseTraversalAbs, which ignores them (hclsyntax/public.go), as hclsyntax.ParseExpression, used for static calls, also does.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-traversal"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_traversal": [
+            {
+              "root": "x"
+            },
+            {
+              "attr": "y"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -44,13 +44,13 @@ unless `input` says otherwise.
 | `spec` | yes | The spec sections that define the behavior, as anchors from [tools/spec-anchors.txt](../tools/spec-anchors.txt). |
 | `op` | yes | `"parse"`, `"eval"` or `"decode"`, the adapter command to run. JSON syntax tests are always decode tests. |
 | `input` | no | The input file name in the test directory, if not `input.hcl` for native syntax tests or `input.hcl.json` for JSON syntax tests. Lint requires the default. |
-| `features` | no | Optional features the test needs: `"typed-values"`, `"unknown-values"`, `"functions"` or `"json-syntax"` (see [capabilities](protocol.md#capabilities)). Adapters without them skip the test. Lint requires `typed-values` when a variable, a function or the expected result has a list, set or map, or a null or unknown value of a type other than dynamic, or a function has a parameter of a collection or structural type, because an implementation without those types can't receive, declare or produce them. It requires `unknown-values` when any of them has an unknown value, `functions` when the test declares functions, and `json-syntax` for JSON syntax tests and only for them. |
+| `features` | no | Optional features the test needs: `"typed-values"`, `"unknown-values"`, `"functions"`, `"json-syntax"` or `"static-analysis"` (see [capabilities](protocol.md#capabilities)). Adapters without them skip the test. Lint requires `typed-values` when a variable, a function or the expected result has a list, set or map, or a null or unknown value of a type other than dynamic, or a function has a parameter of a collection or structural type, because an implementation without those types can't receive, declare or produce them. It requires `unknown-values` when any of them has an unknown value, `functions` when the test declares functions, `json-syntax` for JSON syntax tests and only for them, and `static-analysis` exactly when the schema analyzes an attribute. |
 | `status` | no | `"disputed"` if the spec doesn't clearly support the expected result (see below). |
 | `notes` | no | Anything a reader needs to know. Required for disputed tests. |
 | `variables` | no | Variables for `eval` and `decode`, as a JSON object of [values](protocol.md#values). |
 | `functions` | no | Functions for `eval` and `decode`, as a JSON object mapping function names to [declarations](protocol.md#functions). Lint checks that function and parameter names are identifiers (function names may join several with `::`), and that the `functions` feature is listed exactly when the test declares functions. |
 | `evaluation_mode` | no | `"literal-only"` to evaluate in literal-only mode (see [eval](protocol.md#eval)), for `eval` and `decode` tests without variables or functions. |
-| `schema` | for `decode` | The [schema](protocol.md#schemas) to apply. Lint requires leaving out fields that only repeat a default (empty `attributes`, `blocks` or `labels`, and `"required": false`), and an expected result that the schema could give: only the attributes it requests, with every required one, blocks of the types it requests with as many labels as it names, and `remain` exactly where it has a remain schema. |
+| `schema` | for `decode` | The [schema](protocol.md#schemas) to apply. Lint requires leaving out fields that only repeat a default (empty `attributes`, `blocks` or `labels`, `"required": false`, and an `analysis` or part that is `{"kind": "value"}`), and an expected result that the schema could give: only the attributes it requests, with every required one, blocks of the types it requests with as many labels as it names, `remain` exactly where it has a remain schema, and for each attribute a result of the kind its analysis asks for, down to each part, or a value where there is no analysis. An `"analysis"` phase needs a schema with an analysis. |
 | `reference_error` | for expected errors | Text that the error reported by hashicorp/hcl contains (see below). |
 | `expect` | yes | The expected result (see below). |
 
@@ -79,8 +79,9 @@ An expected error:
 error must give it:
 `"phase": "parse"` if the file itself is invalid, or `"phase": "eval"` if it
 parses and then fails during evaluation. `decode` tests can also expect
-`"phase": "schema"`, for a file that parses but doesn't fit the schema. Error
-messages and positions are never compared between implementations.
+`"phase": "schema"`, for a file that parses but doesn't fit the schema, and
+`"phase": "analysis"`, for a static analysis that fails. Error messages and
+positions are never compared between implementations.
 
 ### Reference errors
 
@@ -163,7 +164,7 @@ covered: every rule has tests, and every test checks a rule.
   disputed, its text ends with `(disputed)`; lint checks this.
 - A rule has either `tests` (which may be in any area) or an `untested`
   reason. Use `untested` only for rules that can't be tested through the
-  protocol yet, such as rules about static analysis.
+  protocol yet, such as rules about error positions.
 - Every test must be listed by at least one rule.
 
 ## Writing tests

@@ -1,0 +1,43 @@
+{
+  "description": "A JSON static traversal decodes JSON escapes and then native string escapes in an index",
+  "spec": [
+    "json/spec.md#static-traversal",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-traversal"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_traversal": [
+            {
+              "root": "x"
+            },
+            {
+              "index": {
+                "string": "a\nb"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

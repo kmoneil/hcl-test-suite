@@ -1,0 +1,33 @@
+{
+  "description": "An empty JSON array analyzed as a static list gives no elements",
+  "spec": [
+    "json/spec.md#static-list"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-list"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_list": []
+        }
+      },
+      "blocks": []
+    }
+  }
+}

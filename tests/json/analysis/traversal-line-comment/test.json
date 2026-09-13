@@ -1,0 +1,40 @@
+{
+  "description": "A line comment in a JSON string analyzed as a static traversal is ignored",
+  "spec": [
+    "json/spec.md#static-traversal",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "status": "disputed",
+  "notes": "The spec reads the string as a native syntax expression, where a line comment counts as a newline, and doesn't say whether an expression in a string may be followed by one. hashicorp/hcl's scanner makes # c a comment token without a newline, and the peeker drops comment tokens (nextToken in hclsyntax/peeker.go), so hclsyntax.ParseTraversalAbs, called from expression.AsTraversal (json/structure.go), reads just x.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-traversal"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_traversal": [
+            {
+              "root": "x"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

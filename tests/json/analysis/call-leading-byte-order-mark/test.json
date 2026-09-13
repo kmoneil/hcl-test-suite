@@ -1,0 +1,43 @@
+{
+  "description": "A U+FEFF before a function call in a JSON string is ignored in static analysis",
+  "spec": [
+    "json/spec.md#static-call",
+    "hclsyntax/spec.md#source-code-representation"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "status": "disputed",
+  "notes": "The spec reads the string's content as a native syntax expression, and the native syntax doesn't permit byte order marks (hclsyntax/spec.md, Source Code Representation), so the content isn't a valid function call. hashicorp/hcl reads the content with hclsyntax.ParseExpression (expression.ExprCall in json/structure.go), whose scanner removes a leading UTF-8 byte order mark from any source (stripUTF8BOM in hclsyntax/token.go).",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-call"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_call": {
+            "name": "f",
+            "arguments": [
+              {
+                "number": "1"
+              }
+            ]
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

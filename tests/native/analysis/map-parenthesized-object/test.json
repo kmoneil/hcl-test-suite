@@ -1,0 +1,29 @@
+{
+  "description": "An object constructor in parentheses is not a static map",
+  "spec": [
+    "hclsyntax/spec.md#static-map",
+    "hclsyntax/spec.md#expression-terms"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "status": "disputed",
+  "notes": "The spec makes object construction syntax a static map without saying whether parentheses around it, which only group in evaluation, keep it one. hashicorp/hcl keeps the parentheses as a ParenthesesExpr (hclsyntax/expression.go), which has no ExprMap method and can't be unwrapped, so hcl.ExprMap reports an error.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map"
+        }
+      }
+    ]
+  },
+  "reference_error": "A static map expression is required",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

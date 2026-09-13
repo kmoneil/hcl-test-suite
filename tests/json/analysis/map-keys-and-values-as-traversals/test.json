@@ -1,0 +1,79 @@
+{
+  "description": "JSON static map keys and values can both be analyzed as static traversals",
+  "spec": [
+    "json/spec.md#static-map",
+    "json/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map",
+          "keys": {
+            "kind": "static-traversal"
+          },
+          "values": {
+            "kind": "static-traversal"
+          }
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_map": [
+            {
+              "key": {
+                "static_traversal": [
+                  {
+                    "root": "aws"
+                  },
+                  {
+                    "attr": "dst"
+                  }
+                ]
+              },
+              "value": {
+                "static_traversal": [
+                  {
+                    "root": "aws"
+                  },
+                  {
+                    "attr": "west"
+                  }
+                ]
+              }
+            },
+            {
+              "key": {
+                "static_traversal": [
+                  {
+                    "root": "google"
+                  }
+                ]
+              },
+              "value": {
+                "static_traversal": [
+                  {
+                    "root": "google"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "description": "An attribute access on an object constructor is not a static map",
+  "spec": [
+    "hclsyntax/spec.md#static-map",
+    "spec.md#static-analysis"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map"
+        }
+      }
+    ]
+  },
+  "reference_error": "A static map expression is required",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

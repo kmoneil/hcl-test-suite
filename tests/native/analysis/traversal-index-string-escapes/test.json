@@ -1,0 +1,42 @@
+{
+  "description": "A quoted string index with an escape gives an index step with the decoded string",
+  "spec": [
+    "hclsyntax/spec.md#static-traversal",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-traversal"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_traversal": [
+            {
+              "root": "x"
+            },
+            {
+              "index": {
+                "string": "a\nb"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

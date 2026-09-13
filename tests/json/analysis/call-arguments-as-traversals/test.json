@@ -1,0 +1,51 @@
+{
+  "description": "JSON static call arguments can be analyzed as static traversals",
+  "spec": [
+    "json/spec.md#static-call",
+    "json/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-call",
+          "arguments": {
+            "kind": "static-traversal"
+          }
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_call": {
+            "name": "f",
+            "arguments": [
+              {
+                "static_traversal": [
+                  {
+                    "root": "x"
+                  },
+                  {
+                    "attr": "y"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "description": "A JSON string containing a traversal is not a static call",
+  "spec": [
+    "json/spec.md#static-call",
+    "json/spec.md#static-analysis"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-call"
+        }
+      }
+    ]
+  },
+  "reference_error": "A static function call is required",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

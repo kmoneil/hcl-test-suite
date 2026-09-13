@@ -1,0 +1,30 @@
+{
+  "description": "An index with the key true in a JSON string makes static traversal analysis an error",
+  "spec": [
+    "json/spec.md#static-traversal",
+    "hclsyntax/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "status": "disputed",
+  "notes": "The spec reads the string as a native syntax expression and delegates to its static traversal analysis, where an index whose key is the literal true is an index step, as in native/analysis/traversal-index-bool. hashicorp/hcl parses the string with hclsyntax.ParseTraversalAbs instead of as an expression (expression.AsTraversal in json/structure.go), and that parser only accepts a number or a quoted string between index brackets (parseTraversal in hclsyntax/parser_traversal.go).",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-traversal"
+        }
+      }
+    ]
+  },
+  "reference_error": "A single static variable reference is required",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

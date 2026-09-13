@@ -1,0 +1,47 @@
+{
+  "description": "A tuple constructor analyzed as a static list gives its element expressions in order",
+  "spec": [
+    "hclsyntax/spec.md#static-list"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "variables": {
+    "x": {
+      "string": "v"
+    }
+  },
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-list"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_list": [
+            {
+              "number": "1"
+            },
+            {
+              "string": "v"
+            },
+            {
+              "string": "y"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

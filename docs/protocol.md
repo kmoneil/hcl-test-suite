@@ -52,6 +52,8 @@ Describes the implementation and what the adapter supports.
   - `functions`: the adapter can add the [test functions](#functions) a test
     declares to the function table.
   - `json-syntax`: the implementation reads the JSON syntax.
+  - `static-analysis`: the implementation has the spec's static analysis
+    operations, which tests use through [`decode`](#static-analysis).
 
 ## `parse`
 
@@ -124,12 +126,15 @@ syntaxes with their own expression syntax.
   isn't `"dynamic"`, and function parameters whose type isn't `"string"`,
   `"number"`, `"bool"` or `"dynamic"` only appear in tests that need
   `typed-values`. Parameters of type `"dynamic"` and the `allow_unknown` and
-  `allow_dynamic_type` flags can appear in any test.
+  `allow_dynamic_type` flags can appear in any test. Schemas only have an
+  `analysis` in tests that need `static-analysis`.
 
 ## `decode`
 
 Parses the file, applies a [schema](#schemas) to its body, and evaluates the
-attributes the schema selects, including those in the blocks it selects.
+attributes the schema selects, including those in the blocks it selects. For
+an attribute whose schema has an [analysis](#static-analysis), it applies that
+analysis instead.
 
 ```json
 {"valid": true, "body": <body content>}
@@ -155,14 +160,19 @@ processing; an implementation without schema-driven processing doesn't list
   object or a block property that is a string, which is only found when a
   schema is applied to that body. An implementation that rejects the schema
   itself also reports that as a schema error.
+- `"analysis"`: a [static analysis](#static-analysis) that the schema asks
+  for failed, including for a JSON string whose content isn't the native
+  syntax expression the analysis needs.
 - `"eval"`: evaluating an attribute the schema selected failed, including
   a JSON string that isn't a valid template.
 
-Apply the whole schema, including to nested blocks and remaining bodies, before
-evaluating anything, so that each error is reported in its phase. A block
-type's body schema is only applied to blocks of that type that exist. Only the
-attributes the schema selects are evaluated, and an error in any of them makes
-the whole result invalid.
+Apply the whole schema, including to nested blocks and remaining bodies, then
+every static analysis, and only then evaluate, so that an input with errors in
+several phases reports the earliest phase. (Each test's input has a single
+mistake, so no test depends on this order.) A block type's body schema is only
+applied to blocks of that type that exist. Only the attributes the schema
+selects are evaluated, and an error in any of them makes the whole result
+invalid.
 
 ### Schemas
 
@@ -182,7 +192,7 @@ defines:
 | Field | Meaning |
 | --- | --- |
 | `mode` | How to process the body (below). Required. |
-| `attributes` | Attribute schemata, each a `name` and whether the attribute is `required` (`false` if left out). None if left out. |
+| `attributes` | Attribute schemata, each a `name`, whether the attribute is `required` (`false` if left out), and optionally an [`analysis`](#static-analysis) to apply instead of evaluating it. None if left out. |
 | `blocks` | Block header schemata, each a block `type`, the names of its `labels` (none if left out), and the schema for the `body` of each block of that type, which is required. None if left out. |
 | `remain` | For partial processing, the schema for the body it leaves. Optional. |
 
@@ -196,9 +206,10 @@ defines:
   error. This mode has no other fields.
 
 A schema never has the same block type twice, which would give one block type
-two body schemas. It can have the same attribute name twice, or an attribute
-and a block type with the same name, which the spec says is an error, because
-tests check what implementations do with such schemas. If the implementation
+two body schemas. It can have the same attribute name twice (unless the
+attribute has an [analysis](#static-analysis)), or an attribute and a block
+type with the same name, which the spec says is an error, because tests check
+what implementations do with such schemas. If the implementation
 can't express such a schema at all, the adapter should exit with a non-zero
 status and say why on standard error.
 
@@ -207,11 +218,59 @@ are never templates, and `evaluation_mode` doesn't change how a body is
 processed, only how the selected attributes are evaluated (including the
 property names of JSON objects that are expressions).
 
-The body content is a [body](#bodies) with evaluated attribute values:
-`attributes` has the attributes the schema selected, and `blocks` the blocks
-it selected, in the order the syntax defines, each with its body processed with
-the schema for its type. With a `remain` schema, the body content also has
+The body content is a [body](#bodies) with evaluated attribute values, or
+analysis results: `attributes` has the attributes the schema selected, and
+`blocks` the blocks it selected, in the order the syntax defines, each with its
+body processed with the schema for its type. With a `remain` schema, the body content also has
 `remain`: the body content of the body that partial processing left.
+
+### Static analysis
+
+An attribute schema's `analysis` asks for one of the spec's static analyses of
+the attribute's expression, instead of evaluating it:
+
+```json
+{"name": "depends_on", "analysis": {"kind": "static-list", "elements": {"kind": "static-traversal"}}}
+```
+
+| Kind | Parts | Result |
+| --- | --- | --- |
+| `"static-list"` | `elements` | `{"static_list": [<result>, ...]}` |
+| `"static-map"` | `keys`, `values` | `{"static_map": [{"key": <result>, "value": <result>}, ...]}` |
+| `"static-call"` | `arguments` | `{"static_call": {"name": "f", "arguments": [<result>, ...]}}` |
+| `"static-traversal"` | | `{"static_traversal": [{"root": "a"}, {"attr": "b"}, {"index": <value>}]}` |
+| `"value"` | | the [value](#values) of the expression |
+
+- The parts are analyses of the expressions an analysis finds: each element of
+  a static list, each key and value of a static map, and each argument of a
+  static call. A part that is left out evaluates those expressions, as
+  `{"kind": "value"}` does.
+- The result takes the place of the attribute's value in the body content.
+  An attribute that the body doesn't define isn't analyzed, and is absent from
+  the body content like any other.
+- List elements, map pairs and call arguments are in source order, and a
+  static map keeps every pair, including pairs with equal keys.
+- A static call's `name` is the function name as written, with the parts of a
+  namespaced name joined by `::`. An argument expanded with `...` is reported
+  like the others: the result has no place for the expansion. Disputed tests
+  cover both.
+- A static traversal is its root name, then a step for each attribute access
+  (`attr`, with the name) and each index (`index`, with the key as a value),
+  in source order. Which index keys can be steps is part of what the tests
+  check.
+- Analyses don't depend on `evaluation_mode`, but evaluating the expressions
+  they give does. In the JSON syntax, a string analyzed as a static call or
+  static traversal is read as a native syntax expression in both modes, and
+  the arguments it gives are native expressions, so a quoted argument is a
+  native template.
+- Results have exactly the fields shown. A field set to `null` is an error.
+- An attribute with an analysis is listed only once in its schema, so it can't
+  be both analyzed and evaluated, or analyzed in two ways.
+- A failed analysis is an error in the `"analysis"` phase. Evaluating the
+  expressions in a result happens afterwards and can fail in the `"eval"`
+  phase.
+- The adapter uses the implementation's own static analysis operations; an
+  implementation without them leaves out the `static-analysis` feature.
 
 ## Functions
 
@@ -395,6 +454,8 @@ Before comparing, the runner rewrites both the expected and the actual output
 into one canonical form. Adapters don't need to produce it:
 
 - Numbers are compared by value, so `"1500"`, `"1.5e3"` and `"1500.0"` match.
+  Other spellings, such as `"inf"`, `"1_000"` or a number with spaces, are
+  errors.
 - A `unary` minus applied to a number `literal` is the same as a negative
   number `literal`, so `-1` may be reported either way.
 - Set elements are compared in any order.
@@ -403,10 +464,13 @@ into one canonical form. Adapters don't need to produce it:
   text, which keeps one empty text part because it isn't unwrapped.
 - A template with no interpolations or directives is the same as a `literal`
   string. `"abc"` may be reported either way.
-- A field set to `null` is the same as a missing field.
+- In an expression tree, a field set to `null` is the same as a missing
+  field.
 - Strings are compared after NFC normalization, because the spec defines
   string equality that way. This applies to string values, object and map
-  keys, and template text, but not to attribute names, block types or labels.
+  keys, attribute names in object types, and template text, but not to
+  attribute names, block types, labels, or the names in static calls and
+  static traversals.
 
 ## Open questions
 

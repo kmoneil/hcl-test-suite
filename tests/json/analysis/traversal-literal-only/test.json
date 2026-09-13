@@ -1,0 +1,42 @@
+{
+  "description": "In literal-only mode a JSON string is still analyzed as a static traversal",
+  "spec": [
+    "json/spec.md#static-traversal",
+    "spec.md#expression-evaluation"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "evaluation_mode": "literal-only",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-traversal"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_traversal": [
+            {
+              "root": "x"
+            },
+            {
+              "attr": "y"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

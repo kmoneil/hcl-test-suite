@@ -1,0 +1,32 @@
+{
+  "description": "A JSON property name that isn't a traversal fails static traversal analysis of the keys",
+  "spec": [
+    "json/spec.md#static-analysis",
+    "json/spec.md#static-map",
+    "json/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map",
+          "keys": {
+            "kind": "static-traversal"
+          }
+        }
+      }
+    ]
+  },
+  "reference_error": "A single static variable reference is required",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

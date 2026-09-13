@@ -1,0 +1,29 @@
+{
+  "description": "A tuple constructor in parentheses is not a static list",
+  "spec": [
+    "hclsyntax/spec.md#static-list",
+    "hclsyntax/spec.md#expression-terms"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "status": "disputed",
+  "notes": "The spec makes tuple construction syntax a static list without saying whether parentheses around it, which only group in evaluation, keep it one. hashicorp/hcl keeps the parentheses as a ParenthesesExpr (hclsyntax/expression.go), which has no ExprList method and can't be unwrapped, so hcl.ExprList reports an error.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-list"
+        }
+      }
+    ]
+  },
+  "reference_error": "A static list expression is required",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

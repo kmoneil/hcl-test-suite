@@ -1,0 +1,27 @@
+{
+  "description": "A variable is not a static call",
+  "spec": [
+    "hclsyntax/spec.md#static-call",
+    "spec.md#static-analysis"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-call"
+        }
+      }
+    ]
+  },
+  "reference_error": "A static function call is required",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

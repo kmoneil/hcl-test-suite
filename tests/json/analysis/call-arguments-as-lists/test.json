@@ -1,0 +1,62 @@
+{
+  "description": "A tuple constructor argument in a JSON static call can be analyzed as a static list",
+  "spec": [
+    "json/spec.md#static-call",
+    "hclsyntax/spec.md#static-list"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-call",
+          "arguments": {
+            "kind": "static-list",
+            "elements": {
+              "kind": "static-traversal"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_call": {
+            "name": "f",
+            "arguments": [
+              {
+                "static_list": [
+                  {
+                    "static_traversal": [
+                      {
+                        "root": "x"
+                      }
+                    ]
+                  },
+                  {
+                    "static_traversal": [
+                      {
+                        "root": "y"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

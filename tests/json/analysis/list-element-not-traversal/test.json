@@ -1,0 +1,32 @@
+{
+  "description": "A JSON static list element that isn't a string fails static traversal analysis",
+  "spec": [
+    "json/spec.md#static-analysis",
+    "json/spec.md#static-list",
+    "json/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-list",
+          "elements": {
+            "kind": "static-traversal"
+          }
+        }
+      }
+    ]
+  },
+  "reference_error": "A single static variable reference is required",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

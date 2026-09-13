@@ -7,7 +7,7 @@ HashiCorp configuration language, in the spirit of
 Any HCL implementation, in any language, can run it by providing a small
 adapter program.
 
-**Status:** draft. 2,468 tests of the native and JSON syntaxes, checking 900
+**Status:** draft. 2,687 tests of the native and JSON syntaxes, checking 965
 rules from the spec at hashicorp/hcl v2.24.0. The test and adapter formats may
 still change.
 
@@ -57,7 +57,7 @@ run the tests at all.
 1. Write an adapter ([protocol](docs/protocol.md)). You can start with just
    `capabilities` and `parse`. Tests for operations or features you don't
    support (such as `eval`, `decode`, the JSON syntax, typed values, unknown
-   values or functions) are skipped, not failed.
+   values, functions or static analysis) are skipped, not failed.
 2. Run `python3 runner/hcltest.py --adapter "<command that runs your adapter>"`.
 3. If you're unsure how some input should be read, ask the reference
    implementation: `bin/hcl-go-adapter parse file.hcl`.
@@ -69,34 +69,37 @@ run the tests at all.
 | lexical elements | 146 | 64 | 1 |
 | numbers | 59 | 28 | 1 |
 | structure (bodies, attributes, blocks, schemas) | 177 | 67 | 0 |
-| collections (tuples, objects) | 152 | 69 | 3 |
+| collections (tuples, objects) | 152 | 66 | 0 |
 | strings | 74 | 27 | 0 |
 | heredocs | 104 | 36 | 0 |
 | templates | 302 | 86 | 1 |
-| variables, attribute access, index | 138 | 59 | 2 |
+| variables, attribute access, index | 138 | 58 | 1 |
 | splat | 88 | 30 | 0 |
-| function calls | 136 | 39 | 1 |
+| function calls | 136 | 38 | 0 |
 | for expressions | 174 | 64 | 0 |
 | operators | 329 | 104 | 0 |
 | types, conversions, unification | 136 | 80 | 4 |
 | unknown values | 181 | 78 | 0 |
+| static analysis | 121 | 38 | 0 |
 | JSON grammar | 94 | 29 | 0 |
 | JSON bodies (attributes, blocks, schemas) | 103 | 33 | 0 |
 | JSON expressions | 75 | 20 | 0 |
-| **total** | **2,468** | **913** | **13** |
+| JSON static analysis | 98 | 27 | 0 |
+| **total** | **2,687** | **973** | **8** |
 
 - Most rules without tests need something the protocol can't express yet:
-  static analysis, conversion to a target type, error positions, capsule
-  values, or literal-only evaluation with variables, which hashicorp/hcl can't
-  express either. Two depend on choices the spec leaves to implementations
+  conversion to a target type, error positions, capsule values, or
+  literal-only evaluation with variables, which hashicorp/hcl can't express
+  either. Two depend on choices the spec leaves to implementations
   (rounding and the order of set elements), and one is guidance for
   applications. `python3 tools/coverage.py rules` lists them.
-- The tests exercise 81.2% of the statements in hashicorp/hcl's `hclsyntax`
-  package and 80.3% of its `json` package (`python3 tools/coverage.py go`).
-  Most of the rest is static analysis, syntax tree walking and source ranges,
-  which the protocol doesn't reach yet, and error handling for states that
-  valid use can't produce.
-- Not covered yet: static analysis and the `ext/` packages.
+- The tests exercise 84.7% of the statements in hashicorp/hcl's `hclsyntax`
+  package and 85.8% of its `json` package (`python3 tools/coverage.py go`).
+  Most of the rest is syntax tree walking, listing the variables an
+  expression uses, lookups by source position and source ranges, which the
+  protocol doesn't reach, and error handling for states that valid use can't
+  produce.
+- Not covered yet: the `ext/` packages.
 
 ## How the tests are checked
 
@@ -119,8 +122,8 @@ run the tests at all.
 
 | Implementation | Passed | Failed | Adapter errors | Skipped |
 | --- | ---: | ---: | ---: | ---: |
-| hashicorp/hcl v2.24.0 | 2,468 | 0 | 0 | 0 |
-| hcl-rs 0.19.8 | 1,570 | 203 (74 disputed) | 21 | 674 |
+| hashicorp/hcl v2.24.0 | 2,687 | 0 | 0 | 0 |
+| hcl-rs 0.19.8 | 1,570 | 203 (74 disputed) | 21 | 893 |
 
 ### hcl-rs 0.19.8
 
@@ -145,11 +148,12 @@ The 129 failures on tests that aren't disputed fall into these groups:
     directives, and a closing marker inside a directive doesn't end a heredoc.
 - **Not supported (skipped or adapter errors):** list, set and map types,
   unknown values, infinity, function parameters of collection or structural
-  types, schema-driven processing (`decode`) and the JSON syntax.
+  types, schema-driven processing (`decode`) with the static analysis tests
+  that use it, and the JSON syntax.
 
 ### Where the spec and hashicorp/hcl disagree
 
-344 tests are disputed. `python3 tools/coverage.py disputes` lists them all by
+379 tests are disputed. `python3 tools/coverage.py disputes` lists them all by
 spec section, with notes. The main themes:
 
 - **Source text:** a byte order mark, identifiers starting with `_`, and some
@@ -188,6 +192,15 @@ spec section, with notes. The main themes:
   inside a block array defines one block, although the spec only allows
   objects there. An empty label level is an error, and a schema that asks for
   `//` gets it.
+- **Static analysis:** parentheses make a tuple, object, call or traversal
+  unusable for static analysis, and only literal index keys are traversal
+  steps, not constant expressions like `-1`. A bare identifier key analyzes
+  as a traversal although it evaluates to a string, a bare `true`, `false` or
+  `null` key is a string, and an expanded final argument loses its `...`. The
+  JSON syntax reads traversal strings with a traversal parser, which rejects
+  `.0`, `[true]`, `[null]` and heredoc keys, and string content read for
+  static analysis ignores newlines, a trailing line comment and a leading
+  byte order mark.
 - **Schemas:** requesting an optional attribute twice (or in the JSON syntax a
   required one), or an attribute and a block type with the same name, isn't
   reported as an error, and dynamic attributes of the body left from a JSON
@@ -218,10 +231,13 @@ spec section, with notes. The main themes:
 - In a JSON string evaluated as a template, a carriage return not followed by
   a line feed stops template processing, so `"x\ry${1}"` gives
   `x\ry${1}`, and a leading U+FEFF is silently removed.
+- A native syntax object key can only be analyzed as a static traversal, so
+  `{f(1) = 2}` has no static call key and `{[1, 2] = 3}` no static list key:
+  `ObjectConsKeyExpr.UnwrapExpression` returns `hclsyntax.Expression` instead
+  of `hcl.Expression`, so hcl's unwrapping never reaches the key's expression.
 
 ## Next steps
 
-- Static analysis operations (static list, map, call and traversal).
 - The `ext/` packages (`typeexpr`, `dynblock`, `tryfunc`, `userfunc`) as
   optional features.
 

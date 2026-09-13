@@ -1,0 +1,292 @@
+{
+  "area": "json/analysis",
+  "rules": [
+    {
+      "id": "analysis-json-list-array",
+      "spec": "json/spec.md#static-list",
+      "rule": "A JSON array analyzed as a static list gives an expression for each element, in order, which evaluates as the element would in either evaluation mode, and none for an empty array",
+      "tests": [
+        "json/analysis/list-array",
+        "json/analysis/list-empty-array",
+        "json/analysis/list-literal-only"
+      ]
+    },
+    {
+      "id": "analysis-json-list-elements",
+      "spec": "json/spec.md#static-list",
+      "rule": "Static list elements can be analyzed in turn, such as strings as static traversals and arrays as static lists",
+      "tests": [
+        "json/analysis/list-elements-as-traversals",
+        "json/analysis/list-elements-as-lists"
+      ]
+    },
+    {
+      "id": "analysis-json-list-not-array",
+      "spec": "json/spec.md#static-list",
+      "rule": "Static list analysis of a JSON value other than an array is an error: an object, null, a number, a bool, a string containing native tuple syntax, or a string template that unwraps to a tuple",
+      "tests": [
+        "json/analysis/list-object",
+        "json/analysis/list-null",
+        "json/analysis/list-number",
+        "json/analysis/list-bool",
+        "json/analysis/list-string-with-tuple-syntax",
+        "json/analysis/list-template-interpolation"
+      ]
+    },
+    {
+      "id": "analysis-json-map-object",
+      "spec": "json/spec.md#static-map",
+      "rule": "A JSON object analyzed as a static map gives a key and a value expression for each property, in source order, and none for an empty object",
+      "tests": [
+        "json/analysis/map-object",
+        "json/analysis/map-empty-object"
+      ]
+    },
+    {
+      "id": "analysis-json-map-every-property",
+      "spec": "json/spec.md#static-map",
+      "rule": "A static map has a pair for every property: two properties with the same name, or with names that evaluate to the same string, give two pairs, and a property named // is a pair",
+      "tests": [
+        "json/analysis/map-duplicate-property-names",
+        "json/analysis/map-equal-evaluated-names",
+        "json/analysis/map-comment-property"
+      ]
+    },
+    {
+      "id": "analysis-json-map-key-templates",
+      "spec": "json/spec.md#static-map",
+      "rule": "In full expression mode a static map key evaluates the property name as a template, so template escapes are decoded and a single interpolation gives its value without conversion to string, which can be null or unknown",
+      "tests": [
+        "json/analysis/map-key-template",
+        "json/analysis/map-key-escaped-template",
+        "json/analysis/map-key-single-interpolation",
+        "json/analysis/map-key-null-interpolation",
+        "json/analysis/map-key-unknown"
+      ]
+    },
+    {
+      "id": "analysis-json-map-key-literal-only",
+      "spec": "json/spec.md#static-map",
+      "rule": "In literal-only mode a static map key is the property name's exact text, even when it isn't a valid template",
+      "tests": [
+        "json/analysis/map-literal-only",
+        "json/analysis/map-key-invalid-template-literal-only"
+      ]
+    },
+    {
+      "id": "analysis-json-map-parts",
+      "spec": "json/spec.md#static-map",
+      "rule": "Static map keys and values can be analyzed in turn, separately or both at once, such as property names as static traversals or static calls and values as static calls or static traversals",
+      "tests": [
+        "json/analysis/map-keys-as-traversals",
+        "json/analysis/map-keys-as-calls",
+        "json/analysis/map-values-as-calls",
+        "json/analysis/map-keys-and-values-as-traversals"
+      ]
+    },
+    {
+      "id": "analysis-json-map-not-object",
+      "spec": "json/spec.md#static-map",
+      "rule": "Static map analysis of a JSON value other than an object is an error: an array, null, a number, a bool, a string containing native object syntax, or a string template that unwraps to an object",
+      "tests": [
+        "json/analysis/map-array",
+        "json/analysis/map-null",
+        "json/analysis/map-number",
+        "json/analysis/map-bool",
+        "json/analysis/map-string-with-object-syntax",
+        "json/analysis/map-template-interpolation"
+      ]
+    },
+    {
+      "id": "analysis-json-call-string",
+      "spec": "json/spec.md#static-call",
+      "rule": "A string whose content is a native function call gives a static call with the call's name and an expression for each argument, which can be analyzed in turn",
+      "tests": [
+        "json/analysis/call-string",
+        "json/analysis/call-no-arguments",
+        "json/analysis/call-arguments-as-traversals"
+      ]
+    },
+    {
+      "id": "analysis-json-call-arguments-native",
+      "spec": "json/spec.md#static-call",
+      "rule": "The arguments of a static call in a string are native expressions: as static traversals they accept legacy indexes and true or null keys, a quoted argument is a template rather than a traversal, a tuple constructor is a static list and a heredoc is a template",
+      "tests": [
+        "json/analysis/call-quoted-argument-template",
+        "json/analysis/call-arguments-as-native-traversals",
+        "json/analysis/call-quoted-argument-not-traversal",
+        "json/analysis/call-arguments-as-lists",
+        "json/analysis/call-heredoc-argument"
+      ]
+    },
+    {
+      "id": "analysis-json-call-native-expression",
+      "spec": "json/spec.md#static-call",
+      "rule": "The string's content is read as a native expression, not a template: spaces around the call and newlines inside its parentheses are ignored, and template interpolation syntax is an error",
+      "tests": [
+        "json/analysis/call-surrounding-spaces",
+        "json/analysis/call-newlines-in-parentheses",
+        "json/analysis/call-template-interpolation"
+      ]
+    },
+    {
+      "id": "analysis-json-call-content-errors",
+      "spec": "json/spec.md#static-call",
+      "rule": "Static call analysis of a string whose content is a native expression other than a function call, such as a traversal or a call followed by an operator, or isn't a single valid native expression, such as an unterminated call, two calls or an empty string, is an error",
+      "tests": [
+        "json/analysis/call-traversal-content",
+        "json/analysis/call-followed-by-operation",
+        "json/analysis/call-followed-by-call",
+        "json/analysis/call-invalid-content",
+        "json/analysis/call-empty-string"
+      ]
+    },
+    {
+      "id": "analysis-json-call-not-string",
+      "spec": "json/spec.md#static-call",
+      "rule": "Static call analysis of a JSON value other than a string is an error: an array, an object, null, a number or a bool",
+      "tests": [
+        "json/analysis/call-array",
+        "json/analysis/call-object",
+        "json/analysis/call-null",
+        "json/analysis/call-number",
+        "json/analysis/call-bool"
+      ]
+    },
+    {
+      "id": "analysis-json-call-newlines",
+      "spec": "json/spec.md#static-call",
+      "rule": "A newline between the function name and the opening parenthesis in the string is ignored by static call analysis (disputed)",
+      "tests": [
+        "json/analysis/call-newline-before-parenthesis"
+      ]
+    },
+    {
+      "id": "analysis-json-traversal-string",
+      "spec": "json/spec.md#static-traversal",
+      "rule": "A string whose content is a native traversal gives a static traversal of its root, which can be true, and its attribute and index steps, with names exactly as written, JSON escapes decoded before native string escapes, and spaces and inline comments ignored",
+      "tests": [
+        "json/analysis/traversal-string",
+        "json/analysis/traversal-keyword-root",
+        "json/analysis/traversal-names-not-normalized",
+        "json/analysis/traversal-index-string-escapes",
+        "json/analysis/traversal-surrounding-spaces",
+        "json/analysis/traversal-inline-comment"
+      ]
+    },
+    {
+      "id": "analysis-json-traversal-content-errors",
+      "spec": "json/spec.md#static-traversal",
+      "rule": "Static traversal analysis of a string whose content isn't a native traversal is an error: an operation, a function call, template interpolation syntax, an index with a variable key, a splat of either kind, an unclosed index bracket, a dot without a name, or nothing",
+      "tests": [
+        "json/analysis/traversal-operation",
+        "json/analysis/traversal-call",
+        "json/analysis/traversal-template-interpolation",
+        "json/analysis/traversal-variable-index",
+        "json/analysis/traversal-splat",
+        "json/analysis/traversal-attribute-only-splat",
+        "json/analysis/traversal-unclosed-index",
+        "json/analysis/traversal-trailing-dot",
+        "json/analysis/traversal-empty-string"
+      ]
+    },
+    {
+      "id": "analysis-json-traversal-not-string",
+      "spec": "json/spec.md#static-traversal",
+      "rule": "Static traversal analysis of a JSON value other than a string is an error: a number, an array, an object, null, or the JSON value true",
+      "tests": [
+        "json/analysis/traversal-number",
+        "json/analysis/traversal-array",
+        "json/analysis/traversal-object",
+        "json/analysis/traversal-null",
+        "json/analysis/traversal-json-true"
+      ]
+    },
+    {
+      "id": "analysis-json-traversal-legacy-index",
+      "spec": "json/spec.md#static-traversal",
+      "rule": "A legacy index such as .0 in the string makes static traversal analysis an error (disputed)",
+      "tests": [
+        "json/analysis/traversal-legacy-index"
+      ]
+    },
+    {
+      "id": "analysis-json-traversal-index-keys",
+      "spec": "json/spec.md#static-traversal",
+      "rule": "An index whose key is true, null or a heredoc in the string makes static traversal analysis an error (disputed)",
+      "tests": [
+        "json/analysis/traversal-index-true",
+        "json/analysis/traversal-index-null",
+        "json/analysis/traversal-index-heredoc"
+      ]
+    },
+    {
+      "id": "analysis-json-traversal-newlines",
+      "spec": "json/spec.md#static-traversal",
+      "rule": "Newlines and a trailing line comment in the string are ignored by static traversal analysis (disputed)",
+      "tests": [
+        "json/analysis/traversal-newline",
+        "json/analysis/traversal-line-comment"
+      ]
+    },
+    {
+      "id": "analysis-json-byte-order-mark",
+      "spec": "hclsyntax/spec.md#source-code-representation",
+      "rule": "A U+FEFF at the start of a string analyzed as a static traversal or static call is ignored (disputed)",
+      "tests": [
+        "json/analysis/traversal-leading-byte-order-mark",
+        "json/analysis/call-leading-byte-order-mark"
+      ]
+    },
+    {
+      "id": "analysis-json-literal-only-strings",
+      "spec": "json/spec.md#static-analysis",
+      "rule": "In literal-only mode strings are still read as native expressions for static calls and static traversals, so template escapes in a quoted index are decoded, and call arguments are evaluated in literal-only mode, where a variable is an error",
+      "tests": [
+        "json/analysis/call-literal-only",
+        "json/analysis/call-literal-only-variable-argument",
+        "json/analysis/traversal-literal-only",
+        "json/analysis/traversal-literal-only-escaped-index"
+      ]
+    },
+    {
+      "id": "analysis-json-results-evaluated",
+      "spec": "json/spec.md#static-analysis",
+      "rule": "The expressions a static analysis gives are evaluated like any other, so an undefined variable in an element or argument, or a property name that isn't a valid template, is an evaluation error rather than an analysis error",
+      "tests": [
+        "json/analysis/list-element-evaluation-error",
+        "json/analysis/call-argument-evaluation-error",
+        "json/analysis/map-key-invalid-template"
+      ]
+    },
+    {
+      "id": "analysis-json-parts-errors",
+      "spec": "json/spec.md#static-analysis",
+      "rule": "When a list element or map key fails the analysis given for it, the whole analysis fails, even when the other parts succeed, and a property name, being a string, is never a static list",
+      "tests": [
+        "json/analysis/list-element-not-traversal",
+        "json/analysis/map-key-not-traversal",
+        "json/analysis/map-keys-as-lists"
+      ]
+    },
+    {
+      "id": "analysis-json-absent-attribute",
+      "spec": "json/spec.md#static-analysis",
+      "rule": "An optional attribute with an analysis that the body doesn't define has nothing to analyze, so it is absent without an error",
+      "tests": [
+        "json/analysis/absent-attribute"
+      ]
+    },
+    {
+      "id": "analysis-json-nested-bodies",
+      "spec": "json/spec.md#static-analysis",
+      "rule": "An attribute can be analyzed wherever it is defined: in a block body, including a labeled block and each block of a block array, and in the body partial processing leaves",
+      "tests": [
+        "json/analysis/block-body-attribute",
+        "json/analysis/labeled-block-body-attribute",
+        "json/analysis/block-array-body-attributes",
+        "json/analysis/remaining-body-attribute"
+      ]
+    }
+  ]
+}

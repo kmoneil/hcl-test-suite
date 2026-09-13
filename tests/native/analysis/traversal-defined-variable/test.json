@@ -1,0 +1,41 @@
+{
+  "description": "A variable that is defined analyzed as a static traversal still gives just its name",
+  "spec": [
+    "hclsyntax/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "variables": {
+    "x": {
+      "number": "1"
+    }
+  },
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-traversal"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_traversal": [
+            {
+              "root": "x"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

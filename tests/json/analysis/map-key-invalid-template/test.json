@@ -1,0 +1,28 @@
+{
+  "description": "Evaluating a JSON static map key that isn't a valid template is an evaluation error",
+  "spec": [
+    "json/spec.md#static-analysis",
+    "json/spec.md#static-map"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map"
+        }
+      }
+    ]
+  },
+  "reference_error": "Expected the start of an expression, but found the end of the file",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

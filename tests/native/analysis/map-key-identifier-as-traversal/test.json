@@ -1,0 +1,52 @@
+{
+  "description": "A bare identifier static map key analyzed as a static traversal is a root",
+  "spec": [
+    "hclsyntax/spec.md#static-map",
+    "hclsyntax/spec.md#static-traversal",
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "status": "disputed",
+  "notes": "The spec says a bare identifier object key is a literal attribute name as opposed to a variable reference, and a static traversal needs a variable expression, but its static map section returns keys with no further interpretation, which can be read as leaving the identifier a variable expression. hashicorp/hcl keeps the identifier as a ScopeTraversalExpr inside an ObjectConsKeyExpr (hclsyntax/expression.go): Value gives the name as a string through hcl.ExprAsKeyword, while AsTraversal gives the traversal of the wrapped expression.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map",
+          "keys": {
+            "kind": "static-traversal"
+          }
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_map": [
+            {
+              "key": {
+                "static_traversal": [
+                  {
+                    "root": "b"
+                  }
+                ]
+              },
+              "value": {
+                "number": "1"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

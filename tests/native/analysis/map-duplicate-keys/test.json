@@ -1,0 +1,49 @@
+{
+  "description": "A static map keeps both elements of an object constructor with the same key",
+  "spec": [
+    "hclsyntax/spec.md#static-map"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_map": [
+            {
+              "key": {
+                "string": "b"
+              },
+              "value": {
+                "number": "1"
+              }
+            },
+            {
+              "key": {
+                "string": "b"
+              },
+              "value": {
+                "number": "2"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

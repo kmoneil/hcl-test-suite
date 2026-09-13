@@ -1,0 +1,31 @@
+{
+  "description": "An object constructor key in a static map can't be analyzed as a static map",
+  "spec": [
+    "hclsyntax/spec.md#static-map"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "status": "disputed",
+  "notes": "The spec returns each key as an expression without further interpretation, so a key written as an object constructor can be analyzed as a static map. hashicorp/hcl wraps every key in an ObjectConsKeyExpr (hclsyntax/expression.go), whose only static analysis method is AsTraversal. Its UnwrapExpression method returns hclsyntax.Expression instead of hcl.Expression, so it doesn't satisfy the interface that hcl.UnwrapExpressionUntil looks for, and hcl.ExprMap can't reach the key's expression.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map",
+          "keys": {
+            "kind": "static-map"
+          }
+        }
+      }
+    ]
+  },
+  "reference_error": "A static map expression is required",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

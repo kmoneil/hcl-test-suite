@@ -1,0 +1,41 @@
+{
+  "description": "Static traversal analysis succeeds in literal-only mode",
+  "spec": [
+    "spec.md#static-analysis",
+    "spec.md#expression-evaluation"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "evaluation_mode": "literal-only",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-traversal"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_traversal": [
+            {
+              "root": "x"
+            },
+            {
+              "attr": "y"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

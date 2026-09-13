@@ -1,0 +1,395 @@
+{
+  "area": "native/analysis",
+  "rules": [
+    {
+      "id": "analysis-list-tuple",
+      "spec": "hclsyntax/spec.md#static-list",
+      "rule": "A tuple constructor analyzed as a static list gives an expression for each element, in order, and none for an empty tuple or a trailing comma",
+      "tests": [
+        "native/analysis/list-tuple-constructor",
+        "native/analysis/list-empty-tuple",
+        "native/analysis/list-trailing-comma"
+      ]
+    },
+    {
+      "id": "analysis-list-elements",
+      "spec": "hclsyntax/spec.md#static-list",
+      "rule": "Static list elements are returned without interpretation, so they can be analyzed in turn, as static traversals or static lists",
+      "tests": [
+        "native/analysis/list-elements-as-traversals",
+        "native/analysis/list-elements-as-lists"
+      ]
+    },
+    {
+      "id": "analysis-list-other-expressions",
+      "spec": "hclsyntax/spec.md#static-list",
+      "rule": "Static list analysis of any expression other than a tuple constructor is an error, even when its value is a tuple: a for expression, a variable, the keyword null, a template, a conditional, an index or splat on a tuple constructor, or an object constructor",
+      "tests": [
+        "native/analysis/list-for-expression",
+        "native/analysis/list-variable",
+        "native/analysis/list-null-keyword",
+        "native/analysis/list-template-interpolation",
+        "native/analysis/list-conditional",
+        "native/analysis/list-indexed-tuple",
+        "native/analysis/list-splat",
+        "native/analysis/list-object-constructor"
+      ]
+    },
+    {
+      "id": "analysis-list-parentheses",
+      "spec": "hclsyntax/spec.md#static-list",
+      "rule": "A tuple constructor in parentheses is not a static list, so the analysis is an error (disputed)",
+      "tests": [
+        "native/analysis/list-parenthesized-tuple"
+      ]
+    },
+    {
+      "id": "analysis-map-object",
+      "spec": "hclsyntax/spec.md#static-map",
+      "rule": "An object constructor analyzed as a static map gives a key and a value expression for each element, in source order, whether separated by = or :, and none for an empty object or a trailing comma",
+      "tests": [
+        "native/analysis/map-object-constructor",
+        "native/analysis/map-empty-object",
+        "native/analysis/map-colon-separator",
+        "native/analysis/map-trailing-comma"
+      ]
+    },
+    {
+      "id": "analysis-map-duplicate-keys",
+      "spec": "hclsyntax/spec.md#static-map",
+      "rule": "A static map keeps every element, including elements with equal keys, instead of letting the later one replace the earlier",
+      "tests": [
+        "native/analysis/map-duplicate-keys"
+      ]
+    },
+    {
+      "id": "analysis-map-keys-not-converted",
+      "spec": "hclsyntax/spec.md#static-map",
+      "rule": "A static map key is the value of its key expression, not converted to a string, so it can be a number, a tuple, a parenthesized bool, null or unknown value, or the unwrapped value of a template with a single interpolation",
+      "tests": [
+        "native/analysis/map-key-number",
+        "native/analysis/map-key-bool",
+        "native/analysis/map-key-null",
+        "native/analysis/map-key-tuple",
+        "native/analysis/map-key-single-interpolation",
+        "native/analysis/map-key-unknown"
+      ]
+    },
+    {
+      "id": "analysis-map-key-expressions",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "A static map key expression follows the object constructor's key rules: a bare identifier gives its name as a string, a quoted key its text, and a parenthesized key the value of the expression inside",
+      "tests": [
+        "native/analysis/map-key-identifier",
+        "native/analysis/map-key-quoted",
+        "native/analysis/map-key-parenthesized"
+      ]
+    },
+    {
+      "id": "analysis-map-keyword-keys",
+      "spec": "hclsyntax/spec.md#static-map",
+      "rule": "A bare true, false or null key gives the string of its name in a static map (disputed)",
+      "tests": [
+        "native/analysis/map-key-true-keyword",
+        "native/analysis/map-key-false-keyword",
+        "native/analysis/map-key-null-keyword"
+      ]
+    },
+    {
+      "id": "analysis-map-bare-traversal-key",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "Evaluating a static map key that is a bare traversal of more than one step is an evaluation error (disputed)",
+      "tests": [
+        "native/analysis/map-key-bare-traversal-evaluated"
+      ]
+    },
+    {
+      "id": "analysis-map-parts",
+      "spec": "hclsyntax/spec.md#static-map",
+      "rule": "Static map values are returned without interpretation, so they can be analyzed in turn, as static calls or static traversals, and a key written as a bare traversal of more than one step can be analyzed as a static traversal, on its own or together with the values",
+      "tests": [
+        "native/analysis/map-key-traversal-as-static-traversal",
+        "native/analysis/map-values-as-calls",
+        "native/analysis/map-keys-and-values-as-traversals"
+      ]
+    },
+    {
+      "id": "analysis-map-bare-keys-as-traversals",
+      "spec": "hclsyntax/spec.md#static-map",
+      "rule": "A bare identifier key, or a bare true, false or null key, analyzed as a static traversal is a root of its name, although evaluating the same key gives its name as a string (disputed)",
+      "tests": [
+        "native/analysis/map-key-identifier-as-traversal",
+        "native/analysis/map-key-true-as-traversal",
+        "native/analysis/map-key-false-as-traversal",
+        "native/analysis/map-key-null-as-traversal"
+      ]
+    },
+    {
+      "id": "analysis-map-keys-other-analyses",
+      "spec": "hclsyntax/spec.md#static-map",
+      "rule": "A static map key analyzed as a static call, static list or static map is an error, even when the key is written in that syntax (disputed)",
+      "tests": [
+        "native/analysis/map-key-call-as-static-call",
+        "native/analysis/map-key-tuple-as-static-list",
+        "native/analysis/map-key-object-as-static-map"
+      ]
+    },
+    {
+      "id": "analysis-map-other-expressions",
+      "spec": "hclsyntax/spec.md#static-map",
+      "rule": "Static map analysis of any expression other than an object constructor is an error, even when its value is an object: a for expression, a variable, the keyword null, a tuple constructor, a template, or an attribute access on an object constructor",
+      "tests": [
+        "native/analysis/map-for-expression",
+        "native/analysis/map-variable",
+        "native/analysis/map-null-keyword",
+        "native/analysis/map-tuple-constructor",
+        "native/analysis/map-template-interpolation",
+        "native/analysis/map-attribute-access-on-object"
+      ]
+    },
+    {
+      "id": "analysis-map-parentheses",
+      "spec": "hclsyntax/spec.md#static-map",
+      "rule": "An object constructor in parentheses is not a static map, so the analysis is an error (disputed)",
+      "tests": [
+        "native/analysis/map-parenthesized-object"
+      ]
+    },
+    {
+      "id": "analysis-call-function-call",
+      "spec": "hclsyntax/spec.md#static-call",
+      "rule": "A function call analyzed as a static call gives the function's name and an expression for each argument, in order, and none for an empty argument list or a trailing comma",
+      "tests": [
+        "native/analysis/call-function-call",
+        "native/analysis/call-no-arguments",
+        "native/analysis/call-trailing-comma"
+      ]
+    },
+    {
+      "id": "analysis-call-name",
+      "spec": "hclsyntax/spec.md#static-call",
+      "rule": "A static call's name is the function name exactly as written, including dashes, non-ASCII letters and combining marks, which aren't normalized, and no function of that name needs to exist",
+      "tests": [
+        "native/analysis/call-name-with-dash",
+        "native/analysis/call-name-non-ascii",
+        "native/analysis/call-name-not-normalized"
+      ]
+    },
+    {
+      "id": "analysis-call-arguments",
+      "spec": "hclsyntax/spec.md#static-call",
+      "rule": "Static call arguments are returned without interpretation, so they can be analyzed in turn, as static traversals or static calls",
+      "tests": [
+        "native/analysis/call-arguments-as-traversals",
+        "native/analysis/call-arguments-as-calls"
+      ]
+    },
+    {
+      "id": "analysis-call-expand-final",
+      "spec": "hclsyntax/spec.md#static-call",
+      "rule": "A static call gives a final argument expanded with ... like any other argument, without the expansion, even when the argument isn't a list or tuple (disputed)",
+      "tests": [
+        "native/analysis/call-expanded-final-argument",
+        "native/analysis/call-expanded-non-sequence"
+      ]
+    },
+    {
+      "id": "analysis-call-namespaced",
+      "spec": "hclsyntax/spec.md#static-call",
+      "rule": "A static call of a namespaced function gives the name joined with ::, however many levels it has (disputed)",
+      "tests": [
+        "native/analysis/call-namespaced-name",
+        "native/analysis/call-multi-level-namespace"
+      ]
+    },
+    {
+      "id": "analysis-call-keyword-name",
+      "spec": "hclsyntax/spec.md#static-call",
+      "rule": "A static call of a function named true gives the name true (disputed)",
+      "tests": [
+        "native/analysis/call-keyword-name"
+      ]
+    },
+    {
+      "id": "analysis-call-other-expressions",
+      "spec": "hclsyntax/spec.md#static-call",
+      "rule": "Static call analysis of any expression other than a function call is an error: a variable, the keyword null, a quoted string, a template, an operation on a call, or an attribute access or index on a call's result",
+      "tests": [
+        "native/analysis/call-variable",
+        "native/analysis/call-null-keyword",
+        "native/analysis/call-quoted-string",
+        "native/analysis/call-template-interpolation",
+        "native/analysis/call-operation",
+        "native/analysis/call-attribute-access-on-result",
+        "native/analysis/call-index-on-result"
+      ]
+    },
+    {
+      "id": "analysis-call-parentheses",
+      "spec": "hclsyntax/spec.md#static-call",
+      "rule": "A function call in parentheses is not a static call, so the analysis is an error (disputed)",
+      "tests": [
+        "native/analysis/call-parenthesized-call"
+      ]
+    },
+    {
+      "id": "analysis-traversal-variable",
+      "spec": "hclsyntax/spec.md#static-traversal",
+      "rule": "A variable analyzed as a static traversal gives a traversal rooted at its name exactly as written, including dashes and combining marks, which aren't normalized, whether or not the variable exists",
+      "tests": [
+        "native/analysis/traversal-variable",
+        "native/analysis/traversal-defined-variable",
+        "native/analysis/traversal-names-not-normalized",
+        "native/analysis/traversal-dash-and-keyword-names"
+      ]
+    },
+    {
+      "id": "analysis-traversal-attribute-access",
+      "spec": "hclsyntax/spec.md#static-traversal",
+      "rule": "Each attribute access after the root gives an attribute step with its name exactly as written, including a keyword or a combining mark, in source order among the other steps",
+      "tests": [
+        "native/analysis/traversal-names-not-normalized",
+        "native/analysis/traversal-attribute-access",
+        "native/analysis/traversal-mixed-steps",
+        "native/analysis/traversal-dash-and-keyword-names"
+      ]
+    },
+    {
+      "id": "analysis-traversal-literal-index",
+      "spec": "hclsyntax/spec.md#static-traversal",
+      "rule": "Each index operation whose key is a literal gives an index step with the key's value: a number, including a non-integer, true, null, or a string written as a quoted string, including an empty one and one with escapes, or as a heredoc, which stays an index step rather than an attribute step",
+      "tests": [
+        "native/analysis/traversal-mixed-steps",
+        "native/analysis/traversal-index-number",
+        "native/analysis/traversal-index-fraction",
+        "native/analysis/traversal-index-bool",
+        "native/analysis/traversal-index-null",
+        "native/analysis/traversal-index-string",
+        "native/analysis/traversal-index-empty-string",
+        "native/analysis/traversal-index-string-escapes",
+        "native/analysis/traversal-index-template-escapes",
+        "native/analysis/traversal-index-heredoc"
+      ]
+    },
+    {
+      "id": "analysis-traversal-legacy-index",
+      "spec": "hclsyntax/spec.md#static-traversal",
+      "rule": "A legacy index such as .0 gives an index step with the number, not an attribute step",
+      "tests": [
+        "native/analysis/traversal-legacy-index"
+      ]
+    },
+    {
+      "id": "analysis-traversal-keywords",
+      "spec": "hclsyntax/spec.md#static-traversal",
+      "rule": "The keywords true, false and null analyzed as static traversals are roots of those names, which can be followed by steps",
+      "tests": [
+        "native/analysis/traversal-keyword-true",
+        "native/analysis/traversal-keyword-null",
+        "native/analysis/traversal-keyword-false-with-steps"
+      ]
+    },
+    {
+      "id": "analysis-traversal-variable-index",
+      "spec": "hclsyntax/spec.md#static-traversal",
+      "rule": "An index whose key refers to a variable isn't constant, so a traversal with it is not a static traversal",
+      "tests": [
+        "native/analysis/traversal-index-variable-key"
+      ]
+    },
+    {
+      "id": "analysis-traversal-computed-index",
+      "spec": "hclsyntax/spec.md#static-traversal",
+      "rule": "An index whose key is a constant expression other than a literal, such as -1, 1 + 1, (0) or a template with an interpolation, is not a static traversal step, so the analysis is an error (disputed)",
+      "tests": [
+        "native/analysis/traversal-index-negative-number",
+        "native/analysis/traversal-index-arithmetic",
+        "native/analysis/traversal-index-parenthesized-literal",
+        "native/analysis/traversal-index-template-interpolation"
+      ]
+    },
+    {
+      "id": "analysis-traversal-splat",
+      "spec": "hclsyntax/spec.md#static-traversal",
+      "rule": "A splat is neither an attribute access nor an index operation, so a traversal with a full or attribute-only splat is not a static traversal",
+      "tests": [
+        "native/analysis/traversal-full-splat",
+        "native/analysis/traversal-attribute-only-splat"
+      ]
+    },
+    {
+      "id": "analysis-traversal-other-expressions",
+      "spec": "hclsyntax/spec.md#static-traversal",
+      "rule": "Static traversal analysis of an expression that isn't a variable or one of the keywords true, false and null, with or without steps after it, is an error: a number, a quoted string, a template, a function call or an attribute of its result, an indexed tuple constructor or an operation",
+      "tests": [
+        "native/analysis/traversal-number-literal",
+        "native/analysis/traversal-quoted-string",
+        "native/analysis/traversal-template-interpolation",
+        "native/analysis/traversal-function-call",
+        "native/analysis/traversal-call-with-attribute",
+        "native/analysis/traversal-indexed-tuple",
+        "native/analysis/traversal-operation"
+      ]
+    },
+    {
+      "id": "analysis-traversal-parentheses",
+      "spec": "hclsyntax/spec.md#static-traversal",
+      "rule": "A traversal in parentheses, steps after a parenthesized variable, and a parenthesized object key are not static traversals, so the analysis is an error (disputed)",
+      "tests": [
+        "native/analysis/traversal-parenthesized",
+        "native/analysis/traversal-steps-after-parentheses",
+        "native/analysis/traversal-parenthesized-map-key"
+      ]
+    },
+    {
+      "id": "analysis-without-evaluation",
+      "spec": "spec.md#static-analysis",
+      "rule": "Static analysis doesn't evaluate the analyzed expression, so it succeeds in literal-only mode, where evaluating a variable or a function call is an error, and a static call doesn't call the function, even one that would fail",
+      "tests": [
+        "native/analysis/literal-only-static-traversal",
+        "native/analysis/literal-only-static-call",
+        "native/analysis/call-declared-function-not-called"
+      ]
+    },
+    {
+      "id": "analysis-results-evaluated",
+      "spec": "spec.md#static-analysis",
+      "rule": "The expressions a static analysis gives are evaluated like any other expression, so an undefined variable in an element, key, value or argument, or a variable argument in literal-only mode, is an evaluation error rather than an analysis error",
+      "tests": [
+        "native/analysis/list-element-evaluation-error",
+        "native/analysis/map-key-evaluation-error",
+        "native/analysis/map-value-evaluation-error",
+        "native/analysis/call-argument-evaluation-error",
+        "native/analysis/literal-only-call-argument-variable"
+      ]
+    },
+    {
+      "id": "analysis-parts-errors",
+      "spec": "spec.md#static-analysis",
+      "rule": "When a list element, map key or value, or call argument fails the analysis given for it, the whole analysis fails, even when the other parts succeed",
+      "tests": [
+        "native/analysis/list-element-not-traversal",
+        "native/analysis/map-quoted-key-as-traversal",
+        "native/analysis/map-value-not-call",
+        "native/analysis/call-argument-not-traversal"
+      ]
+    },
+    {
+      "id": "analysis-absent-attribute",
+      "spec": "spec.md#static-analysis",
+      "rule": "An optional attribute with an analysis that the body doesn't define has nothing to analyze, so it is absent without an error",
+      "tests": [
+        "native/analysis/absent-attribute"
+      ]
+    },
+    {
+      "id": "analysis-nested-bodies",
+      "spec": "spec.md#static-analysis",
+      "rule": "An attribute can be analyzed wherever it is defined, including in a block body and in the body partial processing leaves",
+      "tests": [
+        "native/analysis/block-body-attribute",
+        "native/analysis/remaining-body-attribute"
+      ]
+    }
+  ]
+}

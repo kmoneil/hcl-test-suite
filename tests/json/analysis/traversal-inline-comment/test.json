@@ -1,0 +1,41 @@
+{
+  "description": "An inline comment in a JSON string analyzed as a static traversal is ignored",
+  "spec": [
+    "json/spec.md#static-traversal",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-traversal"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_traversal": [
+            {
+              "root": "x"
+            },
+            {
+              "attr": "y"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

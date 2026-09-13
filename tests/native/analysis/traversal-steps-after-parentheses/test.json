@@ -1,0 +1,29 @@
+{
+  "description": "Steps after a parenthesized variable are not a static traversal",
+  "spec": [
+    "hclsyntax/spec.md#static-traversal",
+    "hclsyntax/spec.md#expression-terms"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "status": "disputed",
+  "notes": "The spec makes a variable expression with attribute access and constant index operations a static traversal without saying whether parentheses, which only group in evaluation, keep it one. hashicorp/hcl makes the steps a RelativeTraversalExpr whose AsTraversal (hclsyntax/expression.go) needs a traversal from its source, and the source is a ParenthesesExpr, which has no AsTraversal method and can't be unwrapped.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-traversal"
+        }
+      }
+    ]
+  },
+  "reference_error": "A single static variable reference is required",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

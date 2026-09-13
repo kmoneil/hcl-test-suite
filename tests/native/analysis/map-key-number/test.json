@@ -1,0 +1,41 @@
+{
+  "description": "A number key in a static map stays a number",
+  "spec": [
+    "hclsyntax/spec.md#static-map"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_map": [
+            {
+              "key": {
+                "number": "1"
+              },
+              "value": {
+                "string": "x"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

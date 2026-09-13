@@ -1,0 +1,27 @@
+{
+  "description": "An index with a variable key makes static traversal analysis an error",
+  "spec": [
+    "hclsyntax/spec.md#static-traversal",
+    "spec.md#static-analysis"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-traversal"
+        }
+      }
+    ]
+  },
+  "reference_error": "A single static variable reference is required",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

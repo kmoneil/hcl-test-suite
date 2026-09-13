@@ -1,0 +1,37 @@
+{
+  "description": "An analyzed optional attribute without a JSON property is absent without an analysis error",
+  "spec": [
+    "json/spec.md#static-analysis",
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-list"
+        }
+      },
+      {
+        "name": "b"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "b": {
+          "number": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

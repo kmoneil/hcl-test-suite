@@ -1,0 +1,44 @@
+{
+  "description": "Newlines inside a JSON static call's parentheses are ignored",
+  "spec": [
+    "json/spec.md#static-call",
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-call"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_call": {
+            "name": "f",
+            "arguments": [
+              {
+                "number": "1"
+              },
+              {
+                "number": "2"
+              }
+            ]
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "description": "A static map key template of a single interpolation keeps the value's type",
+  "spec": [
+    "hclsyntax/spec.md#static-map",
+    "hclsyntax/spec.md#template-interpolation-unwrapping"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_map": [
+            {
+              "key": {
+                "number": "1"
+              },
+              "value": {
+                "string": "x"
+              }
+            },
+            {
+              "key": {
+                "bool": true
+              },
+              "value": {
+                "string": "y"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "description": "A static map value that isn't a function call fails static call analysis of the values",
+  "spec": [
+    "spec.md#static-analysis",
+    "hclsyntax/spec.md#static-map",
+    "hclsyntax/spec.md#static-call"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map",
+          "values": {
+            "kind": "static-call"
+          }
+        }
+      }
+    ]
+  },
+  "reference_error": "A static function call is required",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

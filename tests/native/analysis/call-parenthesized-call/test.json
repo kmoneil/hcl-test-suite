@@ -1,0 +1,29 @@
+{
+  "description": "A function call in parentheses is not a static call",
+  "spec": [
+    "hclsyntax/spec.md#static-call",
+    "hclsyntax/spec.md#expression-terms"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "status": "disputed",
+  "notes": "The spec makes function call syntax a static call without saying whether parentheses around it, which only group in evaluation, keep it one. hashicorp/hcl keeps the parentheses as a ParenthesesExpr (hclsyntax/expression.go), which has no ExprCall method and can't be unwrapped, so hcl.ExprCall reports an error.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-call"
+        }
+      }
+    ]
+  },
+  "reference_error": "A static function call is required",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

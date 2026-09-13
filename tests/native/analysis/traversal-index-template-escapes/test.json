@@ -1,0 +1,42 @@
+{
+  "description": "A quoted string index with template escapes gives an index step with the unescaped string",
+  "spec": [
+    "hclsyntax/spec.md#static-traversal",
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-traversal"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_traversal": [
+            {
+              "root": "x"
+            },
+            {
+              "index": {
+                "string": "${a}%{b}"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

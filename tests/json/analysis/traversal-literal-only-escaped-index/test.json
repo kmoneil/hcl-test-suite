@@ -1,0 +1,45 @@
+{
+  "description": "In literal-only mode a JSON static traversal decodes template escapes in an index",
+  "spec": [
+    "json/spec.md#static-traversal",
+    "spec.md#expression-evaluation",
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "evaluation_mode": "literal-only",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-traversal"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_traversal": [
+            {
+              "root": "x"
+            },
+            {
+              "index": {
+                "string": "${y}"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

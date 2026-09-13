@@ -1,0 +1,27 @@
+{
+  "description": "A splat on a tuple constructor is not a static list",
+  "spec": [
+    "hclsyntax/spec.md#static-list",
+    "spec.md#static-analysis"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-list"
+        }
+      }
+    ]
+  },
+  "reference_error": "A static list expression is required",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

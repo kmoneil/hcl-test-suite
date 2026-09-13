@@ -1,0 +1,84 @@
+{
+  "description": "Bare traversal keys and values of a static map can both be analyzed as static traversals",
+  "spec": [
+    "hclsyntax/spec.md#static-map",
+    "hclsyntax/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map",
+          "keys": {
+            "kind": "static-traversal"
+          },
+          "values": {
+            "kind": "static-traversal"
+          }
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_map": [
+            {
+              "key": {
+                "static_traversal": [
+                  {
+                    "root": "aws"
+                  },
+                  {
+                    "attr": "dst"
+                  }
+                ]
+              },
+              "value": {
+                "static_traversal": [
+                  {
+                    "root": "aws"
+                  },
+                  {
+                    "attr": "west"
+                  }
+                ]
+              }
+            },
+            {
+              "key": {
+                "static_traversal": [
+                  {
+                    "root": "gcp"
+                  },
+                  {
+                    "attr": "dst"
+                  }
+                ]
+              },
+              "value": {
+                "static_traversal": [
+                  {
+                    "root": "gcp"
+                  },
+                  {
+                    "attr": "east"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "description": "A JSON object analyzed as a static map gives its property names and values in source order",
+  "spec": [
+    "json/spec.md#static-map"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_map": [
+            {
+              "key": {
+                "string": "z"
+              },
+              "value": {
+                "number": "1"
+              }
+            },
+            {
+              "key": {
+                "string": "b"
+              },
+              "value": {
+                "number": "2"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

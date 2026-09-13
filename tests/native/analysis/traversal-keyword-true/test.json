@@ -1,0 +1,36 @@
+{
+  "description": "The keyword true analyzed as a static traversal gives the root true",
+  "spec": [
+    "hclsyntax/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-traversal"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_traversal": [
+            {
+              "root": "true"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "description": "Evaluating a variable static call argument in literal-only mode is an error",
+  "spec": [
+    "spec.md#static-analysis",
+    "spec.md#expression-evaluation"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "evaluation_mode": "literal-only",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-call"
+        }
+      }
+    ]
+  },
+  "reference_error": "Variables not allowed",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

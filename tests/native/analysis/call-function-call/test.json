@@ -1,0 +1,50 @@
+{
+  "description": "A function call analyzed as a static call gives its name and argument expressions in order",
+  "spec": [
+    "hclsyntax/spec.md#static-call"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "variables": {
+    "x": {
+      "bool": true
+    }
+  },
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-call"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_call": {
+            "name": "f",
+            "arguments": [
+              {
+                "number": "1"
+              },
+              {
+                "bool": true
+              },
+              {
+                "string": "y"
+              }
+            ]
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

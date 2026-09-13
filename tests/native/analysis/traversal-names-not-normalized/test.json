@@ -1,0 +1,40 @@
+{
+  "description": "Static traversal names keep a combining mark that NFC would compose",
+  "spec": [
+    "hclsyntax/spec.md#static-traversal",
+    "hclsyntax/spec.md#source-code-representation"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-traversal"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_traversal": [
+            {
+              "root": "café"
+            },
+            {
+              "attr": "café"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

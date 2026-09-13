@@ -1,0 +1,61 @@
+{
+  "description": "An attribute in a block body can be analyzed statically",
+  "spec": [
+    "spec.md#static-analysis",
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "c",
+              "analysis": {
+                "kind": "static-list",
+                "elements": {
+                  "kind": "static-traversal"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "c": {
+                "static_list": [
+                  {
+                    "static_traversal": [
+                      {
+                        "root": "x"
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

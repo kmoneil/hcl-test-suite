@@ -1,0 +1,52 @@
+{
+  "description": "A static traversal gives attribute and index steps in source order",
+  "spec": [
+    "hclsyntax/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-traversal"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_traversal": [
+            {
+              "root": "x"
+            },
+            {
+              "attr": "y"
+            },
+            {
+              "index": {
+                "number": "0"
+              }
+            },
+            {
+              "index": {
+                "string": "z"
+              }
+            },
+            {
+              "attr": "w"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

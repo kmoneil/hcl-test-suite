@@ -1,0 +1,53 @@
+{
+  "description": "Static call analysis doesn't call a declared function that would fail",
+  "spec": [
+    "spec.md#static-analysis",
+    "hclsyntax/spec.md#static-call"
+  ],
+  "op": "decode",
+  "features": [
+    "functions",
+    "static-analysis"
+  ],
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": "number"
+        }
+      ],
+      "result": {
+        "error": "f was called"
+      }
+    }
+  },
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-call"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_call": {
+            "name": "f",
+            "arguments": [
+              {
+                "number": "1"
+              }
+            ]
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

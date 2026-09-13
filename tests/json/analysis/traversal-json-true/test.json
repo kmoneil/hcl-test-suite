@@ -1,0 +1,28 @@
+{
+  "description": "The JSON value true is not a static traversal",
+  "spec": [
+    "json/spec.md#static-traversal",
+    "json/spec.md#static-analysis"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-traversal"
+        }
+      }
+    ]
+  },
+  "reference_error": "A single static variable reference is required",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

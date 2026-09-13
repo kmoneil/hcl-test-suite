@@ -1,0 +1,40 @@
+{
+  "description": "A static traversal keeps a dash in its root and a keyword as an attribute name",
+  "spec": [
+    "hclsyntax/spec.md#static-traversal",
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-traversal"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_traversal": [
+            {
+              "root": "x-y"
+            },
+            {
+              "attr": "null"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

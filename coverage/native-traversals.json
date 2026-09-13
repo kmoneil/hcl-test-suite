@@ -131,12 +131,6 @@
       "untested": "hashicorp/hcl evaluates in literal-only mode by evaluating without an evaluation context, so there is no way to also give it variables or functions, and the runner rejects tests that ask for both"
     },
     {
-      "id": "traversals-static-traversal",
-      "spec": "hclsyntax/spec.md#static-traversal",
-      "rule": "A variable expression with attached attribute accesses and constant index operations can be analyzed statically as a traversal, and true, false and null can be analyzed as traversals of those names",
-      "untested": "Static analysis is not part of the protocol"
-    },
-    {
       "id": "traversals-getattr-parse",
       "spec": "hclsyntax/spec.md#attribute-access-operator",
       "rule": "A dot followed by an identifier parses as an attribute access of that name, and chained accesses apply from left to right",

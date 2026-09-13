@@ -26,15 +26,12 @@ ROOT = Path(__file__).resolve().parent.parent
 TESTS_DIR = (ROOT / "tests").resolve()
 SPEC_URL = "https://github.com/hashicorp/hcl/blob/v2.24.0/"
 OPERATIONS = ("parse", "eval", "decode")
-PHASES = {"eval": ("parse", "eval"), "decode": ("parse", "schema", "eval")}  # where errors can be reported
+PHASES = {"eval": ("parse", "eval"), "decode": ("parse", "schema", "analysis", "eval")}  # where errors can be reported
 INPUT_NAMES = {"native": "input.hcl", "json": "input.hcl.json"}  # the input file of a test, by its syntax
 TEST_FIELDS = {"description", "spec", "op", "input", "features", "status", "notes", "variables", "functions",
                "evaluation_mode", "schema", "reference_error", "expect"}
 # The test fields passed to eval and decode in their context file.
 CONTEXT_FIELDS = ("variables", "functions", "evaluation_mode", "schema")
-
-# Enough precision that normalizing a number never rounds it.
-decimal.getcontext().prec = 10_000
 
 
 class TestError(Exception):
@@ -52,6 +49,12 @@ class KeyConflict(AdapterError):
 
 class Test:
     def __init__(self, path):
+        try:
+            self._load(path)
+        except RecursionError:
+            raise TestError(f"{path}: nested too deeply")
+
+    def _load(self, path):
         self.dir = path.parent
         try:
             self.name = self.dir.resolve().relative_to(TESTS_DIR).as_posix()
@@ -181,9 +184,11 @@ def capabilities(adapter, timeout):
     caps = call_adapter(adapter, ["capabilities"], timeout)
     if not isinstance(caps, dict) or not isinstance(caps.get("implementation"), str):
         raise AdapterError('"capabilities" output needs an "implementation" name')
-    if not isinstance(caps.get("operations"), list):
-        raise AdapterError('"capabilities" output needs an "operations" list')
-    caps.setdefault("features", [])
+    for field in ("operations", "features"):
+        if field not in caps and field == "features":
+            caps[field] = []
+        if not (isinstance(caps.get(field), list) and all(isinstance(x, str) for x in caps[field])):
+            raise AdapterError(f'"capabilities" output needs a list of strings in "{field}"')
     return caps
 
 
@@ -213,6 +218,8 @@ def call_adapter(adapter, args, timeout):
         output = json.loads(proc.stdout, object_pairs_hook=unique_keys)
     except ValueError as e:
         raise AdapterError(f"adapter printed invalid JSON ({e})")
+    except RecursionError:
+        raise AdapterError("adapter output is nested too deeply")
     try:
         json.dumps(output, ensure_ascii=False).encode("utf-8")
     except UnicodeEncodeError:
@@ -244,6 +251,8 @@ def run_test(test, adapter, caps, args, tmp):
         failure = compare(test, actual, args.reference_errors)
     except AdapterError as e:
         return Result(test, "error", str(e))
+    except RecursionError:
+        return Result(test, "error", "adapter output is nested too deeply")
     if failure:
         return Result(test, "fail", *failure)
     return Result(test, "pass")
@@ -274,7 +283,7 @@ def compare(test, actual, reference_errors=False):
         body = normalize_body(actual.get("body"), test.op)
     except KeyConflict as e:
         return str(e), None
-    if body != test.expected_body:
+    if canonical(body) != canonical(test.expected_body):
         return "output differs from expected", json_diff(test.expected_body, body)
     return None
 
@@ -288,6 +297,11 @@ def error_messages(actual):
             where = f"{start.get('line')}:{start.get('column')}: "
         lines.append(where + str(error.get("message", "")))
     return "\n".join(lines) or None
+
+
+def canonical(x):
+    """JSON text that tells apart what Python's == doesn't, such as true and 1."""
+    return json.dumps(x, sort_keys=True, ensure_ascii=False)
 
 
 def json_diff(expected, actual):
@@ -412,9 +426,16 @@ def check_schema(schema, where="schema"):
     if not isinstance(attributes, list):
         raise ValueError(f'{where}: "attributes" must be a list')
     for attr in attributes:
-        if not (isinstance(attr, dict) and not set(attr) - {"name", "required"} and isinstance(attr.get("name"), str)
+        if not (isinstance(attr, dict) and not set(attr) - {"name", "required", "analysis"} and isinstance(attr.get("name"), str)
                 and isinstance(attr.get("required", False), bool)):
-            raise ValueError(f'{where}: attributes are {{"name": <string>, "required": <bool>}}, not {json.dumps(attr)}')
+            raise ValueError(f'{where}: attributes are {{"name": <string>, "required": <bool>, "analysis": <analysis>}}, '
+                             f"not {json.dumps(attr)}")
+    names = [attr["name"] for attr in attributes]
+    for attr in attributes:
+        if "analysis" in attr:
+            if names.count(attr["name"]) > 1:
+                raise ValueError(f"{where}: attribute {attr['name']!r} has an analysis, so it can only be listed once")
+            check_analysis(attr["analysis"], f"{where}: analysis of attribute {attr['name']!r}")
     blocks = schema.get("blocks", [])
     if not isinstance(blocks, list):
         raise ValueError(f'{where}: "blocks" must be a list')
@@ -432,6 +453,24 @@ def check_schema(schema, where="schema"):
         check_schema(block["body"], f"{where}: body of block {block['type']!r}")
     if "remain" in schema:
         check_schema(schema["remain"], f"{where}: remain")
+
+
+# The parts of each kind of static analysis, which are analyses of their own.
+ANALYSIS_PARTS = {"value": (), "static-list": ("elements",), "static-map": ("keys", "values"), "static-call": ("arguments",),
+                  "static-traversal": ()}
+
+
+def check_analysis(analysis, where="analysis"):
+    """Raises ValueError if an analysis doesn't follow the format in docs/protocol.md#static-analysis."""
+    if not isinstance(analysis, dict) or not isinstance(analysis.get("kind"), str) or analysis["kind"] not in ANALYSIS_PARTS:
+        raise ValueError(f'{where} must be an object whose "kind" is one of {", ".join(ANALYSIS_PARTS)}')
+    parts = ANALYSIS_PARTS[analysis["kind"]]
+    unknown = set(analysis) - {"kind"} - set(parts)
+    if unknown:
+        raise ValueError(f"{where}: a {analysis['kind']} analysis doesn't take {', '.join(sorted(unknown))}")
+    for part in parts:
+        if part in analysis:
+            check_analysis(analysis[part], f"{where}: {part}")
 
 
 def check_functions(functions):
@@ -509,15 +548,18 @@ def check_type(ty, where):
 
 
 def normalize_body(body, op):
-    normalize_attr = normalize_expr if op == "parse" else normalize_value
+    normalize_attr = {"parse": normalize_expr, "decode": normalize_result}.get(op, normalize_value)
     if not isinstance(body, dict):
         raise AdapterError(f"body must be an object, got {body!r}")
+    unknown = set(body) - {"attributes", "blocks", "remain"}
+    if unknown:
+        raise AdapterError(f"unknown fields in a body: {', '.join(sorted(unknown))}")
     try:
         out = {
             "attributes": {name: normalize_attr(v) for name, v in body.get("attributes", {}).items()},
             "blocks": [normalize_block(block, op) for block in body.get("blocks", [])],
         }
-        if body.get("remain") is not None:
+        if "remain" in body:
             if op != "decode":
                 raise AdapterError("only decode results have a remain body")
             out["remain"] = normalize_body(body["remain"], op)  # the body that partial processing left
@@ -527,6 +569,9 @@ def normalize_body(body, op):
 
 
 def normalize_block(block, op):
+    unknown = set(block) - {"type", "labels", "body"}
+    if unknown:
+        raise AdapterError(f"unknown fields in a block: {', '.join(sorted(unknown))}")
     labels = block.get("labels", [])
     if not isinstance(block["type"], str) or not isinstance(labels, list) or not all(isinstance(label, str) for label in labels):
         raise AdapterError(f"a block needs a string type and a list of string labels, got {block!r}")
@@ -536,14 +581,61 @@ def normalize_block(block, op):
 VALUE_KINDS = ("string", "number", "bool", "null", "unknown", "tuple", "object", "list", "set", "map")
 
 
+ANALYSIS_RESULTS = ("static_list", "static_map", "static_call", "static_traversal")
+
+
+def normalize_result(result):
+    """Normalizes a decoded attribute: a value, or the result of a static analysis."""
+    if not (isinstance(result, dict) and len(result) == 1 and next(iter(result)) in ANALYSIS_RESULTS):
+        return normalize_value(result)
+    kind, x = next(iter(result.items()))
+    items = x.get("arguments") if kind == "static_call" and isinstance(x, dict) else x
+    if not isinstance(items, list):
+        raise AdapterError(f"malformed {kind} result: {result!r}")
+    try:
+        if kind == "static_list":
+            return {kind: [normalize_result(item) for item in x]}
+        if kind == "static_map":
+            if not all(isinstance(pair, dict) and set(pair) == {"key", "value"} for pair in x):
+                raise AdapterError(f"static map pairs are {{\"key\": ..., \"value\": ...}}, got {x!r}")
+            return {kind: [{"key": normalize_result(pair["key"]), "value": normalize_result(pair["value"])} for pair in x]}
+        if kind == "static_call":
+            if not (isinstance(x, dict) and set(x) == {"name", "arguments"} and isinstance(x["name"], str)):
+                raise AdapterError(f'a static call is {{"name": <string>, "arguments": [...]}}, got {x!r}')
+            return {kind: {"name": x["name"], "arguments": [normalize_result(item) for item in x["arguments"]]}}
+        steps = []
+        for i, step in enumerate(x):
+            name = next(iter(step)) if isinstance(step, dict) and len(step) == 1 else None
+            if (i == 0) != (name == "root") or name not in ("root", "attr", "index"):
+                raise AdapterError(f"a static traversal is a root step and attr or index steps, got {x!r}")
+            if name == "index":
+                steps.append({name: normalize_value(step[name])})
+            elif isinstance(step[name], str):
+                steps.append({name: step[name]})
+            else:
+                raise AdapterError(f"a traversal step's name must be a string, got {step!r}")
+        if not steps:
+            raise AdapterError("a static traversal needs a root step")
+        return {kind: steps}
+    except TypeError as e:
+        raise AdapterError(f"malformed {kind} result ({e})")
+
+
 def normalize_value(value):
     kinds = [k for k in value if k in VALUE_KINDS] if isinstance(value, dict) else []
-    if len(kinds) != 1:
+    if len(kinds) != 1 or set(value) - {kinds[0], "element_type"}:
         raise AdapterError(f"not a value: {value!r}")
     kind = kinds[0]
     x = value[kind]
+    if ("element_type" in value) != (kind in ("list", "set", "map")):
+        raise AdapterError(f"lists, sets and maps need an element_type, and other values have none: {value!r}")
+    container = {"tuple": list, "list": list, "set": list, "object": dict, "map": dict, "bool": bool}.get(kind)
+    if container and not isinstance(x, container):
+        raise AdapterError(f"malformed {kind} value: {value!r}")
     if kind == "number":
         return {"number": normalize_number(x)}
+    if kind in ("null", "unknown"):
+        return {kind: normalize_type(x)}
     if kind in ("tuple", "list", "set"):
         items = [normalize_value(item) for item in x]
         if kind == "set":  # sets are unordered
@@ -561,8 +653,24 @@ def normalize_value(value):
     else:
         return {kind: x}
     if kind in ("list", "set", "map"):
-        out["element_type"] = value.get("element_type")
+        out["element_type"] = normalize_type(value["element_type"])
     return out
+
+
+def normalize_type(ty):
+    """A type in go-cty's JSON type notation, with object attribute names in NFC like object keys."""
+    try:
+        check_type(ty, "type")
+    except ValueError as e:
+        raise AdapterError(str(e))
+    if isinstance(ty, str):
+        return ty
+    kind, arg = ty
+    if kind == "tuple":
+        return [kind, [normalize_type(item) for item in arg]]
+    if kind == "object":
+        return [kind, {nfc(name): normalize_type(item) for name, item in arg.items()}]
+    return [kind, normalize_type(arg)]
 
 
 def nfc(text):
@@ -572,20 +680,26 @@ def nfc(text):
     return unicodedata.normalize("NFC", text)
 
 
+# The number forms adapters may print.
+DECIMAL_NUMBER = re.compile(r"-?Infinity|[-+]?([0-9]+(\.[0-9]*)?|\.[0-9]+)([eE][-+]?[0-9]+)?")
+
+
 def normalize_number(text):
     if not isinstance(text, str):
         raise AdapterError(f"numbers must be strings, got {text!r}")
+    if not DECIMAL_NUMBER.fullmatch(text):
+        raise AdapterError(f"{text!r} is not a decimal number or Infinity")
+    number = decimal.Decimal(text)
+    if number.is_infinite():
+        return "-Infinity" if number < 0 else "Infinity"
+    if number.is_zero():
+        return "0"
+    # Keep every digit, and report exponents beyond the context's range instead of rounding.
+    context = decimal.Context(prec=max(28, len(number.as_tuple().digits)), traps=[decimal.Overflow, decimal.Inexact])
     try:
-        number = decimal.Decimal(text)
-        if number.is_nan():
-            raise AdapterError("NaN is not an HCL number")
-        if number.is_infinite():
-            return "-Infinity" if number < 0 else "Infinity"
-        if number.is_zero():
-            return "0"
-        return format(number.normalize(), "f")
+        return format(number.normalize(context), "f")
     except decimal.DecimalException:
-        raise AdapterError(f"invalid or out of range number {text!r}")
+        raise AdapterError(f"out of range number {text!r}")
 
 
 # Fields holding lists of template parts, by node kind.
@@ -617,7 +731,7 @@ def normalize_expr(node):
             out[field] = x
     if kind == "unary" and out.get("operator") == "-" and is_number(out.get("operand", {})):
         # Negating a number literal is the same as a negative number literal.
-        number = normalize_number(str(-decimal.Decimal(out["operand"]["value"]["number"])))
+        number = normalize_number(str(decimal.Decimal(out["operand"]["value"]["number"]).copy_negate()))
         return {"kind": "literal", "value": {"number": number}}
     if kind == "template":
         # A template with no interpolations or directives is just a string.

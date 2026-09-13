@@ -1,0 +1,51 @@
+{
+  "description": "A JSON string containing a function call analyzed as a static call gives its name and arguments",
+  "spec": [
+    "json/spec.md#static-call"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "variables": {
+    "y": {
+      "bool": true
+    }
+  },
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-call"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_call": {
+            "name": "f",
+            "arguments": [
+              {
+                "number": "1"
+              },
+              {
+                "string": "x"
+              },
+              {
+                "bool": true
+              }
+            ]
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

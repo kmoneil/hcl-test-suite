@@ -1,0 +1,35 @@
+{
+  "description": "A static call's name keeps non-ASCII letters in the function name",
+  "spec": [
+    "hclsyntax/spec.md#static-call"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-call"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_call": {
+            "name": "café",
+            "arguments": []
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

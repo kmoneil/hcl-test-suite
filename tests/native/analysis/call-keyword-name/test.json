@@ -1,0 +1,43 @@
+{
+  "description": "A static call of a function named true gives the name true",
+  "spec": [
+    "hclsyntax/spec.md#static-call",
+    "hclsyntax/spec.md#keywords",
+    "hclsyntax/spec.md#literal-values"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis"
+  ],
+  "status": "disputed",
+  "notes": "The spec makes true a keyword among expression terms, whose role supersedes any other interpretation, and its function call grammar takes an identifier as the name, so true(1) could be the literal true followed by parentheses, a syntax error. hashicorp/hcl checks for an opening parenthesis after any identifier before it recognizes the keywords true, false and null (parseExpressionTerm in hclsyntax/parser.go), so this is a call named true, and FunctionCallExpr.ExprCall (hclsyntax/expression.go) gives that name.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-call"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_call": {
+            "name": "true",
+            "arguments": [
+              {
+                "number": "1"
+              }
+            ]
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}
