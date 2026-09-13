@@ -1,0 +1,29 @@
+{
+  "description": "A function with only a variadic parameter can be called without arguments",
+  "spec": [
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "variadic_param": {
+        "type": "string"
+      },
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": []
+        }
+      },
+      "blocks": []
+    }
+  }
+}

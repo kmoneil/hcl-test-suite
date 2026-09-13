@@ -1,0 +1,43 @@
+{
+  "description": "A tuple element of an expanded tuple is a single argument",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": "dynamic"
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "tuple": [
+                {
+                  "string": "x"
+                },
+                {
+                  "string": "y"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

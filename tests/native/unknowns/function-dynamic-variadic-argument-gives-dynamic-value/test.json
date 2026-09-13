@@ -1,0 +1,36 @@
+{
+  "description": "The dynamic value for a variadic parameter of the dynamic pseudo-type gives the dynamic value",
+  "spec": [
+    "spec.md#functions-and-function-calls",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "unknown-values",
+    "functions"
+  ],
+  "variables": {
+    "d": {
+      "unknown": "dynamic"
+    }
+  },
+  "functions": {
+    "f": {
+      "variadic_param": {
+        "type": "dynamic"
+      },
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "description": "An object argument without an attribute of the parameter's object type is an error",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec's call rules make an argument that doesn't match its parameter's type an error, and the object type {b = string} doesn't match {b = string, c = string}. But the spec also says automatic conversion is attempted when a value doesn't match what an operation expects, and its conversion rules convert an object to an object type with more attributes by filling them with null, which would give {b = \"x\", c = null}. hashicorp/hcl converts arguments, but go-cty's object conversion requires every attribute of the target type that isn't optional (conversionObjectToObject in cty/convert/conversion_object.go), so the call fails.",
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "name": "o",
+          "type": [
+            "object",
+            {
+              "b": "string",
+              "c": "string"
+            }
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "attribute \"c\" is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

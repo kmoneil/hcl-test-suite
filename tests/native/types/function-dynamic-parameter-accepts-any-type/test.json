@@ -1,0 +1,54 @@
+{
+  "description": "A parameter of the dynamic pseudo-type accepts arguments of any type unchanged",
+  "spec": [
+    "spec.md#type-specifications",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "variadic_param": {
+        "type": "dynamic"
+      },
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "x"
+            },
+            {
+              "number": "1"
+            },
+            {
+              "bool": true
+            },
+            {
+              "tuple": [
+                {
+                  "string": "y"
+                }
+              ]
+            },
+            {
+              "object": {
+                "b": {
+                  "number": "2"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "description": "The elements of an expanded list become separate arguments",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "string": "x"
+        },
+        {
+          "string": "y"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "x"
+            },
+            {
+              "string": "y"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

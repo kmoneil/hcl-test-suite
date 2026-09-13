@@ -1,0 +1,31 @@
+{
+  "description": "Expanding an unknown string is an error, because its type isn't a list or tuple",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "string"
+    }
+  },
+  "functions": {
+    "f": {
+      "variadic_param": {
+        "type": "string"
+      },
+      "result": "arguments"
+    }
+  },
+  "reference_error": "must be of a tuple, list, or set type",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

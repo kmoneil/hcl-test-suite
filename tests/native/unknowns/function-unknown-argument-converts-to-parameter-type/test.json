@@ -1,0 +1,47 @@
+{
+  "description": "An unknown string for a number parameter becomes an unknown number",
+  "spec": [
+    "spec.md#functions-and-function-calls",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec's function call rules make a call erroneous when an argument doesn't match its parameter's type specification, which only an identical type or the dynamic pseudo-type does, and don't mention converting arguments; only the general section on conversions says that automatic conversion is attempted when values don't match what an operation expects. hashicorp/hcl converts each argument to its parameter's type with go-cty's convert.Convert before checking it (FunctionCallExpr.Value in hclsyntax/expression.go), also when the argument is unknown, so the unknown string becomes an unknown number.",
+  "variables": {
+    "u": {
+      "unknown": "string"
+    }
+  },
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": "number"
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": [
+            "tuple",
+            [
+              "number"
+            ]
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

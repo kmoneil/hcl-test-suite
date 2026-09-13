@@ -1,0 +1,38 @@
+{
+  "description": "An index after a call selects an element of the call's result",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "result": {
+        "value": {
+          "tuple": [
+            {
+              "string": "x"
+            },
+            {
+              "string": "y"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "y"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

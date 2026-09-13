@@ -1,0 +1,33 @@
+{
+  "description": "A function that returns an unknown value makes the call unknown without unknown variables",
+  "spec": [
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "result": {
+        "value": {
+          "unknown": "number"
+        }
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "number"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

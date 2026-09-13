@@ -1,0 +1,24 @@
+{
+  "description": "A null argument collected by a variadic parameter that doesn't accept null is an error",
+  "spec": [
+    "spec.md#functions-and-function-calls",
+    "spec.md#null-values"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "variadic_param": {
+        "type": "dynamic"
+      },
+      "result": "arguments"
+    }
+  },
+  "reference_error": "argument must not be null",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

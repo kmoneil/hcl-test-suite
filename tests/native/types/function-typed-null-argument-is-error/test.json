@@ -1,0 +1,32 @@
+{
+  "description": "Passing a null string to a string parameter that doesn't accept null is an error",
+  "spec": [
+    "spec.md#functions-and-function-calls",
+    "spec.md#null-values"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "variables": {
+    "n": {
+      "null": "string"
+    }
+  },
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": "string"
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "argument must not be null",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

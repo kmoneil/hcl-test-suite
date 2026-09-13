@@ -1,0 +1,25 @@
+{
+  "description": "A call with more arguments than positional parameters and no variadic one is an error",
+  "spec": [
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": "string"
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "Too many function arguments",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

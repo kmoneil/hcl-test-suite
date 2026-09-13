@@ -1,0 +1,47 @@
+{
+  "description": "The dynamic value for a string parameter gives an unknown of the result type",
+  "spec": [
+    "spec.md#functions-and-function-calls",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+    "spec.md#conversion-to-and-from-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec can be read three ways. Its call rules make an argument that doesn't match its parameter's type an error, and the dynamic pseudo-type doesn't match string. They also say the dynamic value for a parameter that doesn't accept the dynamic pseudo-type makes the call valid with the dynamic pseudo-type as its result type, which gives the dynamic value. And if arguments are converted, converting the dynamic value to string gives an unknown string, and the unknown argument gives an unknown of the function's result type. hashicorp/hcl converts each argument to its parameter's type first (FunctionCallExpr.Value in hclsyntax/expression.go), so it gives the last result.",
+  "variables": {
+    "d": {
+      "unknown": "dynamic"
+    }
+  },
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": "string"
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": [
+            "tuple",
+            [
+              "string"
+            ]
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

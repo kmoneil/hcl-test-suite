@@ -1,0 +1,42 @@
+{
+  "description": "A function can return values of different types for different arguments",
+  "spec": [
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": "dynamic"
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "number": "1"
+            }
+          ]
+        },
+        "b": {
+          "tuple": [
+            {
+              "string": "x"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

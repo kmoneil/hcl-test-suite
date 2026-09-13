@@ -1,0 +1,34 @@
+{
+  "description": "An unknown argument of a type that doesn't match its parameter is an error",
+  "spec": [
+    "spec.md#functions-and-function-calls",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "bool"
+    }
+  },
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "name": "n",
+          "type": "number"
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "Invalid value for \"n\" parameter: number required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -24,6 +24,14 @@
       ]
     },
     {
+      "id": "functions-call-arguments-are-expressions",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "Arguments are positional expressions only: there are no named arguments, so name = value inside the parentheses is an error",
+      "tests": [
+        "native/functions/call-named-argument-is-error"
+      ]
+    },
+    {
       "id": "functions-call-separator",
       "spec": "hclsyntax/spec.md#functions-and-function-calls",
       "rule": "Arguments must be separated by commas; a newline between two arguments is not a separator",
@@ -43,13 +51,15 @@
     {
       "id": "functions-expand-final-syntax",
       "spec": "hclsyntax/spec.md#functions-and-function-calls",
-      "rule": "An ellipsis after the last argument, optionally separated by whitespace, marks the whole final argument expression for expansion",
+      "rule": "An ellipsis after the last argument, optionally separated by whitespace, marks the whole final argument expression of the innermost enclosing call for expansion, while the grouping ellipsis of a for expression argument doesn't",
       "tests": [
         "native/functions/call-expand-final",
         "native/functions/call-expand-final-after-other-arguments",
         "native/functions/call-expand-final-after-space",
         "native/functions/call-expand-final-number-argument",
-        "native/functions/call-expand-final-operation-argument"
+        "native/functions/call-expand-final-operation-argument",
+        "native/functions/call-argument-grouping-ellipsis-is-not-expansion",
+        "native/functions/call-expand-final-belongs-to-inner-call"
       ]
     },
     {
@@ -135,10 +145,11 @@
     {
       "id": "functions-call-name-characters",
       "spec": "hclsyntax/spec.md#functions-and-function-calls",
-      "rule": "A function name is an identifier, so it can contain dashes and non-ASCII letters",
+      "rule": "A function name is an identifier, so it can contain dashes and non-ASCII letters, and a function with a non-ASCII name is called by that name",
       "tests": [
         "native/functions/call-name-non-ascii",
-        "native/functions/call-name-with-dash"
+        "native/functions/call-name-with-dash",
+        "native/functions/call-non-ascii-name-evaluates"
       ]
     },
     {
@@ -167,74 +178,230 @@
     {
       "id": "functions-unknown-function",
       "spec": "spec.md#functions-and-function-calls",
-      "rule": "Calling a name that is not in the application's function table is an error when the call is evaluated, not during parsing, so a call that is never evaluated causes no error",
+      "rule": "Calling a name that is not in the application's function table is an error when the call is evaluated, not during parsing, even when other functions are defined or an argument is unknown, so a call that is never evaluated causes no error",
       "tests": [
         "native/functions/namespaced-unknown-function-is-eval-error",
         "native/functions/unknown-function-in-unselected-branch",
-        "native/functions/unknown-function-is-eval-error"
+        "native/functions/unknown-function-is-eval-error",
+        "native/functions/unknown-function-with-other-functions-defined",
+        "native/unknowns/function-undefined-function-with-dynamic-argument-is-error"
+      ]
+    },
+    {
+      "id": "functions-name-exact-match",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "A call finds only the function with exactly its name: names that differ in case or in Unicode normalization, or by a namespace prefix, are different functions",
+      "tests": [
+        "native/functions/function-names-are-case-sensitive",
+        "native/functions/function-names-are-not-normalized",
+        "native/functions/namespaced-function-is-not-plain-function"
+      ]
+    },
+    {
+      "id": "functions-namespaced-function-call",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "A namespaced call calls the function declared with the whole name joined with ::, never a function declared with only its last part, and is an error for a name the namespace lacks even when it has other functions (disputed)",
+      "tests": [
+        "native/functions/namespaced-call-does-not-find-plain-function",
+        "native/functions/namespaced-function-call-evaluates",
+        "native/functions/namespaced-function-call-multiple-levels",
+        "native/functions/namespaced-unknown-function-in-known-namespace"
       ]
     },
     {
       "id": "functions-namespace-distinct-from-variables",
       "spec": "hclsyntax/spec.md#functions-and-function-calls",
-      "rule": "Functions and variables are separate namespaces, so a variable does not make a function of the same name callable",
+      "rule": "Functions and variables are separate namespaces, so a variable does not make a function of the same name callable, and a local variable doesn't hide a function of the same name",
       "tests": [
-        "native/functions/variable-is-not-a-function"
+        "native/functions/variable-is-not-a-function",
+        "native/functions/call-in-for-expression-with-variable-named-like-function"
       ]
     },
     {
       "id": "functions-function-does-not-define-variable",
       "spec": "hclsyntax/spec.md#functions-and-function-calls",
       "rule": "A function does not define a variable of the same name, and a function and a variable can share a name and both be used",
-      "untested": "Needs test functions, which the protocol doesn't provide yet"
+      "tests": [
+        "native/functions/function-and-variable-with-same-name",
+        "native/functions/function-name-is-not-a-variable"
+      ]
     },
     {
       "id": "functions-call-returns-result",
       "spec": "hclsyntax/spec.md#functions-and-function-calls",
-      "rule": "A function call evaluates to the named function's return value for the given arguments",
-      "untested": "Needs test functions, which the protocol doesn't provide yet"
+      "rule": "A function call evaluates to the value the named function returns for the call's argument values, keeping its type; the arguments are evaluated where the call is, such as for each element of a for expression, and can be other calls",
+      "tests": [
+        "native/functions/call-as-argument-of-call",
+        "native/functions/call-in-for-expression-uses-each-element",
+        "native/functions/call-passes-argument-values",
+        "native/functions/call-result-keeps-its-type",
+        "native/functions/call-returns-function-result",
+        "native/functions/call-without-arguments"
+      ]
+    },
+    {
+      "id": "functions-argument-errors",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "An error in an argument expression, including the expanded final one, makes the call an error",
+      "tests": [
+        "native/functions/argument-error-is-call-error",
+        "native/functions/expand-argument-error-is-call-error"
+      ]
+    },
+    {
+      "id": "functions-call-result-is-value",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "A call's result is an ordinary value, so arithmetic, template interpolation, attribute access, indexing and splats apply to it",
+      "tests": [
+        "native/functions/call-result-attribute-access-evaluates",
+        "native/functions/call-result-in-arithmetic",
+        "native/functions/call-result-in-template",
+        "native/functions/call-result-index-evaluates",
+        "native/functions/call-result-splat-evaluates"
+      ]
+    },
+    {
+      "id": "functions-result-type-varies",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "A function can return values of different types for arguments of different types",
+      "tests": [
+        "native/functions/result-type-depends-on-arguments"
+      ]
     },
     {
       "id": "functions-expand-final-requires-sequence",
       "spec": "hclsyntax/spec.md#functions-and-function-calls",
-      "rule": "An argument marked with an ellipsis must evaluate to a list or tuple, otherwise the call is an error",
-      "untested": "Needs test functions, which the protocol doesn't provide yet (hashicorp/hcl looks the function up before evaluating the arguments, so this can't be reached with an empty function table; it also accepts sets and rejects null)"
+      "rule": "An argument marked with an ellipsis must evaluate to a list or tuple: a string, number, object or map is an error",
+      "tests": [
+        "native/functions/expand-map-is-error",
+        "native/functions/expand-number-is-error",
+        "native/functions/expand-object-is-error",
+        "native/functions/expand-string-is-error",
+        "native/unknowns/function-expand-unknown-string-is-error"
+      ]
+    },
+    {
+      "id": "functions-expand-final-null",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "Expanding a null, the null keyword or a null list, is an error (disputed)",
+      "tests": [
+        "native/functions/expand-null-is-error",
+        "native/functions/expand-null-list-is-error"
+      ]
+    },
+    {
+      "id": "functions-expand-final-set",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "An argument marked with an ellipsis can also be a set, whose elements become the arguments (disputed)",
+      "tests": [
+        "native/functions/expand-set-elements-become-arguments"
+      ]
     },
     {
       "id": "functions-expand-final-maps-elements",
       "spec": "hclsyntax/spec.md#functions-and-function-calls",
-      "rule": "The elements of an expanded final argument become separate arguments, mapped to the parameters after those taken by the earlier arguments",
-      "untested": "Needs test functions, which the protocol doesn't provide yet"
+      "rule": "The elements of the value of the whole final argument expression become separate arguments in order, mapped to the parameters after those taken by the earlier arguments and then to the variadic parameter; the elements keep their own types, an empty tuple adds no arguments, and an element that is itself a tuple is one argument",
+      "tests": [
+        "native/functions/expand-after-other-arguments",
+        "native/functions/expand-applies-to-whole-final-expression",
+        "native/functions/expand-elements-fill-positional-then-variadic",
+        "native/functions/expand-tuple-elements-keep-their-types",
+        "native/functions/expand-elements-into-variadic-parameter",
+        "native/functions/expand-empty-tuple-after-arguments",
+        "native/functions/expand-empty-tuple-gives-no-arguments",
+        "native/functions/expand-list-elements-become-arguments",
+        "native/functions/expand-nested-tuple-is-one-argument",
+        "native/functions/expand-tuple-elements-become-arguments"
+      ]
     },
     {
       "id": "functions-positional-parameters",
       "spec": "spec.md#functions-and-function-calls",
-      "rule": "Arguments are mapped to a function's positional parameters in order",
-      "untested": "Needs test functions, which the protocol doesn't provide yet"
+      "rule": "Arguments are mapped to a function's positional parameters in order, and each argument is checked against the type and the null, unknown and dynamic flags of its own parameter, positional or variadic",
+      "tests": [
+        "native/functions/positional-arguments-in-parameter-order",
+        "native/functions/positional-arguments-out-of-order-is-error",
+        "native/functions/positional-parameter-flags-follow-position",
+        "native/functions/positional-parameter-null-flag-not-applied-to-variadic",
+        "native/functions/variadic-parameter-null-flag-not-applied-to-positional",
+        "native/unknowns/function-dynamic-flag-follows-position",
+        "native/unknowns/function-positional-dynamic-flag-not-applied-to-variadic",
+        "native/unknowns/function-positional-unknown-flag-not-applied-to-variadic",
+        "native/unknowns/function-unknown-flag-follows-position",
+        "native/unknowns/function-variadic-dynamic-flag-not-applied-to-positional",
+        "native/unknowns/function-variadic-unknown-flag-not-applied-to-positional"
+      ]
     },
     {
       "id": "functions-missing-arguments",
       "spec": "spec.md#functions-and-function-calls",
-      "rule": "A call with fewer arguments than the function has positional parameters is an error",
-      "untested": "Needs test functions, which the protocol doesn't provide yet"
+      "rule": "A call with fewer arguments than the function has positional parameters is an error, also when the function has a variadic parameter or the arguments come from an expanded tuple",
+      "tests": [
+        "native/functions/expand-too-few-elements-is-error",
+        "native/functions/missing-argument-with-variadic-parameter-is-error",
+        "native/functions/missing-last-argument-is-error",
+        "native/functions/missing-only-argument-is-error"
+      ]
     },
     {
       "id": "functions-variadic-parameter",
       "spec": "spec.md#functions-and-function-calls",
-      "rule": "A function's variadic parameter collects all arguments left after the positional parameters",
-      "untested": "Needs test functions, which the protocol doesn't provide yet"
+      "rule": "A function's variadic parameter collects all arguments left after the positional parameters, which may be none, and each of them is checked against the variadic parameter's type",
+      "tests": [
+        "native/functions/variadic-after-positional-arguments",
+        "native/functions/variadic-argument-type-mismatch-is-error",
+        "native/functions/variadic-empty-after-positional-arguments",
+        "native/functions/variadic-several-arguments",
+        "native/functions/variadic-without-arguments"
+      ]
     },
     {
       "id": "functions-extra-arguments",
       "spec": "spec.md#functions-and-function-calls",
-      "rule": "A call with more arguments than positional parameters is an error when the function has no variadic parameter",
-      "untested": "Needs test functions, which the protocol doesn't provide yet"
+      "rule": "A call with more arguments than positional parameters is an error when the function has no variadic parameter, including a function without parameters and arguments from an expanded tuple",
+      "tests": [
+        "native/functions/expand-too-many-elements-is-error",
+        "native/functions/extra-argument-is-error",
+        "native/functions/extra-argument-without-parameters-is-error"
+      ]
     },
     {
       "id": "functions-argument-type-mismatch",
       "spec": "spec.md#functions-and-function-calls",
-      "rule": "A call is an error when an argument does not match the type specification of its parameter",
-      "untested": "Needs test functions, which the protocol doesn't provide yet"
+      "rule": "A call is an error when an argument doesn't match its parameter's type specification, such as a tuple for a string, an object for a tuple, or a string such as yes for a bool",
+      "tests": [
+        "native/functions/argument-object-for-tuple-parameter-is-error",
+        "native/functions/argument-string-for-bool-parameter-is-error",
+        "native/functions/argument-tuple-for-string-parameter-is-error"
+      ]
+    },
+    {
+      "id": "functions-argument-conversion",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "An argument that doesn't match its parameter's type is converted to that type by the conversion rules: between primitive types, tuples to lists and sets, lists to sets, objects to maps and to object types with fewer attributes, and the null keyword to a typed null, including variadic arguments and expanded elements (disputed)",
+      "tests": [
+        "native/functions/argument-bool-converts-to-string",
+        "native/functions/argument-list-converts-to-set",
+        "native/functions/argument-null-keyword-converts-to-typed-null",
+        "native/functions/argument-number-converts-to-string",
+        "native/functions/argument-object-converts-to-map",
+        "native/functions/argument-object-drops-extra-attributes",
+        "native/functions/argument-string-converts-to-bool",
+        "native/functions/argument-string-converts-to-number",
+        "native/functions/argument-tuple-converts-to-list",
+        "native/functions/argument-tuple-converts-to-list-of-dynamic",
+        "native/functions/argument-tuple-converts-to-set",
+        "native/functions/expand-elements-each-converted",
+        "native/functions/variadic-arguments-each-converted"
+      ]
+    },
+    {
+      "id": "functions-function-error",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "A call is an error when the function it calls fails (disputed)",
+      "tests": [
+        "native/functions/function-error-is-eval-error"
+      ]
     },
     {
       "id": "functions-literal-only-mode",

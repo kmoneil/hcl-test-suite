@@ -1,0 +1,41 @@
+{
+  "description": "The dynamic value for a dynamic pseudo-type parameter accepting unknowns gives the dynamic value",
+  "spec": [
+    "spec.md#functions-and-function-calls",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "unknown-values",
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec forces the call's result type to the dynamic pseudo-type, and then, because the parameter accepts unknowns, uses the function's result value, a tuple holding the dynamic value. That contradicts itself, since the only values of the dynamic pseudo-type are its null and the dynamic value, so the spec doesn't decide the result. go-cty doesn't call the function for the dynamic value when its parameter doesn't accept the dynamic pseudo-type, whatever the parameter's other flags, and returns the dynamic value (Function.Call in cty/function/function.go).",
+  "variables": {
+    "d": {
+      "unknown": "dynamic"
+    }
+  },
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": "dynamic",
+          "allow_unknown": true
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

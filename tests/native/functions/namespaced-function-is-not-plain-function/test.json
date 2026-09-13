@@ -1,0 +1,25 @@
+{
+  "description": "A function declared with a namespace can't be called without it",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "functions": {
+    "ns::f": {
+      "result": {
+        "value": {
+          "string": "x"
+        }
+      }
+    }
+  },
+  "reference_error": "There is no function named \"f\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

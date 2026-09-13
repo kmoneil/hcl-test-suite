@@ -1,0 +1,25 @@
+{
+  "description": "Calling an undefined function is an error even when other functions are defined",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "result": {
+        "value": {
+          "string": "x"
+        }
+      }
+    }
+  },
+  "reference_error": "There is no function named \"g\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

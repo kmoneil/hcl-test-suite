@@ -1,0 +1,39 @@
+{
+  "description": "A parameter that accepts null receives the null keyword",
+  "spec": [
+    "spec.md#functions-and-function-calls",
+    "spec.md#null-values"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "notes": "The parameter also accepts the dynamic pseudo-type, the type of the null keyword. Without that flag hashicorp/hcl gives an unknown result (see native/unknowns/function-null-keyword-without-dynamic-flag).",
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": "dynamic",
+          "allow_null": true,
+          "allow_dynamic_type": true
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "null": "dynamic"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

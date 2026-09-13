@@ -1,0 +1,32 @@
+{
+  "description": "A variadic parameter accepting null doesn't make a positional parameter accept it",
+  "spec": [
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "name": "first",
+          "type": "dynamic"
+        }
+      ],
+      "variadic_param": {
+        "name": "rest",
+        "type": "dynamic",
+        "allow_null": true,
+        "allow_dynamic_type": true
+      },
+      "result": "arguments"
+    }
+  },
+  "reference_error": "\"first\" parameter: argument must not be null",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

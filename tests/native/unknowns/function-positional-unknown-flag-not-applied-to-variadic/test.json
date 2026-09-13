@@ -1,0 +1,49 @@
+{
+  "description": "A positional parameter accepting unknowns doesn't make the variadic parameter accept them",
+  "spec": [
+    "spec.md#functions-and-function-calls",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "string"
+    }
+  },
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": "string",
+          "allow_unknown": true
+        }
+      ],
+      "variadic_param": {
+        "type": "string"
+      },
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": [
+            "tuple",
+            [
+              "string",
+              "string"
+            ]
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

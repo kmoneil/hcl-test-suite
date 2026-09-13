@@ -1,0 +1,31 @@
+{
+  "description": "An object doesn't match a list of the dynamic pseudo-type",
+  "spec": [
+    "spec.md#type-specifications",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "name": "l",
+          "type": [
+            "list",
+            "dynamic"
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "list of any single type required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

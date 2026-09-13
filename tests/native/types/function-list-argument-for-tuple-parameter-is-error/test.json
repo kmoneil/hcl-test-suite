@@ -1,0 +1,45 @@
+{
+  "description": "A list argument for a tuple parameter of the same length is an error",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec's call rules make an argument that doesn't match its parameter's type an error, and a list doesn't match a tuple type. But the spec also says automatic conversion is attempted when a value doesn't match what an operation expects, and its conversion rules convert a list to a tuple type with the same number of elements. hashicorp/hcl converts arguments, but go-cty has no conversion from a list or set to a tuple (getConversionKnown in cty/convert/conversion.go), so the call fails.",
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "string": "x"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "name": "t",
+          "type": [
+            "tuple",
+            [
+              "string"
+            ]
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "tuple required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

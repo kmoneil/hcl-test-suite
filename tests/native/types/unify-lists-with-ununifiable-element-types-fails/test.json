@@ -8,6 +8,8 @@
   "features": [
     "typed-values"
   ],
+  "status": "disputed",
+  "notes": "The spec's rules only say that number and bool each unify with string, and none names bool with number. But it defines unification as finding a type that all the given types can be converted to, the most general supertype in a lattice, and bool and number both convert safely to string, which would give a list of strings holding \"5\". hashicorp/hcl only tries the given types themselves as the result type (unify in cty/convert/unify.go), and neither bool nor number converts to the other, so the element types, and the conditional, fail to unify.",
   "variables": {
     "l": {
       "list": [

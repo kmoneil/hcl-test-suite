@@ -1,0 +1,36 @@
+{
+  "description": "A null bool for a number parameter that accepts null is an error",
+  "spec": [
+    "spec.md#conversion-of-null-values",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec's call rules make an argument that doesn't match its parameter's type an error, and bool doesn't match number. But the spec also says automatic conversion is attempted when a value doesn't match what an operation expects, and that every null converts to a null of any other type, regardless of the rules for its type, which would give a null number that the parameter accepts. hashicorp/hcl converts arguments, but go-cty converts a null only when its type converts to the target type (getConversion in cty/convert/conversion.go), so the call fails, as native/types/null-number-or-operand-is-error shows for operators.",
+  "variables": {
+    "n": {
+      "null": "bool"
+    }
+  },
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "name": "n",
+          "type": "number",
+          "allow_null": true
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "number required, but have bool",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

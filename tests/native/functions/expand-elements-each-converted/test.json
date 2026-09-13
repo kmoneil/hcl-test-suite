@@ -1,0 +1,45 @@
+{
+  "description": "Each element of an expanded argument is converted to its parameter's type",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "spec.md#functions-and-function-calls",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec's function call rules make a call erroneous when an argument doesn't match its parameter's type specification, which only an identical type or the dynamic pseudo-type does, and don't mention converting arguments; only the general section on conversions says that automatic conversion is attempted when values don't match what an operation expects. hashicorp/hcl converts each argument to its parameter's type with go-cty's convert.Convert before checking it (FunctionCallExpr.Value in hclsyntax/expression.go), also for each element of an expanded argument, so 1 and true become \"1\" and \"true\".",
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "1"
+            },
+            {
+              "string": "true"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

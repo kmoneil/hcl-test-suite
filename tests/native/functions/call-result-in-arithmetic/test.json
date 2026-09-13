@@ -1,0 +1,31 @@
+{
+  "description": "A call's result can be an operand of an arithmetic operator",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#arithmetic-operators"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "result": {
+        "value": {
+          "number": "2"
+        }
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "3"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "description": "A set argument matches a parameter of the identical set type",
+  "spec": [
+    "spec.md#type-specifications",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "variables": {
+    "s": {
+      "set": [
+        {
+          "number": "1"
+        }
+      ],
+      "element_type": "number"
+    }
+  },
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": [
+            "set",
+            "number"
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "set": [
+                {
+                  "number": "1"
+                }
+              ],
+              "element_type": "number"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

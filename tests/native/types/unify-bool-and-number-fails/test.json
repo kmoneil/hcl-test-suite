@@ -6,6 +6,8 @@
     "hclsyntax/spec.md#conditional-operator"
   ],
   "op": "eval",
+  "status": "disputed",
+  "notes": "The spec's rules only say that number and bool each unify with string, and none names bool with number. But it defines unification as finding a type that all the given types can be converted to, the most general supertype in a lattice, and bool and number both convert safely to string, which would give the string \"true\". hashicorp/hcl only tries the given types themselves as the result type (unify in cty/convert/unify.go), and neither bool nor number converts to the other, so the conditional fails.",
   "reference_error": "must have consistent types",
   "expect": {
     "valid": false,

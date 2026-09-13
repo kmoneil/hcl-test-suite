@@ -1,0 +1,28 @@
+{
+  "description": "Calling an undefined function is an error even when its argument is the dynamic value",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "spec.md#functions-and-function-calls",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "unknown-values",
+    "functions"
+  ],
+  "variables": {
+    "d": {
+      "unknown": "dynamic"
+    }
+  },
+  "functions": {
+    "f": {
+      "result": "arguments"
+    }
+  },
+  "reference_error": "There is no function named \"g\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

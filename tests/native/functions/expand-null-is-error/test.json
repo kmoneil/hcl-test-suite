@@ -1,0 +1,25 @@
+{
+  "description": "Expanding null is an error",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec says the expanded argument must evaluate to a list or tuple, whose elements each map to a parameter, but not what a null does; passing no arguments would also be reasonable. The null keyword is a null of the dynamic pseudo-type, which hashicorp/hcl otherwise accepts for expansion (expanding the dynamic value gives the dynamic value), so only being null makes it fail. hashicorp/hcl reports an error for a null expanded argument (FunctionCallExpr.Value in hclsyntax/expression.go).",
+  "functions": {
+    "f": {
+      "variadic_param": {
+        "type": "string"
+      },
+      "result": "arguments"
+    }
+  },
+  "reference_error": "The expanding argument (indicated by ...) must not be null",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

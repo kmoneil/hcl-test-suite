@@ -1,19 +1,20 @@
 # Adapter protocol (draft v0)
 
 An adapter is a small program that lets the test runner talk to one HCL
-implementation. The runner starts the adapter once per test, passes it a file
-path, and reads one JSON document from its standard output.
+implementation. The runner starts the adapter once per test, passes it the
+path of the test's input file (and for some `eval` tests, a context file), and
+reads one JSON document from its standard output.
 
 This keeps the requirements for an adapter low. It needs to read a file, call
-the implementation, and print JSON. Only `eval` tests with variables require
-reading JSON.
+the implementation, and print JSON. Only `eval` tests with variables or
+functions require reading JSON.
 
 ## Commands
 
 ```
 <adapter> capabilities
 <adapter> parse <file>
-<adapter> eval <file> [<variables.json>]
+<adapter> eval <file> [<context.json>]
 ```
 
 The adapter must exit with status 0 whenever it produced a result, **including
@@ -42,8 +43,12 @@ Describes the implementation and what the adapter supports.
 - `features` lists optional parts of HCL the implementation supports. Tests
   that need a missing feature are skipped:
   - `typed-values`: list, set and map values distinct from tuples and
-    objects, and null and unknown values that keep a type.
-  - `unknown-values`: unknown values and the dynamic pseudo-type.
+    objects, null and unknown values that keep a type, and function
+    parameters whose type is a collection or structural type.
+  - `unknown-values`: unknown values, including the dynamic value (the
+    unknown value of the dynamic pseudo-type).
+  - `functions`: the adapter can add the [test functions](#functions) a test
+    declares to the function table.
 
 ## `parse`
 
@@ -78,14 +83,106 @@ or
 succeeded but evaluation failed. Tests that expect an evaluation error check
 it, so a parser bug can't pass as the expected evaluation error.
 
-The optional variables file is a JSON object mapping variable names to
-[values](#values):
+The optional context file describes the evaluation context:
 
 ```json
-{"u": {"unknown": "bool"}, "name": {"string": "web"}}
+{
+  "variables": {"u": {"unknown": "bool"}, "name": {"string": "web"}},
+  "functions": {"f": {"params": [{"type": "string"}], "result": "arguments"}}
+}
 ```
 
-No functions are available during evaluation yet.
+- `variables` maps variable names to [values](#values).
+- `functions` maps function names to [declarations](#functions).
+
+Both are optional. Without a context file there are no variables, and the
+function table is empty, so every function call is an error.
+
+- Names are used exactly as given, without Unicode normalization or other
+  changes, because tests depend on names that differ only in normalization.
+- The runner only sends the fields described here, and never sends `null` for
+  them. Adapters should reject anything else, so that a test written for a
+  later version of the protocol fails loudly instead of being evaluated
+  wrongly.
+- What a context file contains depends on the test's
+  [features](#capabilities): unknown values only appear in tests that need
+  `unknown-values`, and lists, sets and maps, nulls and unknowns whose type
+  isn't `"dynamic"`, and function parameters whose type isn't `"string"`,
+  `"number"`, `"bool"` or `"dynamic"` only appear in tests that need
+  `typed-values`. Parameters of type `"dynamic"` and the `allow_unknown` and
+  `allow_dynamic_type` flags can appear in any test.
+
+## Functions
+
+HCL has no built-in functions: the application defines them. Tests that call
+functions declare test-only functions, which the adapter adds to the function
+table. A declaration describes a function the way the spec does:
+
+```json
+{
+  "params": [
+    {"name": "s", "type": "string"},
+    {"name": "n", "type": "number", "allow_null": true}
+  ],
+  "variadic_param": {"name": "rest", "type": "dynamic", "allow_unknown": true},
+  "result": "arguments"
+}
+```
+
+| Field | Meaning |
+| --- | --- |
+| `params` | The positional parameters, in order. Optional, and empty if left out. |
+| `variadic_param` | The variadic parameter, if the function has one. |
+| `result` | What the function returns. Required. |
+
+Each parameter has these fields:
+
+| Field | Meaning |
+| --- | --- |
+| `name` | The parameter's name, for error messages. Optional. |
+| `type` | The parameter's type specification, in the [type notation](#values) of values, such as `"string"` or `["list", "dynamic"]`. Required. |
+| `allow_null` | Whether the parameter accepts null values. Defaults to `false`. |
+| `allow_unknown` | Whether the parameter accepts unknown values. Defaults to `false`. |
+| `allow_dynamic_type` | Whether the parameter accepts values of the dynamic pseudo-type. Defaults to `false`. |
+
+A parameter of type `"dynamic"` accepts values of every type, but still only
+accepts null if `allow_null` is set. An implementation without unknown values
+can ignore `allow_unknown` and `allow_dynamic_type`.
+
+`result` is one of:
+
+- `"arguments"`: the function returns a tuple of the argument values it
+  receives, the positional arguments followed by the variadic ones. These are
+  the values after whatever the implementation does to arguments before
+  calling a function, such as converting them to the parameter types. The
+  result type is the tuple type of those values' types, which is also defined
+  for unknown values; the dynamic value contributes `"dynamic"`.
+- `{"value": <value>}`: the function returns this [value](#values), whatever
+  the arguments. Its result type is the value's type. The value can be unknown
+  or hold unknown values.
+- `{"error": "<message>"}`: the function fails with this message when it is
+  called. Its result type is the dynamic pseudo-type. A call that doesn't run
+  the function, for example because an argument is unknown, doesn't fail.
+
+The adapter defines each function through the implementation's usual interface
+for application-defined functions. Everything else the spec says about calls
+is the implementation's job, and it is what the tests check: mapping arguments
+to parameters, checking them against the parameter types and flags, and giving
+an unknown or dynamic result for unknown or dynamic arguments instead of
+running the function. If the implementation's interface needs a single result
+type for every call, declare the dynamic pseudo-type for `"arguments"`; tests of
+unknown results will then show the difference.
+
+If the implementation can't express a declaration, for example a parameter type
+it has no equivalent for, the adapter should exit with a non-zero status and
+say why on standard error.
+
+A function name can contain `::`, as in `provider::aws::arn`, for the
+namespaced function calls that hashicorp/hcl supports (see the disputed tests).
+An adapter can register such a name as one string or split it into a namespace
+and a name, as long as `provider::aws::arn()` calls the function and `arn()`
+doesn't. An adapter for an implementation without namespaced functions can
+leave these declarations out.
 
 ## Errors
 
@@ -127,7 +224,9 @@ Each value is a JSON object with one key naming its kind.
 | map | `{"map": {"key": <value>}, "element_type": <type>}` |
 
 Numbers are decimal strings such as `"-3"`, `"0.25"` or `"1500"`, or
-`"Infinity"` and `"-Infinity"`.
+`"Infinity"` and `"-Infinity"`. Context files only contain numbers in this
+plain form, while adapters may print any decimal form, such as `"1.5e3"`
+(see [what the runner normalizes](#what-the-runner-normalizes)).
 
 Types use the same JSON notation as go-cty: `"string"`, `"number"`, `"bool"`,
 `"dynamic"`, `["list", "string"]`, `["set", <type>]`, `["map", <type>]`,
@@ -215,8 +314,6 @@ These are undecided in v0:
   Unicode version. Checking positions could be an optional stricter level.
 - **JSON syntax**, which can't be interpreted without a schema, so it will
   need a schema input.
-- **Functions.** HCL has no built-in functions, so tests will need a few
-  test-only functions provided by the adapter.
 - **Unknown value refinements** and marks.
 - **Bare traversal keys in parse trees.** How an object key written as a bare
   multi-step traversal such as `{a.b = 1}` appears in a parse tree. Its

@@ -1,0 +1,35 @@
+{
+  "description": "A null argument is an error even when a later argument is the dynamic value",
+  "spec": [
+    "spec.md#functions-and-function-calls",
+    "spec.md#null-values"
+  ],
+  "op": "eval",
+  "features": [
+    "unknown-values",
+    "functions"
+  ],
+  "variables": {
+    "d": {
+      "unknown": "dynamic"
+    }
+  },
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": "dynamic"
+        },
+        {
+          "type": "dynamic"
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "argument must not be null",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

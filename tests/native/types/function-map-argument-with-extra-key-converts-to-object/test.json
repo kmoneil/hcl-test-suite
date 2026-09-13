@@ -1,0 +1,61 @@
+{
+  "description": "A map argument with a key its parameter's object type lacks becomes that object, without the key",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec makes this an error however the call is read: the map doesn't match the object type, and converting a map whose keys don't exactly match the object type's attributes is an error. hashicorp/hcl converts arguments to their parameter's type, and go-cty's map to object conversion skips map keys that aren't attributes of the object type (conversionMapToObject in cty/convert/conversion_collection.go), so c is dropped.",
+  "variables": {
+    "m": {
+      "map": {
+        "b": {
+          "string": "x"
+        },
+        "c": {
+          "string": "y"
+        }
+      },
+      "element_type": "string"
+    }
+  },
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": [
+            "object",
+            {
+              "b": "string"
+            }
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "object": {
+                "b": {
+                  "string": "x"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

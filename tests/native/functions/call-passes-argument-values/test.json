@@ -1,0 +1,40 @@
+{
+  "description": "A function receives the values of its argument expressions",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "variadic_param": {
+        "type": "dynamic"
+      },
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "number": "3"
+            },
+            {
+              "string": "ab"
+            },
+            {
+              "bool": false
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

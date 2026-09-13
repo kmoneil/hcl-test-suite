@@ -1,0 +1,44 @@
+{
+  "description": "The dynamic value for a dynamic pseudo-type parameter hides a null argument after it",
+  "spec": [
+    "spec.md#functions-and-function-calls",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+    "spec.md#null-values"
+  ],
+  "op": "eval",
+  "features": [
+    "unknown-values",
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec checks every argument, and a null for a parameter that doesn't accept null makes the call erroneous, so this is an error, as it is with the arguments the other way around (native/types/function-null-argument-before-dynamic-argument-is-error). go-cty stops checking the arguments at the first one of the dynamic pseudo-type whose parameter doesn't accept that type, and returns the dynamic value (Function.returnTypeForValues in cty/function/function.go). hashicorp/hcl has already converted the arguments, so this only happens for parameters whose type is the dynamic pseudo-type.",
+  "variables": {
+    "d": {
+      "unknown": "dynamic"
+    }
+  },
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": "dynamic"
+        },
+        {
+          "type": "dynamic"
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "description": "A function name with a combining accent doesn't call the function named with the precomposed letter",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#source-code-representation"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "notes": "The call writes e followed by U+0301 COMBINING ACUTE ACCENT, and the declared function name uses the precomposed U+00E9.",
+  "functions": {
+    "café": {
+      "result": {
+        "value": {
+          "string": "x"
+        }
+      }
+    }
+  },
+  "reference_error": "Call to unknown function",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

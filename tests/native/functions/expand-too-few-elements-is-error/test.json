@@ -1,0 +1,29 @@
+{
+  "description": "An expanded tuple with fewer elements than the parameters is an error",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "Not enough function arguments",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

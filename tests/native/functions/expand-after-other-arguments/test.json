@@ -1,0 +1,48 @@
+{
+  "description": "Expanded elements map to the parameters after those taken by the earlier arguments",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "bool"
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "x"
+            },
+            {
+              "number": "1"
+            },
+            {
+              "bool": true
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "description": "The elements of an expanded set become separate arguments",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec says the expanded argument must evaluate to a list or tuple value, so a set is an error. hashicorp/hcl also accepts sets (FunctionCallExpr.Value in hclsyntax/expression.go). The set has one element so that the result doesn't depend on the order of set elements.",
+  "variables": {
+    "s": {
+      "set": [
+        {
+          "string": "x"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "functions": {
+    "f": {
+      "variadic_param": {
+        "type": "string"
+      },
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "x"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

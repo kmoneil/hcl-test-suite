@@ -2,18 +2,19 @@
 //!
 //!     hcl-rs-adapter capabilities
 //!     hcl-rs-adapter parse <file.hcl>
-//!     hcl-rs-adapter eval <file.hcl> [<variables.json>]
+//!     hcl-rs-adapter eval <file.hcl> [<context.json>]
 //!
 //! The output formats are described in docs/protocol.md.
 
 use std::env;
 use std::fs;
 use std::process::ExitCode;
+use std::sync::OnceLock;
 
-use hcl::eval::{Context, Evaluate};
-use hcl::expr::{Expression, ObjectKey, Operation, TraversalOperator};
+use hcl::eval::{Context, Evaluate, Func, FuncArgs, FuncDef, ParamType};
+use hcl::expr::{Expression, FuncName, ObjectKey, Operation, TraversalOperator};
 use hcl::template::{Directive, Element};
-use hcl::{Body, Number, Structure, Template, Value};
+use hcl::{Body, Identifier, Number, Structure, Template, Value};
 use serde_json::{Map, Value as Json, json};
 
 /// Must match the exact version pinned in Cargo.toml.
@@ -22,7 +23,7 @@ const HCL_RS_VERSION: &str = "0.19.8";
 const USAGE: &str = "usage:
   hcl-rs-adapter capabilities
   hcl-rs-adapter parse <file.hcl>
-  hcl-rs-adapter eval <file.hcl> [<variables.json>]";
+  hcl-rs-adapter eval <file.hcl> [<context.json>]";
 
 fn main() -> ExitCode {
     let args: Vec<String> = env::args().skip(1).collect();
@@ -31,7 +32,7 @@ fn main() -> ExitCode {
         ["capabilities"] => Ok(capabilities()),
         ["parse", path] => parse(path),
         ["eval", path] => eval(path, None),
-        ["eval", path, variables] => eval(path, Some(variables)),
+        ["eval", path, context] => eval(path, Some(context)),
         _ => Err(USAGE.to_string()),
     };
     match result {
@@ -51,7 +52,7 @@ fn capabilities() -> Json {
         "implementation": "hcl-rs",
         "version": HCL_RS_VERSION,
         "operations": ["parse", "eval"],
-        "features": [],
+        "features": ["functions"],
     })
 }
 
@@ -85,10 +86,10 @@ fn parse(path: &str) -> Result<Json, String> {
     })
 }
 
-fn eval(path: &str, variables: Option<&str>) -> Result<Json, String> {
+fn eval(path: &str, context: Option<&str>) -> Result<Json, String> {
     let mut ctx = Context::new();
-    if let Some(variables) = variables {
-        declare_variables(&mut ctx, variables)?;
+    if let Some(context) = context {
+        declare_context(&mut ctx, context)?;
     }
     let body = match parse_file(path)? {
         Parsed::Body(body) => body,
@@ -355,20 +356,152 @@ fn number_text(n: &Number) -> String {
     }
 }
 
-fn declare_variables(ctx: &mut Context, path: &str) -> Result<(), String> {
+fn declare_context(ctx: &mut Context, path: &str) -> Result<(), String> {
     let text = fs::read_to_string(path).map_err(|err| format!("{path}: {err}"))?;
-    let variables: Map<String, Json> = serde_json::from_str(&text).map_err(|err| format!("{path}: {err}"))?;
-    for (name, value) in &variables {
-        ctx.declare_var(name.as_str(), decode_value(value)?);
+    let context: Json = serde_json::from_str(&text).map_err(|err| format!("{path}: {err}"))?;
+    let context = object_with_fields(&context, &["variables", "functions"]).map_err(|err| format!("{path}: {err}"))?;
+    let mut fixed_results = Vec::new();
+    for (field, entries) in context {
+        let entries = entries.as_object().ok_or_else(|| format!("{path}: {field} must be an object"))?;
+        for (name, entry) in entries {
+            // Names are used as given, without hcl-rs's sanitizing.
+            if field == "variables" {
+                let value = decode_value(entry).map_err(|err| format!("{path}: variable {name}: {err}"))?;
+                ctx.declare_var(Identifier::unchecked(name.as_str()), value);
+            } else {
+                let func = func_def(entry, &mut fixed_results).map_err(|err| format!("{path}: function {name}: {err}"))?;
+                ctx.declare_func(func_name(name), func);
+            }
+        }
     }
+    FIXED_RESULTS.set(fixed_results).expect("the context is only read once");
     Ok(())
 }
 
+/// Returns the fields of a JSON object after checking that it has no fields
+/// other than `allowed` and none of them is null.
+fn object_with_fields<'a>(json: &'a Json, allowed: &[&str]) -> Result<&'a Map<String, Json>, String> {
+    let object = json.as_object().ok_or_else(|| format!("expected an object, got {json}"))?;
+    for (field, value) in object {
+        if !allowed.contains(&field.as_str()) {
+            return Err(format!("unknown field {field}"));
+        }
+        if value.is_null() {
+            return Err(format!("field {field} is null"));
+        }
+    }
+    Ok(object)
+}
+
+/// Splits a namespaced name such as ns::f into its parts.
+fn func_name(name: &str) -> FuncName {
+    let mut parts: Vec<Identifier> = name.split("::").map(Identifier::unchecked).collect();
+    let last = parts.pop().expect("split returns at least one part");
+    FuncName::new(last).with_namespace(parts)
+}
+
+/// Builds a function from a declaration. hcl-rs functions are plain fn
+/// pointers, so a function with a fixed result gets one of the FIXED_RESULT_FUNCS,
+/// which returns the result stored at its index.
+fn func_def(decl: &Json, fixed_results: &mut Vec<Result<Value, String>>) -> Result<FuncDef, String> {
+    let decl = object_with_fields(decl, &["params", "variadic_param", "result"])?;
+    let mut builder = FuncDef::builder();
+    if let Some(params) = decl.get("params") {
+        let params = params.as_array().ok_or_else(|| format!("params must be a list, got {params}"))?;
+        for param in params {
+            builder = builder.param(param_type(param)?);
+        }
+    }
+    if let Some(param) = decl.get("variadic_param") {
+        builder = builder.variadic_param(param_type(param)?);
+    }
+    let func = match decl.get("result").ok_or("missing result")? {
+        Json::String(s) if s == "arguments" => arguments as Func,
+        result @ Json::Object(_) => {
+            let result = object_with_fields(result, &["value", "error"])?;
+            let func = *FIXED_RESULT_FUNCS
+                .get(fixed_results.len())
+                .ok_or("too many functions with fixed results")?;
+            fixed_results.push(match (result.get("value"), result.get("error")) {
+                (Some(value), None) => Ok(decode_value(value)?),
+                (None, Some(Json::String(message))) => Err(message.clone()),
+                _ => return Err(format!("invalid result {}", Json::Object(result.clone()))),
+            });
+            func
+        }
+        result => return Err(format!("invalid result {result}")),
+    };
+    Ok(builder.build(func))
+}
+
+fn arguments(args: FuncArgs) -> Result<Value, String> {
+    Ok(Value::Array(args.into_values()))
+}
+
+static FIXED_RESULTS: OnceLock<Vec<Result<Value, String>>> = OnceLock::new();
+
+macro_rules! fixed_result_funcs {
+    ($($name:ident = $index:literal),* $(,)?) => {
+        $(
+            fn $name(_: FuncArgs) -> Result<Value, String> {
+                FIXED_RESULTS.get().expect("results are stored before evaluation")[$index].clone()
+            }
+        )*
+        const FIXED_RESULT_FUNCS: &[Func] = &[$($name),*];
+    };
+}
+
+fixed_result_funcs!(fixed0 = 0, fixed1 = 1, fixed2 = 2, fixed3 = 3, fixed4 = 4, fixed5 = 5, fixed6 = 6, fixed7 = 7);
+
+/// hcl-rs parameter types have no unknown or dynamic values to allow, and no
+/// tuple, object, list, set or map types, only arrays and objects whose
+/// elements all have one type.
+fn param_type(param: &Json) -> Result<ParamType, String> {
+    let param = object_with_fields(param, &["name", "type", "allow_null", "allow_unknown", "allow_dynamic_type"])?;
+    for flag in ["allow_null", "allow_unknown", "allow_dynamic_type"] {
+        if param.get(flag).is_some_and(|value| !value.is_boolean()) {
+            return Err(format!("{flag} must be true or false"));
+        }
+    }
+    if param.get("name").is_some_and(|name| !name.is_string()) {
+        return Err("a parameter name must be a string".into());
+    }
+    let ty = param.get("type").ok_or("parameter without a type")?;
+    let allow_null = param.get("allow_null").and_then(Json::as_bool).unwrap_or(false);
+    let ty = match ty.as_str() {
+        Some("string") => ParamType::String,
+        Some("number") => ParamType::Number,
+        Some("bool") => ParamType::Bool,
+        Some("dynamic") if allow_null => return Ok(ParamType::Any),
+        Some("dynamic") => {
+            // Any also accepts null, so list the non-null kinds instead.
+            let any = || Box::new(ParamType::Any);
+            return Ok(ParamType::OneOf(vec![
+                ParamType::Bool,
+                ParamType::Number,
+                ParamType::String,
+                ParamType::Array(any()),
+                ParamType::Object(any()),
+            ]));
+        }
+        _ => return Err(format!("hcl-rs has no parameter type for {ty}")),
+    };
+    Ok(if allow_null { ParamType::Nullable(Box::new(ty)) } else { ty })
+}
+
+/// Decodes a value in the protocol's encoding: an object with one key naming the
+/// kind of value, and an element_type for lists, sets and maps. hcl-rs values
+/// have no types, so types are checked for presence but otherwise ignored.
 fn decode_value(value: &Json) -> Result<Value, String> {
-    let (kind, x) = value
-        .as_object()
-        .and_then(|node| node.iter().find(|(key, _)| key.as_str() != "element_type"))
-        .ok_or_else(|| format!("not a value: {value}"))?;
+    let not_a_value = || format!("not a value: {value}");
+    let node = value.as_object().ok_or_else(not_a_value)?;
+    let kinds: Vec<(&String, &Json)> = node.iter().filter(|(key, _)| key.as_str() != "element_type").collect();
+    let [(kind, x)] = kinds.as_slice() else {
+        return Err(not_a_value());
+    };
+    if x.is_null() || node.contains_key("element_type") != matches!(kind.as_str(), "list" | "set" | "map") {
+        return Err(not_a_value());
+    }
     let malformed = || format!("malformed {kind} value: {value}");
     Ok(match kind.as_str() {
         "string" => Value::String(x.as_str().ok_or_else(malformed)?.to_owned()),

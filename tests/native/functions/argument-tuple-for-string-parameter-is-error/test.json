@@ -1,0 +1,26 @@
+{
+  "description": "A tuple argument for a string parameter is an error",
+  "spec": [
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "name": "s",
+          "type": "string"
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "string required, but have tuple",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

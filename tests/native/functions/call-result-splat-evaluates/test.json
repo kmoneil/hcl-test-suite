@@ -1,0 +1,53 @@
+{
+  "description": "A splat after a call applies to the elements of the call's result",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#splat-operators"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "result": {
+        "value": {
+          "tuple": [
+            {
+              "object": {
+                "b": {
+                  "string": "x"
+                }
+              }
+            },
+            {
+              "object": {
+                "b": {
+                  "string": "y"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "x"
+            },
+            {
+              "string": "y"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

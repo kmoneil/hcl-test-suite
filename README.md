@@ -7,7 +7,7 @@ HashiCorp configuration language, in the spirit of
 Any HCL implementation, in any language, can run it by providing a small
 adapter program.
 
-**Status:** draft. 1,994 tests of the native syntax, checking 758 rules from
+**Status:** draft. 2,149 tests of the native syntax, checking 798 rules from
 the spec at hashicorp/hcl v2.24.0. The test and adapter formats may still
 change.
 
@@ -54,8 +54,8 @@ run the tests at all.
 
 1. Write an adapter ([protocol](docs/protocol.md)). You can start with just
    `capabilities` and `parse`. Tests for operations or features you don't
-   support (such as `eval`, typed values or unknown values) are skipped, not
-   failed.
+   support (such as `eval`, typed values, unknown values or functions) are
+   skipped, not failed.
 2. Run `python3 runner/hcltest.py --adapter "<command that runs your adapter>"`.
 3. If you're unsure how some input should be read, ask the reference
    implementation: `bin/hcl-go-adapter parse file.hcl`.
@@ -73,22 +73,26 @@ run the tests at all.
 | templates | 300 | 85 | 2 |
 | variables, attribute access, index | 137 | 59 | 3 |
 | splat | 87 | 30 | 0 |
-| function calls | 55 | 29 | 11 |
-| for expressions | 172 | 63 | 0 |
-| operators | 328 | 103 | 0 |
-| types, conversions, unification | 101 | 75 | 7 |
-| unknown values | 143 | 69 | 3 |
-| **total** | **1,994** | **798** | **40** |
+| function calls | 135 | 39 | 2 |
+| for expressions | 173 | 63 | 0 |
+| operators | 329 | 104 | 0 |
+| types, conversions, unification | 136 | 80 | 4 |
+| unknown values | 181 | 78 | 0 |
+| **total** | **2,149** | **823** | **25** |
 
-- Every rule without tests needs something the protocol can't express yet:
-  working functions, schema-driven body processing, static analysis or
-  literal-only evaluation. `python3 tools/coverage.py rules` lists them.
-- The tests exercise 72.9% of the statements in hashicorp/hcl's `hclsyntax`
+- Most rules without tests need something the protocol can't express yet:
+  schema-driven body processing, static analysis, literal-only evaluation,
+  standalone templates, conversion to a target type, error positions or
+  capsule values. Two depend on choices the spec leaves to implementations
+  (rounding and the order of set elements), and one is guidance for
+  applications. `python3 tools/coverage.py rules` lists them.
+- The tests exercise 75.8% of the statements in hashicorp/hcl's `hclsyntax`
   package (`python3 tools/coverage.py go`). Most of the rest is static
-  analysis, syntax tree walking and function calls, which the protocol doesn't
-  reach yet.
-- Not covered yet: the JSON syntax, static analysis, function call semantics,
-  and the `ext/` packages.
+  analysis, syntax tree walking and source ranges, which the protocol doesn't
+  reach. The untested parts of function call evaluation are for literal-only
+  mode, capsule types, name suggestions in error messages and functions that
+  report errors for arguments they weren't given.
+- Not covered yet: the JSON syntax, static analysis and the `ext/` packages.
 
 ## How the tests are checked
 
@@ -111,12 +115,12 @@ run the tests at all.
 
 | Implementation | Passed | Failed | Adapter errors | Skipped |
 | --- | ---: | ---: | ---: | ---: |
-| hashicorp/hcl v2.24.0 | 1,994 | 0 | 0 | 0 |
-| hcl-rs 0.19.8 | 1,495 | 197 (70 disputed) | 21 | 281 |
+| hashicorp/hcl v2.24.0 | 2,149 | 0 | 0 | 0 |
+| hcl-rs 0.19.8 | 1,564 | 203 (74 disputed) | 21 | 361 |
 
 ### hcl-rs 0.19.8
 
-The 130 failures on tests that aren't disputed fall into these groups:
+The 129 failures on tests that aren't disputed fall into these groups:
 
 - **Parsing:** it accepts `[for, x]`, `{for: 1}` and `[for v inxs: v]`; literal
   newlines and the escapes `\b`, `\f` and `\/` in strings; and newlines after
@@ -136,11 +140,12 @@ The 130 failures on tests that aren't disputed fall into these groups:
   - `<<-` turns CR LF into LF and doesn't remove indentation inside
     directives, and a closing marker inside a directive doesn't end a heredoc.
 - **Not supported (skipped or adapter errors):** list, set and map types,
-  unknown values, and infinity.
+  unknown values, infinity, and function parameters of collection or
+  structural types.
 
 ### Where the spec and hashicorp/hcl disagree
 
-274 tests are disputed. `python3 tools/coverage.py disputes` lists them all by
+317 tests are disputed. `python3 tools/coverage.py disputes` lists them all by
 spec section, with notes. The main themes:
 
 - **Source text:** a byte order mark, identifiers starting with `_`, and some
@@ -157,10 +162,19 @@ spec section, with notes. The main themes:
   out.
 - **Logic operators:** `&&` and `||` return known results for some unknown
   operands and drop errors from the operand that doesn't decide.
-- **Types:** unification prefers lists over tuples and maps over objects, and
-  string to number conversion accepts `"1e3"`, `"1p4"`, `"+5"` and `"Inf"`.
+- **Types:** unification prefers lists over tuples and maps over objects, bool
+  and number don't unify to string, and string to number conversion accepts
+  `"1e3"`, `"1p4"`, `"+5"` and `"Inf"`.
 - **Numbers:** division by zero gives infinity, and integers above 512 bits
   are silently rounded.
+- **Function calls:** arguments are converted to their parameter's type,
+  which the spec's call rules don't provide for, so `"12"` is accepted for a
+  number. Sets can be expanded with `...` although the spec only allows lists
+  and tuples. The spec doesn't decide what expanding null or an unknown value
+  does, or whether a function that fails makes the call fail.
+- **Parameters of the dynamic pseudo-type:** go-cty ignores `allow_unknown`
+  for the dynamic value, stops checking the arguments after it, and treats the
+  `null` keyword like the dynamic value.
 - **Syntax that isn't in the spec:** namespaced function calls like
   `provider::aws::arn()`.
 
@@ -175,10 +189,18 @@ spec section, with notes. The main themes:
 - `(1/0) % 2` dereferences a nil pointer in go-cty's Modulo; it is recovered
   and reported as "Operation failed".
 - `true && null` is false, while `null || false` is an error.
+- Passing `null` to a function parameter of the dynamic pseudo-type that
+  accepts null but not that type gives an unknown result, which the spec's
+  guarantee that nothing is unknown without an unknown input rules out
+  (go-cty's `Function.returnTypeForValues`).
+- For parameters of the dynamic pseudo-type, an argument that is the dynamic
+  value stops go-cty from checking the arguments after it, so `f(d, null)`
+  gives the dynamic value while `f(null, d)` is an error.
+- Expanding an unknown list with `...` skips evaluating the other arguments,
+  so `f(nope, u...)` reports no error for the undefined `nope`.
 
 ## Next steps
 
-- Test-only functions in the protocol, to cover function call semantics.
 - The JSON syntax, which needs schemas in the protocol.
 - Static analysis operations (static list, map, call and traversal).
 - The `ext/` packages (`typeexpr`, `dynblock`, `tryfunc`, `userfunc`) as

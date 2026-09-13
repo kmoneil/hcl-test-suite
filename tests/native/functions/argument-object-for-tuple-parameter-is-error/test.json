@@ -1,0 +1,32 @@
+{
+  "description": "An object argument for a tuple parameter is an error",
+  "spec": [
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "name": "t",
+          "type": [
+            "tuple",
+            [
+              "number"
+            ]
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "tuple required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

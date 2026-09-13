@@ -1,0 +1,33 @@
+{
+  "description": "A call with several namespace prefixes calls the function declared with the whole name",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec has no namespaced function names, so a::b::f() would be a syntax error. hashicorp/hcl parses the call (finishParsingFunctionCall in hclsyntax/parser.go) and looks up the name joined with :: in the function table (FunctionCallExpr.Value in hclsyntax/expression.go).",
+  "functions": {
+    "a::b::f": {
+      "result": {
+        "value": {
+          "string": "x"
+        }
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

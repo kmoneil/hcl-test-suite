@@ -1,0 +1,54 @@
+{
+  "description": "An object argument matches an object type with an attribute of the dynamic pseudo-type",
+  "spec": [
+    "spec.md#type-specifications",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": [
+            "object",
+            {
+              "b": "dynamic",
+              "c": "number"
+            }
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "object": {
+                "b": {
+                  "tuple": [
+                    {
+                      "string": "x"
+                    }
+                  ]
+                },
+                "c": {
+                  "number": "1"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

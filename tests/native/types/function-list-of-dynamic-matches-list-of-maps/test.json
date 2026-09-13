@@ -1,0 +1,71 @@
+{
+  "description": "A list of maps matches a parameter that is a list of the dynamic pseudo-type",
+  "spec": [
+    "spec.md#type-specifications",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "map": {
+            "k": {
+              "string": "v"
+            }
+          },
+          "element_type": "string"
+        }
+      ],
+      "element_type": [
+        "map",
+        "string"
+      ]
+    }
+  },
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": [
+            "list",
+            "dynamic"
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "list": [
+                {
+                  "map": {
+                    "k": {
+                      "string": "v"
+                    }
+                  },
+                  "element_type": "string"
+                }
+              ],
+              "element_type": [
+                "map",
+                "string"
+              ]
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

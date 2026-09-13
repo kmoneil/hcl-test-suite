@@ -1,0 +1,20 @@
+{
+  "description": "Passing an argument to a function without parameters is an error",
+  "spec": [
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "result": "arguments"
+    }
+  },
+  "reference_error": "Too many function arguments",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

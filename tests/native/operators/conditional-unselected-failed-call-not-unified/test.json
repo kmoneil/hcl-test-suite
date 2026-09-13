@@ -1,0 +1,40 @@
+{
+  "description": "A failed call in the result that isn't selected takes no part in unifying the results",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator",
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "spec.md#type-unification"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec says errors in the result that isn't selected aren't passed through, and that both results must unify, but not what type a failed result has; the function would return a bool, which doesn't unify with a number. hashicorp/hcl evaluates both results (ConditionalExpr.Value in hclsyntax/expression.go) and gets the dynamic value from the failed call, as from any failed call (FunctionCallExpr.Value); because one result has the dynamic pseudo-type, it skips unification and returns the selected number unconverted. A failed !nope still yields a bool, so unification fails there (native/operators/conditional-unselected-error-still-unified).",
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "name": "n",
+          "type": "number"
+        }
+      ],
+      "result": {
+        "value": {
+          "bool": true
+        }
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

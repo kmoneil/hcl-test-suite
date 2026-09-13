@@ -1,0 +1,25 @@
+{
+  "description": "Calling a function with one parameter without arguments is an error",
+  "spec": [
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": "string"
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "Not enough function arguments",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

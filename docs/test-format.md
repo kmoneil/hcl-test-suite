@@ -42,10 +42,11 @@ are lowercase words separated by dashes.
 | `spec` | yes | The spec sections that define the behavior, as anchors from [tools/spec-anchors.txt](../tools/spec-anchors.txt). |
 | `op` | yes | `"parse"` or `"eval"`, the adapter command to run. |
 | `input` | no | The input file name, if not `input.hcl`. |
-| `features` | no | Optional features the test needs: `"typed-values"` or `"unknown-values"` (see [capabilities](protocol.md#capabilities)). Adapters without them skip the test. Lint requires `typed-values` when a variable or the expected result contains a list, set or map, or a null or unknown value of a type other than dynamic, because an implementation without those types can't receive or produce such values. |
+| `features` | no | Optional features the test needs: `"typed-values"`, `"unknown-values"` or `"functions"` (see [capabilities](protocol.md#capabilities)). Adapters without them skip the test. Lint requires `typed-values` when a variable, a function or the expected result has a list, set or map, or a null or unknown value of a type other than dynamic, or a function has a parameter of a collection or structural type, because an implementation without those types can't receive, declare or produce them. It requires `unknown-values` when any of them has an unknown value, and `functions` when the test declares functions. |
 | `status` | no | `"disputed"` if the spec doesn't clearly support the expected result (see below). |
 | `notes` | no | Anything a reader needs to know. Required for disputed tests. |
 | `variables` | no | Variables for `eval`, as a JSON object of [values](protocol.md#values). |
+| `functions` | no | Functions for `eval`, as a JSON object mapping function names to [declarations](protocol.md#functions). Lint checks that function and parameter names are identifiers (function names may join several with `::`), and that the `functions` feature is listed exactly when the test declares functions. |
 | `reference_error` | for expected errors | Text that the error reported by hashicorp/hcl contains (see below). |
 | `expect` | yes | The expected result (see below). |
 
@@ -150,7 +151,7 @@ covered: every rule has tests, and every test checks a rule.
   disputed, its text ends with `(disputed)`; lint checks this.
 - A rule has either `tests` (which may be in any area) or an `untested`
   reason. Use `untested` only for rules that can't be tested through the
-  protocol yet, such as rules about functions or static analysis.
+  protocol yet, such as rules about static analysis or schemas.
 - Every test must be listed by at least one rule.
 
 ## Writing tests
@@ -159,13 +160,21 @@ covered: every rule has tests, and every test checks a rule.
   as small as possible, with one attribute unless the rule needs more.
 - **Work from the spec.** Write the expected result from the spec text
   first, then check it against the reference implementation:
-  `bin/hcl-go-adapter eval tests/.../input.hcl`. If they disagree, find the
-  reason in the hashicorp/hcl source before deciding, and mark the test
-  disputed if the spec is wrong or silent.
+  `bin/hcl-go-adapter eval tests/.../input.hcl`, or for a test with variables
+  or functions, `python3 runner/hcltest.py --adapter bin/hcl-go-adapter -v
+  tests/.../name`, which shows the difference when the result doesn't match.
+  If they disagree, find the reason in the hashicorp/hcl source before
+  deciding, and mark the test disputed if the spec is wrong or silent.
 - **Test both sides of every rule.** Include inputs that must be rejected,
   not just ones that must be accepted. New parsers tend to accept too much.
 - **Make expected errors unambiguous.** An input that should fail must contain
   exactly one mistake, and its `reference_error` must match that mistake.
+- **Declare only the functions a test needs.** Give each argument exactly its
+  parameter's type unless the test is about conversion: the spec's function
+  call rules make an argument that doesn't match its parameter an error, while
+  hashicorp/hcl converts it, so a test that depends on that conversion is
+  disputed. Name parameters when the reference error has to say which one
+  failed.
 - **Keep results exact and portable.**
   - Non-integer values must be exactly representable in binary, like `0.5`
     or `2.25`, and their exact decimal expansion must have at most 70

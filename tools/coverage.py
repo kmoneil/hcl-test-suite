@@ -31,6 +31,7 @@ COVER_PACKAGES = [
     "github.com/hashicorp/hcl/v2/hclsyntax",
     "github.com/zclconf/go-cty/cty",
     "github.com/zclconf/go-cty/cty/convert",
+    "github.com/zclconf/go-cty/cty/function",
 ]
 
 

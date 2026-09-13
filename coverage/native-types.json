@@ -157,14 +157,56 @@
     {
       "id": "types-type-specification-matches-identical",
       "spec": "spec.md#type-specifications",
-      "rule": "A type matches a type specification that is identical to it",
-      "untested": "Type specifications are only used for function parameters; needs test functions"
+      "rule": "A type matches a type specification that is identical to it, for tuple, object, list, set and map types",
+      "tests": [
+        "native/types/function-parameter-matches-identical-list-type",
+        "native/types/function-parameter-matches-identical-map-type",
+        "native/types/function-parameter-matches-identical-object-type",
+        "native/types/function-parameter-matches-identical-set-type",
+        "native/types/function-parameter-matches-identical-tuple-type"
+      ]
     },
     {
       "id": "types-type-specification-matches-dynamic",
       "spec": "spec.md#type-specifications",
-      "rule": "Any type matches the dynamic pseudo-type, also nested, so a list of strings matches a list of the dynamic pseudo-type while a set of strings doesn't",
-      "untested": "Type specifications are only used for function parameters; needs test functions"
+      "rule": "Any type matches the dynamic pseudo-type, also nested as an element, attribute or collection element type, while the rest of the type must still match: a list of strings or of maps matches a list of the dynamic pseudo-type, and an object doesn't",
+      "tests": [
+        "native/types/function-dynamic-element-type-still-checks-kind",
+        "native/types/function-dynamic-parameter-accepts-any-type",
+        "native/types/function-list-of-dynamic-matches-list-of-maps",
+        "native/types/function-list-of-dynamic-matches-list-of-strings",
+        "native/types/function-map-of-dynamic-matches-map-of-numbers",
+        "native/types/function-nested-dynamic-matches-list-of-lists",
+        "native/types/function-object-type-with-dynamic-attribute",
+        "native/types/function-tuple-type-with-dynamic-element"
+      ]
+    },
+    {
+      "id": "types-type-specification-set-for-list-of-dynamic",
+      "spec": "spec.md#type-specifications",
+      "rule": "A set of strings passed for a list of the dynamic pseudo-type, which the spec's own example says doesn't match, is converted to a list of strings (disputed)",
+      "tests": [
+        "native/types/function-list-of-dynamic-and-set-of-strings"
+      ]
+    },
+    {
+      "id": "types-type-specification-mismatch",
+      "spec": "spec.md#type-specifications",
+      "rule": "A type that isn't identical to a type specification and doesn't match it through the dynamic pseudo-type doesn't match, such as a tuple of another length, a list of another element type, or a tuple of elements with no common type for a list of the dynamic pseudo-type",
+      "tests": [
+        "native/types/function-list-of-dynamic-tuple-elements-must-unify",
+        "native/types/function-list-parameter-element-type-mismatch-is-error",
+        "native/types/function-tuple-parameter-length-mismatch-is-error"
+      ]
+    },
+    {
+      "id": "types-type-specification-dynamic-as-type",
+      "spec": "spec.md#type-specifications",
+      "rule": "The null keyword or an empty tuple passed for a list of the dynamic pseudo-type becomes a null or empty list with the dynamic pseudo-type as its element type (disputed)",
+      "tests": [
+        "native/types/function-empty-tuple-for-list-of-dynamic-parameter",
+        "native/types/function-null-keyword-for-list-of-dynamic-parameter"
+      ]
     },
     {
       "id": "types-null-equals-itself",
@@ -248,8 +290,26 @@
     {
       "id": "types-function-null-argument",
       "spec": "spec.md#functions-and-function-calls",
-      "rule": "A function call passing null to a parameter that doesn't accept null is an error",
-      "untested": "Needs test functions: the adapter's function table is empty, so every call fails as a call to an unknown function"
+      "rule": "A function call passing null to a parameter that doesn't accept null is an error, whether the null is the null keyword or typed, a variadic argument or an expanded element, and even when an earlier argument is unknown or a later one is the dynamic value",
+      "tests": [
+        "native/types/function-null-argument-after-unknown-argument-is-error",
+        "native/types/function-null-argument-before-dynamic-argument-is-error",
+        "native/types/function-null-argument-is-error",
+        "native/types/function-null-expanded-element-is-error",
+        "native/types/function-null-variadic-argument-is-error",
+        "native/types/function-typed-null-argument-is-error"
+      ]
+    },
+    {
+      "id": "types-function-null-argument-accepted",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "A positional or variadic parameter that accepts null receives a null argument, the null keyword or a typed null, and an argument that only holds a null is not a null argument",
+      "tests": [
+        "native/types/function-null-argument-accepted",
+        "native/types/function-null-inside-argument-is-not-null-argument",
+        "native/types/function-null-variadic-argument-accepted",
+        "native/types/function-typed-null-argument-accepted"
+      ]
     },
     {
       "id": "types-conversion-to-own-type",
@@ -284,9 +344,10 @@
     {
       "id": "types-null-conversion-needs-type-conversion",
       "spec": "spec.md#conversion-of-null-values",
-      "rule": "A null converts to another type only if its own type converts to it, so a null number used as a || operand is an error (disputed)",
+      "rule": "A null converts to another type only if its own type converts to it, so a null number used as a || operand and a null bool for a number parameter that accepts null are errors (disputed)",
       "tests": [
-        "native/types/null-number-or-operand-is-error"
+        "native/types/null-number-or-operand-is-error",
+        "native/types/function-null-of-unconvertible-type-is-error"
       ]
     },
     {
@@ -427,9 +488,8 @@
     {
       "id": "types-no-bool-number-conversion",
       "spec": "spec.md#primitive-type-conversions",
-      "rule": "There is no conversion in either direction between bool and number: not for operands, predicates, index keys or unification",
+      "rule": "There is no conversion in either direction between bool and number: not for operands, predicates or index keys",
       "tests": [
-        "native/types/unify-bool-and-number-fails",
         "native/operators/add-bool-operand",
         "native/operators/conditional-number-condition",
         "native/traversals/index-tuple-bool-key-is-error"
@@ -487,18 +547,29 @@
     {
       "id": "types-list-to-tuple-conversion",
       "spec": "spec.md#collection-and-structural-type-conversions",
-      "rule": "hashicorp/hcl has no conversion from a list or set to a tuple, so a list never fails the spec's length check: a list and a tuple of another length unify to a list (disputed)",
+      "rule": "hashicorp/hcl has no conversion from a list or set to a tuple, so a list argument for a tuple parameter of the same length is an error, and a list and a tuple of another length unify to a list instead of failing the spec's length check (disputed)",
       "tests": [
-        "native/types/unify-list-and-tuple-of-other-length-gives-list"
+        "native/types/unify-list-and-tuple-of-other-length-gives-list",
+        "native/types/function-list-argument-for-tuple-parameter-is-error"
       ]
     },
     {
       "id": "types-map-to-object-conversion",
       "spec": "spec.md#collection-and-structural-type-conversions",
-      "rule": "hashicorp/hcl never converts a map to an object when unifying, so a map keeps its keys even when they don't match the object's attributes (disputed)",
+      "rule": "hashicorp/hcl never converts a map to an object when unifying, so a map keeps its keys even when they don't match the object's attributes; it converts a map argument for an object parameter, but drops map keys that aren't attributes of the object type instead of failing (disputed)",
       "tests": [
         "native/types/unify-map-and-object-keeps-map",
-        "native/types/unify-map-and-object-with-other-keys-gives-map"
+        "native/types/unify-map-and-object-with-other-keys-gives-map",
+        "native/types/function-map-argument-converts-to-object",
+        "native/types/function-map-argument-with-extra-key-converts-to-object"
+      ]
+    },
+    {
+      "id": "types-map-to-object-missing-attribute",
+      "spec": "spec.md#collection-and-structural-type-conversions",
+      "rule": "A map without an element for one of an object type's attributes doesn't convert to that object type",
+      "tests": [
+        "native/types/function-map-argument-missing-attribute-is-error"
       ]
     },
     {
@@ -512,9 +583,10 @@
     {
       "id": "types-object-to-object-missing-attributes",
       "spec": "spec.md#collection-and-structural-type-conversions",
-      "rule": "hashicorp/hcl never converts an object to an object type with attributes it lacks, which the spec fills with null, because objects with different attribute names unify to a map (disputed)",
+      "rule": "hashicorp/hcl never converts an object to an object type with attributes it lacks, which the spec fills with null: objects with different attribute names unify to a map, and such an object argument for an object parameter is an error (disputed)",
       "tests": [
-        "native/types/unify-objects-with-different-attributes-gives-map"
+        "native/types/unify-objects-with-different-attributes-gives-map",
+        "native/types/function-object-parameter-missing-attribute-is-error"
       ]
     },
     {
@@ -546,7 +618,7 @@
     {
       "id": "types-unify-bool-and-number-fail",
       "spec": "spec.md#type-unification",
-      "rule": "Bool and number have no unification rule and fail to unify, also as collection element types",
+      "rule": "Bool and number fail to unify, also as collection element types, although both convert to string (disputed)",
       "tests": [
         "native/types/unify-bool-and-number-fails",
         "native/types/unify-lists-with-ununifiable-element-types-fails"

@@ -1,0 +1,43 @@
+{
+  "description": "An unknown argument gives an unknown of the type the function would return",
+  "spec": [
+    "spec.md#functions-and-function-calls",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "number"
+    }
+  },
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": "number"
+        }
+      ],
+      "result": {
+        "value": {
+          "string": "x"
+        }
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "string"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

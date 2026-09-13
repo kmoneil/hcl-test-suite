@@ -1,0 +1,47 @@
+{
+  "description": "An object argument for a map parameter is converted to a map, converting its attributes",
+  "spec": [
+    "spec.md#functions-and-function-calls",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec's function call rules make a call erroneous when an argument doesn't match its parameter's type specification, which only an identical type or the dynamic pseudo-type does, and don't mention converting arguments; only the general section on conversions says that automatic conversion is attempted when values don't match what an operation expects. hashicorp/hcl converts each argument to its parameter's type with go-cty's convert.Convert before checking it (FunctionCallExpr.Value in hclsyntax/expression.go), so the object becomes a map of strings and its number 1 the string \"1\".",
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": [
+            "map",
+            "string"
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "map": {
+                "b": {
+                  "string": "1"
+                }
+              },
+              "element_type": "string"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "description": "A map argument without an element for one of the parameter's object attributes is an error",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "variables": {
+    "m": {
+      "map": {
+        "b": {
+          "string": "x"
+        }
+      },
+      "element_type": "string"
+    }
+  },
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "name": "o",
+          "type": [
+            "object",
+            {
+              "b": "string",
+              "c": "string"
+            }
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "map has no element for required attribute \"c\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

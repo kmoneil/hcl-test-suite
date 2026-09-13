@@ -1,0 +1,44 @@
+{
+  "description": "An empty tuple for a list of the dynamic pseudo-type becomes an empty list of that type",
+  "spec": [
+    "spec.md#type-specifications",
+    "spec.md#functions-and-function-calls",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The dynamic pseudo-type is a placeholder for a type that isn't known yet, and in a type specification it stands for any type, so no value should have it as a list's element type. The spec's call rules also make an empty tuple, which doesn't match a list of the dynamic pseudo-type, an error. hashicorp/hcl converts arguments to their parameter's type with go-cty's convert.Convert (FunctionCallExpr.Value in hclsyntax/expression.go), which returns an empty list of the requested element type for an empty tuple (conversionTupleToList in cty/convert/conversion_collection.go).",
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": [
+            "list",
+            "dynamic"
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "list": [],
+              "element_type": "dynamic"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

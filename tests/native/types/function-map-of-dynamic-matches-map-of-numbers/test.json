@@ -1,0 +1,55 @@
+{
+  "description": "A map of numbers matches a parameter that is a map of the dynamic pseudo-type",
+  "spec": [
+    "spec.md#type-specifications",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "variables": {
+    "m": {
+      "map": {
+        "b": {
+          "number": "1"
+        }
+      },
+      "element_type": "number"
+    }
+  },
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": [
+            "map",
+            "dynamic"
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "map": {
+                "b": {
+                  "number": "1"
+                }
+              },
+              "element_type": "number"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

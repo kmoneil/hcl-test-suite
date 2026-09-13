@@ -1,0 +1,47 @@
+{
+  "description": "The null keyword for a list of the dynamic pseudo-type becomes a null of that type",
+  "spec": [
+    "spec.md#type-specifications",
+    "spec.md#functions-and-function-calls",
+    "spec.md#conversion-of-null-values"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The dynamic pseudo-type is a placeholder for a type that isn't known yet, and in a type specification it stands for any type, so no value should have it as a list's element type. The spec's call rules also make the null keyword, a null of the dynamic pseudo-type, which doesn't match a list of the dynamic pseudo-type, an error. hashicorp/hcl converts arguments to their parameter's type with go-cty's convert.Convert (FunctionCallExpr.Value in hclsyntax/expression.go), which converts a null to the specification as if it were a type (getConversion in cty/convert/conversion.go).",
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": [
+            "list",
+            "dynamic"
+          ],
+          "allow_null": true
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "null": [
+                "list",
+                "dynamic"
+              ]
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

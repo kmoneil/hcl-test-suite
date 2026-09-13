@@ -1,0 +1,30 @@
+{
+  "description": "Arguments in the wrong order fail the parameters' type checks",
+  "spec": [
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "name": "n",
+          "type": "number"
+        },
+        {
+          "name": "b",
+          "type": "bool"
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "Invalid value for \"n\" parameter",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

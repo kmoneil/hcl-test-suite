@@ -1,0 +1,25 @@
+{
+  "description": "Function names are case-sensitive, so F doesn't call a function named f",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "result": {
+        "value": {
+          "string": "x"
+        }
+      }
+    }
+  },
+  "reference_error": "There is no function named \"F\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

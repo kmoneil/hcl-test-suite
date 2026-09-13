@@ -1,0 +1,26 @@
+{
+  "description": "A string such as yes for a bool parameter is an error",
+  "spec": [
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "name": "b",
+          "type": "bool"
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "a bool is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "description": "An ellipsis inside a nested call expands that call's argument, not the outer call's",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "call",
+          "name": "f",
+          "expand_final": false,
+          "args": [
+            {
+              "kind": "call",
+              "name": "g",
+              "expand_final": true,
+              "args": [
+                {
+                  "kind": "variable",
+                  "name": "x"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

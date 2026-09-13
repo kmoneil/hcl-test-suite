@@ -1,0 +1,45 @@
+{
+  "description": "Expanding an unknown list gives the dynamic value even after too many other arguments",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "spec.md#functions-and-function-calls",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec doesn't say how an unknown value expands, but the function takes only one argument and the call passes at least two, so it is an error however many elements the list has. hashicorp/hcl returns the dynamic value for an expanded argument that is unknown or of the dynamic pseudo-type, before evaluating the other arguments or mapping them to parameters (FunctionCallExpr.Value in hclsyntax/expression.go).",
+  "variables": {
+    "u": {
+      "unknown": [
+        "list",
+        "string"
+      ]
+    }
+  },
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": "number"
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

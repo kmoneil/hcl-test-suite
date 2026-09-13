@@ -22,43 +22,32 @@ import hcltest  # noqa: E402  reuses the runner's test loading and normalization
 
 TESTS = ROOT / "tests"
 COVERAGE = ROOT / "coverage"
-KEY_ORDER = ["description", "spec", "op", "input", "features", "status", "notes", "variables", "reference_error", "expect"]
-FEATURES = {"unknown-values", "typed-values"}
+KEY_ORDER = ["description", "spec", "op", "input", "features", "status", "notes", "variables", "functions",
+             "reference_error", "expect"]
+FEATURES = {"unknown-values", "typed-values", "functions"}
 NAME = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 MAX_INPUT_BYTES = 2048
 MAX_DESCRIPTION = 100
 EM_DASH = "\u2014"
 
 
-def value_type(value):
-    """The type of a protocol value, in go-cty's JSON type notation."""
+def is_function_name(name):
+    """Whether a name is an identifier, or identifiers joined by :: for a namespaced function. Python's identifier
+    characters are XID_Start and XID_Continue, close to the ID_Start and ID_Continue that HCL uses."""
+    return all(part and part[0].isidentifier() and part.replace("-", "_").isidentifier() for part in name.split("::"))
+
+
+def needs_unknown_values(value):
+    """Whether a value contains an unknown value."""
     kind = next(k for k in value if k != "element_type")
     x = value[kind]
-    if kind in ("string", "number", "bool"):
-        return kind
-    if kind in ("null", "unknown"):
-        return x
-    if kind == "tuple":
-        return ["tuple", [value_type(item) for item in x]]
-    if kind == "object":
-        return ["object", {key: value_type(item) for key, item in x.items()}]
-    return [kind, value["element_type"]]
-
-
-def type_problems(value, path="value"):
-    """Lists places where a list, set or map holds elements of another type than it declares."""
-    problems = []
-    kind = next(k for k in value if k != "element_type")
-    items = value[kind]
+    if kind == "unknown":
+        return True
     if kind in ("tuple", "list", "set"):
-        items = dict(enumerate(items))
-    if kind in ("tuple", "list", "set", "object", "map"):
-        for key, item in items.items():
-            if kind in ("list", "set", "map") and value_type(item) != value.get("element_type"):
-                problems.append(f"{path}[{key!r}] has type {json.dumps(value_type(item))}, "
-                                f"but element_type is {json.dumps(value.get('element_type'))}")
-            problems.extend(type_problems(item, f"{path}[{key!r}]"))
-    return problems
+        return any(needs_unknown_values(item) for item in x)
+    if kind in ("object", "map"):
+        return any(needs_unknown_values(item) for item in x.values())
+    return False
 
 
 def needs_typed_values(value):
@@ -115,7 +104,8 @@ class Linter:
     def check_test(self, test_json, descriptions, inputs):
         where = test_json.parent.relative_to(TESTS).as_posix()
         try:
-            self.disputed[where] = json.loads(test_json.read_text(encoding="utf-8")).get("status") == "disputed"
+            meta = json.loads(test_json.read_text(encoding="utf-8"))
+            self.disputed[where] = isinstance(meta, dict) and meta.get("status") == "disputed"
         except (OSError, ValueError):
             pass
         if not self.in_scope(where):
@@ -176,33 +166,57 @@ class Linter:
             self.problem(where, "disputed tests must explain the dispute in notes")
         self.text_field(where, "notes", meta.get("notes"), required=False)
 
-        if "variables" in meta:
-            if test.op != "eval":
-                self.problem(where, "only eval tests can have variables")
-            elif not isinstance(meta["variables"], dict):
-                self.problem(where, '"variables" must be an object')
-            else:
-                for name, value in meta["variables"].items():
-                    try:
-                        hcltest.normalize_value(value)
-                    except hcltest.AdapterError as e:
-                        self.problem(where, f"variable {name!r}: {e}")
-                        continue
-                    for issue in type_problems(value, f"variable {name!r}"):
-                        self.problem(where, issue)
-                    if needs_typed_values(value) and "typed-values" not in meta.get("features", []):
-                        self.problem(where, f'variable {name!r} is a list, set, map, or typed null or unknown, so the '
-                                            'test needs "features": ["typed-values"]')
+        features = meta.get("features", [])
+        needs = {}  # features that the variables, functions and expected result call for, with the reason
+        # hcltest.Test has checked the format of variables and functions, and that their values could exist.
+        for name, value in test.context.get("variables", {}).items():
+            if needs_typed_values(value) and "typed-values" not in features:
+                self.problem(where, f'variable {name!r} is a list, set, map, or typed null or unknown, so the '
+                                    'test needs "features": ["typed-values"]')
+            if needs_unknown_values(value):
+                needs.setdefault("unknown-values", f"variable {name!r} is unknown or holds an unknown value")
+
+        if "functions" in test.context:
+            needs["functions"] = "the test declares functions"
+            for name, decl in test.context["functions"].items():
+                if not is_function_name(name):
+                    self.problem(where, f"function name {name!r} is not an identifier, or identifiers joined by ::")
+                params = decl.get("params", []) + ([decl["variadic_param"]] if "variadic_param" in decl else [])
+                for param in params:
+                    if "name" in param and ("::" in param["name"] or not is_function_name(param["name"])):
+                        self.problem(where, f"parameter name {param['name']!r} of function {name!r} is not an "
+                                            "identifier")
+                if any(isinstance(param["type"], list) for param in params):
+                    # Implementations without typed values have no collection or structural types to declare.
+                    needs.setdefault("typed-values", f"function {name!r} has a parameter of a collection or "
+                                                     "structural type")
+                result = decl["result"]
+                if isinstance(result, dict) and "value" in result:
+                    if needs_typed_values(result["value"]):
+                        needs.setdefault("typed-values", f"function {name!r} returns a list, set, map, or typed null "
+                                                         "or unknown")
+                    if needs_unknown_values(result["value"]):
+                        needs.setdefault("unknown-values", f"function {name!r} returns an unknown value")
+                if isinstance(result, dict) and "error" in result:
+                    self.text_field(where, f"function {name!r} error", result["error"])
 
         expect = meta["expect"]
         if test.op == "eval" and expect.get("valid"):
             values = list(body_values(expect.get("body", {})))
             for value in values:
-                for issue in type_problems(value, "expected value"):
-                    self.problem(where, issue)
-            if any(needs_typed_values(v) for v in values) and "typed-values" not in meta.get("features", []):
+                try:
+                    hcltest.check_value(value, "expected value")
+                except ValueError as e:
+                    self.problem(where, str(e))
+            if any(needs_typed_values(v) for v in values) and "typed-values" not in features:
                 self.problem(where, 'the expected result has a list, set, map, or typed null or unknown, so the test needs '
                                     '"features": ["typed-values"]')
+            if any(needs_unknown_values(v) for v in values):
+                needs.setdefault("unknown-values", "the expected result has an unknown value")
+        for feature in sorted(set(needs) - set(features)):
+            self.problem(where, f'{needs[feature]}, so the test needs "features": ["{feature}"]')
+        if "functions" in features and "functions" not in meta:
+            self.problem(where, 'lists the "functions" feature but declares no functions')
         unknown = set(expect) - {"valid", "body", "phase"}
         if unknown:
             self.problem(where, f"unknown fields in expect: {', '.join(sorted(unknown))}")
@@ -225,21 +239,21 @@ class Linter:
         data = test.input.read_bytes()
         if len(data) > MAX_INPUT_BYTES:
             self.problem(where, f"input is larger than {MAX_INPUT_BYTES} bytes; keep tests minimal")
-        key = (test.op, data, json.dumps(meta.get("variables"), sort_keys=True))
+        key = (test.op, data, json.dumps(test.context, sort_keys=True))
         if key in inputs:
-            self.problem(where, f"same op, input and variables as {inputs[key]}")
+            self.problem(where, f"same op, input, variables and functions as {inputs[key]}")
         inputs.setdefault(key, where)
         return where
 
     def register_only(self, test_json, where, descriptions, inputs):
         """Records an out-of-scope test so in-scope tests can be checked against it."""
         try:
-            meta = json.loads(test_json.read_text(encoding="utf-8"))
-            data = (test_json.parent / meta.get("input", "input.hcl")).read_bytes()
-        except (OSError, ValueError):
-            return where
-        descriptions.setdefault(meta.get("description"), where)
-        inputs.setdefault((meta.get("op"), data, json.dumps(meta.get("variables"), sort_keys=True)), where)
+            test = hcltest.Test(test_json)
+            data = test.input.read_bytes()
+        except (OSError, hcltest.TestError):
+            return where  # reported when the test is in scope
+        descriptions.setdefault(test.description, where)
+        inputs.setdefault((test.op, data, json.dumps(test.context, sort_keys=True)), where)
         return where
 
     def check_coverage(self, test_names):

@@ -1,0 +1,37 @@
+{
+  "description": "Null for a dynamic pseudo-type parameter that accepts null but not that type gives the dynamic value",
+  "spec": [
+    "spec.md#functions-and-function-calls",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+    "spec.md#null-values"
+  ],
+  "op": "eval",
+  "features": [
+    "unknown-values",
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The null keyword is a value of the dynamic pseudo-type, which this positional parameter doesn't accept, but the spec only states a consequence for the dynamic value, an unknown; the parameter accepts null, so the function should return a tuple holding null. The spec also guarantees that no expression is unknown unless a variable or function result is. go-cty tests the argument's type instead of whether it is unknown, so the null makes it return the dynamic value without calling the function (Function.returnTypeForValues in cty/function/function.go). For a parameter of any other type, hashicorp/hcl first converts the null keyword to a null of that type (FunctionCallExpr.Value in hclsyntax/expression.go), so this only happens for parameters of the dynamic pseudo-type.",
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": "dynamic",
+          "allow_null": true
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

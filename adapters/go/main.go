@@ -4,7 +4,7 @@
 //
 //	hcl-go-adapter capabilities
 //	hcl-go-adapter parse <file.hcl>
-//	hcl-go-adapter eval <file.hcl> [<variables.json>]
+//	hcl-go-adapter eval <file.hcl> [<context.json>]
 //
 // The output formats are described in docs/protocol.md.
 package main
@@ -16,8 +16,10 @@ import (
 	"fmt"
 	"math/big"
 	"os"
+	"reflect"
 	"runtime/debug"
 	"sort"
+	"strings"
 
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
@@ -31,7 +33,7 @@ type object = map[string]any
 const usage = `usage:
   hcl-go-adapter capabilities
   hcl-go-adapter parse <file.hcl>
-  hcl-go-adapter eval <file.hcl> [<variables.json>]`
+  hcl-go-adapter eval <file.hcl> [<context.json>]`
 
 // unsupported is panicked when the input contains something the protocol has
 // no representation for yet. run recovers it and reports an adapter error.
@@ -87,7 +89,7 @@ func capabilities() object {
 		"implementation": "hashicorp/hcl",
 		"version":        version,
 		"operations":     []string{"parse", "eval"},
-		"features":       []string{"typed-values", "unknown-values"},
+		"features":       []string{"typed-values", "unknown-values", "functions"},
 	}
 }
 
@@ -104,14 +106,14 @@ func parse(path string) (any, error) {
 	return object{"valid": true, "body": c.body(file.Body.(*hclsyntax.Body))}, nil
 }
 
-func eval(path, varsPath string) (any, error) {
+func eval(path, contextPath string) (any, error) {
 	src, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
-	vars := map[string]cty.Value{}
-	if varsPath != "" {
-		if vars, err = readVariables(varsPath); err != nil {
+	ctx := &hcl.EvalContext{Variables: map[string]cty.Value{}, Functions: map[string]function.Function{}}
+	if contextPath != "" {
+		if err := readContext(contextPath, ctx); err != nil {
 			return nil, err
 		}
 	}
@@ -119,7 +121,6 @@ func eval(path, varsPath string) (any, error) {
 	if diags.HasErrors() {
 		return invalid("parse", diags), nil
 	}
-	ctx := &hcl.EvalContext{Variables: vars, Functions: map[string]function.Function{}}
 	body, diags := evalBody(file.Body.(*hclsyntax.Body), ctx)
 	if diags.HasErrors() {
 		return invalid("eval", diags), nil
@@ -443,89 +444,261 @@ func typeJSON(ty cty.Type) json.RawMessage {
 	return raw
 }
 
-func readVariables(path string) (map[string]cty.Value, error) {
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return nil, err
-	}
-	var raw map[string]json.RawMessage
-	if err := json.Unmarshal(data, &raw); err != nil {
-		return nil, fmt.Errorf("%s: %w", path, err)
-	}
-	vars := make(map[string]cty.Value, len(raw))
-	for name, r := range raw {
-		if vars[name], err = decodeValue(r); err != nil {
-			return nil, fmt.Errorf("%s: variable %q: %w", path, name, err)
-		}
-	}
-	return vars, nil
+// The context file given to eval. Its declarations are decoded one level at a
+// time with unmarshalObject, and its values with decodeValue, so that every
+// level is checked strictly.
+type evalContext struct {
+	Variables map[string]json.RawMessage `json:"variables"`
+	Functions map[string]json.RawMessage `json:"functions"`
 }
 
+type functionDecl struct {
+	Params        []json.RawMessage `json:"params"`
+	VariadicParam json.RawMessage   `json:"variadic_param"`
+	Result        json.RawMessage   `json:"result"`
+}
+
+type paramDecl struct {
+	Name             string          `json:"name"`
+	Type             json.RawMessage `json:"type"`
+	AllowNull        bool            `json:"allow_null"`
+	AllowUnknown     bool            `json:"allow_unknown"`
+	AllowDynamicType bool            `json:"allow_dynamic_type"`
+}
+
+type fixedResult struct {
+	Value json.RawMessage `json:"value"`
+	Error *string         `json:"error"`
+}
+
+// unmarshalObject decodes a JSON object into the struct v points to. Unlike
+// json.Unmarshal alone, it rejects null, fields the struct doesn't have, fields
+// set to null, and field names that differ from the struct's only in case.
+func unmarshalObject(data []byte, v any) error {
+	var fields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &fields); err != nil {
+		return err
+	}
+	if fields == nil {
+		return errors.New("expected an object, not null")
+	}
+	known := map[string]bool{}
+	t := reflect.TypeOf(v).Elem()
+	for i := 0; i < t.NumField(); i++ {
+		name, _, _ := strings.Cut(t.Field(i).Tag.Get("json"), ",")
+		known[name] = true
+	}
+	for name, raw := range fields {
+		switch {
+		case !known[name]:
+			return fmt.Errorf("unknown field %q", name)
+		case string(raw) == "null":
+			return fmt.Errorf("field %q is null", name)
+		}
+	}
+	return json.Unmarshal(data, v)
+}
+
+func readContext(path string, ctx *hcl.EvalContext) error {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return err
+	}
+	var decl evalContext
+	if err := unmarshalObject(data, &decl); err != nil {
+		return fmt.Errorf("%s: %w", path, err)
+	}
+	for name, raw := range decl.Variables {
+		if ctx.Variables[name], err = decodeValue(raw); err != nil {
+			return fmt.Errorf("%s: variable %q: %w", path, name, err)
+		}
+	}
+	for name, raw := range decl.Functions {
+		if ctx.Functions[name], err = newFunction(raw); err != nil {
+			return fmt.Errorf("%s: function %q: %w", path, name, err)
+		}
+	}
+	return nil
+}
+
+// newFunction builds a go-cty function from a declaration. Its Type and Impl
+// only describe the result: hashicorp/hcl checks the number of arguments and
+// converts them to the parameter types, and go-cty's Function.Call handles
+// null, unknown and dynamic arguments before calling Impl.
+func newFunction(data json.RawMessage) (function.Function, error) {
+	var decl functionDecl
+	if err := unmarshalObject(data, &decl); err != nil {
+		return function.Function{}, err
+	}
+	spec := &function.Spec{Params: []function.Parameter{}}
+	for i, raw := range decl.Params {
+		param, err := newParameter(raw, fmt.Sprintf("param%d", i))
+		if err != nil {
+			return function.Function{}, fmt.Errorf("parameter %d: %w", i, err)
+		}
+		spec.Params = append(spec.Params, param)
+	}
+	if decl.VariadicParam != nil {
+		param, err := newParameter(decl.VariadicParam, "variadic")
+		if err != nil {
+			return function.Function{}, fmt.Errorf("variadic parameter: %w", err)
+		}
+		spec.VarParam = &param
+	}
+
+	var fixed fixedResult
+	switch {
+	case string(decl.Result) == `"arguments"`:
+		// The result is a tuple of the arguments the function receives, so its
+		// type is the tuple of their types.
+		spec.Type = func(args []cty.Value) (cty.Type, error) {
+			types := make([]cty.Type, len(args))
+			for i, arg := range args {
+				types[i] = arg.Type()
+			}
+			return cty.Tuple(types), nil
+		}
+		spec.Impl = func(args []cty.Value, _ cty.Type) (cty.Value, error) {
+			return cty.TupleVal(args), nil
+		}
+	case decl.Result == nil:
+		return function.Function{}, errors.New(`missing "result"`)
+	case unmarshalObject(decl.Result, &fixed) != nil:
+		return function.Function{}, fmt.Errorf("invalid result %s", decl.Result)
+	case fixed.Value != nil && fixed.Error == nil:
+		v, err := decodeValue(fixed.Value)
+		if err != nil {
+			return function.Function{}, fmt.Errorf("result value: %w", err)
+		}
+		spec.Type = function.StaticReturnType(v.Type())
+		spec.Impl = func([]cty.Value, cty.Type) (cty.Value, error) {
+			return v, nil
+		}
+	case fixed.Error != nil && fixed.Value == nil:
+		message := *fixed.Error
+		spec.Type = function.StaticReturnType(cty.DynamicPseudoType)
+		spec.Impl = func([]cty.Value, cty.Type) (cty.Value, error) {
+			return cty.NilVal, errors.New(message)
+		}
+	default:
+		return function.Function{}, errors.New(`result needs exactly one of "value" and "error"`)
+	}
+	return function.New(spec), nil
+}
+
+func newParameter(data json.RawMessage, defaultName string) (function.Parameter, error) {
+	var decl paramDecl
+	if err := unmarshalObject(data, &decl); err != nil {
+		return function.Parameter{}, err
+	}
+	if decl.Type == nil {
+		return function.Parameter{}, errors.New(`missing "type"`)
+	}
+	ty, err := ctyjson.UnmarshalType(decl.Type)
+	if err != nil {
+		return function.Parameter{}, fmt.Errorf("type: %w", err)
+	}
+	name := decl.Name
+	if name == "" {
+		name = defaultName
+	}
+	return function.Parameter{
+		Name:             name,
+		Type:             ty,
+		AllowNull:        decl.AllowNull,
+		AllowUnknown:     decl.AllowUnknown,
+		AllowDynamicType: decl.AllowDynamicType,
+	}, nil
+}
+
+// valueKinds are the keys that name the kind of a value in the protocol.
+var valueKinds = map[string]bool{
+	"string": true, "number": true, "bool": true, "null": true, "unknown": true,
+	"tuple": true, "object": true, "list": true, "set": true, "map": true,
+}
+
+// decodeValue decodes a value in the protocol's encoding: an object with one key
+// naming the kind of value, and an element_type for lists, sets and maps.
 func decodeValue(data json.RawMessage) (cty.Value, error) {
 	var node map[string]json.RawMessage
 	if err := json.Unmarshal(data, &node); err != nil {
 		return cty.NilVal, err
 	}
-	for kind, raw := range node {
-		switch kind {
-		case "string":
-			var s string
-			err := json.Unmarshal(raw, &s)
-			return cty.StringVal(s), err
-		case "number":
-			var s string
-			if err := json.Unmarshal(raw, &s); err != nil {
-				return cty.NilVal, err
+	var kind string
+	for key := range node {
+		if key != "element_type" {
+			if !valueKinds[key] || kind != "" {
+				return cty.NilVal, fmt.Errorf("not a value: %s", data)
 			}
-			switch s {
-			case "Infinity":
-				return cty.PositiveInfinity, nil
-			case "-Infinity":
-				return cty.NegativeInfinity, nil
-			}
-			return cty.ParseNumberVal(s)
-		case "bool":
-			var b bool
-			err := json.Unmarshal(raw, &b)
-			return cty.BoolVal(b), err
-		case "null", "unknown":
-			ty, err := ctyjson.UnmarshalType(raw)
-			if err != nil {
-				return cty.NilVal, err
-			}
-			if kind == "null" {
-				return cty.NullVal(ty), nil
-			}
-			return cty.UnknownVal(ty), nil
-		case "tuple", "list", "set":
-			var items []json.RawMessage
-			if err := json.Unmarshal(raw, &items); err != nil {
-				return cty.NilVal, err
-			}
-			elems := make([]cty.Value, len(items))
-			for i, item := range items {
-				var err error
-				if elems[i], err = decodeValue(item); err != nil {
-					return cty.NilVal, err
-				}
-			}
-			return sequence(kind, node["element_type"], elems)
-		case "object", "map":
-			var items map[string]json.RawMessage
-			if err := json.Unmarshal(raw, &items); err != nil {
-				return cty.NilVal, err
-			}
-			attrs := make(map[string]cty.Value, len(items))
-			for key, item := range items {
-				var err error
-				if attrs[key], err = decodeValue(item); err != nil {
-					return cty.NilVal, err
-				}
-			}
-			return mapping(kind, node["element_type"], attrs)
+			kind = key
 		}
 	}
-	return cty.NilVal, fmt.Errorf("not a value: %s", data)
+	raw := node[kind]
+	_, hasElementType := node["element_type"]
+	switch {
+	case kind == "" || string(raw) == "null":
+		return cty.NilVal, fmt.Errorf("not a value: %s", data)
+	case hasElementType != (kind == "list" || kind == "set" || kind == "map"):
+		return cty.NilVal, fmt.Errorf("lists, sets and maps need an element_type, and other values have none: %s", data)
+	}
+	switch kind {
+	case "string":
+		var s string
+		err := json.Unmarshal(raw, &s)
+		return cty.StringVal(s), err
+	case "number":
+		var s string
+		if err := json.Unmarshal(raw, &s); err != nil {
+			return cty.NilVal, err
+		}
+		switch s {
+		case "Infinity":
+			return cty.PositiveInfinity, nil
+		case "-Infinity":
+			return cty.NegativeInfinity, nil
+		}
+		return cty.ParseNumberVal(s)
+	case "bool":
+		var b bool
+		err := json.Unmarshal(raw, &b)
+		return cty.BoolVal(b), err
+	case "null", "unknown":
+		ty, err := ctyjson.UnmarshalType(raw)
+		if err != nil {
+			return cty.NilVal, err
+		}
+		if kind == "null" {
+			return cty.NullVal(ty), nil
+		}
+		return cty.UnknownVal(ty), nil
+	case "tuple", "list", "set":
+		var items []json.RawMessage
+		if err := json.Unmarshal(raw, &items); err != nil {
+			return cty.NilVal, err
+		}
+		elems := make([]cty.Value, len(items))
+		for i, item := range items {
+			var err error
+			if elems[i], err = decodeValue(item); err != nil {
+				return cty.NilVal, err
+			}
+		}
+		return sequence(kind, node["element_type"], elems)
+	case "object", "map":
+		var items map[string]json.RawMessage
+		if err := json.Unmarshal(raw, &items); err != nil {
+			return cty.NilVal, err
+		}
+		attrs := make(map[string]cty.Value, len(items))
+		for key, item := range items {
+			var err error
+			if attrs[key], err = decodeValue(item); err != nil {
+				return cty.NilVal, err
+			}
+		}
+		return mapping(kind, node["element_type"], attrs)
+	}
+	panic("unreachable: every value kind is handled")
 }
 
 func sequence(kind string, rawType json.RawMessage, elems []cty.Value) (v cty.Value, err error) {

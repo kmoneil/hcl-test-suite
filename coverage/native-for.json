@@ -516,11 +516,12 @@
     {
       "id": "for-condition-checked-before-iteration",
       "spec": "hclsyntax/spec.md#for-expressions",
-      "rule": "The if condition is also checked once before iterating, with unknown key and value, so a condition that is null, can't be a bool or fails to evaluate is an error even for an empty collection (disputed)",
+      "rule": "The if condition is also checked once before iterating, with unknown key and value, so a condition that is null, can't be a bool or fails to evaluate is an error even for an empty collection, including a call to a failing function whose parameter accepts both unknowns and the dynamic pseudo-type (disputed)",
       "tests": [
         "native/for/condition-error-reported-for-empty-collection",
         "native/for/condition-null-reported-for-empty-collection",
-        "native/for/condition-number-reported-for-empty-collection"
+        "native/for/condition-number-reported-for-empty-collection",
+        "native/for/condition-call-accepting-unknowns-runs-for-empty-collection"
       ]
     },
     {

@@ -1,0 +1,38 @@
+{
+  "description": "A number argument for a string parameter is converted to a string",
+  "spec": [
+    "spec.md#functions-and-function-calls",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec's function call rules make a call erroneous when an argument doesn't match its parameter's type specification, which only an identical type or the dynamic pseudo-type does, and don't mention converting arguments; only the general section on conversions says that automatic conversion is attempted when values don't match what an operation expects. hashicorp/hcl converts each argument to its parameter's type with go-cty's convert.Convert before checking it (FunctionCallExpr.Value in hclsyntax/expression.go), so the number 1.5 becomes the string \"1.5\".",
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": "string"
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "1.5"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

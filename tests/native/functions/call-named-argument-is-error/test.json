@@ -1,0 +1,11 @@
+{
+  "description": "Function arguments are expressions, so name = value is not an argument",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "parse",
+  "reference_error": "Missing argument separator",
+  "expect": {
+    "valid": false
+  }
+}

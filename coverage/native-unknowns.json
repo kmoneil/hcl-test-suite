@@ -89,7 +89,8 @@
         "native/unknowns/for-unknown-number-condition-fails",
         "native/unknowns/for-object-unknown-number-condition-per-element-fails",
         "native/unknowns/object-unknown-tuple-key-fails",
-        "native/unknowns/compound-expression-with-unknowns-gives-typed-unknown"
+        "native/unknowns/compound-expression-with-unknowns-gives-typed-unknown",
+        "native/unknowns/function-unknown-argument-type-mismatch-is-error"
       ]
     },
     {
@@ -102,6 +103,14 @@
         "native/unknowns/conditional-unselected-dynamic-result",
         "native/unknowns/template-if-unselected-unknown-part",
         "native/collections/object-key-parenthesized-variable-value"
+      ]
+    },
+    {
+      "id": "unknowns-function-returns-unknown",
+      "spec": "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+      "rule": "A function can return an unknown value, which makes the call unknown although no variable is unknown",
+      "tests": [
+        "native/unknowns/function-returning-unknown-gives-unknown"
       ]
     },
     {
@@ -126,14 +135,100 @@
     {
       "id": "unknowns-function-unknown-argument",
       "spec": "spec.md#functions-and-function-calls",
-      "rule": "An unknown argument for a parameter that doesn't accept unknowns makes the call's result an unknown of the result type",
-      "untested": "Needs test functions: the adapter's function table is empty, so every call fails as a call to an unknown function"
+      "rule": "An unknown argument for a parameter that doesn't accept unknowns makes the call's result an unknown of the function's result type for the arguments' types, without running the function; this includes variadic arguments and expanded elements",
+      "tests": [
+        "native/unknowns/function-unknown-argument-failing-function-not-called",
+        "native/unknowns/function-unknown-argument-gives-unknown-result",
+        "native/unknowns/function-unknown-argument-result-has-result-type",
+        "native/unknowns/function-unknown-expanded-element-gives-unknown-result",
+        "native/unknowns/function-unknown-result-type-follows-argument-types",
+        "native/unknowns/function-unknown-variadic-argument-gives-unknown-result"
+      ]
+    },
+    {
+      "id": "unknowns-function-unknown-argument-hides-no-errors",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "An unknown argument or the dynamic value doesn't hide other errors in the call: a wrong number of arguments, another argument of the wrong type, or an error in another argument's expression",
+      "tests": [
+        "native/unknowns/function-dynamic-argument-does-not-hide-invalid-argument",
+        "native/unknowns/function-unknown-argument-does-not-hide-error-in-other-argument",
+        "native/unknowns/function-unknown-argument-does-not-hide-invalid-argument",
+        "native/unknowns/function-unknown-argument-wrong-count-is-error"
+      ]
+    },
+    {
+      "id": "unknowns-function-unknown-argument-accepted",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "An unknown argument for a positional or variadic parameter that accepts unknowns is passed to the function, and an argument that only holds an unknown is a known argument",
+      "tests": [
+        "native/unknowns/function-argument-holding-unknown-is-known",
+        "native/unknowns/function-unknown-argument-passed-when-accepted",
+        "native/unknowns/function-unknown-variadic-argument-passed-when-accepted"
+      ]
     },
     {
       "id": "unknowns-function-dynamic-argument",
       "spec": "spec.md#functions-and-function-calls",
-      "rule": "The dynamic value as an argument for a parameter that doesn't accept the dynamic pseudo-type makes the call's result type the dynamic pseudo-type",
-      "untested": "Needs test functions: the adapter's function table is empty, so every call fails as a call to an unknown function"
+      "rule": "The dynamic value as an argument for a parameter of the dynamic pseudo-type that accepts neither that type nor unknowns makes the call's result type the dynamic pseudo-type, so the result is the dynamic value whatever the function's result type, also for a variadic parameter",
+      "tests": [
+        "native/unknowns/function-dynamic-argument-forces-dynamic-result-type",
+        "native/unknowns/function-dynamic-variadic-argument-gives-dynamic-value"
+      ]
+    },
+    {
+      "id": "unknowns-function-dynamic-argument-accepted",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "For a parameter of the dynamic pseudo-type that accepts that type, the dynamic value gives an unknown of the function's result type, or is passed to the function if the parameter also accepts unknowns",
+      "tests": [
+        "native/unknowns/function-dynamic-argument-accepted-keeps-result-type",
+        "native/unknowns/function-dynamic-argument-passed-when-accepted",
+        "native/unknowns/function-dynamic-variadic-argument-accepted-keeps-result-type"
+      ]
+    },
+    {
+      "id": "unknowns-function-dynamic-argument-accepting-unknowns",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "The dynamic value for a parameter of the dynamic pseudo-type that accepts unknowns but not that type gives the dynamic value without running the function (disputed)",
+      "tests": [
+        "native/unknowns/function-dynamic-argument-accepting-only-unknowns"
+      ]
+    },
+    {
+      "id": "unknowns-function-argument-conversion",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "Unknown arguments are converted to their parameter's type before the checks, so an unknown string for a number parameter and the dynamic value for a string parameter give an unknown of the function's result type (disputed)",
+      "tests": [
+        "native/unknowns/function-dynamic-argument-for-string-parameter",
+        "native/unknowns/function-unknown-argument-converts-to-parameter-type"
+      ]
+    },
+    {
+      "id": "unknowns-function-dynamic-argument-hides-null",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "The dynamic value for a parameter of the dynamic pseudo-type that doesn't accept that type gives the dynamic value without checking the arguments after it, so a later null argument isn't an error (disputed)",
+      "tests": [
+        "native/unknowns/function-dynamic-argument-hides-later-null-argument"
+      ]
+    },
+    {
+      "id": "unknowns-function-null-keyword-dynamic-parameter",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "The null keyword for a parameter of the dynamic pseudo-type that accepts null but not the dynamic pseudo-type gives the dynamic value, although nothing in the call is unknown, for a positional or variadic parameter (disputed)",
+      "tests": [
+        "native/unknowns/function-null-keyword-without-dynamic-flag",
+        "native/unknowns/function-null-keyword-without-dynamic-flag-variadic"
+      ]
+    },
+    {
+      "id": "unknowns-function-expand-unknown",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "Expanding an unknown tuple or list, or the dynamic value, gives the dynamic value without evaluating the other arguments or mapping and counting them (disputed)",
+      "tests": [
+        "native/unknowns/function-expand-dynamic-value",
+        "native/unknowns/function-expand-unknown-hides-argument-errors",
+        "native/unknowns/function-expand-unknown-list-with-too-many-arguments",
+        "native/unknowns/function-expand-unknown-tuple"
+      ]
     },
     {
       "id": "unknowns-conversion-from-dynamic",
@@ -153,7 +248,9 @@
       "id": "unknowns-conversion-to-dynamic",
       "spec": "spec.md#conversion-to-and-from-the-dynamic-pseudo-type",
       "rule": "Converting any value to the dynamic pseudo-type returns the value unchanged",
-      "untested": "hashicorp/hcl does convert to the dynamic pseudo-type, for example the object element of true ? [{a = 1}] : [d], but a conversion that returns its input unchanged gives the same result as the spec's conversion to the object type would, so the protocol can't tell them apart"
+      "tests": [
+        "native/types/function-dynamic-parameter-accepts-any-type"
+      ]
     },
     {
       "id": "unknowns-arithmetic-unknown-operand",

@@ -1,0 +1,33 @@
+{
+  "description": "A condition calling a function that accepts the dynamic value fails even for an empty collection",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "unknown-values",
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec says the condition filters the elements of the collection, so with an empty collection f is never called and the result is an empty tuple. hashicorp/hcl first evaluates the condition with the value variable set to the dynamic value (ForExpr.Value in hclsyntax/expression.go); because the parameter accepts unknowns and the dynamic pseudo-type, go-cty calls the function with that value, and its error is reported. Without either flag the call gives an unknown result instead, and the result is an empty tuple. The test needs unknown values, because an implementation without them ignores both flags.",
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": "dynamic",
+          "allow_unknown": true,
+          "allow_dynamic_type": true
+        }
+      ],
+      "result": {
+        "error": "boom"
+      }
+    }
+  },
+  "reference_error": "Call to function \"f\" failed: boom",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

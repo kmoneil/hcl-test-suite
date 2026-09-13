@@ -1,0 +1,43 @@
+{
+  "description": "The grouping ellipsis of a for expression argument doesn't expand the argument",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "call",
+          "name": "f",
+          "expand_final": false,
+          "args": [
+            {
+              "kind": "for",
+              "result": "object",
+              "key_var": "k",
+              "value_var": "v",
+              "collection": {
+                "kind": "variable",
+                "name": "xs"
+              },
+              "key": {
+                "kind": "variable",
+                "name": "k"
+              },
+              "value": {
+                "kind": "variable",
+                "name": "v"
+              },
+              "condition": null,
+              "grouping": true
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

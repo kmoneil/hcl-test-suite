@@ -1,0 +1,34 @@
+{
+  "description": "A tuple argument with fewer elements than the parameter's tuple type is an error",
+  "spec": [
+    "spec.md#type-specifications",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "name": "t",
+          "type": [
+            "tuple",
+            [
+              "string",
+              "string"
+            ]
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "tuple required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

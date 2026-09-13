@@ -1,0 +1,50 @@
+{
+  "description": "A tuple argument for a list of the dynamic pseudo-type becomes a list of its unified element type",
+  "spec": [
+    "spec.md#functions-and-function-calls",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec's function call rules make a call erroneous when an argument doesn't match its parameter's type specification, which only an identical type or the dynamic pseudo-type does, and don't mention converting arguments; only the general section on conversions says that automatic conversion is attempted when values don't match what an operation expects. hashicorp/hcl converts each argument to its parameter's type with go-cty's convert.Convert before checking it (FunctionCallExpr.Value in hclsyntax/expression.go), so the tuple becomes a list, and because the list's element type is the dynamic pseudo-type, go-cty unifies the element types string and number to string (conversionTupleToList in cty/convert/conversion_collection.go).",
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": [
+            "list",
+            "dynamic"
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "list": [
+                {
+                  "string": "x"
+                },
+                {
+                  "string": "1"
+                }
+              ],
+              "element_type": "string"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

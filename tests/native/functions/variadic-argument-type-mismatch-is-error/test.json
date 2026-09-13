@@ -1,0 +1,24 @@
+{
+  "description": "Every argument collected by a variadic parameter must match its type",
+  "spec": [
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "variadic_param": {
+        "name": "n",
+        "type": "number"
+      },
+      "result": "arguments"
+    }
+  },
+  "reference_error": "Invalid value for \"n\" parameter: number required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

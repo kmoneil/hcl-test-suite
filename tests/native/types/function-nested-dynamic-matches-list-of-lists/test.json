@@ -1,0 +1,74 @@
+{
+  "description": "A list of lists of strings matches a list of lists of the dynamic pseudo-type",
+  "spec": [
+    "spec.md#type-specifications",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "list": [
+            {
+              "string": "x"
+            }
+          ],
+          "element_type": "string"
+        }
+      ],
+      "element_type": [
+        "list",
+        "string"
+      ]
+    }
+  },
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": [
+            "list",
+            [
+              "list",
+              "dynamic"
+            ]
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "list": [
+                {
+                  "list": [
+                    {
+                      "string": "x"
+                    }
+                  ],
+                  "element_type": "string"
+                }
+              ],
+              "element_type": [
+                "list",
+                "string"
+              ]
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

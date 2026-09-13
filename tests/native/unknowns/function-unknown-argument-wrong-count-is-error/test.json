@@ -1,0 +1,28 @@
+{
+  "description": "An unknown argument doesn't hide a wrong number of arguments",
+  "spec": [
+    "spec.md#functions-and-function-calls",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "string"
+    }
+  },
+  "functions": {
+    "f": {
+      "result": "arguments"
+    }
+  },
+  "reference_error": "Too many function arguments",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

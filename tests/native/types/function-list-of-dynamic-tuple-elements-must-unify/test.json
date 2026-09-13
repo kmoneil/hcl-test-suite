@@ -1,0 +1,32 @@
+{
+  "description": "A tuple whose elements have no common type is an error for a list of the dynamic pseudo-type",
+  "spec": [
+    "spec.md#type-specifications",
+    "spec.md#functions-and-function-calls",
+    "spec.md#type-unification"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "name": "l",
+          "type": [
+            "list",
+            "dynamic"
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "all list elements must have the same type",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

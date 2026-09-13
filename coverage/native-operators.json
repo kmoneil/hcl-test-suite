@@ -1052,6 +1052,14 @@
       "tests": [
         "native/operators/conditional-unselected-error-still-unified"
       ]
+    },
+    {
+      "id": "operators-conditional-unselected-failed-call",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "A failed function call in the result that isn't selected gives the dynamic value, so it unifies with the other result and causes no error (disputed)",
+      "tests": [
+        "native/operators/conditional-unselected-failed-call-not-unified"
+      ]
     }
   ]
 }

@@ -1,0 +1,27 @@
+{
+  "description": "Calling a name that a namespace with other functions lacks is an error",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec has no namespaced function names, so ns::g() would be a syntax error. hashicorp/hcl parses the call (finishParsingFunctionCall in hclsyntax/parser.go), and because the function table has another function in the namespace ns, it reports that ns has no function g (FunctionCallExpr.Value in hclsyntax/expression.go).",
+  "functions": {
+    "ns::f": {
+      "result": {
+        "value": {
+          "string": "x"
+        }
+      }
+    }
+  },
+  "reference_error": "There is no function named \"g\" in namespace ns::",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

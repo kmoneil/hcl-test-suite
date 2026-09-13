@@ -13,6 +13,7 @@ import argparse
 import decimal
 import difflib
 import json
+import re
 import shlex
 import subprocess
 import sys
@@ -25,7 +26,9 @@ ROOT = Path(__file__).resolve().parent.parent
 TESTS_DIR = ROOT / "tests"
 SPEC_URL = "https://github.com/hashicorp/hcl/blob/v2.24.0/"
 OPERATIONS = ("parse", "eval")
-TEST_FIELDS = {"description", "spec", "op", "input", "features", "status", "notes", "variables", "reference_error", "expect"}
+TEST_FIELDS = {"description", "spec", "op", "input", "features", "status", "notes", "variables", "functions",
+               "reference_error", "expect"}
+CONTEXT_FIELDS = ("variables", "functions")  # the test fields passed to eval in its context file
 
 # Enough precision that normalizing a number never rounds it.
 decimal.getcontext().prec = 10_000
@@ -55,12 +58,26 @@ class Test:
             meta = json.loads(path.read_text(encoding="utf-8"))
         except ValueError as e:
             raise TestError(f"{path}: invalid JSON: {e}")
+        if not isinstance(meta, dict):
+            raise TestError(f"{path}: must be a JSON object")
+        try:
+            json.dumps(meta, ensure_ascii=False).encode("utf-8")
+        except UnicodeEncodeError:
+            raise TestError(f"{path}: contains an escaped lone surrogate, which isn't Unicode text")
         unknown = set(meta) - TEST_FIELDS
         if unknown:
             raise TestError(f"{path}: unknown fields: {', '.join(sorted(unknown))}")
         for field in ("description", "op", "expect"):
             if field not in meta:
                 raise TestError(f'{path}: missing "{field}"')
+        for field in ("description", "op", "input", "status", "notes", "reference_error"):
+            if field in meta and not isinstance(meta[field], str):
+                raise TestError(f'{path}: "{field}" must be a string')
+        for field in ("spec", "features"):
+            if field in meta and not (isinstance(meta[field], list) and all(isinstance(x, str) for x in meta[field])):
+                raise TestError(f'{path}: "{field}" must be a list of strings')
+        if not isinstance(meta["expect"], dict):
+            raise TestError(f'{path}: "expect" must be an object')
         if meta["op"] not in OPERATIONS:
             raise TestError(f'{path}: "op" must be one of {", ".join(OPERATIONS)}')
         if meta.get("status", "normal") not in ("normal", "disputed"):
@@ -72,7 +89,17 @@ class Test:
         self.features = meta.get("features", [])
         self.disputed = meta.get("status") == "disputed"
         self.notes = meta.get("notes")
-        self.variables = meta.get("variables")
+        self.context = {}  # the evaluation context (docs/protocol.md#eval)
+        for field, check in zip(CONTEXT_FIELDS, (check_variables, check_functions)):
+            if field not in meta:
+                continue
+            if self.op != "eval":
+                raise TestError(f'{path}: only eval tests can have "{field}"')
+            try:
+                check(meta[field])
+            except ValueError as e:
+                raise TestError(f'{path}: malformed "{field}": {e}')
+            self.context[field] = meta[field]
         self.reference_error = meta.get("reference_error")
         self.input = self.dir / meta.get("input", "input.hcl")
         if not self.input.is_file():
@@ -161,9 +188,14 @@ def call_adapter(adapter, args, timeout):
     if proc.returncode != 0:
         raise AdapterError(f"adapter exited with status {proc.returncode}" + (f":\n{stderr}" if stderr else ""))
     try:
-        return json.loads(proc.stdout, object_pairs_hook=unique_keys)
+        output = json.loads(proc.stdout, object_pairs_hook=unique_keys)
     except ValueError as e:
         raise AdapterError(f"adapter printed invalid JSON ({e})")
+    try:
+        json.dumps(output, ensure_ascii=False).encode("utf-8")
+    except UnicodeEncodeError:
+        raise AdapterError("adapter printed an escaped lone surrogate, which isn't Unicode text")
+    return output
 
 
 def unique_keys(pairs):
@@ -181,10 +213,10 @@ def run_test(test, adapter, caps, args, tmp):
         return Result(test, "skip", f"adapter does not support {', '.join(missing)}")
 
     command = [test.op, str(test.input)]
-    if test.variables is not None:
-        variables = tmp / (test.name.replace("/", "__") + ".json")
-        variables.write_text(json.dumps(test.variables, ensure_ascii=False), encoding="utf-8")
-        command.append(str(variables))
+    if test.context:
+        context_file = tmp / (test.name.replace("/", "__") + ".json")
+        context_file.write_text(json.dumps(test.context, ensure_ascii=False), encoding="utf-8")
+        command.append(str(context_file))
     try:
         actual = call_adapter(adapter, command, args.timeout)
         failure = compare(test, actual, args.reference_errors)
@@ -238,6 +270,168 @@ def json_diff(expected, actual):
         return json.dumps(x, indent=2, sort_keys=True, ensure_ascii=False).splitlines()
 
     return "\n".join(difflib.unified_diff(dump(expected), dump(actual), "expected", "actual", lineterm=""))
+
+
+# Checks of the values and function declarations that tests pass to adapters, so
+# that a mistake in a test is reported as one instead of as an adapter error.
+
+PRIMITIVE_TYPES = ("string", "number", "bool", "dynamic")
+# Numbers in tests are plain decimals, so that adapters don't need to parse other forms.
+PLAIN_NUMBER = re.compile(r"-?(0|[1-9][0-9]*)(\.[0-9]+)?")
+FUNCTION_FIELDS = {"params", "variadic_param", "result"}
+PARAM_FIELDS = {"name", "type", "allow_null", "allow_unknown", "allow_dynamic_type"}
+
+
+def check_variables(variables):
+    """Raises ValueError if a "variables" object doesn't map names to values."""
+    if not isinstance(variables, dict):
+        raise ValueError("must be an object mapping variable names to values")
+    for name, value in variables.items():
+        check_value(value, f"variable {name!r}")
+
+
+def check_value(value, where="value"):
+    """Raises ValueError if a value in a test doesn't follow the encoding in docs/protocol.md#values, or couldn't
+    exist: a list, set or map with elements of another type than it declares, an object or map with two keys that
+    are equal under NFC, or a set with two equal elements."""
+    check_value_encoding(value, where)
+    problems = type_problems(value, where)
+    if problems:
+        raise ValueError(problems[0])
+
+
+def check_value_encoding(value, where):
+    kinds = [k for k in value if k in VALUE_KINDS] if isinstance(value, dict) else []
+    if len(kinds) != 1 or set(value) - set(VALUE_KINDS) - {"element_type"}:
+        raise ValueError(f"{where}: not a value: {json.dumps(value)}")
+    kind = kinds[0]
+    x = value[kind]
+    if ("element_type" in value) != (kind in ("list", "set", "map")):
+        raise ValueError(f'{where}: lists, sets and maps need an "element_type", and other values have none')
+    expected = {"string": str, "number": str, "bool": bool, "tuple": list, "list": list, "set": list, "object": dict,
+                "map": dict}.get(kind)
+    if expected and not isinstance(x, expected):
+        raise ValueError(f"{where}: malformed {kind} value: {json.dumps(value)}")
+    if kind == "number" and not (x in ("Infinity", "-Infinity") or PLAIN_NUMBER.fullmatch(x)):
+        raise ValueError(f"{where}: {x!r} is not a plain decimal number such as -12.5, or Infinity or -Infinity")
+    elif kind in ("null", "unknown"):
+        check_type(x, where)
+    elif kind in ("list", "set", "map"):
+        check_type(value["element_type"], where)
+    items = x.items() if kind in ("object", "map") else enumerate(x) if kind in ("tuple", "list", "set") else ()
+    for key, item in items:
+        check_value_encoding(item, f"{where}[{key!r}]")
+    if kind in ("object", "map"):
+        keys = {}
+        for key in x:
+            if nfc(key) in keys:
+                raise ValueError(f"{where}: the keys {keys[nfc(key)]!r} and {key!r} are equal under NFC")
+            keys[nfc(key)] = key
+    if kind == "set":
+        elements = [json.dumps(normalize_value(item), sort_keys=True) for item in x]
+        if len(set(elements)) != len(elements):
+            raise ValueError(f"{where}: the set has two equal elements")
+
+
+def value_type(value):
+    """The type of a value, in go-cty's JSON type notation."""
+    kind = next(k for k in value if k != "element_type")
+    x = value[kind]
+    if kind in ("string", "number", "bool"):
+        return kind
+    if kind in ("null", "unknown"):
+        return x
+    if kind == "tuple":
+        return ["tuple", [value_type(item) for item in x]]
+    if kind == "object":
+        return ["object", {key: value_type(item) for key, item in x.items()}]
+    return [kind, value["element_type"]]
+
+
+def type_problems(value, path="value"):
+    """Lists places where a list, set or map holds elements of another type than it declares."""
+    problems = []
+    kind = next(k for k in value if k != "element_type")
+    items = value[kind]
+    if kind in ("tuple", "list", "set"):
+        items = dict(enumerate(items))
+    if kind in ("tuple", "list", "set", "object", "map"):
+        for key, item in items.items():
+            if kind in ("list", "set", "map") and value_type(item) != value.get("element_type"):
+                problems.append(f"{path}[{key!r}] has type {json.dumps(value_type(item))}, "
+                                f"but element_type is {json.dumps(value.get('element_type'))}")
+            problems.extend(type_problems(item, f"{path}[{key!r}]"))
+    return problems
+
+
+def check_functions(functions):
+    """Raises ValueError if a "functions" object doesn't follow the declaration format."""
+    if not isinstance(functions, dict):
+        raise ValueError("must be an object mapping function names to declarations")
+    for name, decl in functions.items():
+        try:
+            check_function(decl)
+        except ValueError as e:
+            raise ValueError(f"function {name!r}: {e}")
+
+
+def check_function(decl):
+    if not isinstance(decl, dict):
+        raise ValueError("a declaration must be an object")
+    unknown = set(decl) - FUNCTION_FIELDS
+    if unknown:
+        raise ValueError(f"unknown fields: {', '.join(sorted(unknown))}")
+    params = decl.get("params", [])
+    if not isinstance(params, list):
+        raise ValueError('"params" must be a list')
+    for i, param in enumerate(params):
+        check_param(param, f"parameter {i}")
+    if "variadic_param" in decl:
+        check_param(decl["variadic_param"], "variadic parameter")
+    result = decl.get("result")
+    if result == "arguments":
+        return
+    if not isinstance(result, dict) or len(result) != 1 or not set(result) <= {"value", "error"}:
+        raise ValueError('"result" must be "arguments", {"value": <value>} or {"error": <message>}')
+    if "error" in result and not isinstance(result["error"], str):
+        raise ValueError("an error result needs a message string")
+    if "value" in result:
+        check_value(result["value"], "result value")
+
+
+def check_param(param, where):
+    if not isinstance(param, dict):
+        raise ValueError(f"{where} must be an object")
+    unknown = set(param) - PARAM_FIELDS
+    if unknown:
+        raise ValueError(f"{where} has unknown fields: {', '.join(sorted(unknown))}")
+    if "name" in param and not isinstance(param["name"], str):
+        raise ValueError(f"{where}: \"name\" must be a string")
+    if "type" not in param:
+        raise ValueError(f'{where} needs a "type"')
+    check_type(param["type"], where)
+    for flag in ("allow_null", "allow_unknown", "allow_dynamic_type"):
+        if not isinstance(param.get(flag, False), bool):
+            raise ValueError(f'{where}: "{flag}" must be true or false')
+
+
+def check_type(ty, where):
+    """Checks a type in go-cty's JSON type notation, as used in values."""
+    if isinstance(ty, str) and ty in PRIMITIVE_TYPES:
+        return
+    if isinstance(ty, list) and len(ty) == 2:
+        kind, arg = ty
+        if kind in ("list", "set", "map"):
+            return check_type(arg, where)
+        if kind == "tuple" and isinstance(arg, list):
+            for item in arg:
+                check_type(item, where)
+            return
+        if kind == "object" and isinstance(arg, dict):
+            for item in arg.values():
+                check_type(item, where)
+            return
+    raise ValueError(f"{where}: not a type: {json.dumps(ty)}")
 
 
 # Normalization lets adapters differ in ways that don't change meaning. Both the
@@ -308,15 +502,15 @@ def normalize_number(text):
         raise AdapterError(f"numbers must be strings, got {text!r}")
     try:
         number = decimal.Decimal(text)
-    except decimal.InvalidOperation:
-        raise AdapterError(f"invalid number {text!r}")
-    if number.is_nan():
-        raise AdapterError("NaN is not an HCL number")
-    if number.is_infinite():
-        return "-Infinity" if number < 0 else "Infinity"
-    if number.is_zero():
-        return "0"
-    return format(number.normalize(), "f")
+        if number.is_nan():
+            raise AdapterError("NaN is not an HCL number")
+        if number.is_infinite():
+            return "-Infinity" if number < 0 else "Infinity"
+        if number.is_zero():
+            return "0"
+        return format(number.normalize(), "f")
+    except decimal.DecimalException:
+        raise AdapterError(f"invalid or out of range number {text!r}")
 
 
 # Fields holding lists of template parts, by node kind.

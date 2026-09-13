@@ -1,0 +1,34 @@
+{
+  "description": "Expanding a map argument is an error",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "variables": {
+    "m": {
+      "map": {
+        "b": {
+          "string": "x"
+        }
+      },
+      "element_type": "string"
+    }
+  },
+  "functions": {
+    "f": {
+      "variadic_param": {
+        "type": "string"
+      },
+      "result": "arguments"
+    }
+  },
+  "reference_error": "must be of a tuple, list, or set type",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "description": "The dynamic value as an argument doesn't hide a later argument of the wrong type",
+  "spec": [
+    "spec.md#functions-and-function-calls",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "unknown-values",
+    "functions"
+  ],
+  "variables": {
+    "d": {
+      "unknown": "dynamic"
+    }
+  },
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "name": "x",
+          "type": "dynamic"
+        },
+        {
+          "name": "n",
+          "type": "number"
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "Invalid value for \"n\" parameter: number required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

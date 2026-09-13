@@ -1,0 +1,27 @@
+{
+  "description": "A namespaced call doesn't call a function declared with the name alone",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec has no namespaced function names, so ns::f() would be a syntax error. hashicorp/hcl parses the call (finishParsingFunctionCall in hclsyntax/parser.go) and looks up the name joined with :: in the function table (FunctionCallExpr.Value in hclsyntax/expression.go), so a function named f doesn't match.",
+  "functions": {
+    "f": {
+      "result": {
+        "value": {
+          "string": "x"
+        }
+      }
+    }
+  },
+  "reference_error": "There are no functions in namespace \"ns::\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "description": "Expanding a string argument is an error",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "variadic_param": {
+        "type": "string"
+      },
+      "result": "arguments"
+    }
+  },
+  "reference_error": "must be of a tuple, list, or set type",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

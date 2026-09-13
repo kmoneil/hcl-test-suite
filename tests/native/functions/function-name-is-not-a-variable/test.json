@@ -1,0 +1,25 @@
+{
+  "description": "A function does not define a variable of the same name",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#variables-and-variable-expressions"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "result": {
+        "value": {
+          "string": "x"
+        }
+      }
+    }
+  },
+  "reference_error": "Unknown variable: There is no variable named \"f\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

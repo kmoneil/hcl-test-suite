@@ -1,0 +1,24 @@
+{
+  "description": "A call is an error when the function itself fails",
+  "spec": [
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec's call rules only name errors in mapping and checking the arguments, and say a call's result is either such an error or the result value; they don't say what happens when a function fails. hashicorp/hcl reports an error returned by the function as an error in the call (FunctionCallExpr.Value in hclsyntax/expression.go).",
+  "functions": {
+    "f": {
+      "result": {
+        "error": "boom"
+      }
+    }
+  },
+  "reference_error": "Call to function \"f\" failed: boom",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}
