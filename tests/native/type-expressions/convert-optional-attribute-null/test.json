@@ -1,0 +1,37 @@
+{
+  "description": "Converting keeps a null given for an optional attribute",
+  "spec": [
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "a": {
+              "string": "1"
+            },
+            "b": {
+              "null": "number"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

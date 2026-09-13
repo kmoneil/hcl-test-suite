@@ -1,0 +1,42 @@
+{
+  "description": "A default value that converts to the attribute's type is allowed",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type-constraint-with-defaults"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "type": [
+            "object",
+            {
+              "a": "number"
+            },
+            [
+              "a"
+            ]
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

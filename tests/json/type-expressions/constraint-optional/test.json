@@ -1,0 +1,47 @@
+{
+  "description": "A JSON string type constraint can have optional attributes",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "json/spec.md#strings"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "json-syntax",
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type-constraint"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "type": [
+            "map",
+            [
+              "object",
+              {
+                "a": "number"
+              },
+              [
+                "a"
+              ]
+            ]
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "description": "The type object({a = string, b = number}) is an object type with those attributes",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "type": [
+            "object",
+            {
+              "a": "string",
+              "b": "number"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

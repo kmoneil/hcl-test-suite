@@ -1,0 +1,29 @@
+{
+  "description": "An empty JSON string is not a type expression",
+  "spec": [
+    "ext/typeexpr/README.md#hcl-type-expressions-extension",
+    "json/spec.md#strings"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "reference_error": "A type specification is either a primitive type keyword",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

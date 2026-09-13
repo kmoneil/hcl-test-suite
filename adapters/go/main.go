@@ -23,9 +23,12 @@ import (
 	"strings"
 
 	"github.com/hashicorp/hcl/v2"
+	"github.com/hashicorp/hcl/v2/ext/customdecode"
+	"github.com/hashicorp/hcl/v2/ext/typeexpr"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 	hcljson "github.com/hashicorp/hcl/v2/json"
 	"github.com/zclconf/go-cty/cty"
+	"github.com/zclconf/go-cty/cty/convert"
 	"github.com/zclconf/go-cty/cty/function"
 	ctyjson "github.com/zclconf/go-cty/cty/json"
 )
@@ -94,7 +97,7 @@ func capabilities() object {
 		"implementation": "hashicorp/hcl",
 		"version":        version,
 		"operations":     []string{"parse", "eval", "decode"},
-		"features":       []string{"typed-values", "unknown-values", "functions", "json-syntax", "static-analysis"},
+		"features":       []string{"typed-values", "unknown-values", "functions", "json-syntax", "static-analysis", "type-expressions"},
 	}
 }
 
@@ -444,7 +447,8 @@ func newAnalysis(data json.RawMessage) (*analysis, error) {
 		{"arguments", decl.Arguments, &a.arguments, "static-call"},
 	}
 	switch decl.Kind {
-	case "value", "static-list", "static-map", "static-call", "static-traversal":
+	case "value", "static-list", "static-map", "static-call", "static-traversal", "type", "type-constraint",
+		"type-constraint-with-defaults":
 	default:
 		return nil, fmt.Errorf("unknown analysis kind %q", decl.Kind)
 	}
@@ -473,6 +477,7 @@ type analyzed struct {
 	pairs     [][2]*analyzed // map keys and values
 	name      string         // the called function
 	traversal hcl.Traversal
+	ty        cty.Type // for the type expression kinds
 }
 
 func analyze(expr hcl.Expression, a *analysis) (*analyzed, hcl.Diagnostics) {
@@ -521,6 +526,19 @@ func analyze(expr hcl.Expression, a *analysis) (*analyzed, hcl.Diagnostics) {
 			return nil, traversalDiags
 		}
 		out.traversal = traversal
+	case "type", "type-constraint", "type-constraint-with-defaults":
+		var typeDiags hcl.Diagnostics
+		switch a.kind {
+		case "type":
+			out.ty, typeDiags = typeexpr.Type(expr)
+		case "type-constraint":
+			out.ty, typeDiags = typeexpr.TypeConstraint(expr)
+		default:
+			out.ty, _, typeDiags = typeexpr.TypeConstraintWithDefaults(expr)
+		}
+		if typeDiags.HasErrors() {
+			return nil, typeDiags
+		}
 	}
 	return out, diags
 }
@@ -553,6 +571,8 @@ func (n *analyzed) eval(ctx *hcl.EvalContext) (any, hcl.Diagnostics) {
 	case "static-call":
 		arguments := evalItems(n.items)
 		return object{"static_call": object{"name": n.name, "arguments": arguments}}, diags
+	case "type", "type-constraint", "type-constraint-with-defaults":
+		return object{"type": typeJSON(n.ty)}, nil
 	}
 	steps := []any{}
 	for _, step := range n.traversal {
@@ -910,6 +930,7 @@ type functionDecl struct {
 	Params        []json.RawMessage `json:"params"`
 	VariadicParam json.RawMessage   `json:"variadic_param"`
 	Result        json.RawMessage   `json:"result"`
+	Extension     *string           `json:"extension"`
 }
 
 type paramDecl struct {
@@ -995,6 +1016,18 @@ func newFunction(data json.RawMessage) (function.Function, error) {
 	if err := unmarshalObject(data, &decl); err != nil {
 		return function.Function{}, err
 	}
+	if decl.Extension != nil {
+		if decl.Params != nil || decl.VariadicParam != nil || decl.Result != nil {
+			return function.Function{}, errors.New("an extension function has no other fields")
+		}
+		switch *decl.Extension {
+		case "convert":
+			return typeexpr.ConvertFunc, nil
+		case "convert-with-defaults":
+			return convertWithDefaultsFunc, nil
+		}
+		return function.Function{}, fmt.Errorf("unknown extension function %q", *decl.Extension)
+	}
 	spec := &function.Spec{Params: []function.Parameter{}}
 	for i, raw := range decl.Params {
 		param, err := newParameter(raw, fmt.Sprintf("param%d", i))
@@ -1051,6 +1084,69 @@ func newFunction(data json.RawMessage) (function.Function, error) {
 	return function.New(spec), nil
 }
 
+// typeWithDefaults is a type constraint and the defaults for its optional
+// attributes, as typeexpr.TypeConstraintWithDefaults gives them.
+type typeWithDefaults struct {
+	ty       cty.Type
+	defaults *typeexpr.Defaults
+}
+
+// typeConstraintWithDefaultsType is like typeexpr.TypeConstraintType, except
+// that a type expression given for it can also give optional attributes
+// default values.
+var typeConstraintWithDefaultsType cty.Type
+
+// convertWithDefaultsFunc is typeexpr.ConvertFunc, except that it applies the
+// defaults of its type constraint to the value before converting it, the way
+// applications apply typeexpr.Defaults.
+var convertWithDefaultsFunc function.Function
+
+func init() {
+	typeConstraintWithDefaultsType = cty.CapsuleWithOps("type constraint with defaults", reflect.TypeOf(typeWithDefaults{}), &cty.CapsuleOps{
+		ExtensionData: func(key any) any {
+			if key != customdecode.CustomExpressionDecoder {
+				return nil
+			}
+			return customdecode.CustomExpressionDecoderFunc(func(expr hcl.Expression, _ *hcl.EvalContext) (cty.Value, hcl.Diagnostics) {
+				ty, defaults, diags := typeexpr.TypeConstraintWithDefaults(expr)
+				if diags.HasErrors() {
+					return cty.NilVal, diags
+				}
+				return cty.CapsuleVal(typeConstraintWithDefaultsType, &typeWithDefaults{ty, defaults}), nil
+			})
+		},
+	})
+	convertValue := func(args []cty.Value) (cty.Value, error) {
+		target := args[1].EncapsulatedValue().(*typeWithDefaults)
+		value := args[0]
+		if target.defaults != nil {
+			value = target.defaults.Apply(value)
+		}
+		converted, err := convert.Convert(value, target.ty)
+		if err != nil {
+			return cty.NilVal, function.NewArgError(0, err)
+		}
+		return converted, nil
+	}
+	// The parameters are the same as typeexpr.ConvertFunc's.
+	convertWithDefaultsFunc = function.New(&function.Spec{
+		Params: []function.Parameter{
+			{Name: "value", Type: cty.DynamicPseudoType, AllowNull: true, AllowDynamicType: true},
+			{Name: "type", Type: typeConstraintWithDefaultsType},
+		},
+		Type: func(args []cty.Value) (cty.Type, error) {
+			converted, err := convertValue(args)
+			if err != nil {
+				return cty.NilType, err
+			}
+			return converted.Type(), nil
+		},
+		Impl: func(args []cty.Value, _ cty.Type) (cty.Value, error) {
+			return convertValue(args)
+		},
+	})
+}
+
 func newParameter(data json.RawMessage, defaultName string) (function.Parameter, error) {
 	var decl paramDecl
 	if err := unmarshalObject(data, &decl); err != nil {
@@ -1059,7 +1155,7 @@ func newParameter(data json.RawMessage, defaultName string) (function.Parameter,
 	if decl.Type == nil {
 		return function.Parameter{}, errors.New(`missing "type"`)
 	}
-	ty, err := ctyjson.UnmarshalType(decl.Type)
+	ty, err := decodeType(decl.Type)
 	if err != nil {
 		return function.Parameter{}, fmt.Errorf("type: %w", err)
 	}
@@ -1074,6 +1170,59 @@ func newParameter(data json.RawMessage, defaultName string) (function.Parameter,
 		AllowUnknown:     decl.AllowUnknown,
 		AllowDynamicType: decl.AllowDynamicType,
 	}, nil
+}
+
+// decodeType decodes a type of the context file. Only type expression results
+// have object types with optional attributes, so the notation for them is an
+// error here, and so is anything else go-cty would panic on.
+func decodeType(raw json.RawMessage) (ty cty.Type, err error) {
+	// check follows the type notation, leaving anything else it finds to go-cty.
+	var check func(any) error
+	check = func(node any) error {
+		items, ok := node.([]any)
+		if !ok || len(items) == 0 {
+			return nil
+		}
+		var children []any
+		switch items[0] {
+		case "object":
+			if len(items) == 3 {
+				return errors.New("only type expression results have object types with optional attributes")
+			}
+			if attrs, ok := items[len(items)-1].(map[string]any); ok && len(items) == 2 {
+				for _, attr := range attrs {
+					children = append(children, attr)
+				}
+			}
+		case "tuple":
+			if elems, ok := items[len(items)-1].([]any); ok && len(items) == 2 {
+				children = elems
+			}
+		case "list", "set", "map":
+			if len(items) == 2 {
+				children = items[1:]
+			}
+		}
+		for _, child := range children {
+			if err := check(child); err != nil {
+				return err
+			}
+		}
+		return nil
+	}
+	var node any
+	if err := json.Unmarshal(raw, &node); err != nil {
+		return cty.NilType, err
+	}
+	if err := check(node); err != nil {
+		return cty.NilType, err
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("invalid type %s: %v", raw, r)
+		}
+	}()
+	return ctyjson.UnmarshalType(raw)
 }
 
 // valueKinds are the keys that name the kind of a value in the protocol.
@@ -1128,7 +1277,7 @@ func decodeValue(data json.RawMessage) (cty.Value, error) {
 		err := json.Unmarshal(raw, &b)
 		return cty.BoolVal(b), err
 	case "null", "unknown":
-		ty, err := ctyjson.UnmarshalType(raw)
+		ty, err := decodeType(raw)
 		if err != nil {
 			return cty.NilVal, err
 		}
@@ -1170,7 +1319,7 @@ func sequence(kind string, rawType json.RawMessage, elems []cty.Value) (v cty.Va
 	if kind == "tuple" {
 		return cty.TupleVal(elems), nil
 	}
-	ety, err := ctyjson.UnmarshalType(rawType)
+	ety, err := decodeType(rawType)
 	if err != nil {
 		return cty.NilVal, fmt.Errorf("%s element_type: %w", kind, err)
 	}
@@ -1195,7 +1344,7 @@ func mapping(kind string, rawType json.RawMessage, attrs map[string]cty.Value) (
 	if kind == "object" {
 		return cty.ObjectVal(attrs), nil
 	}
-	ety, err := ctyjson.UnmarshalType(rawType)
+	ety, err := decodeType(rawType)
 	if err != nil {
 		return cty.NilVal, fmt.Errorf("map element_type: %w", err)
 	}

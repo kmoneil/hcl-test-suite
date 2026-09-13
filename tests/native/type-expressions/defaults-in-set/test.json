@@ -1,0 +1,43 @@
+{
+  "description": "Defaults apply to each object in a set before equal elements merge",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "set": [
+            {
+              "object": {
+                "a": {
+                  "string": "x"
+                }
+              }
+            }
+          ],
+          "element_type": [
+            "object",
+            {
+              "a": "string"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

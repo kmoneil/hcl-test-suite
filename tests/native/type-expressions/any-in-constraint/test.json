@@ -1,0 +1,33 @@
+{
+  "description": "The keyword any is the dynamic pseudo-type in a type constraint",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type-constraint"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "type": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

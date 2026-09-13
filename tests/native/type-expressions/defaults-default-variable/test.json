@@ -1,0 +1,28 @@
+{
+  "description": "A convert-with-defaults type whose default refers to a variable is an error",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#expression-evaluation"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "The README says the type syntax is processed statically, and TypeConstraintWithDefaults takes only the expression and returns default values as values (Defaults.DefaultValues), so a default value has no variables or functions: a variable is an error even when the application defines it. hashicorp/hcl evaluates each one with Value(nil) (getType in ext/typeexpr/get_type.go).",
+  "variables": {
+    "v": {
+      "string": "x"
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "reference_error": "Variables not allowed",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "description": "A default value that doesn't convert to the attribute's type is an error",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type-constraint-with-defaults"
+        }
+      }
+    ]
+  },
+  "reference_error": "This default value is not compatible with the attribute's type constraint",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

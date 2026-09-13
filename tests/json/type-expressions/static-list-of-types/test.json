@@ -1,0 +1,49 @@
+{
+  "description": "A JSON static list's elements can be analyzed as types",
+  "spec": [
+    "ext/typeexpr/README.md#hcl-type-expressions-extension",
+    "json/spec.md#static-list"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "json-syntax",
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-list",
+          "elements": {
+            "kind": "type"
+          }
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_list": [
+            {
+              "type": "string"
+            },
+            {
+              "type": [
+                "list",
+                "number"
+              ]
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

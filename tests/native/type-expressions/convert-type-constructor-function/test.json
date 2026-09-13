@@ -1,0 +1,46 @@
+{
+  "description": "A function named like a type constructor doesn't change convert's type argument",
+  "spec": [
+    "ext/typeexpr/README.md#type-constraints-as-values",
+    "ext/customdecode/README.md#hcl-custom-static-decoding-extension"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    },
+    "list": {
+      "params": [
+        {
+          "type": "dynamic"
+        }
+      ],
+      "result": {
+        "value": {
+          "string": "number"
+        }
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [
+            {
+              "string": "1"
+            }
+          ],
+          "element_type": "string"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

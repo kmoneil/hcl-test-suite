@@ -1,0 +1,27 @@
+{
+  "description": "An optional modifier without the attribute type is an error",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type-constraint"
+        }
+      }
+    ]
+  },
+  "reference_error": "Optional attribute modifier requires the attribute type",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

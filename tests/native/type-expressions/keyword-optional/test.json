@@ -1,0 +1,28 @@
+{
+  "description": "The bare keyword optional is not a type constraint",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax",
+    "ext/typeexpr/README.md#optional-object-attributes"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type-constraint"
+        }
+      }
+    ]
+  },
+  "reference_error": "The keyword \"optional\" is not a valid type specification",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

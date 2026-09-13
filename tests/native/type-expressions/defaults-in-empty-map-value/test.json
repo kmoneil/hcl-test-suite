@@ -1,0 +1,43 @@
+{
+  "description": "An empty map value stays empty when converted with defaults",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "variables": {
+    "m": {
+      "map": {},
+      "element_type": [
+        "object",
+        {}
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "map": {},
+          "element_type": [
+            "object",
+            {
+              "a": "string"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

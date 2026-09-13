@@ -1,0 +1,27 @@
+{
+  "description": "A tuple type whose argument is a type instead of a list of types is an error",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "reference_error": "Tuple type constructor requires a list of element types",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

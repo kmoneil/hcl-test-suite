@@ -1,0 +1,27 @@
+{
+  "description": "A convert type argument that is a variable is an error, whatever its value",
+  "spec": [
+    "ext/typeexpr/README.md#type-constraints-as-values",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "variables": {
+    "t": {
+      "string": "number"
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "reference_error": "The keyword \"t\" is not a valid type specification",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

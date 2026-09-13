@@ -1,0 +1,30 @@
+{
+  "description": "A parenthesized object attribute name in a type is an error",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax",
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The README requires attribute names to be valid identifiers and builds the extension on hcl.ExprAsKeyword and hcl.ExprCall. In an object key the native syntax spec gives parentheses a meaning beyond grouping ({(foo) = \"baz\"} takes its name from the variable foo), but doesn't say whether they stop the key being a variable expression for static analysis (native/analysis/traversal-parenthesized-map-key), which would read (a) as the keyword a. hashicorp/hcl marks a key that starts with a parenthesis ForceNonLiteral (parseObjectCons in hclsyntax/parser.go), so ObjectConsKeyExpr.AsTraversal (hclsyntax/expression.go) gives no traversal and getType (ext/typeexpr/get_type.go) reports that the key isn't an attribute name.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "reference_error": "Object constructor map keys must be attribute names",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

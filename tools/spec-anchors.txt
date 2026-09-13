@@ -1,5 +1,6 @@
-# Section anchors in the HCL spec at hashicorp/hcl v2.24.0. Tests and coverage
-# files may only link to these. Regenerate with: python3 tools/coverage.py anchors <spec-dir>
+# Section anchors in the HCL spec and the READMEs of its extensions at hashicorp/hcl v2.24.0.
+# Tests and coverage files may only link to these.
+# Regenerate with: python3 tools/coverage.py anchors <spec-dir>
 spec.md#hcl-syntax-agnostic-information-model
 spec.md#structural-elements
 spec.md#body-content
@@ -84,3 +85,19 @@ json/spec.md#static-list
 json/spec.md#static-map
 json/spec.md#static-call
 json/spec.md#static-traversal
+ext/typeexpr/README.md#hcl-type-expressions-extension
+ext/typeexpr/README.md#type-expression-syntax
+ext/typeexpr/README.md#optional-object-attributes
+ext/typeexpr/README.md#type-constraints-as-values
+ext/typeexpr/README.md#the-convert-cty-function
+ext/customdecode/README.md#hcl-custom-static-decoding-extension
+ext/customdecode/README.md#custom-decoding-types
+ext/customdecode/README.md#the-expression-and-expression-closure-cty-types
+ext/tryfunc/README.md#try-and-can-functions
+ext/tryfunc/README.md#using-these-functions
+ext/userfunc/README.md#hcl-user-functions-extension
+ext/dynblock/README.md#hcl-dynamic-blocks-extension
+ext/dynblock/README.md#usage
+ext/dynblock/README.md#detecting-variables
+ext/dynblock/README.md#detecting-variables-with-hcldec-specifications
+ext/dynblock/README.md#performance

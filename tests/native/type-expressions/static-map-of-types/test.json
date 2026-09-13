@@ -1,0 +1,58 @@
+{
+  "description": "A static map's values can be analyzed as types",
+  "spec": [
+    "ext/typeexpr/README.md#hcl-type-expressions-extension",
+    "hclsyntax/spec.md#static-map"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map",
+          "values": {
+            "kind": "type"
+          }
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_map": [
+            {
+              "key": {
+                "string": "x"
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            {
+              "key": {
+                "string": "y"
+              },
+              "value": {
+                "type": [
+                  "list",
+                  "number"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "description": "Newlines can separate an object type's attributes",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax",
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The native syntax grammar lets newlines separate object elements, but the prose says newlines between the braces are ignored as whitespace, and prose outranks the grammar (native/collections/object-newline-separated). hashicorp/hcl's parseObjectCons (hclsyntax/parser.go) takes a newline as a separator, and getType (ext/typeexpr/get_type.go) reads the elements with hcl.ExprMap.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "type": [
+            "object",
+            {
+              "a": "string",
+              "b": "number"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

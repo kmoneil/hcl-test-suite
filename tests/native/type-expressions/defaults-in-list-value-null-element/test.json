@@ -1,0 +1,69 @@
+{
+  "description": "A null element of a list value stays null while the others get defaults",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "variables": {
+    "v": {
+      "list": [
+        {
+          "null": [
+            "object",
+            {}
+          ]
+        },
+        {
+          "object": {}
+        }
+      ],
+      "element_type": [
+        "object",
+        {}
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [
+            {
+              "null": [
+                "object",
+                {
+                  "a": "string"
+                }
+              ]
+            },
+            {
+              "object": {
+                "a": {
+                  "string": "x"
+                }
+              }
+            }
+          ],
+          "element_type": [
+            "object",
+            {
+              "a": "string"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

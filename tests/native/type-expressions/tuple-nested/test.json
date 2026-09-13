@@ -1,0 +1,48 @@
+{
+  "description": "Tuple element types can be collection and tuple types",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "type": [
+            "tuple",
+            [
+              [
+                "list",
+                "string"
+              ],
+              [
+                "tuple",
+                [
+                  "bool"
+                ]
+              ]
+            ]
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

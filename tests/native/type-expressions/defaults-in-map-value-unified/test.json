@@ -1,0 +1,48 @@
+{
+  "description": "A default added to a map value is unified with the map's elements",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The README says defaults populate missing optional attributes, and Defaults.Apply's documentation says its input and output values may have different types, which suggests the default keeps its own type, the number 1, as it does for an object value (native/type-expressions/defaults-default-for-any). hashicorp/hcl's Defaults.apply (ext/typeexpr/defaults.go) keeps a map value a map when the added default unifies with its elements (unifyAsMap), so the default becomes the string \"1\". The test also needs any in a type constraint with defaults (native/type-expressions/any-with-defaults).",
+  "variables": {
+    "m": {
+      "map": {
+        "b": {
+          "string": "y"
+        }
+      },
+      "element_type": "string"
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "a": {
+              "string": "1"
+            },
+            "b": {
+              "string": "y"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

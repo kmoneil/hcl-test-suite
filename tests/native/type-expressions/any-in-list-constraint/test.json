@@ -1,0 +1,37 @@
+{
+  "description": "The keyword any can be a list's element type in a type constraint",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type-constraint"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "type": [
+            "list",
+            "dynamic"
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "description": "Converting a single-interpolation template's result to string circumvents unwrapping",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolation-unwrapping",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "true"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

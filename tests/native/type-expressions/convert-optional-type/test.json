@@ -1,0 +1,22 @@
+{
+  "description": "An optional type as the whole convert type argument is an error",
+  "spec": [
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "ext/typeexpr/README.md#optional-object-attributes"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "reference_error": "Keyword \"optional\" is valid only as a modifier for object type attributes",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

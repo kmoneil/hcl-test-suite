@@ -1,0 +1,52 @@
+{
+  "description": "The arguments of a static call in a JSON string can be analyzed as types",
+  "spec": [
+    "ext/typeexpr/README.md#hcl-type-expressions-extension",
+    "json/spec.md#static-call"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "json-syntax",
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-call",
+          "arguments": {
+            "kind": "type"
+          }
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_call": {
+            "name": "f",
+            "arguments": [
+              {
+                "type": "string"
+              },
+              {
+                "type": [
+                  "list",
+                  "number"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

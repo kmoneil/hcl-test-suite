@@ -1,0 +1,28 @@
+{
+  "description": "An index into a type constructor call is not a type",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax",
+    "ext/typeexpr/README.md#hcl-type-expressions-extension"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "reference_error": "A type specification is either a primitive type keyword",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

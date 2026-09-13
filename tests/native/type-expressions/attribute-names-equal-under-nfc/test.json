@@ -1,0 +1,42 @@
+{
+  "description": "Object type attribute names equal under NFC name one attribute",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax",
+    "spec.md#primitive-types",
+    "hclsyntax/spec.md#source-code-representation"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The spec says strings are equal when their NFC normalizations are, which would make the two names the same attribute named twice, an error for hashicorp/hcl (native/type-expressions/attribute-twice), while the native syntax doesn't normalize identifiers. hashicorp/hcl's getType (ext/typeexpr/get_type.go) compares the names as written, finds no duplicate, and cty.ObjectWithOptionalAttrs merges the names under NFC into one attribute.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "type": [
+            "object",
+            {
+              "é": "string"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "description": "The convert-with-defaults function can be called in a JSON string template",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "json/spec.md#strings"
+  ],
+  "op": "decode",
+  "features": [
+    "functions",
+    "json-syntax",
+    "type-expressions"
+  ],
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "a": {
+              "string": "x"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

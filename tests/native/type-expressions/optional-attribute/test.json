@@ -1,0 +1,42 @@
+{
+  "description": "An optional attribute of an object type constraint is listed as optional",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type-constraint"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "type": [
+            "object",
+            {
+              "a": "string",
+              "b": "number"
+            },
+            [
+              "b"
+            ]
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

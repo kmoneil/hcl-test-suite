@@ -1,0 +1,27 @@
+{
+  "description": "The keyword string written as a call is an error",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "reference_error": "Primitive type keyword \"string\" does not expect arguments",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

@@ -1,0 +1,537 @@
+{
+  "area": "native/type-expressions",
+  "rules": [
+    {
+      "id": "type-expressions-primitive-keywords",
+      "spec": "ext/typeexpr/README.md#type-expression-syntax",
+      "rule": "The keywords string, bool and number are the string, bool and number types",
+      "tests": [
+        "native/type-expressions/primitive-string",
+        "native/type-expressions/primitive-bool",
+        "native/type-expressions/primitive-number"
+      ]
+    },
+    {
+      "id": "type-expressions-any",
+      "spec": "ext/typeexpr/README.md#type-expression-syntax",
+      "rule": "In a type constraint the keyword any is the dynamic pseudo-type, also inside other types, while in an exact type it is an error",
+      "tests": [
+        "native/type-expressions/any-in-constraint",
+        "native/type-expressions/any-in-list-constraint",
+        "native/type-expressions/any-in-exact-type",
+        "native/type-expressions/any-in-list-exact-type",
+        "native/type-expressions/any-in-object-constraint",
+        "native/type-expressions/any-in-tuple-exact-type"
+      ]
+    },
+    {
+      "id": "type-expressions-any-with-defaults",
+      "spec": "ext/typeexpr/README.md#type-expression-syntax",
+      "rule": "The keyword any is also the dynamic pseudo-type in a type constraint with defaults, where the default of an attribute of type any keeps its own type (disputed)",
+      "tests": [
+        "native/type-expressions/any-with-defaults",
+        "native/type-expressions/defaults-default-for-any"
+      ]
+    },
+    {
+      "id": "type-expressions-collections",
+      "spec": "ext/typeexpr/README.md#type-expression-syntax",
+      "rule": "list(T), set(T) and map(T) are list, set and map types whose element type is their argument, which can be any type expression",
+      "tests": [
+        "native/type-expressions/list-of-string",
+        "native/type-expressions/set-of-number",
+        "native/type-expressions/map-of-bool",
+        "native/type-expressions/list-of-lists",
+        "native/type-expressions/map-of-objects"
+      ]
+    },
+    {
+      "id": "type-expressions-collection-arguments",
+      "spec": "ext/typeexpr/README.md#type-expression-syntax",
+      "rule": "A collection type keyword without exactly one argument, including the bare keyword, is an error",
+      "tests": [
+        "native/type-expressions/list-without-call",
+        "native/type-expressions/set-without-arguments",
+        "native/type-expressions/map-with-two-arguments"
+      ]
+    },
+    {
+      "id": "type-expressions-tuple",
+      "spec": "ext/typeexpr/README.md#type-expression-syntax",
+      "rule": "tuple([T, ...]) is a tuple type whose element types are the elements of its single tuple constructor argument, in order, including none",
+      "tests": [
+        "native/type-expressions/tuple-types",
+        "native/type-expressions/tuple-empty",
+        "native/type-expressions/tuple-nested"
+      ]
+    },
+    {
+      "id": "type-expressions-tuple-arguments",
+      "spec": "ext/typeexpr/README.md#type-expression-syntax",
+      "rule": "A tuple type keyword whose argument isn't a tuple constructor, or without exactly one argument, including the bare keyword, is an error",
+      "tests": [
+        "native/type-expressions/tuple-object-argument",
+        "native/type-expressions/tuple-type-argument",
+        "native/type-expressions/tuple-without-call",
+        "native/type-expressions/tuple-without-arguments",
+        "native/type-expressions/tuple-two-arguments"
+      ]
+    },
+    {
+      "id": "type-expressions-object",
+      "spec": "ext/typeexpr/README.md#type-expression-syntax",
+      "rule": "object({name = T, ...}) is an object type with the attribute names and types of its single object constructor argument, including none, with = or : between a name and its type",
+      "tests": [
+        "native/type-expressions/object-types",
+        "native/type-expressions/object-empty",
+        "native/type-expressions/object-colon",
+        "native/type-expressions/object-nested"
+      ]
+    },
+    {
+      "id": "type-expressions-object-arguments",
+      "spec": "ext/typeexpr/README.md#type-expression-syntax",
+      "rule": "An object type keyword whose argument isn't an object constructor, or without exactly one argument, including the bare keyword, is an error",
+      "tests": [
+        "native/type-expressions/object-tuple-argument",
+        "native/type-expressions/object-type-argument",
+        "native/type-expressions/object-without-call",
+        "native/type-expressions/object-without-arguments",
+        "native/type-expressions/object-two-arguments"
+      ]
+    },
+    {
+      "id": "type-expressions-object-attribute-names",
+      "spec": "ext/typeexpr/README.md#type-expression-syntax",
+      "rule": "Object attribute names are identifiers, including ones with dashes and ones that are type keywords, while a quoted name, a number or a traversal of several steps is an error",
+      "tests": [
+        "native/type-expressions/attribute-name-with-dash",
+        "native/type-expressions/attribute-name-type-keyword",
+        "native/type-expressions/attribute-name-quoted",
+        "native/type-expressions/attribute-name-number",
+        "native/type-expressions/attribute-name-traversal"
+      ]
+    },
+    {
+      "id": "type-expressions-object-attribute-named-literal-keyword",
+      "spec": "ext/typeexpr/README.md#type-expression-syntax",
+      "rule": "A bare true or null key names an object type attribute of that name (disputed)",
+      "tests": [
+        "native/type-expressions/attribute-name-true",
+        "native/type-expressions/attribute-name-null"
+      ]
+    },
+    {
+      "id": "type-expressions-object-duplicate-attributes",
+      "spec": "ext/typeexpr/README.md#type-expression-syntax",
+      "rule": "An attribute named twice in an object type is an error, also when one of the two is optional (disputed)",
+      "tests": [
+        "native/type-expressions/attribute-twice",
+        "native/type-expressions/optional-attribute-twice"
+      ]
+    },
+    {
+      "id": "type-expressions-object-attribute-names-nfc",
+      "spec": "ext/typeexpr/README.md#type-expression-syntax",
+      "rule": "Object type attribute names that are equal under NFC name one attribute instead of being duplicates (disputed)",
+      "tests": [
+        "native/type-expressions/attribute-names-equal-under-nfc"
+      ]
+    },
+    {
+      "id": "type-expressions-other-keywords",
+      "spec": "ext/typeexpr/README.md#type-expression-syntax",
+      "rule": "Any other keyword is an error, including null, optional and keywords in another letter case, and so is a call of any other name",
+      "tests": [
+        "native/type-expressions/keyword-unknown",
+        "native/type-expressions/keyword-capitalized",
+        "native/type-expressions/constructor-capitalized",
+        "native/type-expressions/keyword-null",
+        "native/type-expressions/keyword-optional",
+        "native/type-expressions/call-unknown"
+      ]
+    },
+    {
+      "id": "type-expressions-namespaced-call",
+      "spec": "ext/typeexpr/README.md#type-expression-syntax",
+      "rule": "A namespaced call such as ns::list(string) is read as a call and is not a type (disputed)",
+      "tests": [
+        "native/type-expressions/call-namespaced"
+      ]
+    },
+    {
+      "id": "type-expressions-keyword-calls",
+      "spec": "ext/typeexpr/README.md#type-expression-syntax",
+      "rule": "A primitive type keyword or any written as a call is an error, with or without arguments",
+      "tests": [
+        "native/type-expressions/string-call",
+        "native/type-expressions/bool-call-with-argument",
+        "native/type-expressions/any-call"
+      ]
+    },
+    {
+      "id": "type-expressions-other-expressions",
+      "spec": "ext/typeexpr/README.md#type-expression-syntax",
+      "rule": "An expression that is neither a keyword nor a call is an error: a quoted string, a number, an index or an attribute access",
+      "tests": [
+        "native/type-expressions/quoted-keyword",
+        "native/type-expressions/number-literal",
+        "native/type-expressions/indexed-constructor",
+        "native/type-expressions/attribute-of-keyword"
+      ]
+    },
+    {
+      "id": "type-expressions-parentheses",
+      "spec": "ext/typeexpr/README.md#hcl-type-expressions-extension",
+      "rule": "A type expression in parentheses is an error, also as the argument of a type constructor or of convert, and so is a parenthesized object attribute name (disputed)",
+      "tests": [
+        "native/type-expressions/parenthesized",
+        "native/type-expressions/parenthesized-argument",
+        "native/type-expressions/convert-type-parenthesized",
+        "native/type-expressions/attribute-name-parenthesized"
+      ]
+    },
+    {
+      "id": "type-expressions-expanded-argument",
+      "spec": "ext/typeexpr/README.md#type-expression-syntax",
+      "rule": "An argument expanded with ... in a type constructor call is read as if it weren't expanded (disputed)",
+      "tests": [
+        "native/type-expressions/expanded-constructor-argument"
+      ]
+    },
+    {
+      "id": "type-expressions-call-syntax",
+      "spec": "ext/typeexpr/README.md#type-expression-syntax",
+      "rule": "Type expressions use the native syntax for calls, tuples and objects, so spaces before a call's parenthesis, comments and newlines inside it, and trailing commas in arguments, tuple constructors and object constructors are allowed",
+      "tests": [
+        "native/type-expressions/space-before-parenthesis",
+        "native/type-expressions/comment-in-call",
+        "native/type-expressions/newlines-in-call",
+        "native/type-expressions/trailing-comma-argument",
+        "native/type-expressions/trailing-comma-tuple",
+        "native/type-expressions/trailing-comma-object"
+      ]
+    },
+    {
+      "id": "type-expressions-object-newline-separator",
+      "spec": "ext/typeexpr/README.md#type-expression-syntax",
+      "rule": "Newlines can separate the attributes of an object type (disputed)",
+      "tests": [
+        "native/type-expressions/object-newline-separated"
+      ]
+    },
+    {
+      "id": "type-expressions-optional-attributes",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "In a type constraint, an object attribute whose type is optional(T) is an optional attribute of type T, at any depth, and the type lists it as optional",
+      "tests": [
+        "native/type-expressions/optional-attribute",
+        "native/type-expressions/optional-attributes-several",
+        "native/type-expressions/optional-attribute-non-ascii-name",
+        "native/type-expressions/optional-attribute-with-defaults-kind",
+        "native/type-expressions/optional-attribute-in-map",
+        "native/type-expressions/optional-attribute-in-tuple",
+        "native/type-expressions/optional-object-attribute"
+      ]
+    },
+    {
+      "id": "type-expressions-optional-exact-type",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "optional is an error in an exact type (disputed)",
+      "tests": [
+        "native/type-expressions/optional-in-exact-type"
+      ]
+    },
+    {
+      "id": "type-expressions-optional-position",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "optional anywhere other than as an object attribute's type is an error, including around another optional",
+      "tests": [
+        "native/type-expressions/optional-top-level",
+        "native/type-expressions/optional-list-element",
+        "native/type-expressions/optional-tuple-element",
+        "native/type-expressions/optional-inside-optional"
+      ]
+    },
+    {
+      "id": "type-expressions-optional-arguments",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "optional needs the attribute type as its argument, and a type constraint without defaults allows no other argument",
+      "tests": [
+        "native/type-expressions/optional-without-arguments",
+        "native/type-expressions/optional-default-without-defaults"
+      ]
+    },
+    {
+      "id": "type-expressions-optional-defaults",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "In a type constraint with defaults, optional(T, default) makes an optional attribute of type T, also when T is an object type with defaults of its own, and a third argument is an error",
+      "tests": [
+        "native/type-expressions/optional-with-default",
+        "native/type-expressions/optional-object-with-defaults",
+        "native/type-expressions/optional-three-arguments"
+      ]
+    },
+    {
+      "id": "type-expressions-default-conversion",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "A default value that doesn't convert to its attribute's type is an error, while one that converts is allowed",
+      "tests": [
+        "native/type-expressions/default-convertible",
+        "native/type-expressions/default-not-convertible"
+      ]
+    },
+    {
+      "id": "type-expressions-default-missing-attribute",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "A default object value that lacks a required attribute of its attribute's type is an error (disputed)",
+      "tests": [
+        "native/type-expressions/default-object-missing-attribute"
+      ]
+    },
+    {
+      "id": "type-expressions-default-evaluation",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "A default value is evaluated without variables or functions, so using either is an error, and a default value whose evaluation fails is an error",
+      "tests": [
+        "native/type-expressions/default-variable",
+        "native/type-expressions/default-function-call",
+        "native/type-expressions/defaults-default-variable",
+        "native/type-expressions/defaults-default-function-call",
+        "native/type-expressions/default-evaluation-error"
+      ]
+    },
+    {
+      "id": "type-expressions-default-operators",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "A default value can be computed with operators, and the computed value is applied (disputed)",
+      "tests": [
+        "native/type-expressions/default-operator",
+        "native/type-expressions/default-computed"
+      ]
+    },
+    {
+      "id": "type-expressions-in-static-analyses",
+      "spec": "hclsyntax/spec.md#static-analysis",
+      "rule": "A type analysis can be a part of a static analysis, such as each value of a static map, each element of a static list or each argument of a static call, and a part that isn't a type makes the analysis fail",
+      "tests": [
+        "native/type-expressions/static-map-of-types",
+        "native/type-expressions/static-list-of-types",
+        "native/type-expressions/static-call-of-types",
+        "native/type-expressions/static-list-element-not-a-type"
+      ]
+    },
+    {
+      "id": "type-expressions-static-map-keyword-keys",
+      "spec": "hclsyntax/spec.md#static-map",
+      "rule": "A bare identifier key of a static map can be analyzed as a type keyword (disputed)",
+      "tests": [
+        "native/type-expressions/static-map-keys-as-types"
+      ]
+    },
+    {
+      "id": "type-expressions-convert",
+      "spec": "ext/typeexpr/README.md#the-convert-cty-function",
+      "rule": "convert(value, type) converts the value to the type constraint written as its second argument",
+      "tests": [
+        "native/type-expressions/convert-string-to-bool",
+        "native/type-expressions/convert-number-to-string",
+        "native/type-expressions/convert-tuple-to-list",
+        "native/type-expressions/convert-tuple-to-set",
+        "native/type-expressions/convert-object-to-map",
+        "native/type-expressions/convert-map-value-to-object",
+        "native/type-expressions/convert-to-tuple"
+      ]
+    },
+    {
+      "id": "type-expressions-convert-any",
+      "spec": "ext/typeexpr/README.md#the-convert-cty-function",
+      "rule": "Converting to any keeps the value, including null, and converting to a collection of any unifies the element types, which is an error when they have no common type",
+      "tests": [
+        "native/type-expressions/convert-any",
+        "native/type-expressions/convert-list-of-any",
+        "native/type-expressions/convert-list-of-any-without-common-type",
+        "native/type-expressions/convert-null-to-any"
+      ]
+    },
+    {
+      "id": "type-expressions-convert-errors",
+      "spec": "ext/typeexpr/README.md#the-convert-cty-function",
+      "rule": "A value that doesn't convert to the type, such as a string that isn't a number, or an unknown value whose type can't convert, is an evaluation error, with or without defaults",
+      "tests": [
+        "native/type-expressions/convert-invalid-number",
+        "native/type-expressions/convert-unknown-unconvertible",
+        "native/type-expressions/defaults-unknown-unconvertible"
+      ]
+    },
+    {
+      "id": "type-expressions-convert-missing-attribute",
+      "spec": "spec.md#collection-and-structural-type-conversions",
+      "rule": "Converting an object that lacks a required attribute of the object type is an error, with or without defaults (disputed)",
+      "tests": [
+        "native/type-expressions/convert-missing-attribute",
+        "native/type-expressions/defaults-missing-required-attribute"
+      ]
+    },
+    {
+      "id": "type-expressions-convert-null-unknown",
+      "spec": "ext/typeexpr/README.md#the-convert-cty-function",
+      "rule": "convert turns a null value into a null of the type, an unknown value, including the dynamic value, into an unknown value of the type the value converts to, which for list(any) keeps an unknown list's element type, and unknown elements into unknown elements of the element type",
+      "tests": [
+        "native/type-expressions/convert-null",
+        "native/type-expressions/convert-unknown",
+        "native/type-expressions/convert-dynamic-value",
+        "native/type-expressions/convert-dynamic-value-to-any",
+        "native/type-expressions/convert-partially-unknown",
+        "native/type-expressions/convert-unknown-list-to-list-of-any"
+      ]
+    },
+    {
+      "id": "type-expressions-convert-optional-null",
+      "spec": "ext/typeexpr/README.md#the-convert-cty-function",
+      "rule": "Converting to an object type with an optional attribute keeps a null given for that attribute",
+      "tests": [
+        "native/type-expressions/convert-optional-attribute-null"
+      ]
+    },
+    {
+      "id": "type-expressions-convert-missing-optional",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "convert of an object that lacks an optional attribute is an error (disputed)",
+      "tests": [
+        "native/type-expressions/convert-missing-optional-attribute"
+      ]
+    },
+    {
+      "id": "type-expressions-convert-type-not-evaluated",
+      "spec": "ext/typeexpr/README.md#type-constraints-as-values",
+      "rule": "The type argument of convert is read as a type expression without being evaluated, also when a variable or function has a type keyword's or constructor's name, or when the value argument is unknown, while the value argument is evaluated",
+      "tests": [
+        "native/type-expressions/convert-type-keyword-variable",
+        "native/type-expressions/convert-type-constructor-function",
+        "native/type-expressions/convert-unknown-value-invalid-type"
+      ]
+    },
+    {
+      "id": "type-expressions-convert-type-argument",
+      "spec": "ext/typeexpr/README.md#type-constraints-as-values",
+      "rule": "The type argument must be a type constraint written in the call: a variable, a quoted string, a template or an expanded argument is an error, whatever its value",
+      "tests": [
+        "native/type-expressions/convert-type-from-variable",
+        "native/type-expressions/defaults-type-from-variable",
+        "native/type-expressions/convert-type-quoted",
+        "native/type-expressions/convert-type-template",
+        "native/type-expressions/convert-expanded-arguments"
+      ]
+    },
+    {
+      "id": "type-expressions-convert-constraint",
+      "spec": "ext/typeexpr/README.md#the-convert-cty-function",
+      "rule": "The type argument is a type constraint without defaults: a default value or optional outside an object is an error",
+      "tests": [
+        "native/type-expressions/convert-default-value",
+        "native/type-expressions/convert-optional-type"
+      ]
+    },
+    {
+      "id": "type-expressions-convert-arguments",
+      "spec": "ext/typeexpr/README.md#the-convert-cty-function",
+      "rule": "convert takes exactly two arguments",
+      "tests": [
+        "native/type-expressions/convert-one-argument",
+        "native/type-expressions/convert-three-arguments"
+      ]
+    },
+    {
+      "id": "type-expressions-defaults",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "An optional attribute missing from an object gets its default value converted to the attribute's type, while a given attribute keeps its value, a missing one whose default is null or that has no default is null even when its type has defaults of its own, and a type without optional attributes converts as convert does",
+      "tests": [
+        "native/type-expressions/defaults-missing-attribute",
+        "native/type-expressions/defaults-given-attribute",
+        "native/type-expressions/defaults-converted-default",
+        "native/type-expressions/defaults-without-default",
+        "native/type-expressions/defaults-null-default",
+        "native/type-expressions/defaults-missing-object-without-default",
+        "native/type-expressions/defaults-null-default-with-nested-defaults",
+        "native/type-expressions/defaults-plain-type"
+      ]
+    },
+    {
+      "id": "type-expressions-defaults-null-attribute",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "An optional attribute set to null gets its default value (disputed)",
+      "tests": [
+        "native/type-expressions/defaults-null-attribute"
+      ]
+    },
+    {
+      "id": "type-expressions-defaults-nested",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "Defaults apply to objects at any depth: as elements of lists, sets (before equal elements merge), maps and tuples, inside other objects, and inside a given value of an optional object attribute",
+      "tests": [
+        "native/type-expressions/defaults-in-list",
+        "native/type-expressions/defaults-in-map",
+        "native/type-expressions/defaults-in-set",
+        "native/type-expressions/defaults-in-tuple",
+        "native/type-expressions/defaults-deeply-nested",
+        "native/type-expressions/defaults-inside-given-object"
+      ]
+    },
+    {
+      "id": "type-expressions-defaults-inside-default-value",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "A default value gets the defaults of the optional attributes of the objects in it (disputed)",
+      "tests": [
+        "native/type-expressions/defaults-inside-default-value",
+        "native/type-expressions/defaults-inside-default-list"
+      ]
+    },
+    {
+      "id": "type-expressions-defaults-typed-collections",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "Defaults also apply to the object elements of list, set and map values, not only of tuple and object constructors, also when the elements end up with different types, and to a map value converted to an object type, also when a default has another type than the map's elements, while an empty collection value stays empty",
+      "tests": [
+        "native/type-expressions/defaults-in-list-value",
+        "native/type-expressions/defaults-in-set-value",
+        "native/type-expressions/defaults-in-map-value",
+        "native/type-expressions/defaults-in-empty-list-value",
+        "native/type-expressions/defaults-in-empty-set-value",
+        "native/type-expressions/defaults-in-empty-map-value",
+        "native/type-expressions/defaults-in-map-value-for-object",
+        "native/type-expressions/defaults-in-map-value-no-common-type",
+        "native/type-expressions/defaults-in-list-value-elements-differ"
+      ]
+    },
+    {
+      "id": "type-expressions-defaults-map-value-unified",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "Defaults added to a map value are unified with its elements before the conversion (disputed)",
+      "tests": [
+        "native/type-expressions/defaults-in-map-value-unified"
+      ]
+    },
+    {
+      "id": "type-expressions-defaults-null-unknown",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "A null or unknown value, a null or unknown element or an unknown attribute gets no defaults before the conversion, while the other elements do",
+      "tests": [
+        "native/type-expressions/defaults-null-value",
+        "native/type-expressions/defaults-unknown-value",
+        "native/type-expressions/defaults-null-element",
+        "native/type-expressions/defaults-unknown-attribute",
+        "native/type-expressions/defaults-unknown-element",
+        "native/type-expressions/defaults-in-list-value-null-element"
+      ]
+    },
+    {
+      "id": "type-expressions-defaults-errors",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "A value that doesn't convert to the type once the defaults are applied, or a default value that doesn't convert to its attribute's type, is an evaluation error",
+      "tests": [
+        "native/type-expressions/defaults-not-an-object",
+        "native/type-expressions/defaults-invalid-default"
+      ]
+    }
+  ]
+}

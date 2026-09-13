@@ -1,0 +1,43 @@
+{
+  "description": "A bare null key names an object type attribute null",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax",
+    "hclsyntax/spec.md#keywords",
+    "hclsyntax/spec.md#static-traversal",
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The README requires attribute names to be valid identifiers, which null is, and builds the extension on hcl.ExprAsKeyword and hcl.ExprCall. The native syntax spec makes a keyword's role supersede other readings, where null would be the null value, but also says null can be interpreted as a static traversal named null (hclsyntax/spec.md#static-traversal), while hcl.ExprAsKeyword's own documentation (traversal_for_expr.go) says the native syntax parses true, false and null as literal values, so they can't be keywords. hashicorp/hcl names the attribute null: LiteralValueExpr.AsTraversal turns the null literal back into its name (hclsyntax/expression.go).",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "type": [
+            "object",
+            {
+              "null": "string"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

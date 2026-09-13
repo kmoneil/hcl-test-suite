@@ -1,0 +1,59 @@
+{
+  "description": "A JSON static map's property names can be analyzed as types",
+  "spec": [
+    "ext/typeexpr/README.md#hcl-type-expressions-extension",
+    "json/spec.md#static-map"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "json-syntax",
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map",
+          "keys": {
+            "kind": "type"
+          }
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_map": [
+            {
+              "key": {
+                "type": "string"
+              },
+              "value": {
+                "number": "1"
+              }
+            },
+            {
+              "key": {
+                "type": [
+                  "list",
+                  "bool"
+                ]
+              },
+              "value": {
+                "number": "2"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

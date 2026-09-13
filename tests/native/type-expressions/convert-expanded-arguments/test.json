@@ -1,0 +1,34 @@
+{
+  "description": "A convert type argument expanded from a tuple is an error",
+  "spec": [
+    "ext/typeexpr/README.md#type-constraints-as-values",
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "variables": {
+    "xs": {
+      "tuple": [
+        {
+          "number": "1"
+        },
+        {
+          "string": "number"
+        }
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "reference_error": "A type specification is either a primitive type keyword",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

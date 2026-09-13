@@ -1,0 +1,44 @@
+{
+  "description": "A default value computed with an operator is allowed",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "ext/typeexpr/README.md#hcl-type-expressions-extension"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The README says the type syntax is processed statically, so it cannot use any of the usual language operators, without saying whether that covers the default values inside it. hashicorp/hcl evaluates each default value as an expression (defaultExpr.Value(nil) in getType, ext/typeexpr/get_type.go), so operators work.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type-constraint-with-defaults"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "type": [
+            "object",
+            {
+              "a": "number"
+            },
+            [
+              "a"
+            ]
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

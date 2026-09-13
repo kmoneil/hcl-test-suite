@@ -1,0 +1,1 @@
+a = object({null = string})

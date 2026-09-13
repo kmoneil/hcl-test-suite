@@ -1,0 +1,38 @@
+{
+  "description": "An inline comment inside a type constructor call is allowed",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "type": [
+            "list",
+            "string"
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

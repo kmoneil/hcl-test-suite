@@ -1,0 +1,24 @@
+{
+  "description": "A required attribute is still required when defaults fill the optional ones",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The spec's conversion rules convert an object to an object type with attributes it lacks by populating them with null (spec.md#collection-and-structural-type-conversions), which gives b = null, while the README says a missing object attribute would typically result in an error when type constraints are validated or used. hashicorp/hcl's Defaults.Apply (ext/typeexpr/defaults.go) adds only a, and go-cty's convert.Convert, which the application calls next, requires every attribute of the target type that isn't optional (conversionObjectToObject in cty/convert/conversion_object.go).",
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "reference_error": "attribute \"b\" is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

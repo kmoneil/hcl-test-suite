@@ -1,0 +1,41 @@
+{
+  "description": "An optional attribute with a default value is optional in a type constraint with defaults",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type-constraint-with-defaults"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "type": [
+            "object",
+            {
+              "a": "string"
+            },
+            [
+              "a"
+            ]
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

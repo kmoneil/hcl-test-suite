@@ -1,0 +1,40 @@
+{
+  "description": "An expanded type constructor argument is read as the argument itself",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax",
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "static-analysis",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The README's type constructors take a type expression as their argument, and the native syntax spec only lets an expanded argument be a list or tuple value, which a type keyword isn't. hashicorp/hcl reads the call with hcl.ExprCall, whose result has no field for the expansion (native/analysis/call-expanded-final-argument), so getType (ext/typeexpr/get_type.go) reads string as the element type.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "type": [
+            "list",
+            "string"
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

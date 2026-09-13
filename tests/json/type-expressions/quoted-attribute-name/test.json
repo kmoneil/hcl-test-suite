@@ -1,0 +1,29 @@
+{
+  "description": "A quoted object attribute name in a JSON string type is an error",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax",
+    "json/spec.md#strings"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "reference_error": "Object constructor map keys must be attribute names",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

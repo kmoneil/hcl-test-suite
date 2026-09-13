@@ -1,0 +1,41 @@
+{
+  "description": "A line comment after a type constructor call in a JSON string is ignored",
+  "spec": [
+    "ext/typeexpr/README.md#hcl-type-expressions-extension",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "json-syntax",
+    "static-analysis",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The README reads the string as a native syntax expression, where a line comment counts as a newline, and doesn't say whether an expression in a string may be followed by one. hashicorp/hcl reads a call with hcl.ExprCall (getType in ext/typeexpr/get_type.go), which for a JSON string parses its content with hclsyntax.ParseExpression (expression.ExprCall in json/structure.go), whose scanner makes # c a comment token that the peeker drops (nextToken in hclsyntax/peeker.go).",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "type": [
+            "list",
+            "string"
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

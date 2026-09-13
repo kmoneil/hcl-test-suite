@@ -1,0 +1,43 @@
+{
+  "description": "A bare true key names an object type attribute true",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax",
+    "hclsyntax/spec.md#keywords",
+    "hclsyntax/spec.md#static-traversal",
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The README requires attribute names to be valid identifiers, which true is, and builds the extension on hcl.ExprAsKeyword and hcl.ExprCall. The native syntax spec makes a keyword's role supersede other readings, but also says true can be interpreted as a static traversal named true (hclsyntax/spec.md#static-traversal), which gives the name true, while hcl.ExprAsKeyword's own documentation (traversal_for_expr.go) says the native syntax parses true, false and null as literal values, so they can't be keywords. hashicorp/hcl names the attribute true: ObjectConsKeyExpr.AsTraversal passes the key to LiteralValueExpr.AsTraversal, which turns the literal back into its name (hclsyntax/expression.go).",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "type": [
+            "object",
+            {
+              "true": "string"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "description": "Defaults apply to list value elements that end up with different types",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "variables": {
+    "v": {
+      "list": [
+        {
+          "null": [
+            "object",
+            {}
+          ]
+        },
+        {
+          "object": {}
+        }
+      ],
+      "element_type": [
+        "object",
+        {}
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [
+            {
+              "null": [
+                "object",
+                {
+                  "a": "string",
+                  "b": [
+                    "list",
+                    "string"
+                  ]
+                }
+              ]
+            },
+            {
+              "object": {
+                "a": {
+                  "string": "x"
+                },
+                "b": {
+                  "list": [],
+                  "element_type": "string"
+                }
+              }
+            }
+          ],
+          "element_type": [
+            "object",
+            {
+              "a": "string",
+              "b": [
+                "list",
+                "string"
+              ]
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

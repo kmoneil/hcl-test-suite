@@ -1,0 +1,32 @@
+{
+  "description": "A JSON static list element that isn't a type fails the analysis",
+  "spec": [
+    "ext/typeexpr/README.md#hcl-type-expressions-extension",
+    "json/spec.md#static-list"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-list",
+          "elements": {
+            "kind": "type"
+          }
+        }
+      }
+    ]
+  },
+  "reference_error": "The keyword \"foo\" is not a valid type specification",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

@@ -24,7 +24,8 @@ TESTS = ROOT / "tests"
 COVERAGE = ROOT / "coverage"
 KEY_ORDER = ["description", "spec", "op", "input", "features", "status", "notes", "variables", "functions",
              "evaluation_mode", "schema", "reference_error", "expect"]
-FEATURES = {"unknown-values", "typed-values", "functions", "json-syntax", "static-analysis"}
+FEATURES = {"unknown-values", "typed-values", "functions", "json-syntax", "static-analysis", "type-expressions"}
+TYPE_KINDS = ("type", "type-constraint", "type-constraint-with-defaults")
 NAME = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 MAX_INPUT_BYTES = 2048
 MAX_DESCRIPTION = 100
@@ -100,7 +101,8 @@ def decode_body_problems(body, schema, where="expected body"):
 
 
 RESULT_KEYS = {"static-list": "static_list", "static-map": "static_map", "static-call": "static_call",
-               "static-traversal": "static_traversal"}
+               "static-traversal": "static_traversal", "type": "type", "type-constraint": "type",
+               "type-constraint-with-defaults": "type"}
 
 
 def analysis_result_problems(result, analysis, where):
@@ -113,6 +115,8 @@ def analysis_result_problems(result, analysis, where):
         return [f"{where} must be a {RESULT_KEYS[kind]} result for its {kind} analysis"]
     x = result[got]
     problems = []
+    if kind == "type" and not is_exact_type(x):
+        problems.append(f"{where} must be an exact type, without dynamic parts or optional attributes, for its type analysis")
     if kind == "static-list":
         for i, item in enumerate(x):
             problems.extend(analysis_result_problems(item, analysis.get("elements"), f"{where}: element {i}"))
@@ -124,6 +128,72 @@ def analysis_result_problems(result, analysis, where):
         for i, item in enumerate(x["arguments"]):
             problems.extend(analysis_result_problems(item, analysis.get("arguments"), f"{where}: argument {i}"))
     return problems
+
+
+def is_exact_type(ty):
+    """Whether a type in JSON type notation has no dynamic parts and no optional attributes."""
+    if isinstance(ty, str):
+        return ty != "dynamic"
+    if ty[0] == "tuple":
+        return all(is_exact_type(item) for item in ty[1])
+    if ty[0] == "object":
+        return len(ty) == 2 and all(is_exact_type(item) for item in ty[1].values())
+    return is_exact_type(ty[1])
+
+
+def type_needs_typed_values(ty):
+    """Whether a type can only exist in an implementation with typed values: it has a list, set or map type."""
+    if isinstance(ty, str):
+        return False
+    if ty[0] in ("list", "set", "map"):
+        return True
+    items = ty[1] if ty[0] == "tuple" else ty[1].values()
+    return any(type_needs_typed_values(item) for item in items)
+
+
+def analysis_kinds(analysis):
+    """The kinds of an analysis and of all its parts."""
+    kinds = {analysis["kind"]}
+    for part in hcltest.ANALYSIS_PARTS[analysis["kind"]]:
+        if part in analysis:
+            kinds |= analysis_kinds(analysis[part])
+    return kinds
+
+
+def schema_analysis_kinds(schema):
+    kinds = set()
+    for attr in schema.get("attributes", []):
+        if "analysis" in attr:
+            kinds |= analysis_kinds(attr["analysis"])
+    for block in schema.get("blocks", []):
+        kinds |= schema_analysis_kinds(block["body"])
+    if "remain" in schema:
+        kinds |= schema_analysis_kinds(schema["remain"])
+    return kinds
+
+
+def result_types(result):
+    """The types in the type results of a decoded attribute."""
+    kind = next(iter(result)) if isinstance(result, dict) and len(result) == 1 else None
+    if kind == "type":
+        yield result[kind]
+    elif kind in ("static_list", "static_map", "static_call"):
+        items = result[kind]["arguments"] if kind == "static_call" else result[kind]
+        for item in items:
+            if kind == "static_map":
+                yield from result_types(item["key"])
+                yield from result_types(item["value"])
+            else:
+                yield from result_types(item)
+
+
+def body_types(body):
+    for result in body.get("attributes", {}).values():
+        yield from result_types(result)
+    for block in body.get("blocks", []):
+        yield from body_types(block.get("body", {}))
+    if body.get("remain") is not None:
+        yield from body_types(body["remain"])
 
 
 def analysis_default_problems(analysis, where):
@@ -175,7 +245,7 @@ def result_values(result):
         for step in result[kind]:
             if "index" in step:
                 yield step["index"]
-    else:
+    elif kind != "type":
         yield result
 
 
@@ -316,15 +386,26 @@ class Linter:
             needs["json-syntax"] = "the input is in the JSON syntax"
         elif "json-syntax" in features:
             self.problem(where, 'lists the "json-syntax" feature, but the input is in the native syntax')
-        if "schema" in test.context and schema_has_analysis(test.context["schema"]):
+        kinds = schema_analysis_kinds(test.context["schema"]) if "schema" in test.context else set()
+        if kinds:
             needs["static-analysis"] = "the schema analyzes an attribute"
         elif "static-analysis" in features:
             self.problem(where, 'lists the "static-analysis" feature, but its schema analyzes no attribute')
+        extensions = {hcltest.EXTENSION_FUNCTIONS[decl["extension"]]
+                      for decl in test.context.get("functions", {}).values() if "extension" in decl}
+        if kinds & set(TYPE_KINDS):
+            needs["type-expressions"] = "the schema analyzes a type expression"
+        elif "type-expressions" in extensions:
+            needs["type-expressions"] = "the test declares a function of the type expression extension"
+        elif "type-expressions" in features:
+            self.problem(where, 'lists the "type-expressions" feature, but uses no type expressions')
         if "functions" in test.context:
             needs["functions"] = "the test declares functions"
             for name, decl in test.context["functions"].items():
                 if not is_function_name(name):
                     self.problem(where, f"function name {name!r} is not an identifier, or identifiers joined by ::")
+                if "extension" in decl:
+                    continue
                 params = decl.get("params", []) + ([decl["variadic_param"]] if "variadic_param" in decl else [])
                 for param in params:
                     if "name" in param and ("::" in param["name"] or not is_function_name(param["name"])):
@@ -357,6 +438,8 @@ class Linter:
                                     '"features": ["typed-values"]')
             if any(needs_unknown_values(v) for v in values):
                 needs.setdefault("unknown-values", "the expected result has an unknown value")
+            if any(type_needs_typed_values(ty) for ty in body_types(expect.get("body", {}))):
+                needs.setdefault("typed-values", "the expected result has a list, set or map type")
         for feature in sorted(set(needs) - set(features)):
             self.problem(where, f'{needs[feature]}, so the test needs "features": ["{feature}"]')
         if "functions" in features and "functions" not in meta:

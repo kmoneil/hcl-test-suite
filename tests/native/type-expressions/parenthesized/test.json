@@ -1,0 +1,30 @@
+{
+  "description": "A type keyword in parentheses is an error",
+  "spec": [
+    "ext/typeexpr/README.md#hcl-type-expressions-extension",
+    "hclsyntax/spec.md#expression-terms"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The README builds type expressions from keywords and calls read with hcl.ExprAsKeyword and hcl.ExprCall, leaving their meaning to the syntax, and the native syntax spec doesn't say whether parentheses around an expression keep it a variable expression or a function call for static analysis (native/analysis/traversal-parenthesized). hashicorp/hcl keeps parentheses as a ParenthesesExpr (hclsyntax/expression.go), which has neither an AsTraversal nor an ExprCall method and can't be unwrapped, so getType (ext/typeexpr/get_type.go) reports an error.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "reference_error": "A type specification is either a primitive type keyword",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

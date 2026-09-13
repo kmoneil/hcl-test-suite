@@ -1,0 +1,27 @@
+{
+  "description": "An unknown keyword is not a type",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "reference_error": "The keyword \"foo\" is not a valid type specification",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

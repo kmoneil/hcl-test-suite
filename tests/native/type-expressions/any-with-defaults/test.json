@@ -1,0 +1,39 @@
+{
+  "description": "The keyword any is allowed in a type constraint with defaults",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "static-analysis",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The README allows any in function TypeConstraint only, and TypeConstraintWithDefaults is a different function, but its documentation says it parses a type constraint, which TypeConstraint's documentation says additionally allows the keyword any. hashicorp/hcl reads both with getType (ext/typeexpr/get_type.go), which allows any whenever it reads a type constraint, with or without defaults.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type-constraint-with-defaults"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "type": [
+            "list",
+            "dynamic"
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

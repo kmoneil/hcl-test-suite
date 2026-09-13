@@ -1,0 +1,43 @@
+{
+  "description": "A JSON string type constraint with defaults can give an optional attribute a default",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "json/spec.md#strings"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type-constraint-with-defaults"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "type": [
+            "object",
+            {
+              "a": "string"
+            },
+            [
+              "a"
+            ]
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

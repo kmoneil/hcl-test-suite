@@ -45,8 +45,9 @@ Describes the implementation and what the adapter supports.
 - `features` lists optional parts of HCL the implementation supports. Tests
   that need a missing feature are skipped:
   - `typed-values`: list, set and map values distinct from tuples and
-    objects, null and unknown values that keep a type, and function
-    parameters whose type is a collection or structural type.
+    objects, null and unknown values that keep a type, function parameters
+    whose type is a collection or structural type, and type expression
+    results with list, set or map types.
   - `unknown-values`: unknown values, including the dynamic value (the
     unknown value of the dynamic pseudo-type).
   - `functions`: the adapter can add the [test functions](#functions) a test
@@ -54,6 +55,11 @@ Describes the implementation and what the adapter supports.
   - `json-syntax`: the implementation reads the JSON syntax.
   - `static-analysis`: the implementation has the spec's static analysis
     operations, which tests use through [`decode`](#static-analysis).
+  - `type-expressions`: the implementation has the type expression extension
+    (hashicorp/hcl's `ext/typeexpr`), which tests use through
+    [type analyses](#type-expressions) and the
+    [extension functions](#extension-functions) `convert` and
+    `convert-with-defaults`.
 
 ## `parse`
 
@@ -127,7 +133,10 @@ syntaxes with their own expression syntax.
   `"number"`, `"bool"` or `"dynamic"` only appear in tests that need
   `typed-values`. Parameters of type `"dynamic"` and the `allow_unknown` and
   `allow_dynamic_type` flags can appear in any test. Schemas only have an
-  `analysis` in tests that need `static-analysis`.
+  `analysis` in tests that need `static-analysis`. Type analyses and
+  [extension functions](#extension-functions) only appear in tests that need
+  `type-expressions`. Context files never have object types with optional
+  attributes.
 
 ## `decode`
 
@@ -272,6 +281,41 @@ the attribute's expression, instead of evaluating it:
 - The adapter uses the implementation's own static analysis operations; an
   implementation without them leaves out the `static-analysis` feature.
 
+### Type expressions
+
+With the `type-expressions` feature, an analysis can also read an expression as
+a type expression of the type expression extension (hashicorp/hcl's
+`ext/typeexpr`, whose README defines the syntax):
+
+| Kind | Reads the expression as | Result |
+| --- | --- | --- |
+| `"type"` | an exact type, such as `list(string)` (`typeexpr.Type`) | `{"type": <type>}` |
+| `"type-constraint"` | a type constraint, which can also use `any` (`typeexpr.TypeConstraint`) | `{"type": <type>}` |
+| `"type-constraint-with-defaults"` | a type constraint whose optional attributes can have default values, as in `optional(number, 0)` (`typeexpr.TypeConstraintWithDefaults`) | `{"type": <type>}` |
+
+- The result is the type in the [type notation](#values) of values, in which
+  `any` is `"dynamic"`. An object type with optional attributes, marked
+  `optional(<type>)` in a type constraint, lists their names after its
+  attribute types: `["object", {"name": "string", "age": "number"}, ["age"]]`.
+  The names can be in any order, and the list is left out when there are
+  none. (hashicorp/hcl rejects `optional` in a `"type"` analysis, which a
+  disputed test covers.)
+- A type analysis reads the expression's keywords and calls, and the tuple and
+  object constructors in `tuple(...)` and `object(...)`, with the syntax's
+  static analysis, without evaluating anything but default values (below). In the JSON syntax the expression is
+  a string whose content is read as a native syntax expression, as for static
+  calls and static traversals, in both evaluation modes, and any other JSON
+  value is an error.
+- With defaults, each default value is evaluated, without variables or
+  functions, and converted to its attribute's type. A default that fails
+  either way makes the analysis fail. The default values aren't part of the
+  result: tests observe them through the `convert-with-defaults`
+  [extension function](#extension-functions).
+- These kinds have no parts, and can be parts of the static analyses, as in
+  `{"kind": "static-map", "values": {"kind": "type"}}`. A test with a type
+  analysis needs the `static-analysis` and `type-expressions` features (and
+  `typed-values` when the result has a list, set or map type).
+
 ## Functions
 
 HCL has no built-in functions: the application defines them. Tests that call
@@ -344,6 +388,47 @@ and a name, as long as `provider::aws::arn()` calls the function and `arn()`
 doesn't. An adapter for an implementation without namespaced functions can
 leave these declarations out.
 
+### Extension functions
+
+Some extensions define functions. A test declares one by giving its name
+instead of the fields above, under the name the test calls it by:
+
+```json
+{"convert": {"extension": "convert"}}
+```
+
+| Extension function | Feature | What it does |
+| --- | --- | --- |
+| `"convert"` | `type-expressions` | `convert(value, type)`: converts the value to a type constraint written as its second argument (hashicorp/hcl's `typeexpr.ConvertFunc`). |
+| `"convert-with-defaults"` | `type-expressions` | `convert(value, type)` with a type constraint that can give optional attributes default values: applies the defaults to the value, then converts it. |
+
+- Both take two arguments. The first is a value, declared as
+  `{"type": "dynamic", "allow_null": true, "allow_dynamic_type": true}`. The
+  second is a type expression written in the call, which is read as a type
+  constraint (`typeexpr.TypeConstraint`, or `TypeConstraintWithDefaults` for
+  `convert-with-defaults`) without being evaluated, except for default values,
+  which are evaluated as in a type analysis. An invalid type expression is an
+  evaluation error.
+- The result is the value converted to the type constraint, and its type is
+  the converted value's type. A value that doesn't convert is an evaluation
+  error. A null is passed to the function like any other value. For an
+  unknown value, including the dynamic value, the call doesn't convert the
+  value but still works out the result type from the value's type: the result
+  is an unknown value of that type, or an evaluation error if the type doesn't
+  convert.
+- `convert-with-defaults` isn't a function of hashicorp/hcl. It stands for how
+  applications use the type expression extension's defaults: it applies them
+  the way `typeexpr.Defaults.Apply` does and then converts the result once
+  with go-cty's `convert.Convert`, so an optional attribute that is missing
+  and has no default becomes null. hashicorp/hcl's `convert` differs there: it
+  fails for a value that lacks an optional attribute, which a disputed test
+  covers. The rules of applying defaults are the rules whose IDs start with
+  `type-expressions-defaults` in `coverage/native-type-expressions.json`.
+- A test that declares an extension function needs the `functions` feature
+  and the feature of the extension. The adapter uses the extension's own
+  functions where the implementation has them, and otherwise builds them from
+  its type expression operations.
+
 ## Errors
 
 ```json
@@ -394,7 +479,8 @@ plain form, while adapters may print any decimal form, such as `"1.5e3"`
 Types use the same JSON notation as go-cty: `"string"`, `"number"`, `"bool"`,
 `"dynamic"`, `["list", "string"]`, `["set", <type>]`, `["map", <type>]`,
 `["tuple", [<type>, ...]]` and `["object", {"name": <type>}]`. The type of the
-`null` keyword is `"dynamic"`.
+`null` keyword is `"dynamic"`. Only [type expression](#type-expressions)
+results can have object types with optional attributes.
 
 An implementation without types (such as one whose arrays aren't typed)
 should report arrays as tuples, objects as objects and nulls as
@@ -458,7 +544,8 @@ into one canonical form. Adapters don't need to produce it:
   errors.
 - A `unary` minus applied to a number `literal` is the same as a negative
   number `literal`, so `-1` may be reported either way.
-- Set elements are compared in any order.
+- Set elements, and the optional attribute names of an object type, are
+  compared in any order.
 - Adjacent text parts in a template are joined, and empty ones are dropped.
   The exception is a template left with one interpolation and some emptied
   text, which keeps one empty text part because it isn't unwrapped.

@@ -1,0 +1,27 @@
+{
+  "description": "An object type without an argument is an error",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "reference_error": "The object type constructor requires one argument",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

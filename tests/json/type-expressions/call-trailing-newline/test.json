@@ -1,0 +1,41 @@
+{
+  "description": "A newline after a type constructor call in a JSON string is ignored",
+  "spec": [
+    "ext/typeexpr/README.md#hcl-type-expressions-extension",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "json-syntax",
+    "static-analysis",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The README reads the string as a native syntax expression, where a newline is not whitespace and is only ignored in some contexts, such as inside parentheses and brackets, without saying whether a string's content is one. hashicorp/hcl reads a call with hcl.ExprCall (getType in ext/typeexpr/get_type.go), which for a JSON string parses its content with hclsyntax.ParseExpression (expression.ExprCall in json/structure.go), and that ignores newlines as if the content were in parentheses (hclsyntax/public.go).",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "type": [
+            "list",
+            "string"
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

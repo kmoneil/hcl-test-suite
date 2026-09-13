@@ -1,0 +1,27 @@
+{
+  "description": "The keyword any as a list's element type is an error in an exact type",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "reference_error": "cannot be used in this type specification",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

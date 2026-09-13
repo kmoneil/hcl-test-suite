@@ -1,0 +1,57 @@
+{
+  "description": "A static map's keyword keys can be analyzed as types",
+  "spec": [
+    "ext/typeexpr/README.md#hcl-type-expressions-extension",
+    "hclsyntax/spec.md#static-map",
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The native syntax spec interprets a bare identifier object key as a literal attribute name as opposed to a variable reference, and the README leaves what a keyword is to the syntax, while the static map section returns keys with no further interpretation (native/analysis/map-key-identifier-as-traversal). hashicorp/hcl keeps a bare key as a ScopeTraversalExpr inside an ObjectConsKeyExpr, whose AsTraversal gives the wrapped expression's traversal (hclsyntax/expression.go), so hcl.ExprAsKeyword gives string and number and getType (ext/typeexpr/get_type.go) reads them as types.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-map",
+          "keys": {
+            "kind": "type"
+          }
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_map": [
+            {
+              "key": {
+                "type": "string"
+              },
+              "value": {
+                "number": "1"
+              }
+            },
+            {
+              "key": {
+                "type": "number"
+              },
+              "value": {
+                "number": "2"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

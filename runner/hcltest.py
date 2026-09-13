@@ -42,6 +42,10 @@ class AdapterError(Exception):
     """The adapter crashed, hung, or printed output that breaks the protocol."""
 
 
+class TypeNameConflict(ValueError):
+    """An object type has two attribute names that are the same string under NFC."""
+
+
 class KeyConflict(AdapterError):
     """An object or map has two keys that are the same string under NFC, which no
     correct implementation can produce. compare() reports it as a failure."""
@@ -455,9 +459,11 @@ def check_schema(schema, where="schema"):
         check_schema(schema["remain"], f"{where}: remain")
 
 
-# The parts of each kind of static analysis, which are analyses of their own.
+# The parts of each kind of analysis, which are analyses of their own.
 ANALYSIS_PARTS = {"value": (), "static-list": ("elements",), "static-map": ("keys", "values"), "static-call": ("arguments",),
-                  "static-traversal": ()}
+                  "static-traversal": (), "type": (), "type-constraint": (), "type-constraint-with-defaults": ()}
+# Functions that an extension defines, which tests declare by name, and the feature each needs.
+EXTENSION_FUNCTIONS = {"convert": "type-expressions", "convert-with-defaults": "type-expressions"}
 
 
 def check_analysis(analysis, where="analysis"):
@@ -487,6 +493,11 @@ def check_functions(functions):
 def check_function(decl):
     if not isinstance(decl, dict):
         raise ValueError("a declaration must be an object")
+    if "extension" in decl:
+        if set(decl) != {"extension"} or not isinstance(decl["extension"], str) or decl["extension"] not in EXTENSION_FUNCTIONS:
+            raise ValueError(f'an extension function is {{"extension": <name>}}, with a name among '
+                             f'{", ".join(EXTENSION_FUNCTIONS)}')
+        return
     unknown = set(decl) - FUNCTION_FIELDS
     if unknown:
         raise ValueError(f"unknown fields: {', '.join(sorted(unknown))}")
@@ -524,21 +535,41 @@ def check_param(param, where):
             raise ValueError(f'{where}: "{flag}" must be true or false')
 
 
-def check_type(ty, where):
-    """Checks a type in go-cty's JSON type notation, as used in values."""
+def check_type(ty, where, constraint=False):
+    """Checks a type in go-cty's JSON type notation, as used in values. A type constraint can also have object types
+    with optional attributes, whose names follow the attribute types: ["object", {"a": "string"}, ["a"]]."""
     if isinstance(ty, str) and ty in PRIMITIVE_TYPES:
         return
-    if isinstance(ty, list) and len(ty) == 2:
-        kind, arg = ty
-        if kind in ("list", "set", "map"):
-            return check_type(arg, where)
-        if kind == "tuple" and isinstance(arg, list):
+    if isinstance(ty, list) and len(ty) in (2, 3):
+        kind, arg = ty[0], ty[1]
+        if kind in ("list", "set", "map") and len(ty) == 2:
+            return check_type(arg, where, constraint)
+        if kind == "tuple" and isinstance(arg, list) and len(ty) == 2:
             for item in arg:
-                check_type(item, where)
+                check_type(item, where, constraint)
             return
         if kind == "object" and isinstance(arg, dict):
-            for item in arg.values():
-                check_type(item, where)
+            names = {}
+            for name, item in arg.items():
+                if unicodedata.normalize("NFC", name) in names:
+                    raise TypeNameConflict(f"{where}: the attribute names {ascii(names[unicodedata.normalize('NFC', name)])} "
+                                           f"and {ascii(name)} of an object type are equal under NFC")
+                names[unicodedata.normalize("NFC", name)] = name
+                check_type(item, where, constraint)
+            if len(ty) == 3:
+                optional = ty[2]
+                if not constraint:
+                    raise ValueError(f"{where}: only type expression results can have object types with optional "
+                                     f"attributes: {json.dumps(ty)}")
+                if optional == []:
+                    raise ValueError(f"{where}: leave out the list of optional attributes when there are none: "
+                                     f"{json.dumps(ty)}")
+                optional_names = [unicodedata.normalize("NFC", name) for name in optional] \
+                    if isinstance(optional, list) and all(isinstance(name, str) for name in optional) else None
+                if not (optional_names is not None and set(optional_names) <= set(names)
+                        and len(set(optional_names)) == len(optional_names)):
+                    raise ValueError(f"{where}: the optional attributes of an object type must be a list of its "
+                                     f"attribute names, each once: {json.dumps(ty)}")
             return
     raise ValueError(f"{where}: not a type: {json.dumps(ty)}")
 
@@ -581,7 +612,7 @@ def normalize_block(block, op):
 VALUE_KINDS = ("string", "number", "bool", "null", "unknown", "tuple", "object", "list", "set", "map")
 
 
-ANALYSIS_RESULTS = ("static_list", "static_map", "static_call", "static_traversal")
+ANALYSIS_RESULTS = ("static_list", "static_map", "static_call", "static_traversal", "type")
 
 
 def normalize_result(result):
@@ -589,6 +620,8 @@ def normalize_result(result):
     if not (isinstance(result, dict) and len(result) == 1 and next(iter(result)) in ANALYSIS_RESULTS):
         return normalize_value(result)
     kind, x = next(iter(result.items()))
+    if kind == "type":
+        return {kind: normalize_type(x, constraint=True)}
     items = x.get("arguments") if kind == "static_call" and isinstance(x, dict) else x
     if not isinstance(items, list):
         raise AdapterError(f"malformed {kind} result: {result!r}")
@@ -657,20 +690,26 @@ def normalize_value(value):
     return out
 
 
-def normalize_type(ty):
-    """A type in go-cty's JSON type notation, with object attribute names in NFC like object keys."""
+def normalize_type(ty, constraint=False):
+    """A type in go-cty's JSON type notation, with object attribute names in NFC like object keys, and the optional
+    attributes of a type constraint in order."""
     try:
-        check_type(ty, "type")
+        check_type(ty, "type", constraint)
+    except TypeNameConflict as e:
+        raise KeyConflict(str(e))
     except ValueError as e:
         raise AdapterError(str(e))
     if isinstance(ty, str):
         return ty
-    kind, arg = ty
+    kind, arg = ty[0], ty[1]
     if kind == "tuple":
-        return [kind, [normalize_type(item) for item in arg]]
+        return [kind, [normalize_type(item, constraint) for item in arg]]
     if kind == "object":
-        return [kind, {nfc(name): normalize_type(item) for name, item in arg.items()}]
-    return [kind, normalize_type(arg)]
+        out = [kind, {nfc(name): normalize_type(item, constraint) for name, item in arg.items()}]
+        if len(ty) == 3:
+            out.append(sorted(nfc(name) for name in ty[2]))
+        return out
+    return [kind, normalize_type(arg, constraint)]
 
 
 def nfc(text):

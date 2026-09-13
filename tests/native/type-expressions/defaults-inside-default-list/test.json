@@ -1,0 +1,48 @@
+{
+  "description": "The objects in a default list value get the defaults of their optional attributes",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The README says defaults populate missing optional attributes, without saying whether a default value it inserts gets the defaults of the objects in it. hashicorp/hcl converts each default value to its attribute's type when it reads the type (getType in ext/typeexpr/get_type.go), which turns [{}] into [{b = null}], and Defaults.apply (ext/typeexpr/defaults.go) applies the child defaults to that value, where b gets its default because a null attribute counts as missing (native/type-expressions/defaults-null-attribute).",
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "a": {
+              "list": [
+                {
+                  "object": {
+                    "b": {
+                      "number": "1"
+                    }
+                  }
+                }
+              ],
+              "element_type": [
+                "object",
+                {
+                  "b": "number"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

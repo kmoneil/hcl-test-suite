@@ -1,0 +1,22 @@
+{
+  "description": "A convert type argument that is a quoted type name is an error",
+  "spec": [
+    "ext/typeexpr/README.md#type-constraints-as-values",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "reference_error": "A type specification is either a primitive type keyword",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

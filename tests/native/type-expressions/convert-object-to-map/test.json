@@ -1,0 +1,37 @@
+{
+  "description": "The convert function converts an object to a map, converting its attributes",
+  "spec": [
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "map": {
+            "a": {
+              "string": "1"
+            },
+            "b": {
+              "string": "x"
+            }
+          },
+          "element_type": "string"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

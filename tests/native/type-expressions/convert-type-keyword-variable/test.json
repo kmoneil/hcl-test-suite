@@ -1,0 +1,33 @@
+{
+  "description": "A variable named like a type keyword doesn't change convert's type argument",
+  "spec": [
+    "ext/typeexpr/README.md#type-constraints-as-values",
+    "ext/customdecode/README.md#hcl-custom-static-decoding-extension"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "variables": {
+    "string": {
+      "number": "1"
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

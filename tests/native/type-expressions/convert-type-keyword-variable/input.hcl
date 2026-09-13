@@ -1,0 +1,1 @@
+a = convert(string, string)

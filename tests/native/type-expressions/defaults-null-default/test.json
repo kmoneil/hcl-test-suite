@@ -1,0 +1,32 @@
+{
+  "description": "A missing optional attribute whose default is null is null",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "a": {
+              "null": "string"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

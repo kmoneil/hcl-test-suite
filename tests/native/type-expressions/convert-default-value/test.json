@@ -1,0 +1,22 @@
+{
+  "description": "A default value in a convert type argument is an error",
+  "spec": [
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "ext/typeexpr/README.md#optional-object-attributes"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "reference_error": "Optional attribute modifier expects only one argument",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

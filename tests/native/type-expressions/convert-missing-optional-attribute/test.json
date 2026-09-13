@@ -1,0 +1,25 @@
+{
+  "description": "Converting an object without an optional attribute with convert is an error",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The README says the convert function populates missing optional attributes with null values, and the spec's conversion rules populate any missing attribute with null (spec.md#collection-and-structural-type-conversions). hashicorp/hcl's typeexpr.ConvertFunc (ext/typeexpr/type_type.go) computes its result type by converting the value, which gives an object type without optional attributes, and go-cty passes that type to its implementation (Function.Call in cty/function/function.go), which converts to it and finds the attribute missing.",
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "reference_error": "attribute \"b\" is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

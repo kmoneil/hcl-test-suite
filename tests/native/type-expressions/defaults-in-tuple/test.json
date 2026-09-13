@@ -1,0 +1,45 @@
+{
+  "description": "Defaults apply to each tuple element with the defaults of its own element type, if any",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "object": {
+                "a": {
+                  "string": "x"
+                }
+              }
+            },
+            {
+              "object": {
+                "a": {
+                  "string": "z"
+                }
+              }
+            },
+            {
+              "string": "s"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

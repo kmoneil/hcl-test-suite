@@ -1,0 +1,1 @@
+a = ns::list(string)

@@ -1,0 +1,30 @@
+{
+  "description": "A default object value without a required attribute is an error",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The spec's conversion rules convert {} to object({b = string}) by populating b with null (spec.md#collection-and-structural-type-conversions), which would make {} a valid default, while the README says a missing object attribute would typically result in an error. hashicorp/hcl converts each default value to its attribute's type when it reads the type (getType in ext/typeexpr/get_type.go), and go-cty's object conversion requires every attribute that isn't optional (conversionObjectToObject in cty/convert/conversion_object.go).",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type-constraint-with-defaults"
+        }
+      }
+    ]
+  },
+  "reference_error": "This default value is not compatible with the attribute's type constraint",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

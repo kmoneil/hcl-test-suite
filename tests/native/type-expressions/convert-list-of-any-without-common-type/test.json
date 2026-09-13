@@ -1,0 +1,23 @@
+{
+  "description": "Converting to a list of any is an error when the elements have no common type",
+  "spec": [
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "spec.md#type-unification"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "Not disputed like native/functions/function-error-is-eval-error: the README defines convert's result as the conversion, and the spec makes this conversion an error (spec.md#type-unification).",
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "reference_error": "all list elements must have the same type",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

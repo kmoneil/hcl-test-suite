@@ -1,0 +1,49 @@
+{
+  "description": "Defaults apply to each object in a list",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [
+            {
+              "object": {
+                "a": {
+                  "string": "x"
+                }
+              }
+            },
+            {
+              "object": {
+                "a": {
+                  "string": "y"
+                }
+              }
+            }
+          ],
+          "element_type": [
+            "object",
+            {
+              "a": "string"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

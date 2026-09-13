@@ -1,0 +1,27 @@
+{
+  "description": "A type constructor written with a capital letter is not a type constructor",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "reference_error": "Keyword \"List\" is not a valid type constructor",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

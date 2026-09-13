@@ -1,0 +1,39 @@
+{
+  "description": "An unknown optional attribute stays unknown instead of getting the default",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "type-expressions"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "string"
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "a": {
+              "unknown": "string"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

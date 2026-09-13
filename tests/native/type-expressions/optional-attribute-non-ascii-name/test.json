@@ -1,0 +1,42 @@
+{
+  "description": "An optional attribute's name keeps a combining mark",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type-constraint"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "type": [
+            "object",
+            {
+              "café": "string"
+            },
+            [
+              "café"
+            ]
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

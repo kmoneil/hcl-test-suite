@@ -1,0 +1,33 @@
+{
+  "description": "Converting to any keeps the value and its type",
+  "spec": [
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "ext/typeexpr/README.md#type-expression-syntax",
+    "spec.md#conversion-to-and-from-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "a": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

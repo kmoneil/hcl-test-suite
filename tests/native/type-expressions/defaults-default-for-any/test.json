@@ -1,0 +1,34 @@
+{
+  "description": "A default for an optional attribute of type any keeps its own type",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax",
+    "ext/typeexpr/README.md#optional-object-attributes"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The README allows any in function TypeConstraint only, and convert-with-defaults reads its type with TypeConstraintWithDefaults, whose documentation says it parses a type constraint, which TypeConstraint's documentation says additionally allows the keyword any. hashicorp/hcl reads both with getType (ext/typeexpr/get_type.go), which allows any whenever it reads a type constraint and converts the default to the dynamic pseudo-type with go-cty's convert.Convert, which keeps its type.",
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "a": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "area": "json/type-expressions",
+  "rules": [
+    {
+      "id": "type-expressions-json-strings",
+      "spec": "ext/typeexpr/README.md#hcl-type-expressions-extension",
+      "rule": "In the JSON syntax a type expression is a string whose content is read as a native syntax expression, not a template, after its JSON escapes are decoded, with spaces around it and newlines inside calls ignored",
+      "tests": [
+        "json/type-expressions/string-keyword",
+        "json/type-expressions/string-collection",
+        "json/type-expressions/string-object",
+        "json/type-expressions/string-tuple",
+        "json/type-expressions/string-escaped-keyword",
+        "json/type-expressions/string-surrounding-spaces",
+        "json/type-expressions/string-newlines-in-call"
+      ]
+    },
+    {
+      "id": "type-expressions-json-not-string",
+      "spec": "ext/typeexpr/README.md#hcl-type-expressions-extension",
+      "rule": "A JSON value other than a string is not a type expression: an array, an object, a number, null or a bool",
+      "tests": [
+        "json/type-expressions/json-array",
+        "json/type-expressions/json-object",
+        "json/type-expressions/json-number",
+        "json/type-expressions/json-null",
+        "json/type-expressions/json-bool"
+      ]
+    },
+    {
+      "id": "type-expressions-json-content-errors",
+      "spec": "ext/typeexpr/README.md#hcl-type-expressions-extension",
+      "rule": "A string whose content isn't a type expression is an error: template interpolation syntax, a quoted attribute name, an unterminated call, more content after a keyword or call, or nothing",
+      "tests": [
+        "json/type-expressions/template-interpolation",
+        "json/type-expressions/quoted-attribute-name",
+        "json/type-expressions/unterminated-call",
+        "json/type-expressions/extra-content-after-call",
+        "json/type-expressions/extra-content-after-keyword",
+        "json/type-expressions/empty-string"
+      ]
+    },
+    {
+      "id": "type-expressions-json-constraints",
+      "spec": "ext/typeexpr/README.md#type-expression-syntax",
+      "rule": "Type constraints in JSON strings can use any, optional attributes and default values, and any is an error in an exact type",
+      "tests": [
+        "json/type-expressions/constraint-any",
+        "json/type-expressions/exact-type-any",
+        "json/type-expressions/constraint-optional",
+        "json/type-expressions/constraint-default"
+      ]
+    },
+    {
+      "id": "type-expressions-json-newlines",
+      "spec": "ext/typeexpr/README.md#hcl-type-expressions-extension",
+      "rule": "A newline or a line comment after a type keyword or a type constructor call in a JSON string is ignored (disputed)",
+      "tests": [
+        "json/type-expressions/keyword-trailing-newline",
+        "json/type-expressions/keyword-line-comment",
+        "json/type-expressions/call-trailing-newline",
+        "json/type-expressions/call-line-comment"
+      ]
+    },
+    {
+      "id": "type-expressions-json-convert",
+      "spec": "ext/typeexpr/README.md#the-convert-cty-function",
+      "rule": "The convert functions can be called in a JSON string template, and their type argument is read as a type expression",
+      "tests": [
+        "json/type-expressions/convert-in-template",
+        "json/type-expressions/convert-with-defaults-in-template"
+      ]
+    },
+    {
+      "id": "type-expressions-json-in-static-analyses",
+      "spec": "json/spec.md#static-analysis",
+      "rule": "A type analysis can be a part of a static analysis of a JSON value: each key or value of a static map, each element of a static list, or each argument of a static call in a string, and a part that isn't a type makes the analysis fail",
+      "tests": [
+        "json/type-expressions/static-map-of-types",
+        "json/type-expressions/static-list-of-types",
+        "json/type-expressions/static-call-of-types",
+        "json/type-expressions/static-map-keys-as-types",
+        "json/type-expressions/static-list-element-not-a-type"
+      ]
+    },
+    {
+      "id": "type-expressions-json-literal-only",
+      "spec": "ext/typeexpr/README.md#hcl-type-expressions-extension",
+      "rule": "A JSON string is read as a type expression in literal-only mode too",
+      "tests": [
+        "json/type-expressions/literal-only-string"
+      ]
+    }
+  ]
+}

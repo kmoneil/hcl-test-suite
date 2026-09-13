@@ -336,7 +336,9 @@
       "id": "templates-unwrap-application-conversion",
       "spec": "hclsyntax/spec.md#template-interpolation-unwrapping",
       "rule": "An application can circumvent unwrapping by converting the template's result to string",
-      "untested": "The protocol evaluates attributes without a target type, so there is no way to request the conversion"
+      "tests": [
+        "native/templates/unwrapping-circumvented-by-conversion"
+      ]
     },
     {
       "id": "templates-if-parse-tree",

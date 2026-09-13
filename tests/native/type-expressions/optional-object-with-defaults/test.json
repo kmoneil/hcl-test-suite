@@ -1,0 +1,49 @@
+{
+  "description": "An optional object attribute can have a default and defaults of its own",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type-constraint-with-defaults"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "type": [
+            "object",
+            {
+              "a": [
+                "object",
+                {
+                  "b": "number"
+                },
+                [
+                  "b"
+                ]
+              ]
+            },
+            [
+              "a"
+            ]
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

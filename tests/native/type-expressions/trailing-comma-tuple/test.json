@@ -1,0 +1,39 @@
+{
+  "description": "A trailing comma in a tuple type's element list doesn't add an element",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax",
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "type": [
+            "tuple",
+            [
+              "string"
+            ]
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

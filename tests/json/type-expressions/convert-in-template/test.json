@@ -1,0 +1,38 @@
+{
+  "description": "The convert function can be called in a JSON string template",
+  "spec": [
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "json/spec.md#strings",
+    "hclsyntax/spec.md#template-interpolation-unwrapping"
+  ],
+  "op": "decode",
+  "features": [
+    "functions",
+    "json-syntax",
+    "type-expressions"
+  ],
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

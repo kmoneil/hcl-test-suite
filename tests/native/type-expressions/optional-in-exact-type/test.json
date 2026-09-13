@@ -1,0 +1,30 @@
+{
+  "description": "An optional attribute in an exact type is an error",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "ext/typeexpr/README.md#type-expression-syntax"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The README lets attributes of object type expressions be marked optional without limiting that to type constraints (it does limit any), and TypeConstraint's documentation says a type constraint has the same structure as a type, adding only the keyword any. hashicorp/hcl's getType (ext/typeexpr/get_type.go) accepts optional only when it reads a type constraint, and reports it as an error in an exact type.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "reference_error": "Optional attribute modifier is only for type constraints",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

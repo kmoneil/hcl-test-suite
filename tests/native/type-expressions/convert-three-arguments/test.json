@@ -1,0 +1,22 @@
+{
+  "description": "Calling convert with three arguments is an error",
+  "spec": [
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "reference_error": "Too many function arguments",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

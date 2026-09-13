@@ -1,0 +1,1 @@
+a = tuple([string, number])

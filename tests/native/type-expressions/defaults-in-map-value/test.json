@@ -1,0 +1,65 @@
+{
+  "description": "Defaults apply to each object element of a map value",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "variables": {
+    "v": {
+      "map": {
+        "k": {
+          "object": {
+            "b": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "element_type": [
+        "object",
+        {
+          "b": "number"
+        }
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "map": {
+            "k": {
+              "object": {
+                "a": {
+                  "string": "x"
+                },
+                "b": {
+                  "number": "1"
+                }
+              }
+            }
+          },
+          "element_type": [
+            "object",
+            {
+              "a": "string",
+              "b": "number"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

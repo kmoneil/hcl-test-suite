@@ -1,0 +1,23 @@
+{
+  "description": "Converting a string to an object type with defaults is an error",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "Not disputed like native/functions/function-error-is-eval-error: the README defines convert's result as the conversion, and the spec makes this conversion an error (spec.md#collection-and-structural-type-conversions).",
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "reference_error": "object required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

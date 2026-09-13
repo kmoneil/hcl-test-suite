@@ -1,0 +1,28 @@
+{
+  "description": "An invalid convert type argument is an error even when the value is unknown",
+  "spec": [
+    "ext/typeexpr/README.md#type-constraints-as-values",
+    "ext/customdecode/README.md#hcl-custom-static-decoding-extension"
+  ],
+  "op": "eval",
+  "features": [
+    "unknown-values",
+    "functions",
+    "type-expressions"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "dynamic"
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "reference_error": "The keyword \"foo\" is not a valid type specification",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

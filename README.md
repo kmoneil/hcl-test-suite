@@ -7,9 +7,9 @@ HashiCorp configuration language, in the spirit of
 Any HCL implementation, in any language, can run it by providing a small
 adapter program.
 
-**Status:** draft. 2,687 tests of the native and JSON syntaxes, checking 965
-rules from the spec at hashicorp/hcl v2.24.0. The test and adapter formats may
-still change.
+**Status:** draft. 2,897 tests of the native and JSON syntaxes, checking 1,025
+rules from the spec and the type expression extension at hashicorp/hcl
+v2.24.0. The test and adapter formats may still change.
 
 ## How it works
 
@@ -57,7 +57,8 @@ run the tests at all.
 1. Write an adapter ([protocol](docs/protocol.md)). You can start with just
    `capabilities` and `parse`. Tests for operations or features you don't
    support (such as `eval`, `decode`, the JSON syntax, typed values, unknown
-   values, functions or static analysis) are skipped, not failed.
+   values, functions, static analysis or type expressions) are skipped, not
+   failed.
 2. Run `python3 runner/hcltest.py --adapter "<command that runs your adapter>"`.
 3. If you're unsure how some input should be read, ask the reference
    implementation: `bin/hcl-go-adapter parse file.hcl`.
@@ -72,7 +73,7 @@ run the tests at all.
 | collections (tuples, objects) | 152 | 66 | 0 |
 | strings | 74 | 27 | 0 |
 | heredocs | 104 | 36 | 0 |
-| templates | 302 | 86 | 1 |
+| templates | 303 | 86 | 0 |
 | variables, attribute access, index | 138 | 58 | 1 |
 | splat | 88 | 30 | 0 |
 | function calls | 136 | 38 | 0 |
@@ -85,21 +86,24 @@ run the tests at all.
 | JSON bodies (attributes, blocks, schemas) | 103 | 33 | 0 |
 | JSON expressions | 75 | 20 | 0 |
 | JSON static analysis | 98 | 27 | 0 |
-| **total** | **2,687** | **973** | **8** |
+| type expressions (`ext/typeexpr`) | 175 | 51 | 0 |
+| JSON type expressions | 34 | 8 | 0 |
+| **total** | **2,897** | **1,032** | **7** |
 
 - Most rules without tests need something the protocol can't express yet:
-  conversion to a target type, error positions, capsule values, or
-  literal-only evaluation with variables, which hashicorp/hcl can't express
-  either. Two depend on choices the spec leaves to implementations
-  (rounding and the order of set elements), and one is guidance for
-  applications. `python3 tools/coverage.py rules` lists them.
-- The tests exercise 84.7% of the statements in hashicorp/hcl's `hclsyntax`
-  package and 85.8% of its `json` package (`python3 tools/coverage.py go`).
+  error positions, capsule values, or literal-only evaluation with variables,
+  which hashicorp/hcl can't express either. Two depend on choices the spec
+  leaves to implementations (rounding and the order of set elements), and one
+  is guidance for applications. `python3 tools/coverage.py rules` lists them.
+- The tests exercise 84.9% of the statements in hashicorp/hcl's `hclsyntax`
+  package, 85.8% of its `json` package and 78.6% of `ext/typeexpr`
+  (`python3 tools/coverage.py go`).
   Most of the rest is syntax tree walking, listing the variables an
   expression uses, lookups by source position and source ranges, which the
   protocol doesn't reach, and error handling for states that valid use can't
-  produce.
-- Not covered yet: the `ext/` packages.
+  produce. In `ext/typeexpr` it is mostly `TypeString` and Go helpers for
+  type constraint values; reading type expressions is fully covered.
+- Not covered yet: the `dynblock`, `tryfunc` and `userfunc` extensions.
 
 ## How the tests are checked
 
@@ -122,8 +126,8 @@ run the tests at all.
 
 | Implementation | Passed | Failed | Adapter errors | Skipped |
 | --- | ---: | ---: | ---: | ---: |
-| hashicorp/hcl v2.24.0 | 2,687 | 0 | 0 | 0 |
-| hcl-rs 0.19.8 | 1,570 | 203 (74 disputed) | 21 | 893 |
+| hashicorp/hcl v2.24.0 | 2,897 | 0 | 0 | 0 |
+| hcl-rs 0.19.8 | 1,570 | 203 (74 disputed) | 21 | 1,103 |
 
 ### hcl-rs 0.19.8
 
@@ -149,11 +153,11 @@ The 129 failures on tests that aren't disputed fall into these groups:
 - **Not supported (skipped or adapter errors):** list, set and map types,
   unknown values, infinity, function parameters of collection or structural
   types, schema-driven processing (`decode`) with the static analysis tests
-  that use it, and the JSON syntax.
+  that use it, type expressions, and the JSON syntax.
 
 ### Where the spec and hashicorp/hcl disagree
 
-379 tests are disputed. `python3 tools/coverage.py disputes` lists them all by
+409 tests are disputed. `python3 tools/coverage.py disputes` lists them all by
 spec section, with notes. The main themes:
 
 - **Source text:** a byte order mark, identifiers starting with `_`, and some
@@ -201,6 +205,22 @@ spec section, with notes. The main themes:
   `.0`, `[true]`, `[null]` and heredoc keys, and string content read for
   static analysis ignores newlines, a trailing line comment and a leading
   byte order mark.
+- **Type expressions:** parentheses make a type expression or an object
+  attribute name invalid, bare `true` and `null` keys name object type
+  attributes, and names equal under NFC name one attribute, while naming an
+  attribute twice is an error. `optional` is an error in an exact type, `any`
+  is allowed with defaults, `ns::list(string)` is read as a call instead of
+  being a syntax error, `list(string...)` is read as `list(string)`, and a
+  bare identifier key of a static map is read as a type keyword. Default
+  values can use operators, an optional attribute set to null gets its
+  default, and so do the objects inside a default value, while a default
+  added to a map value is unified with the map's elements. A value that lacks
+  a required attribute doesn't convert, with or without defaults, and a
+  default value that lacks one is an error, although the spec's object
+  conversion fills missing attributes with null. `convert` also fails for a
+  value that lacks an optional attribute, which the README says becomes null.
+  In the JSON syntax, a newline or line comment after a type keyword or call
+  is ignored.
 - **Schemas:** requesting an optional attribute twice (or in the JSON syntax a
   required one), or an attribute and a block type with the same name, isn't
   reported as an error, and dynamic attributes of the body left from a JSON
@@ -235,11 +255,21 @@ spec section, with notes. The main themes:
   `{f(1) = 2}` has no static call key and `{[1, 2] = 3}` no static list key:
   `ObjectConsKeyExpr.UnwrapExpression` returns `hclsyntax.Expression` instead
   of `hcl.Expression`, so hcl's unwrapping never reaches the key's expression.
+- `typeexpr.ConvertFunc` fails for a value that lacks an optional attribute:
+  its implementation converts to the result type its type function computed,
+  which no longer has the optional attributes.
+- An object type whose two attribute names differ only in Unicode
+  normalization (`é` written as U+00E9 and as `e` followed by U+0301), one
+  `string` and one `number`, gives an attribute of either type from one run
+  to the next: typeexpr checks for duplicates by the names as written, and
+  go-cty merges them in Go map order. No test depends on it.
+- The documentation of `hcl.ExprAsKeyword` says the native syntax's `true`,
+  `false` and `null` can't be keywords, but it gives their names.
 
 ## Next steps
 
-- The `ext/` packages (`typeexpr`, `dynblock`, `tryfunc`, `userfunc`) as
-  optional features.
+- The other `ext/` packages (`dynblock`, `tryfunc`, `userfunc`) as optional
+  features.
 
 ## License
 

@@ -24,12 +24,15 @@ from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SPEC_DOCS = ("spec.md", "hclsyntax/spec.md", "json/spec.md")
+SPEC_DOCS = ("spec.md", "hclsyntax/spec.md", "json/spec.md", "ext/typeexpr/README.md", "ext/customdecode/README.md",
+             "ext/tryfunc/README.md", "ext/userfunc/README.md", "ext/dynblock/README.md")
 COVER_PACKAGES = [
     "./...",  # Go only writes coverage data if the main package is instrumented too
     "github.com/hashicorp/hcl/v2",
     "github.com/hashicorp/hcl/v2/hclsyntax",
     "github.com/hashicorp/hcl/v2/json",
+    "github.com/hashicorp/hcl/v2/ext/customdecode",
+    "github.com/hashicorp/hcl/v2/ext/typeexpr",
     "github.com/zclconf/go-cty/cty",
     "github.com/zclconf/go-cty/cty/convert",
     "github.com/zclconf/go-cty/cty/function",
@@ -127,7 +130,7 @@ def cmd_go(args):
             lines = profile.read_text().splitlines(keepends=True)
             profile.write_text("".join(line for line in lines if ".rl:" not in line))
             report = run(["go", "tool", "cover", "-func", str(profile)], cwd=adapter_dir)
-            for package in ("hclsyntax", "json"):
+            for package in ("hclsyntax", "json", "ext/typeexpr"):
                 print(f"\n{package} functions below 100%:")
                 for line in report.splitlines():
                     if f"/v2/{package}/" in line and not line.rstrip().endswith("100.0%"):
@@ -150,8 +153,9 @@ def cmd_anchors(args):
             count = seen.get(slug, 0)
             seen[slug] = count + 1
             anchors.append(f"{doc}#{slug}" + (f"-{count}" if count else ""))
-    header = ("# Section anchors in the HCL spec at hashicorp/hcl v2.24.0. Tests and coverage\n"
-              "# files may only link to these. Regenerate with: python3 tools/coverage.py anchors <spec-dir>\n")
+    header = ("# Section anchors in the HCL spec and the READMEs of its extensions at hashicorp/hcl v2.24.0.\n"
+              "# Tests and coverage files may only link to these.\n"
+              "# Regenerate with: python3 tools/coverage.py anchors <spec-dir>\n")
     (ROOT / "tools" / "spec-anchors.txt").write_text(header + "\n".join(anchors) + "\n", encoding="utf-8")
     print(f"wrote {len(anchors)} anchors")
 
@@ -171,10 +175,11 @@ def main():
     commands.add_parser("spec", help="rules and tests per spec section").set_defaults(func=cmd_spec)
     commands.add_parser("disputes", help="disputed tests by spec section, as Markdown").set_defaults(func=cmd_disputes)
     go = commands.add_parser("go", help="code of hashicorp/hcl exercised by the tests")
-    go.add_argument("--functions", action="store_true", help="list hclsyntax and json functions that aren't fully covered")
+    go.add_argument("--functions", action="store_true",
+                    help="list hclsyntax, json and ext/typeexpr functions that aren't fully covered")
     go.set_defaults(func=cmd_go)
     anchors = commands.add_parser("anchors", help="regenerate tools/spec-anchors.txt")
-    anchors.add_argument("spec_dir", help="directory containing spec.md, hclsyntax/spec.md and json/spec.md")
+    anchors.add_argument("spec_dir", help="a checkout of hashicorp/hcl v2.24.0, which has the spec documents")
     anchors.set_defaults(func=cmd_anchors)
     args = parser.parse_args()
     args.func(args)

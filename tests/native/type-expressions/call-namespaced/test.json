@@ -1,0 +1,30 @@
+{
+  "description": "A namespaced type constructor call is an error",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax",
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The native syntax spec's function call grammar has a single identifier as the function name (FunctionCall = Identifier \"(\" arguments \")\"), and :: is not one of its tokens, so ns::list(string) would be a syntax error. hashicorp/hcl parses the call (finishParsingFunctionCall in hclsyntax/parser.go), and getType (ext/typeexpr/get_type.go) reports ns::list as an invalid type constructor.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "reference_error": "Keyword \"ns::list\" is not a valid type constructor",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

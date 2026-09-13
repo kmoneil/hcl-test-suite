@@ -1,0 +1,30 @@
+{
+  "description": "Converting an unknown bool to a list is an error",
+  "spec": [
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "Not disputed like native/functions/function-error-is-eval-error: the README defines convert's result as the conversion, and the spec makes this conversion an error (spec.md#unknown-values-and-the-dynamic-pseudo-type, which makes an operation on unknown values an error when its types already rule it out).",
+  "variables": {
+    "u": {
+      "unknown": "bool"
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "reference_error": "list of string required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

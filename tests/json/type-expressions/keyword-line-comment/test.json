@@ -1,0 +1,37 @@
+{
+  "description": "A line comment after a type keyword in a JSON string is ignored",
+  "spec": [
+    "ext/typeexpr/README.md#hcl-type-expressions-extension",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The README reads the string as a native syntax expression, where a line comment counts as a newline and newlines are only ignored in some contexts, such as inside parentheses and brackets, without saying whether a string's content is one. hashicorp/hcl reads a keyword with hcl.ExprAsKeyword (getType in ext/typeexpr/get_type.go), which for a JSON string parses its content with hclsyntax.ParseTraversalAbs (expression.AsTraversal in json/structure.go), and that ignores newlines and drops comments.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "type": "string"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

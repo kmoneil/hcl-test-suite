@@ -1,0 +1,28 @@
+{
+  "description": "A default value whose evaluation fails is an error",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "hclsyntax/spec.md#template-interpolations"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type-constraint-with-defaults"
+        }
+      }
+    ]
+  },
+  "reference_error": "Invalid template interpolation value",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

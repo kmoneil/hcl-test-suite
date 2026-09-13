@@ -1,0 +1,30 @@
+{
+  "description": "An object type naming an attribute twice is an error",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax",
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The README doesn't say what an object type constructor that names an attribute twice means, and the spec doesn't say what an object constructor with duplicate keys does (native/collections/object-duplicate-key-last-wins): object types can't have two attributes with the same name, but hashicorp/hcl evaluates such a constructor by keeping the last value. getType (ext/typeexpr/get_type.go) reports the second name as an error.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "reference_error": "Object constructor map keys must be unique",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

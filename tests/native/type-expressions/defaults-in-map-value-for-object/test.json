@@ -1,0 +1,46 @@
+{
+  "description": "Defaults apply to a map value converted to an object type",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "variables": {
+    "m": {
+      "map": {
+        "b": {
+          "string": "y"
+        }
+      },
+      "element_type": "string"
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "a": {
+              "string": "x"
+            },
+            "b": {
+              "string": "y"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "description": "The keyword any written as a call is an error in a type constraint",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type-constraint"
+        }
+      }
+    ]
+  },
+  "reference_error": "Type constraint keyword \"any\" does not expect arguments",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

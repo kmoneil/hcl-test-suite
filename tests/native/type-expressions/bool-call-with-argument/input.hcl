@@ -1,0 +1,1 @@
+a = bool(string)

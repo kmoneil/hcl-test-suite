@@ -1,0 +1,31 @@
+{
+  "description": "A given optional attribute keeps its value instead of the default",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "a": {
+              "string": "y"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

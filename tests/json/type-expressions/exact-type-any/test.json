@@ -1,0 +1,29 @@
+{
+  "description": "A JSON string containing any is an error in an exact type",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax",
+    "json/spec.md#strings"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "reference_error": "cannot be used in this type specification",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

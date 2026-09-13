@@ -1,0 +1,27 @@
+{
+  "description": "A number as an object attribute name in a type is an error",
+  "spec": [
+    "ext/typeexpr/README.md#type-expression-syntax"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "type-expressions"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "type"
+        }
+      }
+    ]
+  },
+  "reference_error": "Object constructor map keys must be attribute names",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}
