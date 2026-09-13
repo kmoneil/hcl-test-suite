@@ -252,11 +252,13 @@
     {
       "id": "strings-escapes-single-pass",
       "spec": "hclsyntax/spec.md#template-expressions",
-      "rule": "Characters produced by escape sequences are not read again as syntax: an escaped quote doesn't end the string, an escaped backslash doesn't start another escape, and an escaped $ doesn't start an interpolation",
+      "rule": "Characters produced by escape sequences are not read again as syntax: an escaped quote doesn't end the string, an escaped backslash doesn't start another escape, an escaped $ doesn't start an interpolation, and an escaped $ or % right before ${ or %{ doesn't make an escaped $${ or %%{",
       "tests": [
         "native/strings/escaped-quote-code-point-does-not-close",
         "native/strings/escaped-backslash-code-point-is-not-an-escape",
-        "native/strings/escaped-dollar-code-point-is-not-interpolation"
+        "native/strings/escaped-dollar-code-point-is-not-interpolation",
+        "native/strings/escaped-percent-code-point-before-directive",
+        "native/strings/escaped-dollar-code-point-before-interpolation"
       ]
     },
     {

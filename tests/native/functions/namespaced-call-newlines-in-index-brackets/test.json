@@ -1,0 +1,31 @@
+{
+  "description": "Inside index brackets, newlines around the double colon of a function name are ignored",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec's function call grammar has a single identifier as the function name (FunctionCall = Identifier \"(\" arguments \")\"), and :: is not one of its tokens. hashicorp/hcl accepts names separated by :: and reports them joined with :: as the function name (finishParsingFunctionCall in hclsyntax/parser.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "index",
+          "collection": {
+            "kind": "variable",
+            "name": "t"
+          },
+          "key": {
+            "kind": "call",
+            "name": "ns::f",
+            "args": [],
+            "expand_final": false
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

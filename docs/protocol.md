@@ -16,6 +16,7 @@ reading JSON.
 <adapter> parse <file>
 <adapter> eval <file> [<context.json>]
 <adapter> decode <file> <context.json>
+<adapter> validate <file>
 ```
 
 The adapter must exit with status 0 whenever it produced a result, **including
@@ -24,8 +25,9 @@ itself failed. The runner reports that as an adapter error and shows whatever
 the adapter wrote to standard error.
 
 Input files ending in `.hcl` use the native syntax, and files ending in
-`.hcl.json` use the JSON syntax. The JSON syntax can only be read with a schema,
-so only `decode` gets JSON syntax files.
+`.hcl.json` use the JSON syntax. Only a schema says how to read the bodies of a
+JSON syntax file, so `parse` and `eval` never get JSON syntax files. `decode`
+does, and so can `validate`, since checking that a file parses needs no schema.
 
 ## `capabilities`
 
@@ -40,10 +42,13 @@ Describes the implementation and what the adapter supports.
 }
 ```
 
-- `operations` lists the commands the adapter supports, any of `parse`, `eval`
-  and `decode`. Tests for other operations are skipped.
+- `operations` lists the commands the adapter supports, any of `parse`,
+  `eval`, `decode` and `validate`. Tests for other operations are skipped.
+  With `--validate`, the runner uses only [`validate`](#validate), for every
+  test, and it needs `--validate` for an adapter that supports nothing else.
 - `features` lists optional parts of HCL the implementation supports. Tests
-  that need a missing feature are skipped:
+  that need a missing feature are skipped (with `--validate`, only a missing
+  `json-syntax` skips tests):
   - `typed-values`: list, set and map values distinct from tuples and
     objects, null and unknown values that keep a type, function parameters
     whose type is a collection or structural type, and type expression
@@ -319,6 +324,44 @@ a type expression of the type expression extension (hashicorp/hcl's
   `{"kind": "static-map", "values": {"kind": "type"}}`. A test with a type
   analysis needs the `static-analysis` and `type-expressions` features (and
   `typed-values` when the result has a list, set or map type).
+
+## `validate`
+
+Reports whether the file parses, without describing it.
+
+```json
+{"valid": true}
+```
+
+or, if the file is not valid HCL:
+
+```json
+{"valid": false, "phase": "parse", "errors": [<error>, ...]}
+```
+
+With `--validate`, the runner sends each test's input file to `validate`
+instead of running the test, and checks only whether the file parses. The
+file should parse unless the test is a `parse` test that expects an error, or
+an `eval` or `decode` test that expects one with `"phase": "parse"`. This way
+parsers that can't run the tests can be measured too, such as parsers that
+keep strings as source text and editor grammars, and so can the parser of any
+implementation on its own.
+
+- A file is valid if the implementation parses it without errors. An adapter
+  that supports other commands too must agree with their parse phase:
+  `validate` accepts a file exactly when `parse`, `eval` and `decode` get past
+  parsing it.
+- JSON syntax files are only sent to adapters with the `json-syntax` feature.
+  The other features don't change whether a file parses, so every native
+  syntax test is checked.
+- As for the other commands, the runner ignores fields it doesn't use, and
+  `errors` may be empty. In a result with `"valid": false`, `phase` may be
+  left out or null, and any other value than `"parse"` is an adapter error.
+- With `--reference-errors`, the runner also checks the errors of tests whose
+  input shouldn't parse against their reference errors.
+- A failing disputed test counts as disputed, as it does without
+  `--validate`, even if the dispute is about evaluation rather than parsing
+  (see [disputed tests](test-format.md#disputed-tests)).
 
 ## Functions
 

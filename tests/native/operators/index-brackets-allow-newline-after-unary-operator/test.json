@@ -1,0 +1,31 @@
+{
+  "description": "Inside index brackets, a newline may separate the ! operator from its operand",
+  "spec": [
+    "hclsyntax/spec.md#operations",
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "index",
+          "collection": {
+            "kind": "variable",
+            "name": "t"
+          },
+          "key": {
+            "kind": "unary",
+            "operator": "!",
+            "operand": {
+              "kind": "variable",
+              "name": "x"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

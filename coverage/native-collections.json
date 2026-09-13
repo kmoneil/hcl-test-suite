@@ -81,7 +81,8 @@
       "spec": "hclsyntax/spec.md#collection-values",
       "rule": "Because the prose makes newlines inside brackets whitespace and prose outranks the grammar, a newline alone doesn't separate tuple elements",
       "tests": [
-        "native/collections/tuple-newline-not-separator"
+        "native/collections/tuple-newline-not-separator",
+        "native/operators/tuple-brackets-allow-newline-before-minus"
       ]
     },
     {

@@ -164,7 +164,8 @@
         "native/heredocs/expression-cannot-continue-after-closing-marker",
         "native/heredocs/expression-continues-after-closing-marker-in-parentheses",
         "native/heredocs/heredoc-as-last-operand",
-        "native/heredocs/heredoc-in-block-body"
+        "native/heredocs/heredoc-in-block-body",
+        "native/collections/tuple-comma-after-heredoc-element"
       ]
     },
     {

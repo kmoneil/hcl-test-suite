@@ -1,0 +1,31 @@
+{
+  "description": "Inside index brackets, a newline after the dot of an attribute access is ignored",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator",
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "index",
+          "collection": {
+            "kind": "variable",
+            "name": "t"
+          },
+          "key": {
+            "kind": "get_attr",
+            "object": {
+              "kind": "variable",
+              "name": "o"
+            },
+            "name": "b"
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -282,6 +282,7 @@ class Linter:
         self.anchors = load_anchors()
         self.problems = []
         self.disputed = {}
+        self.validity = {}  # (input file name, input bytes) -> [(test, whether the input parses), ...]
 
     def in_scope(self, name):
         return not self.scopes or any(name == s or name.startswith(s + "/") for s in self.scopes)
@@ -477,10 +478,6 @@ class Linter:
             if "body" in expect:
                 self.problem(where, "an expected error cannot have a body")
             self.text_field(where, "reference_error", meta.get("reference_error"))
-            phases = hcltest.PHASES.get(test.op)
-            if phases and expect.get("phase") not in phases:
-                self.problem(where, f'{test.op} tests that expect an error need a "phase": '
-                                    f'{" or ".join(json.dumps(p) for p in phases)}')
             if test.op == "parse" and "phase" in expect:
                 self.problem(where, 'parse tests don\'t need a "phase"')
             if expect.get("phase") == "analysis" and not schema_has_analysis(test.context.get("schema", {})):
@@ -489,11 +486,13 @@ class Linter:
         data = test.input.read_bytes()
         if len(data) > MAX_INPUT_BYTES:
             self.problem(where, f"input is larger than {MAX_INPUT_BYTES} bytes; keep tests minimal")
-        key = (test.op, test.input.name, data, json.dumps(test.context, sort_keys=True))
-        if key in inputs:
-            self.problem(where, f"same op, input and context as {inputs[key]}")
-        inputs.setdefault(key, where)
+        self.register(test, where, inputs, data)
         return where
+
+    def register(self, test, where, inputs, data):
+        """Records a test for check_same_inputs."""
+        inputs.setdefault((test.op, test.input.name, data, json.dumps(test.context, sort_keys=True)), []).append((where, None))
+        self.validity.setdefault((test.input.name, data), []).append((where, test.parses))
 
     def register_only(self, test_json, where, descriptions, inputs):
         """Records an out-of-scope test so in-scope tests can be checked against it."""
@@ -503,8 +502,30 @@ class Linter:
         except (OSError, hcltest.TestError):
             return where  # reported when the test is in scope
         descriptions.setdefault(test.description, where)
-        inputs.setdefault((test.op, test.input.name, data, json.dumps(test.context, sort_keys=True)), where)
+        self.register(test, where, inputs, data)
         return where
+
+    def check_same_inputs(self, inputs):
+        """Checks tests with the same input against each other. It runs after every test is recorded, so
+        that a check of some tests also finds conflicts with the tests outside it."""
+        for tests in inputs.values():
+            self.report_conflicts(tests, lambda a, b: True, lambda test, other: f"same op, input and context as {other[0]}")
+        # --validate checks each test's input on its own, so tests with the same input can't disagree.
+        for tests in self.validity.values():
+            self.report_conflicts(tests, lambda a, b: a[1] != b[1], lambda test, other: f"same input as {other[0]}, "
+                                  f"which expects it to {'parse' if other[1] else 'be a parse error'}")
+
+    def report_conflicts(self, tests, conflict, message):
+        """Reports the tests that conflict with the first of a group. If none of them are checked, it reports the
+        checked tests that agree with the first instead, so that a check of some tests still finds the conflict."""
+        first, others = tests[0], [t for t in tests[1:] if conflict(tests[0], t)]
+        checked = [t for t in others if self.in_scope(t[0])]
+        for test in checked:
+            self.problem(test[0], message(test, first))
+        if others and not checked:
+            for test in [first] + [t for t in tests[1:] if t not in others]:
+                if self.in_scope(test[0]):
+                    self.problem(test[0], message(test, others[0]))
 
     def check_coverage(self, test_names):
         covered = defaultdict(list)
@@ -589,6 +610,7 @@ def main():
         depth = len(directory.relative_to(TESTS).parts)
         if depth == 3 and not (directory / "test.json").exists() and linter.in_scope(directory.relative_to(TESTS).as_posix()):
             linter.problem(directory.relative_to(TESTS).as_posix(), "test directory without test.json")
+    linter.check_same_inputs(inputs)
     linter.check_coverage(names)
 
     for problem in linter.problems:

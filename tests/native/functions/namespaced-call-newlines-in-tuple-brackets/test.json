@@ -1,0 +1,30 @@
+{
+  "description": "Inside tuple brackets, newlines around the double colon of a function name are ignored",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#syntax-notation"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec's function call grammar has a single identifier as the function name (FunctionCall = Identifier \"(\" arguments \")\"), and :: is not one of its tokens. hashicorp/hcl accepts names separated by :: and reports them joined with :: as the function name (finishParsingFunctionCall in hclsyntax/parser.go). Separately, the grammar lists Newline as a separator between tuple elements, but the prose says newlines between the brackets are ignored as whitespace, and prose has priority over the grammar, so the newlines don't end the element.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "tuple",
+          "elements": [
+            {
+              "kind": "call",
+              "name": "ns::f",
+              "args": [],
+              "expand_final": false
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

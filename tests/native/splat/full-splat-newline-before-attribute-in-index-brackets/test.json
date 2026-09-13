@@ -1,0 +1,37 @@
+{
+  "description": "Inside index brackets, an attribute access on the line after a full splat joins its each expression",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators",
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "index",
+          "collection": {
+            "kind": "variable",
+            "name": "u"
+          },
+          "key": {
+            "kind": "splat",
+            "source": {
+              "kind": "variable",
+              "name": "t"
+            },
+            "each": {
+              "kind": "get_attr",
+              "object": {
+                "kind": "splat_item"
+              },
+              "name": "b"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

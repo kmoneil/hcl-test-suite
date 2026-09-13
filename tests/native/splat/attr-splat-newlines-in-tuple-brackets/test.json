@@ -1,0 +1,37 @@
+{
+  "description": "Inside tuple brackets, newlines around the dots of an attribute-only splat are ignored",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators",
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#syntax-notation"
+  ],
+  "op": "parse",
+  "notes": "The grammar lists Newline as a separator between tuple elements, but the prose says newlines between the brackets are ignored as whitespace, and prose has priority over the grammar, so the newlines don't end the element. hashicorp/hcl ignores newlines inside tuple constructors (parseTupleCons in hclsyntax/parser.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "tuple",
+          "elements": [
+            {
+              "kind": "splat",
+              "source": {
+                "kind": "variable",
+                "name": "t"
+              },
+              "each": {
+                "kind": "get_attr",
+                "object": {
+                  "kind": "splat_item"
+                },
+                "name": "b"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

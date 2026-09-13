@@ -1,0 +1,39 @@
+{
+  "description": "Inside index brackets, a newline may come before a binary operator",
+  "spec": [
+    "hclsyntax/spec.md#operations",
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "index",
+          "collection": {
+            "kind": "variable",
+            "name": "t"
+          },
+          "key": {
+            "kind": "binary",
+            "operator": "+",
+            "left": {
+              "kind": "literal",
+              "value": {
+                "number": "1"
+              }
+            },
+            "right": {
+              "kind": "literal",
+              "value": {
+                "number": "1"
+              }
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

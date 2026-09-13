@@ -226,7 +226,8 @@
       "spec": "hclsyntax/spec.md#comments-and-whitespace",
       "rule": "Inline comments count as whitespace and may appear between any two tokens of a for expression",
       "tests": [
-        "native/for/for-inline-comments-between-tokens"
+        "native/for/for-inline-comments-between-tokens",
+        "native/for/tuple-for-inline-comments-between-tokens"
       ]
     },
     {

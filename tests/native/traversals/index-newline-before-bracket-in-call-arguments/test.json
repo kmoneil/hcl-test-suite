@@ -1,0 +1,36 @@
+{
+  "description": "Inside function call arguments, a newline before the opening bracket of an index is ignored",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "call",
+          "name": "f",
+          "args": [
+            {
+              "kind": "index",
+              "collection": {
+                "kind": "variable",
+                "name": "t"
+              },
+              "key": {
+                "kind": "literal",
+                "value": {
+                  "number": "0"
+                }
+              }
+            }
+          ],
+          "expand_final": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

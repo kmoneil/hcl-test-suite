@@ -42,9 +42,9 @@ unless `input` says otherwise.
 | --- | --- | --- |
 | `description` | yes | One sentence stating the rule being tested, starting with a capital letter and without a final period. At most 100 characters, and unique in the suite. |
 | `spec` | yes | The spec sections that define the behavior, as anchors from [tools/spec-anchors.txt](../tools/spec-anchors.txt). |
-| `op` | yes | `"parse"`, `"eval"` or `"decode"`, the adapter command to run. JSON syntax tests are always decode tests. |
+| `op` | yes | `"parse"`, `"eval"` or `"decode"`, the adapter command to run. JSON syntax tests are always decode tests. With `--validate`, the runner sends the test's input to `validate` instead. |
 | `input` | no | The input file name in the test directory, if not `input.hcl` for native syntax tests or `input.hcl.json` for JSON syntax tests. Lint requires the default. |
-| `features` | no | Optional features the test needs: `"typed-values"`, `"unknown-values"`, `"functions"`, `"json-syntax"`, `"static-analysis"`, `"type-expressions"` or `"try-functions"` (see [capabilities](protocol.md#capabilities)). Adapters without them skip the test. Lint requires `typed-values` when a variable, a function or the expected result has a list, set or map, or a null or unknown value of a type other than dynamic, or a function has a parameter of a collection or structural type, because an implementation without those types can't receive, declare or produce them. It requires `unknown-values` when any of them has an unknown value, `functions` when the test declares functions, `json-syntax` for JSON syntax tests and only for them, `static-analysis` exactly when the schema analyzes an attribute, `type-expressions` exactly when the schema analyzes a type expression or the test declares a type expression extension function, and `try-functions` exactly when the test declares the extension functions `try` or `can`, which must be declared under their own names, and no other function may be declared under those names. It also requires `typed-values` when an expected type result has a list, set or map type. |
+| `features` | no | Optional features the test needs: `"typed-values"`, `"unknown-values"`, `"functions"`, `"json-syntax"`, `"static-analysis"`, `"type-expressions"` or `"try-functions"` (see [capabilities](protocol.md#capabilities)). Adapters without them skip the test, except that with `--validate` only `json-syntax` counts. Lint requires `typed-values` when a variable, a function or the expected result has a list, set or map, or a null or unknown value of a type other than dynamic, or a function has a parameter of a collection or structural type, because an implementation without those types can't receive, declare or produce them. It requires `unknown-values` when any of them has an unknown value, `functions` when the test declares functions, `json-syntax` for JSON syntax tests and only for them, `static-analysis` exactly when the schema analyzes an attribute, `type-expressions` exactly when the schema analyzes a type expression or the test declares a type expression extension function, and `try-functions` exactly when the test declares the extension functions `try` or `can`, which must be declared under their own names, and no other function may be declared under those names. It also requires `typed-values` when an expected type result has a list, set or map type. |
 | `status` | no | `"disputed"` if the spec doesn't clearly support the expected result (see below). |
 | `notes` | no | Anything a reader needs to know. Required for disputed tests. |
 | `variables` | no | Variables for `eval` and `decode`, as a JSON object of [values](protocol.md#values). |
@@ -82,6 +82,12 @@ parses and then fails during evaluation. `decode` tests can also expect
 `"phase": "schema"`, for a file that parses but doesn't fit the schema, and
 `"phase": "analysis"`, for a static analysis that fails. Error messages and
 positions are never compared between implementations.
+
+Every test also says whether its input parses: it does unless the test is a
+`parse` test that expects an error, or an `eval` or `decode` test that expects
+one with `"phase": "parse"`. The runner's `--validate` option checks only that
+([protocol](protocol.md#validate)), so tests with the same input must agree,
+which `tools/lint.py` checks.
 
 ### Reference errors
 
@@ -122,7 +128,10 @@ is marked:
 The notes must say what the spec says (or that it's silent), what the
 reference implementation does, and where in its source that happens. A
 failing disputed test is reported but doesn't make the run fail unless
-`--strict` is given. Each disputed test is a spec issue worth raising
+`--strict` is given. The runner can't tell which part of a test a dispute is
+about, so a disputed test counts as disputed whatever made it fail. With
+`--validate`, that includes tests disputed about evaluation, whose input
+should parse either way. Each disputed test is a spec issue worth raising
 upstream. To list them: `grep -rl '"disputed"' tests`.
 
 ## Coverage files

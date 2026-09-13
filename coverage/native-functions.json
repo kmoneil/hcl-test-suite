@@ -100,7 +100,10 @@
       "rule": "A newline between the function name and the opening parenthesis is ignored only inside parentheses, tuple brackets, index brackets or function call parentheses; at the top level of an attribute it ends the expression",
       "tests": [
         "native/functions/call-newline-before-parenthesis-in-parentheses",
-        "native/functions/call-newline-before-parenthesis-is-error"
+        "native/functions/call-newline-before-parenthesis-is-error",
+        "native/functions/call-newline-before-parenthesis-in-tuple-brackets",
+        "native/functions/call-newline-before-parenthesis-in-index-brackets",
+        "native/functions/call-newline-before-parenthesis-in-call-arguments"
       ]
     },
     {
@@ -160,7 +163,10 @@
         "native/functions/namespaced-call",
         "native/functions/namespaced-call-multiple-levels",
         "native/functions/namespaced-call-newlines-in-parentheses",
-        "native/functions/namespaced-call-spaces"
+        "native/functions/namespaced-call-spaces",
+        "native/functions/namespaced-call-newlines-in-tuple-brackets",
+        "native/functions/namespaced-call-newlines-in-index-brackets",
+        "native/functions/namespaced-call-newlines-in-call-arguments"
       ]
     },
     {

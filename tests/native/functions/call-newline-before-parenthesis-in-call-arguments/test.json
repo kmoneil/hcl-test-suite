@@ -1,0 +1,35 @@
+{
+  "description": "Inside function call arguments, a newline between a function name and its arguments is ignored",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "call",
+          "name": "g",
+          "args": [
+            {
+              "kind": "call",
+              "name": "f",
+              "args": [
+                {
+                  "kind": "literal",
+                  "value": {
+                    "number": "1"
+                  }
+                }
+              ],
+              "expand_final": false
+            }
+          ],
+          "expand_final": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

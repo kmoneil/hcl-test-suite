@@ -6,6 +6,7 @@
 //	hcl-go-adapter parse <file.hcl>
 //	hcl-go-adapter eval <file.hcl> [<context.json>]
 //	hcl-go-adapter decode <file.hcl or file.hcl.json> <context.json>
+//	hcl-go-adapter validate <file.hcl or file.hcl.json>
 //
 // The output formats are described in docs/protocol.md.
 package main
@@ -40,7 +41,8 @@ const usage = `usage:
   hcl-go-adapter capabilities
   hcl-go-adapter parse <file.hcl>
   hcl-go-adapter eval <file.hcl> [<context.json>]
-  hcl-go-adapter decode <file.hcl or file.hcl.json> <context.json>`
+  hcl-go-adapter decode <file.hcl or file.hcl.json> <context.json>
+  hcl-go-adapter validate <file.hcl or file.hcl.json>`
 
 // unsupported is panicked when the input contains something the protocol has
 // no representation for yet. run recovers it and reports an adapter error.
@@ -81,6 +83,8 @@ func run(args []string) (out any, err error) {
 		return eval(args[1], args[2])
 	case len(args) == 3 && args[0] == "decode":
 		return decode(args[1], args[2])
+	case len(args) == 2 && args[0] == "validate":
+		return validate(args[1])
 	}
 	return nil, errors.New(usage)
 }
@@ -104,10 +108,22 @@ func capabilities() object {
 	return object{
 		"implementation": implementation,
 		"version":        version,
-		"operations":     []string{"parse", "eval", "decode"},
+		"operations":     []string{"parse", "eval", "decode", "validate"},
 		"features": []string{"typed-values", "unknown-values", "functions", "json-syntax", "static-analysis", "type-expressions",
 			"try-functions"},
 	}
+}
+
+// validate parses a file in either syntax, like the first step of decode.
+func validate(path string) (any, error) {
+	src, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+	if _, diags := parseFile(src, path); diags.HasErrors() {
+		return invalid("parse", diags), nil
+	}
+	return object{"valid": true}, nil
 }
 
 func parse(path string) (any, error) {
@@ -124,16 +140,24 @@ func parse(path string) (any, error) {
 }
 
 // readNativeFile reads a file for parse or eval, which only take the native
-// syntax: the JSON syntax can't be read without a schema.
+// syntax: only a schema says how to read the bodies of a JSON syntax file.
 func readNativeFile(path string) ([]byte, error) {
 	if isJSONSyntax(path) {
-		return nil, errors.New("JSON syntax files can only be decoded with a schema")
+		return nil, errors.New("parse and eval only take the native syntax; decode JSON syntax files with a schema")
 	}
 	return os.ReadFile(path)
 }
 
 func isJSONSyntax(path string) bool {
 	return strings.HasSuffix(path, ".hcl.json")
+}
+
+// parseFile parses a file in the syntax its name gives.
+func parseFile(src []byte, path string) (*hcl.File, hcl.Diagnostics) {
+	if isJSONSyntax(path) {
+		return hcljson.Parse(src, path)
+	}
+	return hclsyntax.ParseConfig(src, path, hcl.InitialPos)
 }
 
 func eval(path, contextPath string) (any, error) {
@@ -181,13 +205,7 @@ func decode(path, contextPath string) (any, error) {
 	if err != nil {
 		return nil, fmt.Errorf("%s: schema: %w", contextPath, err)
 	}
-	var file *hcl.File
-	var diags hcl.Diagnostics
-	if isJSONSyntax(path) {
-		file, diags = hcljson.Parse(src, path)
-	} else {
-		file, diags = hclsyntax.ParseConfig(src, path, hcl.InitialPos)
-	}
+	file, diags := parseFile(src, path)
 	if diags.HasErrors() {
 		return invalid("parse", diags), nil
 	}

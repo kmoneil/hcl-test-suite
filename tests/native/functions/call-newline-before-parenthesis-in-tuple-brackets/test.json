@@ -1,0 +1,36 @@
+{
+  "description": "Inside tuple brackets, a newline between a function name and its arguments is ignored",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#syntax-notation"
+  ],
+  "op": "parse",
+  "notes": "The grammar lists Newline as a separator between tuple elements, but the prose says newlines between the brackets are ignored as whitespace, and prose has priority over the grammar, so the newline doesn't end the element. hashicorp/hcl ignores newlines inside tuple constructors (parseTupleCons in hclsyntax/parser.go).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "tuple",
+          "elements": [
+            {
+              "kind": "call",
+              "name": "f",
+              "args": [
+                {
+                  "kind": "literal",
+                  "value": {
+                    "number": "1"
+                  }
+                }
+              ],
+              "expand_final": false
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

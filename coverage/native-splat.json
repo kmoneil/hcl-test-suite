@@ -170,16 +170,21 @@
         "native/splat/full-splat-newline-before-close-bracket-is-error",
         "native/splat/full-splat-newline-before-star-is-error",
         "native/splat/full-splat-newline-ends-each-is-error",
-        "native/splat/full-splat-newlines-in-parentheses"
+        "native/splat/full-splat-newlines-in-parentheses",
+        "native/splat/attr-splat-newlines-in-tuple-brackets",
+        "native/splat/full-splat-newline-before-attribute-in-index-brackets",
+        "native/splat/full-splat-newlines-in-call-arguments"
       ]
     },
     {
       "id": "splat-whitespace",
       "spec": "hclsyntax/spec.md#splat-operators",
-      "rule": "Spaces are allowed between the tokens of both splat operators",
+      "rule": "Spaces and inline comments are allowed between the tokens of both splat operators",
       "tests": [
         "native/splat/attr-splat-spaces-around-dots",
-        "native/splat/full-splat-spaces-inside-brackets"
+        "native/splat/full-splat-spaces-inside-brackets",
+        "native/splat/full-splat-inline-comment-inside-brackets",
+        "native/splat/attr-splat-inline-comment-between-dot-and-star"
       ]
     },
     {

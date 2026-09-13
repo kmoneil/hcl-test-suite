@@ -1,0 +1,35 @@
+{
+  "description": "Inside index brackets, a newline before the opening bracket of another index is ignored",
+  "spec": [
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "index",
+          "collection": {
+            "kind": "variable",
+            "name": "u"
+          },
+          "key": {
+            "kind": "index",
+            "collection": {
+              "kind": "variable",
+              "name": "t"
+            },
+            "key": {
+              "kind": "literal",
+              "value": {
+                "number": "0"
+              }
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

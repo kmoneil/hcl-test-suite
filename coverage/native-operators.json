@@ -309,13 +309,18 @@
     {
       "id": "operators-parentheses-ignore-newlines",
       "spec": "hclsyntax/spec.md#expression-terms",
-      "rule": "Inside parentheses newlines are ignored between any two tokens of an operation or conditional",
+      "rule": "Inside parentheses, tuple brackets, index brackets and function call arguments, newlines are ignored between any two tokens of an operation or conditional",
       "tests": [
         "native/operators/parentheses-allow-newlines",
         "native/operators/parentheses-allow-newline-after-operator",
         "native/operators/parentheses-allow-newlines-inside-delimiters",
         "native/operators/parentheses-allow-newlines-in-conditional",
-        "native/operators/parentheses-allow-newline-after-unary-operator"
+        "native/operators/parentheses-allow-newline-after-unary-operator",
+        "native/operators/tuple-brackets-allow-newline-before-minus",
+        "native/operators/index-brackets-allow-newline-before-binary-operator",
+        "native/operators/call-arguments-allow-newlines-in-conditional",
+        "native/operators/tuple-brackets-allow-newline-after-unary-operator",
+        "native/operators/index-brackets-allow-newline-after-unary-operator"
       ]
     },
     {
@@ -347,7 +352,7 @@
     {
       "id": "operators-newline-ends-operation",
       "spec": "hclsyntax/spec.md#comments-and-whitespace",
-      "rule": "Outside parentheses a newline ends the attribute, so it can't come before or after a binary operator or after a unary operator",
+      "rule": "At the top level of an attribute a newline ends it, so it can't come before or after a binary operator or after a unary operator",
       "tests": [
         "native/operators/newline-after-binary-operator",
         "native/structure/newline-ends-attribute",
@@ -357,7 +362,7 @@
     {
       "id": "operators-newline-ends-conditional",
       "spec": "hclsyntax/spec.md#comments-and-whitespace",
-      "rule": "Outside parentheses a newline ends the attribute, so it can't come before or after the ? or the : of a conditional",
+      "rule": "At the top level of an attribute a newline ends it, so it can't come before or after the ? or the : of a conditional",
       "tests": [
         "native/operators/newline-after-question-mark",
         "native/operators/newline-before-question-mark",

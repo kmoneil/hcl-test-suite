@@ -245,7 +245,10 @@
       "tests": [
         "native/traversals/getattr-newline-after-dot-is-error",
         "native/traversals/getattr-newline-before-dot-is-error",
-        "native/traversals/getattr-newlines-in-parentheses"
+        "native/traversals/getattr-newlines-in-parentheses",
+        "native/traversals/getattr-newline-before-dot-in-tuple-brackets",
+        "native/traversals/getattr-newline-after-dot-in-index-brackets",
+        "native/traversals/getattr-newlines-in-call-arguments"
       ]
     },
     {
@@ -459,7 +462,8 @@
       "rule": "Newlines and comments between the brackets of an index operation are ignored",
       "tests": [
         "native/traversals/index-line-comment-inside-brackets",
-        "native/traversals/index-newlines-inside-brackets"
+        "native/traversals/index-newlines-inside-brackets",
+        "native/traversals/index-inline-comment-inside-brackets"
       ]
     },
     {
@@ -468,15 +472,19 @@
       "rule": "A newline before the opening bracket of an index is ignored only inside parentheses, tuple brackets, index brackets or function call parentheses; at the top level of an attribute it ends the expression",
       "tests": [
         "native/traversals/index-newline-before-bracket-in-parentheses",
-        "native/traversals/index-newline-before-bracket-is-error"
+        "native/traversals/index-newline-before-bracket-is-error",
+        "native/traversals/index-newline-before-bracket-in-tuple-brackets",
+        "native/traversals/index-newline-before-bracket-in-index-brackets",
+        "native/traversals/index-newline-before-bracket-in-call-arguments"
       ]
     },
     {
       "id": "traversals-index-whitespace-before-bracket",
       "spec": "hclsyntax/spec.md#comments-and-whitespace",
-      "rule": "Spaces between a term and the opening bracket of an index are allowed",
+      "rule": "Spaces and inline comments between a term and the opening bracket of an index are allowed",
       "tests": [
-        "native/traversals/index-space-before-bracket"
+        "native/traversals/index-space-before-bracket",
+        "native/traversals/index-inline-comment-before-bracket"
       ]
     },
     {

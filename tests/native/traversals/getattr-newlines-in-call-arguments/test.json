@@ -1,0 +1,31 @@
+{
+  "description": "Inside function call arguments, newlines around the dot of an attribute access are ignored",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator",
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "call",
+          "name": "f",
+          "args": [
+            {
+              "kind": "get_attr",
+              "object": {
+                "kind": "variable",
+                "name": "o"
+              },
+              "name": "b"
+            }
+          ],
+          "expand_final": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

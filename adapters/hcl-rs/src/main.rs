@@ -3,6 +3,7 @@
 //!     hcl-rs-adapter capabilities
 //!     hcl-rs-adapter parse <file.hcl>
 //!     hcl-rs-adapter eval <file.hcl> [<context.json>]
+//!     hcl-rs-adapter validate <file.hcl>
 //!
 //! The output formats are described in docs/protocol.md.
 
@@ -23,7 +24,8 @@ const HCL_RS_VERSION: &str = "0.19.8";
 const USAGE: &str = "usage:
   hcl-rs-adapter capabilities
   hcl-rs-adapter parse <file.hcl>
-  hcl-rs-adapter eval <file.hcl> [<context.json>]";
+  hcl-rs-adapter eval <file.hcl> [<context.json>]
+  hcl-rs-adapter validate <file.hcl>";
 
 fn main() -> ExitCode {
     let args: Vec<String> = env::args().skip(1).collect();
@@ -33,6 +35,7 @@ fn main() -> ExitCode {
         ["parse", path] => parse(path),
         ["eval", path] => eval(path, None),
         ["eval", path, context] => eval(path, Some(context)),
+        ["validate", path] => validate(path),
         _ => Err(USAGE.to_string()),
     };
     match result {
@@ -51,7 +54,7 @@ fn capabilities() -> Json {
     json!({
         "implementation": "hcl-rs",
         "version": HCL_RS_VERSION,
-        "operations": ["parse", "eval"],
+        "operations": ["parse", "eval", "validate"],
         "features": ["functions"],
     })
 }
@@ -62,6 +65,9 @@ enum Parsed {
 }
 
 fn parse_file(path: &str) -> Result<Parsed, String> {
+    if path.ends_with(".hcl.json") {
+        return Err("hcl-rs doesn't read the JSON syntax".into());
+    }
     let bytes = fs::read(path).map_err(|err| format!("{path}: {err}"))?;
     // hcl-rs only accepts a &str, so invalid UTF-8 never reaches its parser.
     let Ok(source) = String::from_utf8(bytes) else {
@@ -73,13 +79,28 @@ fn parse_file(path: &str) -> Result<Parsed, String> {
     })
 }
 
+/// Gives the answer `parse` gives. It converts every template the way `parse`
+/// does, since that can fail (see `parse`), but builds no output, which for a
+/// long traversal chain takes far longer than parsing.
+fn validate(path: &str) -> Result<Json, String> {
+    let body = match parse_file(path)? {
+        Parsed::Body(body) => body,
+        Parsed::Invalid(output) => return Ok(output),
+    };
+    Ok(match check_body(&body) {
+        Ok(()) => json!({"valid": true}),
+        Err(message) => invalid("parse", message),
+    })
+}
+
 fn parse(path: &str) -> Result<Json, String> {
     let body = match parse_file(path)? {
         Parsed::Body(body) => body,
         Parsed::Invalid(output) => return Ok(output),
     };
-    // hcl-rs parses the inside of templates lazily, so template syntax errors
-    // only appear while converting.
+    // hcl-rs keeps the text of each template and parses it again to convert it,
+    // which fails for some templates its parser accepted, such as
+    // "\u0025%{if true}x%{endif}". Those errors are parse errors too.
     Ok(match body_json(&body, &expr_json) {
         Ok(body) => json!({"valid": true, "body": body}),
         Err(message) => invalid("parse", message),
@@ -95,6 +116,11 @@ fn eval(path: &str, context: Option<&str>) -> Result<Json, String> {
         Parsed::Body(body) => body,
         Parsed::Invalid(output) => return Ok(output),
     };
+    // Templates that fail to convert are parse errors (see `parse`), even where
+    // evaluation wouldn't reach them.
+    if let Err(message) = check_body(&body) {
+        return Ok(invalid("parse", message));
+    }
     let evaluate = |expr: &Expression| {
         expr.evaluate(&ctx)
             .map(|value| value_json(&value))
@@ -132,6 +158,93 @@ fn body_json(body: &Body, convert: &dyn Fn(&Expression) -> Result<Json, String>)
         }
     }
     Ok(json!({"attributes": attributes, "blocks": blocks}))
+}
+
+/// Converts the templates in a body and fails where `body_json` with
+/// `expr_json` would, without building anything.
+fn check_body(body: &Body) -> Result<(), String> {
+    for structure in body.iter() {
+        match structure {
+            Structure::Attribute(attr) => check_expr(&attr.expr)?,
+            Structure::Block(block) => check_body(&block.body)?,
+        }
+    }
+    Ok(())
+}
+
+fn check_expr(expr: &Expression) -> Result<(), String> {
+    match expr {
+        Expression::Null | Expression::Bool(_) | Expression::Number(_) | Expression::String(_) => Ok(()),
+        Expression::Variable(_) => Ok(()),
+        Expression::Array(items) => items.iter().try_for_each(check_expr),
+        Expression::Object(object) => object.iter().try_for_each(|(key, value)| {
+            match key {
+                ObjectKey::Identifier(_) => {}
+                ObjectKey::Expression(expr) => check_expr(expr)?,
+                #[allow(unreachable_patterns)]
+                _ => return Err("unsupported object key".into()),
+            }
+            check_expr(value)
+        }),
+        Expression::TemplateExpr(template) => {
+            let template = Template::from_expr(template).map_err(|err| err.to_string())?;
+            check_elements(template.elements())
+        }
+        Expression::Traversal(traversal) => {
+            check_expr(&traversal.expr)?;
+            traversal.operators.iter().try_for_each(|operator| match operator {
+                TraversalOperator::Index(key) => check_expr(key),
+                TraversalOperator::GetAttr(_)
+                | TraversalOperator::LegacyIndex(_)
+                | TraversalOperator::FullSplat
+                | TraversalOperator::AttrSplat => Ok(()),
+                #[allow(unreachable_patterns)]
+                _ => Err("unsupported traversal operator".into()),
+            })
+        }
+        Expression::FuncCall(call) => call.args.iter().try_for_each(check_expr),
+        Expression::Parenthesis(inner) => check_expr(inner),
+        Expression::Conditional(cond) => {
+            check_expr(&cond.cond_expr)?;
+            check_expr(&cond.true_expr)?;
+            check_expr(&cond.false_expr)
+        }
+        Expression::Operation(op) => match op.as_ref() {
+            Operation::Unary(op) => check_expr(&op.expr),
+            Operation::Binary(op) => {
+                check_expr(&op.lhs_expr)?;
+                check_expr(&op.rhs_expr)
+            }
+        },
+        Expression::ForExpr(f) => {
+            check_expr(&f.collection_expr)?;
+            f.key_expr.as_ref().map(check_expr).transpose()?;
+            check_expr(&f.value_expr)?;
+            f.cond_expr.as_ref().map(check_expr).transpose()?;
+            Ok(())
+        }
+        #[allow(unreachable_patterns)]
+        _ => Err("unsupported expression".into()),
+    }
+}
+
+fn check_elements(elements: &[Element]) -> Result<(), String> {
+    elements.iter().try_for_each(|element| match element {
+        Element::Literal(_) => Ok(()),
+        Element::Interpolation(interp) => check_expr(&interp.expr),
+        Element::Directive(directive) => match directive.as_ref() {
+            Directive::If(dir) => {
+                check_expr(&dir.cond_expr)?;
+                check_elements(dir.true_template.elements())?;
+                dir.false_template.as_ref().map(|template| check_elements(template.elements())).transpose()?;
+                Ok(())
+            }
+            Directive::For(dir) => {
+                check_expr(&dir.collection_expr)?;
+                check_elements(dir.template.elements())
+            }
+        },
+    })
 }
 
 fn literal(value: Json) -> Json {

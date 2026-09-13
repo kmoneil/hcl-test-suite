@@ -3,6 +3,7 @@
 
     python3 runner/hcltest.py --adapter bin/hcl-go-adapter
     python3 runner/hcltest.py --adapter "python3 my_adapter.py" tests/native/heredocs
+    python3 runner/hcltest.py --validate --adapter "python3 my_parser_adapter.py"
 
 An adapter is a small program that exposes an HCL implementation to this
 runner. docs/protocol.md describes what it must do, and docs/test-format.md
@@ -132,7 +133,8 @@ class Test:
         if not self.input.is_file():
             raise TestError(f"{path}: input file {self.input.name} not found")
         if self.input.name.endswith(".hcl.json") and self.op != "decode":
-            raise TestError(f"{path}: the JSON syntax can only be read with a schema, so JSON syntax tests are decode tests")
+            raise TestError(f"{path}: only a schema says how to read the bodies of a JSON syntax file, so JSON syntax "
+                            "tests are decode tests")
 
         self.expect = meta["expect"]
         if not isinstance(self.expect.get("valid"), bool):
@@ -142,6 +144,12 @@ class Test:
             raise TestError(f'{path}: only expected errors have a "phase"')
         if phase is not None and phase not in PHASES.get(self.op, ()):
             raise TestError(f'{path}: "phase" {phase!r} is not a phase where a {self.op} test can expect an error')
+        if phase is None and not self.expect["valid"] and self.op in PHASES:
+            raise TestError(f'{path}: {self.op} tests that expect an error need a "phase": '
+                            f'{" or ".join(json.dumps(p) for p in PHASES[self.op])}')
+        # Whether the input should parse, which is all --validate checks. The
+        # errors that parse tests expect are parse errors.
+        self.parses = self.expect["valid"] or (self.op != "parse" and phase != "parse")
         self.expected_body = None
         if self.expect["valid"]:
             try:
@@ -167,6 +175,8 @@ def main():
     parser.add_argument("--timeout", type=float, default=10, help="seconds to allow each adapter call (default: 10)")
     parser.add_argument("--reference-errors", action="store_true",
                         help='check that errors match each test\'s "reference_error" (for the hashicorp/hcl adapter)')
+    parser.add_argument("--validate", action="store_true",
+                        help="only check whether each test's input parses, with the adapter's validate command")
     args = parser.parse_args()
 
     adapter = shlex.split(args.adapter)
@@ -176,14 +186,27 @@ def main():
     except (AdapterError, TestError) as e:
         print(f"error: {e}", file=sys.stderr)
         return 2
+    if args.validate and "validate" not in caps["operations"]:
+        print('error: --validate needs an adapter that supports "validate"', file=sys.stderr)
+        return 2
+    if not args.validate and "validate" in caps["operations"] and not set(OPERATIONS) & set(caps["operations"]):
+        print('error: the adapter only supports "validate", which needs --validate', file=sys.stderr)
+        return 2
 
     print(f"{caps['implementation']} {caps.get('version', '')}".rstrip())
+    if args.validate:
+        print("Checking only whether each test's input parses (--validate)")
     with tempfile.TemporaryDirectory(prefix="hcltest-") as tmp:
-        results = [run_test(test, adapter, caps, args, Path(tmp)) for test in tests]
+        if args.validate:
+            results = [validate_test(test, adapter, caps, args) for test in tests]
+        else:
+            results = [run_test(test, adapter, caps, args, Path(tmp)) for test in tests]
     for result in results:
         if args.verbose or result.outcome in ("fail", "error"):
             print_result(result)
-    print_summary(results)
+    print_summary(results, args.strict)
+    if args.validate:
+        print_validity_summary(results)
 
     blocking = [r for r in results if r.outcome in ("fail", "error") and (args.strict or not r.test.disputed)]
     return 1 if blocking else 0
@@ -269,6 +292,41 @@ def run_test(test, adapter, caps, args, tmp):
     return Result(test, "pass")
 
 
+ACCEPTS_INVALID = "expected a parse error, but the input was accepted"
+REJECTS_VALID = "expected the input to parse, but got errors"
+
+
+def validate_test(test, adapter, caps, args):
+    """Checks only whether the test's input parses (--validate)."""
+    if test.input.name.endswith(".hcl.json") and "json-syntax" not in caps["features"]:
+        return Result(test, "skip", "adapter does not support json-syntax")
+    try:
+        actual = call_adapter(adapter, ["validate", str(test.input)], args.timeout)
+        failure = compare_validity(test, actual, args.reference_errors)
+    except AdapterError as e:
+        return Result(test, "error", str(e))
+    if failure:
+        return Result(test, "fail", *failure)
+    return Result(test, "pass")
+
+
+def compare_validity(test, actual, reference_errors=False):
+    """Returns None if validate's output matches whether the test's input should
+    parse, or (message, detail)."""
+    if not isinstance(actual, dict) or not isinstance(actual.get("valid"), bool):
+        raise AdapterError('output must be a JSON object with a boolean "valid"')
+    errors = actual.get("errors")
+    if errors is not None and not (isinstance(errors, list) and all(isinstance(e, dict) for e in errors)):
+        raise AdapterError('"errors" must be a list of error objects')
+    if not actual["valid"] and actual.get("phase") not in (None, "parse"):
+        raise AdapterError(f'validate reports errors in the "parse" phase, not {json.dumps(actual["phase"])}')
+    if test.parses:
+        return None if actual["valid"] else (REJECTS_VALID, error_messages(actual))
+    if actual["valid"]:
+        return ACCEPTS_INVALID, None
+    return reference_error_failure(test, actual) if reference_errors else None
+
+
 def compare(test, actual, reference_errors=False):
     """Returns None if the adapter's output matches the test, or (message, detail)."""
     if not isinstance(actual, dict) or not isinstance(actual.get("valid"), bool):
@@ -282,11 +340,7 @@ def compare(test, actual, reference_errors=False):
         phase = test.expect.get("phase")
         if test.op in PHASES and phase and actual.get("phase") != phase:
             return f"expected an error during {phase}, but it was reported during {actual.get('phase')}", error_messages(actual)
-        if reference_errors and test.reference_error:
-            messages = [str(e.get("message", "")) for e in actual.get("errors") or []]
-            if not any(test.reference_error in m for m in messages):
-                return f'expected the reference error "{test.reference_error}"', error_messages(actual)
-        return None
+        return reference_error_failure(test, actual) if reference_errors else None
     if not actual["valid"]:
         during = f" during {actual['phase']}" if actual.get("phase") else ""
         return f"expected success, but got errors{during}", error_messages(actual)
@@ -296,6 +350,14 @@ def compare(test, actual, reference_errors=False):
         return str(e), None
     if canonical(body) != canonical(test.expected_body):
         return "output differs from expected", json_diff(test.expected_body, body)
+    return None
+
+
+def reference_error_failure(test, actual):
+    """Returns (message, detail) if the reported errors lack the test's reference error."""
+    messages = [str(e.get("message", "")) for e in actual.get("errors") or []]
+    if test.reference_error and not any(test.reference_error in m for m in messages):
+        return f'expected the reference error "{test.reference_error}"', error_messages(actual)
     return None
 
 
@@ -834,7 +896,7 @@ def print_result(result):
             print("\n" + "\n".join("    " + line for line in result.detail.splitlines()))
 
 
-def print_summary(results):
+def print_summary(results, strict=False):
     groups = defaultdict(lambda: defaultdict(int))
     for result in results:
         group = "/".join(result.test.name.split("/")[:2])
@@ -849,9 +911,24 @@ def print_summary(results):
                   ("skip", "skipped")) if counts[o]]
         print(f"  {group:<{width}}  {', '.join(parts)}")
     disputed = [r for r in results if r.test.disputed and r.outcome in ("fail", "error")]
-    if disputed:
+    if disputed and not strict:
         which = "1 failing test is disputed and doesn't" if len(disputed) == 1 else f"{len(disputed)} failing tests are disputed and don't"
         print(f"\n{which} fail the run (use --strict to change that).")
+
+
+def print_validity_summary(results):
+    """Splits the failures of --validate by what went wrong."""
+    kinds = {ACCEPTS_INVALID: "accepted input that should be rejected", REJECTS_VALID: "rejected input that should parse"}
+    other = "lacked the reference error"
+    counts = {what: [0, 0] for what in [*kinds.values(), other]}  # failures, and how many are disputed
+    for result in results:
+        if result.outcome == "fail":
+            count = counts[kinds.get(result.message, other)]
+            count[0] += 1
+            count[1] += result.test.disputed
+    parts = [f"{n} {what}" + (f" ({disputed} disputed)" if disputed else "") for what, (n, disputed) in counts.items() if n]
+    if parts:
+        print(f"\nOf the failed tests, {', '.join(parts[:-1])}{' and ' if len(parts) > 1 else ''}{parts[-1]}.")
 
 
 if __name__ == "__main__":
