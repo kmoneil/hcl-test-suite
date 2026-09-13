@@ -24,7 +24,8 @@ hashicorp/hcl v2.24.0. The test and adapter formats may still change.
   ([protocol](docs/protocol.md)). `adapters/` has
   adapters for [hashicorp/hcl](https://github.com/hashicorp/hcl) (Go, the
   reference implementation) and [hcl-rs](https://github.com/martinohmann/hcl-rs)
-  (Rust).
+  (Rust). The Go adapter can also be built with the fork of hashicorp/hcl that
+  [OpenTofu](https://github.com/opentofu/opentofu) uses.
 - **`runner/hcltest.py`** runs each test through an adapter, compares the
   output with the expected result and prints a report. It needs only
   Python 3.9 or later.
@@ -41,6 +42,10 @@ python3 runner/hcltest.py --adapter bin/hcl-go-adapter
 # hcl-rs (needs Rust)
 (cd adapters/hcl-rs && cargo build --release && cp target/release/hcl-rs-adapter ../../bin/)
 python3 runner/hcltest.py --adapter bin/hcl-rs-adapter
+
+# the HCL of OpenTofu v1.12.6 (needs Go)
+(cd adapters/go && go build -modfile=opentofu.mod -o ../../bin/hcl-opentofu-adapter .)
+python3 runner/hcltest.py --adapter bin/hcl-opentofu-adapter
 ```
 
 - To run part of the suite, pass test directories:
@@ -94,9 +99,10 @@ run the tests at all.
 
 - Most rules without tests need something the protocol can't express yet:
   error positions or messages, capsule values, or literal-only evaluation
-  with variables, which hashicorp/hcl can't express either. Two depend on choices the spec
-  leaves to implementations (rounding and the order of set elements), and one
-  is guidance for applications. `python3 tools/coverage.py rules` lists them.
+  with variables, which hashicorp/hcl can't express either. Two depend on
+  choices the spec leaves to implementations (rounding and the order of set
+  elements), and one is guidance for applications.
+  `python3 tools/coverage.py rules` lists them.
 - The tests exercise 84.9% of the statements in hashicorp/hcl's `hclsyntax`
   package, 85.8% of its `json` package, 78.6% of `ext/typeexpr` and 97.1% of
   `ext/tryfunc` (`python3 tools/coverage.py go`).
@@ -129,7 +135,34 @@ run the tests at all.
 | Implementation | Passed | Failed | Adapter errors | Skipped |
 | --- | ---: | ---: | ---: | ---: |
 | hashicorp/hcl v2.24.0 | 3,003 | 0 | 0 | 0 |
+| opentofu/hcl, as used by OpenTofu v1.12.6 | 3,001 | 2 | 0 | 0 |
 | hcl-rs 0.19.8 | 1,570 | 203 (74 disputed) | 21 | 1,209 |
+
+OpenTofu has no HCL implementation of its own: its `go.mod` replaces
+hashicorp/hcl with the fork [opentofu/hcl](https://github.com/opentofu/hcl), so
+its row shows how that fork differs from hashicorp/hcl v2.24.0.
+
+### opentofu/hcl, as used by OpenTofu v1.12.6
+
+`adapters/go/opentofu.mod` builds the Go adapter with the versions in OpenTofu
+v1.12.6's `go.mod`: opentofu/hcl at commit 587d123c2828 and go-cty v1.18.0. That
+commit is hashicorp/hcl v2.23.0 with part of the later upstream changes, plus
+APIs that list the functions and variables expressions and bodies use, which
+don't change results.
+
+- Both failures come from a fix the fork doesn't have yet,
+  [hashicorp/hcl#763](https://github.com/hashicorp/hcl/pull/763): indexing an
+  unknown object with a string, as in `u["a"]`, gives the dynamic value instead
+  of an unknown value of the attribute's type
+  (`native/unknowns/index-unknown-object`), and a name the object type lacks
+  isn't an error
+  (`native/unknowns/index-unknown-object-missing-attribute-fails`).
+- OpenTofu's main branch uses a later version of the fork that includes the
+  fix and passes every test.
+- To follow a new OpenTofu release, copy the `replace` directive for
+  `github.com/hashicorp/hcl/v2` and the go-cty version from its `go.mod` into
+  `adapters/go/opentofu.mod`, then run
+  `go mod tidy -modfile=opentofu.mod` in `adapters/go`.
 
 ### hcl-rs 0.19.8
 

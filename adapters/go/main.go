@@ -86,16 +86,23 @@ func run(args []string) (out any, err error) {
 }
 
 func capabilities() object {
-	version := "unknown"
+	// The adapter reports the HCL module it was built with, which is a fork
+	// when the module file replaces hashicorp/hcl (see opentofu.mod).
+	implementation, version := "hashicorp/hcl", "unknown"
 	if info, ok := debug.ReadBuildInfo(); ok {
 		for _, dep := range info.Deps {
-			if dep.Path == "github.com/hashicorp/hcl/v2" {
-				version = dep.Version
+			if dep.Path != "github.com/hashicorp/hcl/v2" {
+				continue
+			}
+			version = dep.Version
+			if dep.Replace != nil {
+				implementation = strings.TrimSuffix(strings.TrimPrefix(dep.Replace.Path, "github.com/"), "/v2")
+				version = dep.Replace.Version
 			}
 		}
 	}
 	return object{
-		"implementation": "hashicorp/hcl",
+		"implementation": implementation,
 		"version":        version,
 		"operations":     []string{"parse", "eval", "decode"},
 		"features": []string{"typed-values", "unknown-values", "functions", "json-syntax", "static-analysis", "type-expressions",
