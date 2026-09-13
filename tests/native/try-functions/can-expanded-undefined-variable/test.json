@@ -1,0 +1,24 @@
+{
+  "description": "An undefined variable expanded into can's argument makes the call fail",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "status": "disputed",
+  "notes": "The README says can gives false for an expression that produces errors. The native syntax spec says the expression before ... must evaluate to a list or tuple whose elements are mapped to parameters, and doesn't say whether can's handling of errors covers that expression. hashicorp/hcl evaluates the expanded expression before calling the function and reports its error (FunctionCallExpr.Value in hclsyntax/expression.go), so can never runs.",
+  "functions": {
+    "can": {
+      "extension": "can"
+    }
+  },
+  "reference_error": "There is no variable named \"ys\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "description": "The try function moves on from comparing a number with a string that isn't one",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "hclsyntax/spec.md#comparison-operators"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "d"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

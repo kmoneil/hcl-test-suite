@@ -1,0 +1,41 @@
+{
+  "description": "The try function gives a known attribute of a variable that holds unknowns",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "unknown-values",
+    "functions",
+    "try-functions"
+  ],
+  "variables": {
+    "x": {
+      "object": {
+        "a": {
+          "string": "v"
+        },
+        "b": {
+          "unknown": "dynamic"
+        }
+      }
+    }
+  },
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "v"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

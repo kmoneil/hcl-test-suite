@@ -1,0 +1,32 @@
+{
+  "description": "A call of try can give a parenthesized object key",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "k": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

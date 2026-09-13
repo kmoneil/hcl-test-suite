@@ -1,0 +1,27 @@
+{
+  "area": "json/try-functions",
+  "rules": [
+    {
+      "id": "try-functions-json-errors",
+      "spec": "ext/tryfunc/README.md#try-and-can-functions",
+      "rule": "A call of try in a JSON string template is an evaluation error when its arguments aren't valid native syntax, which try doesn't catch, or when none of them succeeds",
+      "tests": [
+        "json/try-functions/try-syntax-error-in-template",
+        "json/try-functions/try-all-arguments-fail-in-template"
+      ]
+    },
+    {
+      "id": "try-functions-json-templates",
+      "spec": "ext/tryfunc/README.md#try-and-can-functions",
+      "rule": "try and can can be called in JSON string templates with native expressions as their arguments, evaluated with the variables in scope: a call that is the whole template gives its value unwrapped, such as can's bool, one beside other text is converted to a string, and calls also work in property names and in an if directive's condition",
+      "tests": [
+        "json/try-functions/try-in-template",
+        "json/try-functions/can-in-template",
+        "json/try-functions/try-in-template-with-text",
+        "json/try-functions/try-in-property-name",
+        "json/try-functions/try-uses-variables-in-template",
+        "json/try-functions/can-in-template-directive"
+      ]
+    }
+  ]
+}

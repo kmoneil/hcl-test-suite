@@ -1,0 +1,28 @@
+{
+  "description": "The try function moves on from a logic operator with a number operand",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "hclsyntax/spec.md#logic-operators"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "d"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

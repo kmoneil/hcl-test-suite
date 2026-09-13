@@ -1,0 +1,27 @@
+{
+  "description": "The try function with arguments expanded from an empty tuple fails",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "variables": {
+    "xs": {
+      "tuple": []
+    }
+  },
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "reference_error": "at least one argument is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

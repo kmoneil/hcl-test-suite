@@ -1,0 +1,35 @@
+{
+  "description": "The try function gives the result of a function that succeeds",
+  "spec": [
+    "ext/tryfunc/README.md#using-these-functions",
+    "ext/tryfunc/README.md#try-and-can-functions"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "functions": {
+    "try": {
+      "extension": "try"
+    },
+    "g": {
+      "result": {
+        "value": {
+          "string": "v"
+        }
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "v"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

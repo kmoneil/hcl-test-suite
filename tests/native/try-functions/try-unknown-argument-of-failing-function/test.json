@@ -1,0 +1,45 @@
+{
+  "description": "The try function gives the dynamic value for a failing function with an unknown argument",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "try-functions"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "string"
+    }
+  },
+  "functions": {
+    "try": {
+      "extension": "try"
+    },
+    "g": {
+      "params": [
+        {
+          "type": "string"
+        }
+      ],
+      "result": {
+        "error": "boom"
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

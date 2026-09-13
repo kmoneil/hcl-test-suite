@@ -1,0 +1,28 @@
+{
+  "description": "The try function moves on from a template interpolating a value that can't convert to a string",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "hclsyntax/spec.md#template-interpolations"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "d"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

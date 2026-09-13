@@ -1,0 +1,37 @@
+{
+  "description": "The try function gives a variable's attribute when it exists",
+  "spec": [
+    "ext/tryfunc/README.md#using-these-functions",
+    "ext/tryfunc/README.md#try-and-can-functions"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "variables": {
+    "x": {
+      "object": {
+        "y": {
+          "string": "v"
+        }
+      }
+    }
+  },
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "v"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

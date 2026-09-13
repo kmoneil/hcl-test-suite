@@ -1,0 +1,24 @@
+{
+  "description": "Expanding a string after a successful argument of try makes the call fail",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "status": "disputed",
+  "notes": "The README says try evaluates its argument expressions in order until one produces a result without errors, so try(1, \"x\"...) would give 1. The native syntax spec says the expression before ... must evaluate to a list or tuple, and neither says whether that is checked before try runs. hashicorp/hcl checks it before calling the function (FunctionCallExpr.Value in hclsyntax/expression.go), so try never runs.",
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "reference_error": "must be of a tuple, list, or set type",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

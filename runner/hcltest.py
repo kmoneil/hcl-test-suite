@@ -65,7 +65,7 @@ class Test:
         except ValueError:
             self.name = self.dir.as_posix()
         try:
-            meta = json.loads(path.read_text(encoding="utf-8"))
+            meta = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=unique_keys)
         except ValueError as e:
             raise TestError(f"{path}: invalid JSON: {e}")
         if not isinstance(meta, dict):
@@ -114,6 +114,11 @@ class Test:
             except ValueError as e:
                 raise TestError(f'{path}: malformed "{field}": {e}')
             self.context[field] = meta[field]
+        if "functions" in self.context and "functions" not in self.features:
+            raise TestError(f'{path}: declaring functions needs the "functions" feature')
+        for name, decl in self.context.get("functions", {}).items():
+            if "extension" in decl and EXTENSION_FUNCTIONS[decl["extension"]] not in self.features:
+                raise TestError(f'{path}: function {name!r} needs the "{EXTENSION_FUNCTIONS[decl["extension"]]}" feature')
         if self.op == "decode" and "schema" not in self.context:
             raise TestError(f'{path}: decode tests need a "schema"')
         if "evaluation_mode" in self.context and ("variables" in self.context or "functions" in self.context):
@@ -232,9 +237,11 @@ def call_adapter(adapter, args, timeout):
 
 
 def unique_keys(pairs):
-    result = dict(pairs)
-    if len(result) != len(pairs):
-        raise ValueError("an object has the same key twice")
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError(f"an object has the key {json.dumps(key, ensure_ascii=False)} twice")
+        result[key] = value
     return result
 
 
@@ -463,7 +470,8 @@ def check_schema(schema, where="schema"):
 ANALYSIS_PARTS = {"value": (), "static-list": ("elements",), "static-map": ("keys", "values"), "static-call": ("arguments",),
                   "static-traversal": (), "type": (), "type-constraint": (), "type-constraint-with-defaults": ()}
 # Functions that an extension defines, which tests declare by name, and the feature each needs.
-EXTENSION_FUNCTIONS = {"convert": "type-expressions", "convert-with-defaults": "type-expressions"}
+EXTENSION_FUNCTIONS = {"convert": "type-expressions", "convert-with-defaults": "type-expressions", "try": "try-functions",
+                       "can": "try-functions"}
 
 
 def check_analysis(analysis, where="analysis"):
@@ -494,9 +502,10 @@ def check_function(decl):
     if not isinstance(decl, dict):
         raise ValueError("a declaration must be an object")
     if "extension" in decl:
-        if set(decl) != {"extension"} or not isinstance(decl["extension"], str) or decl["extension"] not in EXTENSION_FUNCTIONS:
-            raise ValueError(f'an extension function is {{"extension": <name>}}, with a name among '
-                             f'{", ".join(EXTENSION_FUNCTIONS)}')
+        if set(decl) != {"extension"}:
+            raise ValueError('an extension function is declared with "extension" alone')
+        if not isinstance(decl["extension"], str) or decl["extension"] not in EXTENSION_FUNCTIONS:
+            raise ValueError(f'"extension" must be one of {", ".join(EXTENSION_FUNCTIONS)}, not {json.dumps(decl["extension"])}')
         return
     unknown = set(decl) - FUNCTION_FIELDS
     if unknown:

@@ -1,0 +1,37 @@
+{
+  "description": "The try function moves on from a bool index key for a tuple",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "variables": {
+    "t": {
+      "tuple": [
+        {
+          "number": "1"
+        }
+      ]
+    }
+  },
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "d"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "description": "The try function can be called in a JSON property name template",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "json/spec.md#objects"
+  ],
+  "op": "decode",
+  "features": [
+    "functions",
+    "json-syntax",
+    "try-functions"
+  ],
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "k": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

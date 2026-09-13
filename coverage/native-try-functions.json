@@ -1,0 +1,249 @@
+{
+  "area": "native/try-functions",
+  "rules": [
+    {
+      "id": "try-functions-first-success",
+      "spec": "ext/tryfunc/README.md#try-and-can-functions",
+      "rule": "try gives the value of its first argument that evaluates without errors, trying the arguments in order, so arguments after that one don't matter, even when they are unknown",
+      "tests": [
+        "native/try-functions/try-first-argument-fails",
+        "native/try-functions/try-first-argument-succeeds",
+        "native/try-functions/try-later-unknown-argument",
+        "native/try-functions/try-several-arguments-fail",
+        "native/try-functions/try-first-of-two-successes"
+      ]
+    },
+    {
+      "id": "try-functions-result-value",
+      "spec": "ext/tryfunc/README.md#try-and-can-functions",
+      "rule": "try gives the successful value as it is, keeping its own type, which can differ from the other arguments' types, and false and null count as successful values",
+      "tests": [
+        "native/try-functions/try-keeps-result-type",
+        "native/try-functions/try-keeps-type-of-first-success",
+        "native/try-functions/try-false-succeeds",
+        "native/try-functions/try-list-keeps-type",
+        "native/try-functions/try-typed-null-keeps-type",
+        "native/try-functions/try-null-succeeds"
+      ]
+    },
+    {
+      "id": "try-functions-errors-tried",
+      "spec": "ext/tryfunc/README.md#try-and-can-functions",
+      "rule": "Any evaluation error in an argument makes try move on to the next one: a missing attribute or index, a bool index key for a tuple, an attribute of null, an operand of the wrong type for an arithmetic, comparison or logic operator (including !), a conditional whose condition is a number or whose results don't unify, a splat over a null list or over an element without the attribute, an undefined function, a call with a missing argument, an argument that doesn't match its parameter or an expanded string, an error inside a for expression (including a duplicate key), a template (including a number as an if directive's condition) or an object constructor (including a key that can't convert to a string), and a call of try whose arguments all fail",
+      "tests": [
+        "native/try-functions/try-missing-attribute",
+        "native/try-functions/try-index-out-of-range",
+        "native/try-functions/try-attribute-of-null",
+        "native/try-functions/try-operand-type-error",
+        "native/try-functions/try-argument-type-mismatch",
+        "native/try-functions/try-undefined-function",
+        "native/try-functions/try-error-in-for-expression",
+        "native/try-functions/try-error-in-template",
+        "native/try-functions/try-error-in-object-constructor",
+        "native/try-functions/try-inner-call-missing-argument",
+        "native/try-functions/try-inner-call-argument-conversion",
+        "native/try-functions/try-error-in-inner-call-expansion",
+        "native/try-functions/try-conditional-results-inconsistent",
+        "native/try-functions/try-conditional-condition-not-bool",
+        "native/try-functions/try-splat-missing-attribute",
+        "native/try-functions/try-splat-null-list",
+        "native/try-functions/try-index-key-wrong-type",
+        "native/try-functions/try-unary-operand-error",
+        "native/try-functions/try-logic-operand-error",
+        "native/try-functions/try-comparison-operand-error",
+        "native/try-functions/try-for-duplicate-key",
+        "native/try-functions/try-template-directive-error",
+        "native/try-functions/try-object-key-error",
+        "native/try-functions/try-readme-deep-traversal-example",
+        "native/try-functions/try-failing-inner-try"
+      ]
+    },
+    {
+      "id": "try-functions-errors-with-unknowns",
+      "spec": "ext/tryfunc/README.md#try-and-can-functions",
+      "rule": "An argument whose evaluation has errors counts as failing even when it also involves unknown values: try moves on, or fails when no argument succeeds, and can gives false",
+      "tests": [
+        "native/try-functions/try-error-with-unknown-operand",
+        "native/try-functions/try-error-beside-unknown",
+        "native/try-functions/can-error-with-unknown-operand",
+        "native/try-functions/can-error-beside-unknown",
+        "native/try-functions/try-single-argument-fails-with-unknown-operand",
+        "native/try-functions/can-attribute-missing-from-unknown-object"
+      ]
+    },
+    {
+      "id": "try-functions-ignored-errors",
+      "spec": "ext/tryfunc/README.md#try-and-can-functions",
+      "rule": "An argument whose expression drops an error, such as one in the unselected result of a conditional, evaluates without errors: try gives its value and can gives true",
+      "tests": [
+        "native/try-functions/try-unselected-conditional-error",
+        "native/try-functions/can-unselected-conditional-error"
+      ]
+    },
+    {
+      "id": "try-functions-known-result",
+      "spec": "ext/tryfunc/README.md#try-and-can-functions",
+      "rule": "An argument whose value is wholly known succeeds with that value even when its expression uses unknown values, such as another attribute of the same variable or the unselected result of a conditional: try gives it and can gives true",
+      "tests": [
+        "native/try-functions/try-known-value-of-variable-with-unknowns",
+        "native/try-functions/can-known-value-of-variable-with-unknowns",
+        "native/try-functions/try-known-value-from-conditional-with-unknown"
+      ]
+    },
+    {
+      "id": "try-functions-failing-function",
+      "spec": "ext/tryfunc/README.md#try-and-can-functions",
+      "rule": "try moves on from, and can gives false for, a call of a function that fails when it runs (disputed)",
+      "tests": [
+        "native/try-functions/try-failing-function",
+        "native/try-functions/can-failing-function"
+      ]
+    },
+    {
+      "id": "try-functions-evaluation-context",
+      "spec": "ext/customdecode/README.md#the-expression-and-expression-closure-cty-types",
+      "rule": "try and can evaluate their arguments with the variables and functions in scope where they are called, including the variables of an enclosing for expression or template for directive, which hide outer variables of the same name, and deep traversals into them",
+      "tests": [
+        "native/try-functions/try-uses-variables",
+        "native/try-functions/try-uses-functions",
+        "native/try-functions/try-deep-traversal",
+        "native/try-functions/try-for-expression-variable",
+        "native/try-functions/try-for-expression-outer-variable",
+        "native/try-functions/can-template-for-variable"
+      ]
+    },
+    {
+      "id": "try-functions-all-fail",
+      "spec": "ext/tryfunc/README.md#try-and-can-functions",
+      "rule": "try fails when none of its arguments succeeds, also with a single argument",
+      "tests": [
+        "native/try-functions/try-single-failing-argument",
+        "native/try-functions/try-all-arguments-fail"
+      ]
+    },
+    {
+      "id": "try-functions-all-fail-reports-errors",
+      "spec": "ext/tryfunc/README.md#try-and-can-functions",
+      "rule": "When no argument succeeds, the error of try includes the errors of all its arguments",
+      "untested": "The protocol doesn't compare error messages"
+    },
+    {
+      "id": "try-functions-no-arguments",
+      "spec": "ext/tryfunc/README.md#try-and-can-functions",
+      "rule": "try without any argument fails, also when its arguments come from expanding an empty tuple, and an empty expansion after a failing argument adds nothing that could succeed, so the call fails",
+      "tests": [
+        "native/try-functions/try-without-arguments",
+        "native/try-functions/try-empty-expansion-after-failure",
+        "native/try-functions/try-expanded-empty-tuple"
+      ]
+    },
+    {
+      "id": "try-functions-unknown",
+      "spec": "ext/tryfunc/README.md#try-and-can-functions",
+      "rule": "try gives the dynamic value instead of the value of the first argument that succeeds when that value is an unknown of a known type or holds unknown values, also after a failing argument and even when a later argument would succeed (disputed)",
+      "tests": [
+        "native/try-functions/try-unknown-value",
+        "native/try-functions/try-partially-unknown-value",
+        "native/try-functions/try-unknown-after-failure"
+      ]
+    },
+    {
+      "id": "try-functions-dynamic-result",
+      "spec": "ext/tryfunc/README.md#try-and-can-functions",
+      "rule": "try gives the dynamic value as it is when the first argument that succeeds evaluates to it, such as a variable holding it, a call of a failing function with an unknown argument, which doesn't run the function, or the dynamic value as the first element of an expanded tuple",
+      "tests": [
+        "native/try-functions/try-dynamic-value",
+        "native/try-functions/try-expanded-unknown-element",
+        "native/try-functions/try-unknown-argument-of-failing-function"
+      ]
+    },
+    {
+      "id": "try-functions-expanded-arguments",
+      "spec": "ext/tryfunc/README.md#try-and-can-functions",
+      "rule": "Arguments expanded from a tuple or list are tried in order like other arguments, also after a failing argument, and can can take its argument from an expanded tuple",
+      "tests": [
+        "native/try-functions/try-expanded-arguments",
+        "native/try-functions/try-expanded-after-failure",
+        "native/try-functions/try-expanded-list-after-failure",
+        "native/try-functions/can-expanded-argument"
+      ]
+    },
+    {
+      "id": "try-functions-expanded-argument-error",
+      "spec": "ext/tryfunc/README.md#try-and-can-functions",
+      "rule": "An error in the expression expanded with ... makes the call fail, even when an earlier argument of try succeeds, as does a null or a string there, and can doesn't give false for it (disputed)",
+      "tests": [
+        "native/try-functions/try-expanded-undefined-variable",
+        "native/try-functions/try-expanded-string-after-success",
+        "native/try-functions/try-expanded-null-after-success",
+        "native/try-functions/can-expanded-undefined-variable"
+      ]
+    },
+    {
+      "id": "try-functions-expanded-unknown",
+      "spec": "ext/tryfunc/README.md#try-and-can-functions",
+      "rule": "An unknown tuple expanded into the arguments of try or can makes the call give the dynamic value, even after an argument of try that succeeds (disputed)",
+      "tests": [
+        "native/try-functions/can-expanded-unknown-tuple",
+        "native/try-functions/try-expanded-unknown-tuple-after-success"
+      ]
+    },
+    {
+      "id": "try-functions-syntax-errors",
+      "spec": "ext/tryfunc/README.md#try-and-can-functions",
+      "rule": "try and can don't catch a syntax error in their arguments, which makes the file invalid, also after a successful argument of try",
+      "tests": [
+        "native/try-functions/try-syntax-error",
+        "native/try-functions/try-syntax-error-after-success",
+        "native/try-functions/can-syntax-error"
+      ]
+    },
+    {
+      "id": "try-functions-can",
+      "spec": "ext/tryfunc/README.md#try-and-can-functions",
+      "rule": "can gives true when its argument evaluates without errors, whatever the value, including false, null or the result of a call of try, and false when it has errors, including a call of try that fails, and try gives that false like any other value",
+      "tests": [
+        "native/try-functions/can-success",
+        "native/try-functions/can-null",
+        "native/try-functions/can-false-argument",
+        "native/try-functions/can-failing-try",
+        "native/try-functions/try-can-false-succeeds",
+        "native/try-functions/can-failure",
+        "native/try-functions/can-deep-traversal-missing",
+        "native/try-functions/can-deep-traversal-present",
+        "native/try-functions/can-successful-try"
+      ]
+    },
+    {
+      "id": "try-functions-can-unknown",
+      "spec": "ext/tryfunc/README.md#try-and-can-functions",
+      "rule": "can gives an unknown bool for an argument that succeeds with a value that isn't wholly known, such as the dynamic value, a tuple holding an unknown number, a call of a failing function with an unknown argument (which doesn't run the function) or an index with an unknown key (disputed)",
+      "tests": [
+        "native/try-functions/can-unknown-value",
+        "native/try-functions/can-partially-unknown-value",
+        "native/try-functions/can-unknown-argument-of-failing-function",
+        "native/try-functions/can-unknown-index-key"
+      ]
+    },
+    {
+      "id": "try-functions-can-arguments",
+      "spec": "ext/tryfunc/README.md#try-and-can-functions",
+      "rule": "can takes exactly one argument, also when its arguments come from an expanded tuple",
+      "tests": [
+        "native/try-functions/can-without-arguments",
+        "native/try-functions/can-two-arguments",
+        "native/try-functions/can-expanded-two-arguments",
+        "native/try-functions/can-expanded-empty-tuple"
+      ]
+    },
+    {
+      "id": "try-functions-positions",
+      "spec": "ext/tryfunc/README.md#try-and-can-functions",
+      "rule": "Calls of try and can are expressions like other calls, usable as parenthesized object keys and in for expression conditions",
+      "tests": [
+        "native/try-functions/try-in-object-key",
+        "native/try-functions/can-as-for-condition"
+      ]
+    }
+  ]
+}

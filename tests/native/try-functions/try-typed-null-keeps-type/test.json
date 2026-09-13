@@ -1,0 +1,34 @@
+{
+  "description": "The try function gives a typed null unchanged",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "spec.md#null-values"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "try-functions"
+  ],
+  "variables": {
+    "n": {
+      "null": "number"
+    }
+  },
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "null": "number"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

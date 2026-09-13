@@ -1,0 +1,37 @@
+{
+  "description": "The try function moves on from a call without a required argument",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "functions": {
+    "try": {
+      "extension": "try"
+    },
+    "f": {
+      "params": [
+        {
+          "name": "n",
+          "type": "number"
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "d"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

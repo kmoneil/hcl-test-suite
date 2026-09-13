@@ -1,0 +1,21 @@
+{
+  "description": "The try function with a single failing argument fails",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "reference_error": "no expression succeeded",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

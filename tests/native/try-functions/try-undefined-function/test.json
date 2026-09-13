@@ -1,0 +1,28 @@
+{
+  "description": "The try function moves on from a call to a function that isn't defined",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "2"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

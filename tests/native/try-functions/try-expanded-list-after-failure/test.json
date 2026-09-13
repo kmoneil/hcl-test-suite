@@ -1,0 +1,42 @@
+{
+  "description": "The try function moves on from a failing argument to elements expanded from a list",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "try-functions"
+  ],
+  "variables": {
+    "xs": {
+      "list": [
+        {
+          "string": "a"
+        },
+        {
+          "string": "b"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "a"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

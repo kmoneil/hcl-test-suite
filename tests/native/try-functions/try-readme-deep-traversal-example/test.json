@@ -1,0 +1,52 @@
+{
+  "description": "The try function gives null for the README's deep traversal example when a step fails",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "variables": {
+    "foo": {
+      "object": {
+        "deep": {
+          "tuple": [
+            {
+              "object": {
+                "lots": {
+                  "object": {
+                    "of": {
+                      "object": {
+                        "other": {
+                          "string": "v"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "null": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

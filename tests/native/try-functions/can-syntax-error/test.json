@@ -1,0 +1,22 @@
+{
+  "description": "A syntax error in the argument of can makes the file invalid",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "hclsyntax/spec.md#operations"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "functions": {
+    "can": {
+      "extension": "can"
+    }
+  },
+  "reference_error": "Expected the start of an expression, but found an invalid expression token",
+  "expect": {
+    "valid": false,
+    "phase": "parse"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "description": "Expanding null after a successful argument of try makes the call fail",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "status": "disputed",
+  "notes": "The README says try evaluates its argument expressions in order until one produces a result without errors, so try(1, null...) would give 1, and the spec doesn't say what expanding null does (native/functions/expand-null-is-error). hashicorp/hcl rejects the null before calling the function (FunctionCallExpr.Value in hclsyntax/expression.go), so try never runs.",
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "reference_error": "must not be null",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

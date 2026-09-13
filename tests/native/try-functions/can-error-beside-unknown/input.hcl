@@ -1,0 +1,1 @@
+a = can([d, nope])

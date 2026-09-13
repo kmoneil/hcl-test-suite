@@ -1,0 +1,46 @@
+{
+  "description": "A call of try in a JSON string template evaluates its arguments with the variables",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "json/spec.md#strings"
+  ],
+  "op": "decode",
+  "features": [
+    "functions",
+    "json-syntax",
+    "try-functions"
+  ],
+  "variables": {
+    "x": {
+      "object": {
+        "y": {
+          "string": "v"
+        }
+      }
+    }
+  },
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "v"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

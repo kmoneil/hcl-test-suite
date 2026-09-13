@@ -24,8 +24,14 @@ TESTS = ROOT / "tests"
 COVERAGE = ROOT / "coverage"
 KEY_ORDER = ["description", "spec", "op", "input", "features", "status", "notes", "variables", "functions",
              "evaluation_mode", "schema", "reference_error", "expect"]
-FEATURES = {"unknown-values", "typed-values", "functions", "json-syntax", "static-analysis", "type-expressions"}
+FEATURES = {"unknown-values", "typed-values", "functions", "json-syntax", "static-analysis", "type-expressions",
+            "try-functions"}
 TYPE_KINDS = ("type", "type-constraint", "type-constraint-with-defaults")
+# Features of extensions, which a test must list exactly when it uses the extension.
+EXTENSION_FEATURES = sorted(set(hcltest.EXTENSION_FUNCTIONS.values()) | {"type-expressions"})
+assert set(EXTENSION_FEATURES) <= FEATURES
+# Extension functions that implementations may only have under their own names.
+OWN_NAME_EXTENSIONS = ("try", "can")
 NAME = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 MAX_INPUT_BYTES = 2048
 MAX_DESCRIPTION = 100
@@ -296,7 +302,7 @@ class Linter:
     def check_test(self, test_json, descriptions, inputs):
         where = test_json.parent.relative_to(TESTS).as_posix()
         try:
-            meta = json.loads(test_json.read_text(encoding="utf-8"))
+            meta = json.loads(test_json.read_text(encoding="utf-8"), object_pairs_hook=hcltest.unique_keys)
             self.disputed[where] = isinstance(meta, dict) and meta.get("status") == "disputed"
         except (OSError, ValueError, RecursionError):
             pass
@@ -311,11 +317,14 @@ class Linter:
 
         try:
             raw = test_json.read_text(encoding="utf-8")
-            meta = json.loads(raw)
+            meta = json.loads(raw, object_pairs_hook=hcltest.unique_keys)
             test = hcltest.Test(test_json)
+        except RecursionError:
+            self.problem(where, "test.json is nested too deeply")
+            return where
         except (ValueError, hcltest.TestError) as e:
             self.problem(where, str(e))
-            return None
+            return where
 
         syntax = parts[0]
         if syntax not in hcltest.INPUT_NAMES:
@@ -366,6 +375,8 @@ class Linter:
         for feature in meta.get("features", []):
             if feature not in FEATURES:
                 self.problem(where, f"unknown feature {feature!r}")
+        for feature in sorted({f for f in meta.get("features", []) if meta.get("features", []).count(f) > 1}):
+            self.problem(where, f"lists the feature {feature!r} twice")
         if meta.get("status") == "normal":
             self.problem(where, 'leave out "status" instead of setting it to "normal"')
         if meta.get("status") == "disputed" and not meta.get("notes"):
@@ -391,14 +402,22 @@ class Linter:
             needs["static-analysis"] = "the schema analyzes an attribute"
         elif "static-analysis" in features:
             self.problem(where, 'lists the "static-analysis" feature, but its schema analyzes no attribute')
-        extensions = {hcltest.EXTENSION_FUNCTIONS[decl["extension"]]
-                      for decl in test.context.get("functions", {}).values() if "extension" in decl}
         if kinds & set(TYPE_KINDS):
             needs["type-expressions"] = "the schema analyzes a type expression"
-        elif "type-expressions" in extensions:
-            needs["type-expressions"] = "the test declares a function of the type expression extension"
-        elif "type-expressions" in features:
-            self.problem(where, 'lists the "type-expressions" feature, but uses no type expressions')
+        for name, decl in test.context.get("functions", {}).items():
+            if "extension" in decl:
+                needs.setdefault(hcltest.EXTENSION_FUNCTIONS[decl["extension"]],
+                                 f'function {name!r} is the extension function "{decl["extension"]}"')
+                if decl["extension"] in OWN_NAME_EXTENSIONS and name != decl["extension"]:
+                    self.problem(where, f'declare the extension function "{decl["extension"]}" under its own name, '
+                                        f'not {name!r}')
+            if name in OWN_NAME_EXTENSIONS and decl.get("extension") != name:
+                self.problem(where, f'the name {name!r} is reserved for the extension function "{name}"')
+        for feature in EXTENSION_FEATURES:
+            if feature in features and feature not in needs:
+                self.problem(where, f'lists the "{feature}" feature, but uses nothing that needs it')
+        if test.context.get("functions") == {}:
+            self.problem(where, 'leave out the empty "functions"')
         if "functions" in test.context:
             needs["functions"] = "the test declares functions"
             for name, decl in test.context["functions"].items():
@@ -493,7 +512,7 @@ class Linter:
         for path in sorted(COVERAGE.glob("*.json")):
             where = path.relative_to(ROOT).as_posix()
             try:
-                data = json.loads(path.read_text(encoding="utf-8"))
+                data = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=hcltest.unique_keys)
             except ValueError as e:
                 self.problem(where, f"invalid JSON: {e}")
                 continue

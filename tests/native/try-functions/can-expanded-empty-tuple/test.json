@@ -1,0 +1,27 @@
+{
+  "description": "The can function with arguments expanded from an empty tuple is an error",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "variables": {
+    "xs": {
+      "tuple": []
+    }
+  },
+  "functions": {
+    "can": {
+      "extension": "can"
+    }
+  },
+  "reference_error": "Not enough function arguments",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

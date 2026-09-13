@@ -7,9 +7,9 @@ HashiCorp configuration language, in the spirit of
 Any HCL implementation, in any language, can run it by providing a small
 adapter program.
 
-**Status:** draft. 2,897 tests of the native and JSON syntaxes, checking 1,025
-rules from the spec and the type expression extension at hashicorp/hcl
-v2.24.0. The test and adapter formats may still change.
+**Status:** draft. 3,003 tests of the native and JSON syntaxes, checking 1,047
+rules from the spec and the type expression and try function extensions at
+hashicorp/hcl v2.24.0. The test and adapter formats may still change.
 
 ## How it works
 
@@ -57,8 +57,8 @@ run the tests at all.
 1. Write an adapter ([protocol](docs/protocol.md)). You can start with just
    `capabilities` and `parse`. Tests for operations or features you don't
    support (such as `eval`, `decode`, the JSON syntax, typed values, unknown
-   values, functions, static analysis or type expressions) are skipped, not
-   failed.
+   values, functions, static analysis, type expressions or `try` and `can`)
+   are skipped, not failed.
 2. Run `python3 runner/hcltest.py --adapter "<command that runs your adapter>"`.
 3. If you're unsure how some input should be read, ask the reference
    implementation: `bin/hcl-go-adapter parse file.hcl`.
@@ -88,22 +88,24 @@ run the tests at all.
 | JSON static analysis | 98 | 27 | 0 |
 | type expressions (`ext/typeexpr`) | 175 | 51 | 0 |
 | JSON type expressions | 34 | 8 | 0 |
-| **total** | **2,897** | **1,032** | **7** |
+| `try` and `can` (`ext/tryfunc`) | 98 | 21 | 1 |
+| JSON `try` and `can` | 8 | 2 | 0 |
+| **total** | **3,003** | **1,055** | **8** |
 
 - Most rules without tests need something the protocol can't express yet:
-  error positions, capsule values, or literal-only evaluation with variables,
-  which hashicorp/hcl can't express either. Two depend on choices the spec
+  error positions or messages, capsule values, or literal-only evaluation
+  with variables, which hashicorp/hcl can't express either. Two depend on choices the spec
   leaves to implementations (rounding and the order of set elements), and one
   is guidance for applications. `python3 tools/coverage.py rules` lists them.
 - The tests exercise 84.9% of the statements in hashicorp/hcl's `hclsyntax`
-  package, 85.8% of its `json` package and 78.6% of `ext/typeexpr`
-  (`python3 tools/coverage.py go`).
+  package, 85.8% of its `json` package, 78.6% of `ext/typeexpr` and 97.1% of
+  `ext/tryfunc` (`python3 tools/coverage.py go`).
   Most of the rest is syntax tree walking, listing the variables an
   expression uses, lookups by source position and source ranges, which the
   protocol doesn't reach, and error handling for states that valid use can't
   produce. In `ext/typeexpr` it is mostly `TypeString` and Go helpers for
   type constraint values; reading type expressions is fully covered.
-- Not covered yet: the `dynblock`, `tryfunc` and `userfunc` extensions.
+- Not covered yet: the `dynblock` and `userfunc` extensions.
 
 ## How the tests are checked
 
@@ -126,8 +128,8 @@ run the tests at all.
 
 | Implementation | Passed | Failed | Adapter errors | Skipped |
 | --- | ---: | ---: | ---: | ---: |
-| hashicorp/hcl v2.24.0 | 2,897 | 0 | 0 | 0 |
-| hcl-rs 0.19.8 | 1,570 | 203 (74 disputed) | 21 | 1,103 |
+| hashicorp/hcl v2.24.0 | 3,003 | 0 | 0 | 0 |
+| hcl-rs 0.19.8 | 1,570 | 203 (74 disputed) | 21 | 1,209 |
 
 ### hcl-rs 0.19.8
 
@@ -153,11 +155,11 @@ The 129 failures on tests that aren't disputed fall into these groups:
 - **Not supported (skipped or adapter errors):** list, set and map types,
   unknown values, infinity, function parameters of collection or structural
   types, schema-driven processing (`decode`) with the static analysis tests
-  that use it, type expressions, and the JSON syntax.
+  that use it, type expressions, `try` and `can`, and the JSON syntax.
 
 ### Where the spec and hashicorp/hcl disagree
 
-409 tests are disputed. `python3 tools/coverage.py disputes` lists them all by
+424 tests are disputed. `python3 tools/coverage.py disputes` lists them all by
 spec section, with notes. The main themes:
 
 - **Source text:** a byte order mark, identifiers starting with `_`, and some
@@ -221,6 +223,15 @@ spec section, with notes. The main themes:
   value that lacks an optional attribute, which the README says becomes null.
   In the JSON syntax, a newline or line comment after a type keyword or call
   is ignored.
+- **`try` and `can`:** when the first argument that succeeds has a value that
+  isn't wholly known, `try` gives the dynamic value, and `can` gives an
+  unknown bool for such an argument, although the README says they give that
+  value and true. An error in the expression expanded with `...`, or a null
+  or string there, makes the call fail, even when an earlier argument of
+  `try` succeeds, and expanding an unknown tuple gives the dynamic value, into
+  `can` and even after an argument of `try` that succeeds. `try` moving on
+  from a function that fails, and `can` giving false for it, depend on a
+  failing function making its call an error, which the spec doesn't say.
 - **Schemas:** requesting an optional attribute twice (or in the JSON syntax a
   required one), or an attribute and a block type with the same name, isn't
   reported as an error, and dynamic attributes of the body left from a JSON
@@ -268,8 +279,7 @@ spec section, with notes. The main themes:
 
 ## Next steps
 
-- The other `ext/` packages (`dynblock`, `tryfunc`, `userfunc`) as optional
-  features.
+- The other `ext/` packages (`dynblock`, `userfunc`) as optional features.
 
 ## License
 

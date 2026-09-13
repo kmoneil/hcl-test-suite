@@ -1,0 +1,24 @@
+{
+  "description": "An undefined variable expanded into try's arguments makes the call fail after a success",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "status": "disputed",
+  "notes": "The README says try evaluates its argument expressions in order until one produces a result without errors, so try(1, ys...) would give 1 without evaluating ys. The native syntax spec says the expression before ... must evaluate to a list or tuple whose elements are mapped to parameters, and neither says whether ys is evaluated before try runs. hashicorp/hcl evaluates the expanded expression before calling the function and reports its error (FunctionCallExpr.Value in hclsyntax/expression.go), so try never runs.",
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "reference_error": "There is no variable named \"ys\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

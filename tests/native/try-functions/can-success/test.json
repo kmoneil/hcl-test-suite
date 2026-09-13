@@ -1,0 +1,27 @@
+{
+  "description": "The can function gives true for an argument that succeeds",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "functions": {
+    "can": {
+      "extension": "can"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

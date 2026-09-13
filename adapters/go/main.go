@@ -24,6 +24,7 @@ import (
 
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/ext/customdecode"
+	"github.com/hashicorp/hcl/v2/ext/tryfunc"
 	"github.com/hashicorp/hcl/v2/ext/typeexpr"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 	hcljson "github.com/hashicorp/hcl/v2/json"
@@ -97,7 +98,8 @@ func capabilities() object {
 		"implementation": "hashicorp/hcl",
 		"version":        version,
 		"operations":     []string{"parse", "eval", "decode"},
-		"features":       []string{"typed-values", "unknown-values", "functions", "json-syntax", "static-analysis", "type-expressions"},
+		"features": []string{"typed-values", "unknown-values", "functions", "json-syntax", "static-analysis", "type-expressions",
+			"try-functions"},
 	}
 }
 
@@ -1025,6 +1027,10 @@ func newFunction(data json.RawMessage) (function.Function, error) {
 			return typeexpr.ConvertFunc, nil
 		case "convert-with-defaults":
 			return convertWithDefaultsFunc, nil
+		case "try":
+			return tryfunc.TryFunc, nil
+		case "can":
+			return tryfunc.CanFunc, nil
 		}
 		return function.Function{}, fmt.Errorf("unknown extension function %q", *decl.Extension)
 	}

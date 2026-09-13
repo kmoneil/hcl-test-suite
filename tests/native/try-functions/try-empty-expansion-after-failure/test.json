@@ -1,0 +1,27 @@
+{
+  "description": "The try function fails when a failing argument is followed by an empty expansion",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "variables": {
+    "xs": {
+      "tuple": []
+    }
+  },
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "reference_error": "no expression succeeded",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

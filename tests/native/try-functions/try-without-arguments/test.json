@@ -1,0 +1,22 @@
+{
+  "description": "The try function without arguments fails",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "reference_error": "at least one argument is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

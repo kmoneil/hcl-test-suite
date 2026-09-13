@@ -1,0 +1,37 @@
+{
+  "description": "The try function moves on from a splat over a null list",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "hclsyntax/spec.md#splat-operators"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "try-functions"
+  ],
+  "variables": {
+    "l": {
+      "null": [
+        "list",
+        "string"
+      ]
+    }
+  },
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "d"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

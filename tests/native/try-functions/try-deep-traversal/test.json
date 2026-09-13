@@ -1,0 +1,49 @@
+{
+  "description": "The try function gives the value at the end of a deep traversal that succeeds",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "ext/tryfunc/README.md#using-these-functions"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "variables": {
+    "x": {
+      "object": {
+        "a": {
+          "object": {
+            "b": {
+              "tuple": [
+                {
+                  "object": {
+                    "c": {
+                      "string": "v"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "v"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "description": "The try function moves on from a function that fails",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "status": "disputed",
+  "notes": "The README says try moves on from an argument that produces errors, but the spec's call rules don't say that a function that fails makes its call an error (see native/functions/function-error-is-eval-error). hashicorp/hcl reports the function's error as an error in the call (FunctionCallExpr.Value in hclsyntax/expression.go), so try moves on to the next argument (try in ext/tryfunc/tryfunc.go).",
+  "functions": {
+    "try": {
+      "extension": "try"
+    },
+    "g": {
+      "result": {
+        "error": "boom"
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "2"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

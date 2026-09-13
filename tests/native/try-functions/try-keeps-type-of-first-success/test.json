@@ -1,0 +1,28 @@
+{
+  "description": "The try function keeps a result type that differs from a later argument's type",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "spec.md#type-unification"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

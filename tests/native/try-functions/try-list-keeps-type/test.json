@@ -1,0 +1,43 @@
+{
+  "description": "The try function gives a list value unchanged",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "try-functions"
+  ],
+  "variables": {
+    "xs": {
+      "list": [
+        {
+          "string": "a"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [
+            {
+              "string": "a"
+            }
+          ],
+          "element_type": "string"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

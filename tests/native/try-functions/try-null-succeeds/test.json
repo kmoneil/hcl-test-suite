@@ -1,0 +1,28 @@
+{
+  "description": "A null argument counts as a success for try",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "spec.md#null-values"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "null": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "description": "A call of try whose arguments all fail in a JSON string template is an evaluation error",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "json/spec.md#strings"
+  ],
+  "op": "decode",
+  "features": [
+    "functions",
+    "json-syntax",
+    "try-functions"
+  ],
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "no expression succeeded",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

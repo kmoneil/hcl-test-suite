@@ -1,0 +1,43 @@
+{
+  "description": "The can function with an argument expanded from an unknown tuple gives the dynamic value",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "try-functions"
+  ],
+  "status": "disputed",
+  "notes": "The README says can gives a bool, and the spec doesn't say how an unknown value expands (native/unknowns/function-expand-unknown-tuple): the tuple's type gives one element, an unknown number, which can would take as a successful expression, giving a bool rather than the dynamic value. hashicorp/hcl returns the dynamic value for an expanded argument that is unknown, before calling the function (FunctionCallExpr.Value in hclsyntax/expression.go).",
+  "variables": {
+    "ut": {
+      "unknown": [
+        "tuple",
+        [
+          "number"
+        ]
+      ]
+    }
+  },
+  "functions": {
+    "can": {
+      "extension": "can"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

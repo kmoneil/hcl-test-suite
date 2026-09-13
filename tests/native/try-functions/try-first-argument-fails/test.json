@@ -1,0 +1,28 @@
+{
+  "description": "The try function gives its second argument when the first fails",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "ext/customdecode/README.md#the-expression-and-expression-closure-cty-types"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "2"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

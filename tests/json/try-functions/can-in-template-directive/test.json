@@ -1,0 +1,38 @@
+{
+  "description": "A call of can can be a JSON string template if directive's condition",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "json/spec.md#strings",
+    "hclsyntax/spec.md#template-if-directive"
+  ],
+  "op": "decode",
+  "features": [
+    "functions",
+    "json-syntax",
+    "try-functions"
+  ],
+  "functions": {
+    "can": {
+      "extension": "can"
+    }
+  },
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "n"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -60,6 +60,9 @@ Describes the implementation and what the adapter supports.
     [type analyses](#type-expressions) and the
     [extension functions](#extension-functions) `convert` and
     `convert-with-defaults`.
+  - `try-functions`: the implementation has the `try` and `can` functions of
+    hashicorp/hcl's `ext/tryfunc`, which tests declare as
+    [extension functions](#extension-functions).
 
 ## `parse`
 
@@ -133,9 +136,10 @@ syntaxes with their own expression syntax.
   `"number"`, `"bool"` or `"dynamic"` only appear in tests that need
   `typed-values`. Parameters of type `"dynamic"` and the `allow_unknown` and
   `allow_dynamic_type` flags can appear in any test. Schemas only have an
-  `analysis` in tests that need `static-analysis`. Type analyses and
-  [extension functions](#extension-functions) only appear in tests that need
-  `type-expressions`. Context files never have object types with optional
+  `analysis` in tests that need `static-analysis`. Type analyses and the
+  type expression [extension functions](#extension-functions) only appear in
+  tests that need `type-expressions`, and the extension functions `try` and
+  `can` only in tests that need `try-functions`. Context files never have object types with optional
   attributes.
 
 ## `decode`
@@ -401,15 +405,18 @@ instead of the fields above, under the name the test calls it by:
 | --- | --- | --- |
 | `"convert"` | `type-expressions` | `convert(value, type)`: converts the value to a type constraint written as its second argument (hashicorp/hcl's `typeexpr.ConvertFunc`). |
 | `"convert-with-defaults"` | `type-expressions` | `convert(value, type)` with a type constraint that can give optional attributes default values: applies the defaults to the value, then converts it. |
+| `"try"` | `try-functions` | `try(expression, ...)`: evaluates its argument expressions in order and gives the value of the first one that evaluates without errors, or fails if none does (hashicorp/hcl's `tryfunc.TryFunc`). |
+| `"can"` | `try-functions` | `can(expression)`: gives whether its argument expression evaluates without errors (hashicorp/hcl's `tryfunc.CanFunc`). |
 
-- Both take two arguments. The first is a value, declared as
+- `convert` and `convert-with-defaults` both take two arguments. The first is
+  a value, declared as
   `{"type": "dynamic", "allow_null": true, "allow_dynamic_type": true}`. The
   second is a type expression written in the call, which is read as a type
   constraint (`typeexpr.TypeConstraint`, or `TypeConstraintWithDefaults` for
   `convert-with-defaults`) without being evaluated, except for default values,
   which are evaluated as in a type analysis. An invalid type expression is an
   evaluation error.
-- The result is the value converted to the type constraint, and its type is
+- Their result is the value converted to the type constraint, and its type is
   the converted value's type. A value that doesn't convert is an evaluation
   error. A null is passed to the function like any other value. For an
   unknown value, including the dynamic value, the call doesn't convert the
@@ -424,10 +431,44 @@ instead of the fields above, under the name the test calls it by:
   fails for a value that lacks an optional attribute, which a disputed test
   covers. The rules of applying defaults are the rules whose IDs start with
   `type-expressions-defaults` in `coverage/native-type-expressions.json`.
+- `try` and `can` receive their arguments as expressions, which they evaluate
+  themselves with the variables and functions in scope where they are called,
+  including the variables of an enclosing for expression or template `for`
+  directive. An evaluation error in an argument doesn't make the call fail by
+  itself: `try` moves on to the next argument and fails only if none succeeds,
+  and `can` gives false. That holds even when the argument also involves
+  unknown values, as in `u + "x"` with `u` an unknown number. A syntax error
+  still makes the file invalid (or, in a JSON string template, is an
+  evaluation error).
+- `try` stops at the first argument that succeeds, so the arguments after it,
+  including unknown ones, don't matter, apart from the expression expanded
+  with `...` (below). It needs at least one argument, including after `...`
+  expands an empty tuple, and `can` takes exactly one and gives a bool. When
+  the value of the first argument of `try` that succeeds, or of the argument
+  of `can` when it succeeds, isn't wholly known, hashicorp/hcl's `try` gives
+  the dynamic value instead of that value and `can` an unknown bool instead of
+  true, which disputed tests cover (a `try` argument that already is the
+  dynamic value is simply given).
+- The expression expanded with `...` is evaluated and expanded before the
+  call, as for any function. An error in it, or a null or a value that isn't
+  a tuple, list or set (known or not), makes the call fail. An unknown tuple,
+  list or set, or the dynamic value, makes the result the dynamic value
+  without calling the function, so `can` then gives the dynamic value instead
+  of a bool. Otherwise each element is an argument that succeeds with that
+  element. Disputed tests cover the cases where this overrides an earlier
+  successful argument of `try`.
+- Tests declare `try` and `can` under their own names, never declare anything
+  else under those names, and never call them without declaring them, so an
+  implementation with its own `try` and `can` can keep them. In contrast,
+  `convert-with-defaults` is declared under the name the test calls it by,
+  such as `convert`.
 - A test that declares an extension function needs the `functions` feature
   and the feature of the extension. The adapter uses the extension's own
   functions where the implementation has them, and otherwise builds them from
-  its type expression operations.
+  the implementation's own operations: type expression operations for
+  `convert` and `convert-with-defaults`, and expression evaluation for `try`
+  and `can`. An implementation that has neither its own `try` and `can` nor
+  functions that receive unevaluated expressions leaves out `try-functions`.
 
 ## Errors
 

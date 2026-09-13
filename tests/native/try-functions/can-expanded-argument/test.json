@@ -1,0 +1,37 @@
+{
+  "description": "The can function takes its argument from an expanded tuple",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "variables": {
+    "xs": {
+      "tuple": [
+        {
+          "number": "1"
+        }
+      ]
+    }
+  },
+  "functions": {
+    "can": {
+      "extension": "can"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

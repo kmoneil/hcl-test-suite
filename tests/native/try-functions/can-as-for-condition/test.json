@@ -1,0 +1,56 @@
+{
+  "description": "A call of can can be a for expression's condition",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "variables": {
+    "xs": {
+      "tuple": [
+        {
+          "object": {
+            "a": {
+              "number": "1"
+            }
+          }
+        },
+        {
+          "object": {
+            "b": {
+              "number": "2"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "functions": {
+    "can": {
+      "extension": "can"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "object": {
+                "a": {
+                  "number": "1"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

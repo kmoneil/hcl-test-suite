@@ -1,0 +1,28 @@
+{
+  "description": "The can function gives true for an argument that evaluates to null",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "spec.md#null-values"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "functions": {
+    "can": {
+      "extension": "can"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

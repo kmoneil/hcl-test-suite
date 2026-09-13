@@ -1,0 +1,44 @@
+{
+  "description": "The can function evaluates its argument with the variable of a template for directive",
+  "spec": [
+    "ext/customdecode/README.md#the-expression-and-expression-closure-cty-types",
+    "hclsyntax/spec.md#template-for-directive"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "variables": {
+    "xs": {
+      "tuple": [
+        {
+          "object": {
+            "a": {
+              "number": "1"
+            }
+          }
+        },
+        {
+          "object": {}
+        }
+      ]
+    }
+  },
+  "functions": {
+    "can": {
+      "extension": "can"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "truefalse"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

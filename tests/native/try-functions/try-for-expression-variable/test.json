@@ -1,0 +1,62 @@
+{
+  "description": "The try function evaluates its arguments with the variables of an enclosing for expression",
+  "spec": [
+    "ext/customdecode/README.md#the-expression-and-expression-closure-cty-types",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "variables": {
+    "x": {
+      "object": {
+        "y": {
+          "string": "outer"
+        }
+      }
+    },
+    "xs": {
+      "tuple": [
+        {
+          "object": {
+            "y": {
+              "string": "inner"
+            }
+          }
+        },
+        {
+          "object": {
+            "z": {
+              "string": "v"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "inner"
+            },
+            {
+              "string": "d"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

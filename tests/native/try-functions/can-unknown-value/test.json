@@ -1,0 +1,37 @@
+{
+  "description": "The can function gives an unknown bool for the dynamic value",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "try-functions"
+  ],
+  "status": "disputed",
+  "notes": "The README says can returns true if the expression produced a successful result, and the dynamic value evaluates without errors. The core spec says operations on unknown values return unknown values, which could be read as supporting an unknown bool, but also that operations on the dynamic value optimistically assume it will be valid, so the spec doesn't clearly decide. hashicorp/hcl's can (ext/tryfunc/tryfunc.go) gives an unknown bool for a value that isn't wholly known, because the expression could still fail once the value is known.",
+  "variables": {
+    "u": {
+      "unknown": "dynamic"
+    }
+  },
+  "functions": {
+    "can": {
+      "extension": "can"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "bool"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

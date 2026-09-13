@@ -1,0 +1,23 @@
+{
+  "description": "The can function with two arguments is an error",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "notes": "The README speaks of can's single given expression, where try has each of its argument expressions, and CanFunc's doc comment names no argument other than the first, while only TryFunc's doc comment calls its function variadic, so can has one parameter and by the call rules a second argument is an error.",
+  "functions": {
+    "can": {
+      "extension": "can"
+    }
+  },
+  "reference_error": "Too many function arguments",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

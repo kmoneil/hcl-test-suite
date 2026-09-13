@@ -1,0 +1,28 @@
+{
+  "description": "The try function moves on from an error inside an object constructor",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "hclsyntax/spec.md#collection-values"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {}
+        }
+      },
+      "blocks": []
+    }
+  }
+}

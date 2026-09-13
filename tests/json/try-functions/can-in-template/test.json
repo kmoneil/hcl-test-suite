@@ -1,0 +1,37 @@
+{
+  "description": "The can function can be called in a JSON string template",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "json/spec.md#strings"
+  ],
+  "op": "decode",
+  "features": [
+    "functions",
+    "json-syntax",
+    "try-functions"
+  ],
+  "functions": {
+    "can": {
+      "extension": "can"
+    }
+  },
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

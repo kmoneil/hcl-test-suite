@@ -1,0 +1,27 @@
+{
+  "description": "The try function gives the first of two arguments that succeed",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "a"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

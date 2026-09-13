@@ -1,0 +1,22 @@
+{
+  "description": "The can function without an argument is an error",
+  "spec": [
+    "ext/tryfunc/README.md#try-and-can-functions",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "try-functions"
+  ],
+  "functions": {
+    "can": {
+      "extension": "can"
+    }
+  },
+  "reference_error": "Not enough function arguments",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}
