@@ -1,0 +1,18 @@
+{
+  "description": "A colon between array values is an error",
+  "spec": [
+    "json/spec.md#hcl-json-syntax-specification"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "A colon is not used to introduce values in a JSON array",
+  "expect": {
+    "valid": false,
+    "phase": "parse"
+  }
+}

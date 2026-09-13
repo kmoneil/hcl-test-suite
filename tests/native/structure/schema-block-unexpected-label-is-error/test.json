@@ -1,0 +1,23 @@
+{
+  "description": "A label on a block whose header schema names no labels is an error",
+  "spec": [
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "dynamic-attributes"
+        }
+      }
+    ]
+  },
+  "reference_error": "No labels are expected for b blocks",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

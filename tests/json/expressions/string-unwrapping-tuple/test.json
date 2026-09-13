@@ -1,0 +1,32 @@
+{
+  "description": "A string that is only an interpolation of a tuple gives the tuple",
+  "spec": [
+    "json/spec.md#strings",
+    "hclsyntax/spec.md#template-interpolation-unwrapping"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "number": "1"
+            },
+            {
+              "number": "2"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

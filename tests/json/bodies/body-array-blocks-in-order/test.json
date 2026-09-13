@@ -1,0 +1,72 @@
+{
+  "description": "Blocks from the objects of a body array are in order of the objects",
+  "spec": [
+    "json/spec.md#structural-elements",
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "dynamic-attributes"
+        }
+      },
+      {
+        "type": "c",
+        "body": {
+          "mode": "dynamic-attributes"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "n": {
+                "number": "1"
+              }
+            },
+            "blocks": []
+          }
+        },
+        {
+          "type": "c",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "n": {
+                "number": "2"
+              }
+            },
+            "blocks": []
+          }
+        },
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "n": {
+                "number": "3"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "description": "The body partial processing leaves has the properties the schema didn't request",
+  "spec": [
+    "spec.md#partial-processing-of-body-content"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "partial",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ],
+    "remain": {
+      "mode": "exhaustive",
+      "attributes": [
+        {
+          "name": "b"
+        }
+      ],
+      "blocks": [
+        {
+          "type": "c",
+          "body": {
+            "mode": "dynamic-attributes"
+          }
+        }
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": [],
+      "remain": {
+        "attributes": {
+          "b": {
+            "number": "2"
+          }
+        },
+        "blocks": [
+          {
+            "type": "c",
+            "labels": [],
+            "body": {
+              "attributes": {
+                "x": {
+                  "number": "3"
+                }
+              },
+              "blocks": []
+            }
+          }
+        ]
+      }
+    }
+  }
+}

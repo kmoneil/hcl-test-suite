@@ -1,0 +1,31 @@
+{
+  "description": "A property name giving the dynamic value makes the object the dynamic value",
+  "spec": [
+    "json/spec.md#objects",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "decode",
+  "features": [
+    "unknown-values",
+    "json-syntax"
+  ],
+  "variables": {
+    "d": {
+      "unknown": "dynamic"
+    }
+  },
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

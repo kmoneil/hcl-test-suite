@@ -359,9 +359,17 @@ fn number_text(n: &Number) -> String {
 fn declare_context(ctx: &mut Context, path: &str) -> Result<(), String> {
     let text = fs::read_to_string(path).map_err(|err| format!("{path}: {err}"))?;
     let context: Json = serde_json::from_str(&text).map_err(|err| format!("{path}: {err}"))?;
-    let context = object_with_fields(&context, &["variables", "functions"]).map_err(|err| format!("{path}: {err}"))?;
+    let context = object_with_fields(&context, &["variables", "functions", "evaluation_mode"])
+        .map_err(|err| format!("{path}: {err}"))?;
+    // hcl-rs has no literal-only mode, but for the native syntax it is the same
+    // as evaluating without variables and functions.
+    if let Some(mode) = context.get("evaluation_mode")
+        && (mode != "literal-only" || context.len() > 1)
+    {
+        return Err(format!("{path}: evaluation_mode must be literal-only, without variables or functions"));
+    }
     let mut fixed_results = Vec::new();
-    for (field, entries) in context {
+    for (field, entries) in context.iter().filter(|(field, _)| field.as_str() != "evaluation_mode") {
         let entries = entries.as_object().ok_or_else(|| format!("{path}: {field} must be an object"))?;
         for (name, entry) in entries {
             // Names are used as given, without hcl-rs's sanitizing.

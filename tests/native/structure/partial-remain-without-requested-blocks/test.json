@@ -1,0 +1,84 @@
+{
+  "description": "The body partial processing leaves doesn't have blocks of the types it took",
+  "spec": [
+    "spec.md#partial-processing-of-body-content"
+  ],
+  "op": "decode",
+  "schema": {
+    "mode": "partial",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "n"
+            }
+          ]
+        }
+      }
+    ],
+    "remain": {
+      "mode": "exhaustive",
+      "attributes": [
+        {
+          "name": "c"
+        }
+      ],
+      "blocks": [
+        {
+          "type": "b",
+          "body": {
+            "mode": "exhaustive",
+            "attributes": [
+              {
+                "name": "n"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "n": {
+                "number": "1"
+              }
+            },
+            "blocks": []
+          }
+        },
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "n": {
+                "number": "3"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ],
+      "remain": {
+        "attributes": {
+          "c": {
+            "number": "2"
+          }
+        },
+        "blocks": []
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "description": "The body partial processing leaves doesn't have the attributes it took",
+  "spec": [
+    "spec.md#partial-processing-of-body-content"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "partial",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ],
+    "remain": {
+      "mode": "exhaustive",
+      "attributes": [
+        {
+          "name": "a"
+        },
+        {
+          "name": "b"
+        }
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": [],
+      "remain": {
+        "attributes": {
+          "b": {
+            "number": "2"
+          }
+        },
+        "blocks": []
+      }
+    }
+  }
+}

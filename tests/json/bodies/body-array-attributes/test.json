@@ -1,0 +1,35 @@
+{
+  "description": "A body can be an array of objects whose properties together define its attributes",
+  "spec": [
+    "json/spec.md#structural-elements"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      },
+      {
+        "name": "b"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        },
+        "b": {
+          "number": "2"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

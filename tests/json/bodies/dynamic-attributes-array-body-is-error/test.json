@@ -1,0 +1,19 @@
+{
+  "description": "Dynamic attributes processing of an array of objects is an error",
+  "spec": [
+    "json/spec.md#structural-elements",
+    "spec.md#dynamic-attributes-processing"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "A JSON object is required here, setting the arguments for this block",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

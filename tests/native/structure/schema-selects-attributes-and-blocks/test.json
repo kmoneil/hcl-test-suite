@@ -1,0 +1,58 @@
+{
+  "description": "A schema selects the attributes and blocks it names from a body",
+  "spec": [
+    "spec.md#body-content",
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "b",
+        "labels": [
+          "name"
+        ],
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "c"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [
+            "x"
+          ],
+          "body": {
+            "attributes": {
+              "c": {
+                "number": "2"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "description": "An array of objects inside a block array defines one block with that array as its body",
+  "spec": [
+    "json/spec.md#blocks",
+    "json/spec.md#structural-elements"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "status": "disputed",
+  "notes": "The spec says each element of an array that defines blocks is a JSON object, so an array element is an error. hashicorp/hcl makes a block of each element ((*body).unpackBlock in json/structure.go), and a body can be an array of objects, so the nested array is the body of one block.",
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "x"
+            },
+            {
+              "name": "y"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "x": {
+                "number": "1"
+              },
+              "y": {
+                "number": "2"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

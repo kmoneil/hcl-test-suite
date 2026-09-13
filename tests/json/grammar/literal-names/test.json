@@ -1,0 +1,34 @@
+{
+  "description": "The literal names true, false and null are values",
+  "spec": [
+    "json/spec.md#hcl-json-syntax-specification"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "bool": true
+            },
+            {
+              "bool": false
+            },
+            {
+              "null": "dynamic"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

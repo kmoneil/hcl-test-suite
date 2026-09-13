@@ -1,0 +1,60 @@
+{
+  "description": "A label level can be an array of objects whose properties name labels in order",
+  "spec": [
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "labels": [
+          "name"
+        ],
+        "body": {
+          "mode": "dynamic-attributes"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [
+            "l"
+          ],
+          "body": {
+            "attributes": {
+              "x": {
+                "number": "1"
+              }
+            },
+            "blocks": []
+          }
+        },
+        {
+          "type": "b",
+          "labels": [
+            "m"
+          ],
+          "body": {
+            "attributes": {
+              "x": {
+                "number": "2"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

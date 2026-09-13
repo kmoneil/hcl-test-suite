@@ -1,0 +1,14 @@
+{
+  "description": "A variable is an error in literal-only mode",
+  "spec": [
+    "spec.md#expression-evaluation",
+    "hclsyntax/spec.md#variables-and-variable-expressions"
+  ],
+  "op": "eval",
+  "evaluation_mode": "literal-only",
+  "reference_error": "Variables not allowed",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

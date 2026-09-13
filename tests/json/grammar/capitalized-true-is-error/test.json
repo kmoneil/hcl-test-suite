@@ -1,0 +1,18 @@
+{
+  "description": "True with a capital letter is an error",
+  "spec": [
+    "json/spec.md#hcl-json-syntax-specification"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "Did you mean \"true\"?",
+  "expect": {
+    "valid": false,
+    "phase": "parse"
+  }
+}

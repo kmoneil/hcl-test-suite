@@ -1,0 +1,58 @@
+{
+  "description": "Partial then exhaustive processing that takes blocks first equals one pass: in two steps",
+  "spec": [
+    "spec.md#partial-processing-of-body-content",
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "partial",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "dynamic-attributes"
+        }
+      }
+    ],
+    "remain": {
+      "mode": "exhaustive",
+      "attributes": [
+        {
+          "name": "c"
+        }
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "x": {
+                "number": "1"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ],
+      "remain": {
+        "attributes": {
+          "c": {
+            "number": "2"
+          }
+        },
+        "blocks": []
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "description": "A function call is an error in literal-only mode",
+  "spec": [
+    "spec.md#expression-evaluation"
+  ],
+  "op": "eval",
+  "evaluation_mode": "literal-only",
+  "reference_error": "Function calls not allowed",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

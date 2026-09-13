@@ -1,0 +1,43 @@
+{
+  "description": "An array can hold values of every kind",
+  "spec": [
+    "json/spec.md#hcl-json-syntax-specification"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "number": "1"
+            },
+            {
+              "string": "b"
+            },
+            {
+              "bool": true
+            },
+            {
+              "null": "dynamic"
+            },
+            {
+              "tuple": []
+            },
+            {
+              "object": {}
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

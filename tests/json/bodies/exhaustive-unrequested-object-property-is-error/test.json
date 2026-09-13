@@ -1,0 +1,24 @@
+{
+  "description": "An unrequested property with an object value is an error, not a block",
+  "spec": [
+    "spec.md#partial-processing-of-body-content",
+    "json/spec.md#structural-elements"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "No argument or block type is named \"b\"",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

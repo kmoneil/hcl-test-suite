@@ -1,0 +1,63 @@
+{
+  "description": "Partial processing of a block body leaves a remaining body inside the block",
+  "spec": [
+    "spec.md#partial-processing-of-body-content",
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "labels": [
+          "name"
+        ],
+        "body": {
+          "mode": "partial",
+          "attributes": [
+            {
+              "name": "x"
+            }
+          ],
+          "remain": {
+            "mode": "dynamic-attributes"
+          }
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [
+            "l"
+          ],
+          "body": {
+            "attributes": {
+              "x": {
+                "number": "1"
+              }
+            },
+            "blocks": [],
+            "remain": {
+              "attributes": {
+                "y": {
+                  "number": "2"
+                }
+              },
+              "blocks": []
+            }
+          }
+        }
+      ]
+    }
+  }
+}

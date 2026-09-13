@@ -1,0 +1,58 @@
+{
+  "description": "A native syntax body left by partial processing can be processed partially again",
+  "spec": [
+    "spec.md#partial-processing-of-body-content"
+  ],
+  "op": "decode",
+  "schema": {
+    "mode": "partial",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ],
+    "remain": {
+      "mode": "partial",
+      "attributes": [
+        {
+          "name": "b"
+        }
+      ],
+      "remain": {
+        "mode": "exhaustive",
+        "attributes": [
+          {
+            "name": "c"
+          }
+        ]
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": [],
+      "remain": {
+        "attributes": {
+          "b": {
+            "number": "2"
+          }
+        },
+        "blocks": [],
+        "remain": {
+          "attributes": {
+            "c": {
+              "number": "3"
+            }
+          },
+          "blocks": []
+        }
+      }
+    }
+  }
+}

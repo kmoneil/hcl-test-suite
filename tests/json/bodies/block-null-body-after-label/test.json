@@ -1,0 +1,33 @@
+{
+  "description": "A null after a block's labels defines no blocks",
+  "spec": [
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "status": "disputed",
+  "notes": "The spec says the value that defines blocks is either a JSON object or a JSON array of objects, so null isn't allowed. hashicorp/hcl skips a null body ((*body).unpackBlock in json/structure.go).",
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "labels": [
+          "name"
+        ],
+        "body": {
+          "mode": "dynamic-attributes"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": []
+    }
+  }
+}

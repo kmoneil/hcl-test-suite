@@ -1,0 +1,24 @@
+{
+  "description": "A negative JSON number with a fraction is that number",
+  "spec": [
+    "json/spec.md#numbers"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "-2.5"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

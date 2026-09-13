@@ -1,0 +1,41 @@
+{
+  "description": "A property named // is ignored when the body partial processing leaves is processed",
+  "spec": [
+    "json/spec.md#structural-elements",
+    "spec.md#partial-processing-of-body-content"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "partial",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ],
+    "remain": {
+      "mode": "dynamic-attributes"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": [],
+      "remain": {
+        "attributes": {
+          "b": {
+            "number": "2"
+          }
+        },
+        "blocks": []
+      }
+    }
+  }
+}

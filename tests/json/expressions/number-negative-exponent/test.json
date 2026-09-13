@@ -1,0 +1,24 @@
+{
+  "description": "A JSON number with a negative exponent is the number it spells",
+  "spec": [
+    "json/spec.md#numbers"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "0.25"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

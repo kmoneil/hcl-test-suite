@@ -1,0 +1,43 @@
+{
+  "description": "An object can have several members of any kind of value",
+  "spec": [
+    "json/spec.md#hcl-json-syntax-specification"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "b": {
+              "number": "1"
+            },
+            "c": {
+              "string": "x"
+            },
+            "d": {
+              "bool": true
+            },
+            "e": {
+              "null": "dynamic"
+            },
+            "f": {
+              "tuple": []
+            },
+            "g": {
+              "object": {}
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

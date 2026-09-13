@@ -1,0 +1,18 @@
+{
+  "description": "Two property names that evaluate to the same string are an error",
+  "spec": [
+    "json/spec.md#objects"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "Duplicate object attribute",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

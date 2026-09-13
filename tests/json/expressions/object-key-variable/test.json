@@ -1,0 +1,34 @@
+{
+  "description": "A property name template can use variables",
+  "spec": [
+    "json/spec.md#objects",
+    "json/spec.md#strings"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "variables": {
+    "name": {
+      "string": "web"
+    }
+  },
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "web": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

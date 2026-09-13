@@ -1,0 +1,60 @@
+{
+  "description": "A label value can be any property name, including an empty string",
+  "spec": [
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "labels": [
+          "name"
+        ],
+        "body": {
+          "mode": "dynamic-attributes"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [
+            ""
+          ],
+          "body": {
+            "attributes": {
+              "x": {
+                "number": "1"
+              }
+            },
+            "blocks": []
+          }
+        },
+        {
+          "type": "b",
+          "labels": [
+            "a b.c"
+          ],
+          "body": {
+            "attributes": {
+              "x": {
+                "number": "2"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

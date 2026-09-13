@@ -1,0 +1,21 @@
+{
+  "description": "In exhaustive processing, an attribute the schema doesn't request is an error",
+  "spec": [
+    "spec.md#partial-processing-of-body-content",
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "An argument named \"b\" is not expected here",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

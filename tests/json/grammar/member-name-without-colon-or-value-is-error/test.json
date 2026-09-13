@@ -1,0 +1,18 @@
+{
+  "description": "A member name alone is an error",
+  "spec": [
+    "json/spec.md#hcl-json-syntax-specification"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "Missing object value",
+  "expect": {
+    "valid": false,
+    "phase": "parse"
+  }
+}

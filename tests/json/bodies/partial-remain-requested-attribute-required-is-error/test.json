@@ -1,0 +1,35 @@
+{
+  "description": "A required attribute that partial processing took is missing from its remaining body",
+  "spec": [
+    "spec.md#partial-processing-of-body-content"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "partial",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ],
+    "remain": {
+      "mode": "exhaustive",
+      "attributes": [
+        {
+          "name": "a",
+          "required": true
+        },
+        {
+          "name": "b"
+        }
+      ]
+    }
+  },
+  "reference_error": "The argument \"a\" is required",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

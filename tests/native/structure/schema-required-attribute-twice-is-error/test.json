@@ -1,0 +1,26 @@
+{
+  "description": "A schema that requests the same required attribute twice is an error",
+  "spec": [
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "notes": "hashicorp/hcl doesn't check schemas, but takes the attribute for its first schema and then reports it missing for the second ((*Body).PartialContent in hclsyntax/structure.go), so the reference error is about a missing attribute.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "required": true
+      },
+      {
+        "name": "a",
+        "required": true
+      }
+    ]
+  },
+  "reference_error": "The argument \"a\" is required",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

@@ -2,12 +2,12 @@
 
 An adapter is a small program that lets the test runner talk to one HCL
 implementation. The runner starts the adapter once per test, passes it the
-path of the test's input file (and for some `eval` tests, a context file), and
-reads one JSON document from its standard output.
+path of the test's input file (and for `decode` and some `eval` tests, a
+context file), and reads one JSON document from its standard output.
 
 This keeps the requirements for an adapter low. It needs to read a file, call
-the implementation, and print JSON. Only `eval` tests with variables or
-functions require reading JSON.
+the implementation, and print JSON. Only tests with a context file require
+reading JSON.
 
 ## Commands
 
@@ -15,6 +15,7 @@ functions require reading JSON.
 <adapter> capabilities
 <adapter> parse <file>
 <adapter> eval <file> [<context.json>]
+<adapter> decode <file> <context.json>
 ```
 
 The adapter must exit with status 0 whenever it produced a result, **including
@@ -22,8 +23,9 @@ when the input is invalid HCL**. A non-zero exit status means the adapter
 itself failed. The runner reports that as an adapter error and shows whatever
 the adapter wrote to standard error.
 
-Input files ending in `.hcl` use the native syntax. (JSON syntax files will
-end in `.hcl.json`; no tests use them yet.)
+Input files ending in `.hcl` use the native syntax, and files ending in
+`.hcl.json` use the JSON syntax. The JSON syntax can only be read with a schema,
+so only `decode` gets JSON syntax files.
 
 ## `capabilities`
 
@@ -38,8 +40,8 @@ Describes the implementation and what the adapter supports.
 }
 ```
 
-- `operations` lists the commands the adapter supports: `parse`, `eval` or
-  both. Tests for other operations are skipped.
+- `operations` lists the commands the adapter supports, any of `parse`, `eval`
+  and `decode`. Tests for other operations are skipped.
 - `features` lists optional parts of HCL the implementation supports. Tests
   that need a missing feature are skipped:
   - `typed-values`: list, set and map values distinct from tuples and
@@ -49,6 +51,7 @@ Describes the implementation and what the adapter supports.
     unknown value of the dynamic pseudo-type).
   - `functions`: the adapter can add the [test functions](#functions) a test
     declares to the function table.
+  - `json-syntax`: the implementation reads the JSON syntax.
 
 ## `parse`
 
@@ -94,9 +97,20 @@ The optional context file describes the evaluation context:
 
 - `variables` maps variable names to [values](#values).
 - `functions` maps function names to [declarations](#functions).
+- `evaluation_mode`, if present, is `"literal-only"`, and the context then has
+  no variables or functions. Expressions are evaluated in the spec's
+  literal-only mode, in which variables and functions aren't available.
+  Without it, they are evaluated in full expression mode. In the native syntax
+  the two modes differ only in that; in the JSON syntax, literal-only mode also
+  reads strings as literal text instead of as templates.
+- `schema` is only for [`decode`](#decode), which always has one.
 
-Both are optional. Without a context file there are no variables, and the
-function table is empty, so every function call is an error.
+The other fields are optional. Without a context file there are no variables,
+and the function table is empty, so every function call is an error.
+
+An implementation without a literal-only mode can evaluate native syntax
+expressions without variables or functions instead, which the spec allows for
+syntaxes with their own expression syntax.
 
 - Names are used exactly as given, without Unicode normalization or other
   changes, because tests depend on names that differ only in normalization.
@@ -111,6 +125,93 @@ function table is empty, so every function call is an error.
   `"number"`, `"bool"` or `"dynamic"` only appear in tests that need
   `typed-values`. Parameters of type `"dynamic"` and the `allow_unknown` and
   `allow_dynamic_type` flags can appear in any test.
+
+## `decode`
+
+Parses the file, applies a [schema](#schemas) to its body, and evaluates the
+attributes the schema selects, including those in the blocks it selects.
+
+```json
+{"valid": true, "body": <body content>}
+```
+
+or
+
+```json
+{"valid": false, "phase": "schema", "errors": [<error>, ...]}
+```
+
+The context file has the same fields as for `eval`, and a `schema`, which it
+always has. The adapter applies the schema with the implementation's own body
+processing; an implementation without schema-driven processing doesn't list
+`decode` in its operations.
+
+`phase` says where the first error was found:
+
+- `"parse"`: the file isn't valid. For the JSON syntax that means it breaks
+  the RFC 7159 grammar or its root value is neither an object nor an array.
+- `"schema"`: applying the schema failed. For the JSON syntax this includes
+  body structure the schema can't use, such as an array element that isn't an
+  object or a block property that is a string, which is only found when a
+  schema is applied to that body. An implementation that rejects the schema
+  itself also reports that as a schema error.
+- `"eval"`: evaluating an attribute the schema selected failed, including
+  a JSON string that isn't a valid template.
+
+Apply the whole schema, including to nested blocks and remaining bodies, before
+evaluating anything, so that each error is reported in its phase. A block
+type's body schema is only applied to blocks of that type that exist. Only the
+attributes the schema selects are evaluated, and an error in any of them makes
+the whole result invalid.
+
+### Schemas
+
+A schema says how to process a body, in one of the three ways the spec
+defines:
+
+```json
+{
+  "mode": "exhaustive",
+  "attributes": [{"name": "region", "required": true}, {"name": "tags"}],
+  "blocks": [
+    {"type": "resource", "labels": ["type", "name"], "body": {"mode": "dynamic-attributes"}}
+  ]
+}
+```
+
+| Field | Meaning |
+| --- | --- |
+| `mode` | How to process the body (below). Required. |
+| `attributes` | Attribute schemata, each a `name` and whether the attribute is `required` (`false` if left out). None if left out. |
+| `blocks` | Block header schemata, each a block `type`, the names of its `labels` (none if left out), and the schema for the `body` of each block of that type, which is required. None if left out. |
+| `remain` | For partial processing, the schema for the body it leaves. Optional. |
+
+- `"exhaustive"`: schema-driven processing, in which an attribute or block
+  the schema doesn't mention is an error.
+- `"partial"`: partial processing, which puts the attributes and blocks the
+  schema doesn't mention into a new body. That body is processed with
+  `remain`, if it is given.
+- `"dynamic-attributes"`: dynamic attributes processing, which gives every
+  attribute and no blocks. In the native syntax a block in the body is an
+  error. This mode has no other fields.
+
+A schema never has the same block type twice, which would give one block type
+two body schemas. It can have the same attribute name twice, or an attribute
+and a block type with the same name, which the spec says is an error, because
+tests check what implementations do with such schemas. If the implementation
+can't express such a schema at all, the adapter should exit with a non-zero
+status and say why on standard error.
+
+Schemas only concern body structure. Attribute names, block types and labels
+are never templates, and `evaluation_mode` doesn't change how a body is
+processed, only how the selected attributes are evaluated (including the
+property names of JSON objects that are expressions).
+
+The body content is a [body](#bodies) with evaluated attribute values:
+`attributes` has the attributes the schema selected, and `blocks` the blocks
+it selected, in the order the syntax defines, each with its body processed with
+the schema for its type. With a `remain` schema, the body content also has
+`remain`: the body content of the body that partial processing left.
 
 ## Functions
 
@@ -190,8 +291,9 @@ leave these declarations out.
 {"message": "Attribute redefined", "range": {"start": {"line": 2, "column": 1, "byte": 10}, "end": {"line": 2, "column": 5, "byte": 14}}}
 ```
 
-The runner shows errors when a test fails but never compares them. `errors`
-may be empty and `range` may be left out.
+The runner shows errors when a test fails. It only compares messages when it
+is given `--reference-errors`, which is meant for the hashicorp/hcl adapter.
+`errors` may be empty and `range` may be left out.
 
 ## Bodies
 
@@ -204,7 +306,9 @@ may be empty and `range` may be left out.
 }
 ```
 
-Attributes are keyed by name. Blocks are listed in source order.
+Attributes are keyed by name. Blocks are listed in source order, which for the
+JSON syntax is the order of the properties that define them. Bodies from
+[`decode`](#decode) can also have `remain`.
 
 ## Values
 
@@ -312,8 +416,6 @@ These are undecided in v0:
   precision, so a result like `1 / 3` has no single correct decimal string.
 - **Error positions.** Columns count grapheme clusters, which depends on the
   Unicode version. Checking positions could be an optional stricter level.
-- **JSON syntax**, which can't be interpreted without a schema, so it will
-  need a schema input.
 - **Unknown value refinements** and marks.
 - **Bare traversal keys in parse trees.** How an object key written as a bare
   multi-step traversal such as `{a.b = 1}` appears in a parse tree. Its

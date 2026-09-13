@@ -1,0 +1,36 @@
+{
+  "description": "An unknown property value gives a known object holding it",
+  "spec": [
+    "json/spec.md#objects",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "json-syntax"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "string"
+    }
+  },
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "b": {
+              "unknown": "string"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

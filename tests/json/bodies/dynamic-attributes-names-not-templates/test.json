@@ -1,0 +1,25 @@
+{
+  "description": "In dynamic attributes processing, a property name with template syntax is the attribute name",
+  "spec": [
+    "spec.md#dynamic-attributes-processing",
+    "json/spec.md#attributes"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "${a}": {
+          "number": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

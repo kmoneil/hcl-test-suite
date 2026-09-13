@@ -1,0 +1,27 @@
+{
+  "description": "An attribute that partial processing doesn't take isn't evaluated",
+  "spec": [
+    "spec.md#partial-processing-of-body-content",
+    "spec.md#expression-evaluation"
+  ],
+  "op": "decode",
+  "schema": {
+    "mode": "partial",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

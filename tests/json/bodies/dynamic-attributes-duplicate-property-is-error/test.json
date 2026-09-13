@@ -1,0 +1,19 @@
+{
+  "description": "In dynamic attributes processing, a property defined twice is an error",
+  "spec": [
+    "spec.md#dynamic-attributes-processing",
+    "json/spec.md#attributes"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "Duplicate attribute definition",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "description": "The JSON values true and false are bools",
+  "spec": [
+    "json/spec.md#boolean-values"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "bool": true
+            },
+            {
+              "bool": false
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

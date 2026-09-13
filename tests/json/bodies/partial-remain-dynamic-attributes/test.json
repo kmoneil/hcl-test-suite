@@ -1,0 +1,44 @@
+{
+  "description": "The body partial processing leaves can be processed as dynamic attributes",
+  "spec": [
+    "spec.md#partial-processing-of-body-content",
+    "spec.md#dynamic-attributes-processing"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "partial",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ],
+    "remain": {
+      "mode": "dynamic-attributes"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": [],
+      "remain": {
+        "attributes": {
+          "b": {
+            "number": "2"
+          },
+          "c": {
+            "number": "3"
+          }
+        },
+        "blocks": []
+      }
+    }
+  }
+}

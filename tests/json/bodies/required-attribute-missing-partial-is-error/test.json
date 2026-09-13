@@ -1,0 +1,25 @@
+{
+  "description": "A required attribute is also required in partial processing",
+  "spec": [
+    "spec.md#schema-driven-processing",
+    "spec.md#partial-processing-of-body-content"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "partial",
+    "attributes": [
+      {
+        "name": "a",
+        "required": true
+      }
+    ]
+  },
+  "reference_error": "The argument \"a\" is required",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

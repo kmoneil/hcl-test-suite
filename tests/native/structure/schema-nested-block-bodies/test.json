@@ -1,0 +1,74 @@
+{
+  "description": "Native syntax block bodies are processed with their own schemas, recursively",
+  "spec": [
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "x"
+            }
+          ],
+          "blocks": [
+            {
+              "type": "c",
+              "labels": [
+                "name"
+              ],
+              "body": {
+                "mode": "exhaustive",
+                "attributes": [
+                  {
+                    "name": "y"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "x": {
+                "number": "1"
+              }
+            },
+            "blocks": [
+              {
+                "type": "c",
+                "labels": [
+                  "l"
+                ],
+                "body": {
+                  "attributes": {
+                    "y": {
+                      "number": "2"
+                    }
+                  },
+                  "blocks": []
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "description": "An unknown property name makes the object the dynamic value even with known names",
+  "spec": [
+    "json/spec.md#objects",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "json-syntax"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "string"
+    }
+  },
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

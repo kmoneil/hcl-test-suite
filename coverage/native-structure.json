@@ -514,55 +514,146 @@
       "id": "structure-body-content-through-schema",
       "spec": "spec.md#body-content",
       "rule": "A body's content is reached by giving a schema of the attributes and blocks the application expects",
-      "untested": "Needs schema-driven processing, which the protocol has no way to request"
+      "tests": [
+        "native/structure/schema-selects-attributes-and-blocks"
+      ]
     },
     {
       "id": "structure-schema-unique-attribute-names",
       "spec": "spec.md#schema-driven-processing",
-      "rule": "A body schema that requests the same attribute name twice is an error",
-      "untested": "Needs schema-driven processing, which the protocol has no way to request"
+      "rule": "A body schema that requests the same required attribute name twice is an error",
+      "tests": [
+        "native/structure/schema-required-attribute-twice-is-error"
+      ]
     },
     {
       "id": "structure-schema-attribute-and-block-type-distinct",
       "spec": "spec.md#schema-driven-processing",
-      "rule": "A body schema that requests a block type with the same name as a requested attribute is an error",
-      "untested": "Needs schema-driven processing, which the protocol has no way to request"
+      "rule": "A body schema that requests a block type with the same name as an attribute is not an error for the native syntax, which gives both the attribute and the blocks (disputed)",
+      "tests": [
+        "native/structure/schema-attribute-and-block-type-same-name"
+      ]
     },
     {
       "id": "structure-schema-required-attribute",
       "spec": "spec.md#schema-driven-processing",
-      "rule": "Schema-driven processing reports an error when an attribute the schema marks as required is missing",
-      "untested": "Needs schema-driven processing, which the protocol has no way to request"
+      "rule": "Schema-driven processing reports an error when an attribute the schema marks as required is missing, and an attribute whose value is null is present",
+      "tests": [
+        "native/structure/schema-required-attribute-present",
+        "native/structure/schema-required-attribute-missing-is-error",
+        "native/structure/schema-required-attribute-missing-partial-is-error",
+        "native/structure/schema-required-attribute-null",
+        "native/structure/schema-required-attribute-not-a-block"
+      ]
     },
     {
       "id": "structure-schema-block-labels",
       "spec": "spec.md#schema-driven-processing",
-      "rule": "A block header schema names each label of its block type, and blocks are matched against that header",
-      "untested": "Needs schema-driven processing, which the protocol has no way to request"
+      "rule": "A block header schema names each label of its block type, and a block of that type must have exactly that many labels: fewer or more are errors",
+      "tests": [
+        "native/structure/schema-block-labels",
+        "native/structure/schema-block-too-few-labels-is-error",
+        "native/structure/schema-block-too-many-labels-is-error",
+        "native/structure/schema-block-unexpected-label-is-error"
+      ]
     },
     {
       "id": "structure-schema-exhaustive",
       "spec": "spec.md#partial-processing-of-body-content",
       "rule": "By default, schema-driven processing reports an error for each attribute or block the schema does not mention",
-      "untested": "Needs schema-driven processing, which the protocol has no way to request"
+      "tests": [
+        "native/structure/schema-unexpected-attribute-is-error",
+        "native/structure/schema-unexpected-block-is-error",
+        "native/structure/schema-attribute-not-a-block-type"
+      ]
     },
     {
       "id": "structure-partial-processing-remainder",
       "spec": "spec.md#partial-processing-of-body-content",
-      "rule": "Partial processing returns the attributes and blocks that the schema does not mention as a new body",
-      "untested": "Needs partial processing with a schema, which the protocol has no way to request"
+      "rule": "Partial processing returns the attributes and blocks that the schema does not mention as a new body, without the requested attributes and without any block of a requested type",
+      "tests": [
+        "native/structure/partial-unexpected-items-not-error",
+        "native/structure/partial-remain-has-unrequested-items",
+        "native/structure/partial-remain-without-requested-attribute",
+        "native/structure/partial-remain-requested-attribute-required-is-error",
+        "native/structure/partial-remain-without-requested-blocks",
+        "native/structure/partial-remain-dynamic-attributes",
+        "native/structure/schema-nested-partial-remain",
+        "native/structure/partial-remain-partial-again"
+      ]
     },
     {
       "id": "structure-partial-processing-two-steps",
       "spec": "spec.md#partial-processing-of-body-content",
       "rule": "Partial processing followed by exhaustive processing of the remainder equals one pass with the union of both schemas",
-      "untested": "Needs partial processing with a schema, which the protocol has no way to request"
+      "tests": [
+        "native/structure/two-steps-content",
+        "native/structure/two-steps-content-one-pass",
+        "native/structure/two-steps-blocks-taken",
+        "native/structure/two-steps-blocks-taken-one-pass",
+        "native/structure/two-steps-error",
+        "native/structure/two-steps-error-one-pass"
+      ]
     },
     {
       "id": "structure-dynamic-attributes",
       "spec": "spec.md#dynamic-attributes-processing",
-      "rule": "Dynamic attributes processing returns one attribute per distinct name in the body and no blocks",
-      "untested": "Needs dynamic attributes processing, which the protocol has no way to request separately from parsing"
+      "rule": "Dynamic attributes processing returns one attribute per distinct name in the body and no blocks, and a body with a block is an error",
+      "tests": [
+        "native/structure/dynamic-attributes-every-attribute",
+        "native/structure/dynamic-attributes-empty-body",
+        "native/structure/dynamic-attributes-block-is-error",
+        "native/structure/dynamic-attributes-block-body"
+      ]
+    },
+    {
+      "id": "structure-schema-optional-attribute",
+      "spec": "spec.md#schema-driven-processing",
+      "rule": "An attribute that isn't required and isn't defined is absent from the body content",
+      "tests": [
+        "native/structure/schema-optional-attribute-absent"
+      ]
+    },
+    {
+      "id": "structure-schema-blocks-in-order",
+      "spec": "spec.md#schema-driven-processing",
+      "rule": "The block sequence has the blocks of every requested type in source order, with types interleaved as they appear",
+      "tests": [
+        "native/structure/schema-blocks-in-source-order"
+      ]
+    },
+    {
+      "id": "structure-schema-nested-bodies",
+      "spec": "spec.md#schema-driven-processing",
+      "rule": "Each block's body is processed with the schema for its type, recursively, and an error in a nested body is an error",
+      "tests": [
+        "native/structure/schema-nested-block-bodies",
+        "native/structure/schema-nested-unexpected-attribute-is-error"
+      ]
+    },
+    {
+      "id": "structure-partial-unrequested-not-evaluated",
+      "spec": "spec.md#partial-processing-of-body-content",
+      "rule": "Attributes that partial processing doesn't take aren't evaluated, so errors in their expressions don't matter",
+      "tests": [
+        "native/structure/partial-unrequested-attribute-not-evaluated"
+      ]
+    },
+    {
+      "id": "structure-dynamic-attributes-after-partial",
+      "spec": "spec.md#dynamic-attributes-processing",
+      "rule": "Dynamic attributes processing of the body that partial processing leaves is an error when the original body has blocks, even of a type partial processing took (disputed)",
+      "tests": [
+        "native/structure/partial-remain-dynamic-attributes-after-blocks-taken"
+      ]
+    },
+    {
+      "id": "structure-schema-optional-attribute-twice",
+      "spec": "spec.md#schema-driven-processing",
+      "rule": "A body schema that requests the same optional attribute name twice is not an error, and the attribute is in the content once (disputed)",
+      "tests": [
+        "native/structure/schema-optional-attribute-twice"
+      ]
     }
   ]
 }

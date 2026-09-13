@@ -1,0 +1,21 @@
+{
+  "description": "In exhaustive processing, a block of a type the schema doesn't request is an error",
+  "spec": [
+    "spec.md#partial-processing-of-body-content",
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "Blocks of type \"b\" are not expected here",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

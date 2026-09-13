@@ -1,0 +1,33 @@
+{
+  "description": "A required attribute missing from a block body is an error",
+  "spec": [
+    "spec.md#schema-driven-processing",
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "x",
+              "required": true
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "The argument \"x\" is required",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

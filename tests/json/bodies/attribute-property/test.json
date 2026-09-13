@@ -1,0 +1,29 @@
+{
+  "description": "The property named like a requested attribute defines it",
+  "spec": [
+    "json/spec.md#attributes"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "b"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

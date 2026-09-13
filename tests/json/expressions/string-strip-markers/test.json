@@ -1,0 +1,25 @@
+{
+  "description": "Strip markers in a string template remove whitespace",
+  "spec": [
+    "json/spec.md#strings",
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x1y"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "description": "A required attribute that the body defines is in the body content",
+  "spec": [
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "required": true
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

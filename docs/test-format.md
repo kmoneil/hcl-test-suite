@@ -9,9 +9,11 @@ tests/native/heredocs/flush-strips-common-indent/
   test.json
 ```
 
-The path is `tests/<syntax>/<area>/<name>`: the syntax (`native`, later
-`json`), the area of the spec, and a name saying what the test checks. Names
-are lowercase words separated by dashes.
+The path is `tests/<syntax>/<area>/<name>`: the syntax (`native` or `json`),
+the area of the spec, and a name saying what the test checks. Names are
+lowercase words separated by dashes. Native syntax tests read `input.hcl`,
+and JSON syntax tests read `input.hcl.json`, which is where the runner looks
+unless `input` says otherwise.
 
 ## `test.json`
 
@@ -40,13 +42,15 @@ are lowercase words separated by dashes.
 | --- | --- | --- |
 | `description` | yes | One sentence stating the rule being tested, starting with a capital letter and without a final period. At most 100 characters, and unique in the suite. |
 | `spec` | yes | The spec sections that define the behavior, as anchors from [tools/spec-anchors.txt](../tools/spec-anchors.txt). |
-| `op` | yes | `"parse"` or `"eval"`, the adapter command to run. |
-| `input` | no | The input file name, if not `input.hcl`. |
-| `features` | no | Optional features the test needs: `"typed-values"`, `"unknown-values"` or `"functions"` (see [capabilities](protocol.md#capabilities)). Adapters without them skip the test. Lint requires `typed-values` when a variable, a function or the expected result has a list, set or map, or a null or unknown value of a type other than dynamic, or a function has a parameter of a collection or structural type, because an implementation without those types can't receive, declare or produce them. It requires `unknown-values` when any of them has an unknown value, and `functions` when the test declares functions. |
+| `op` | yes | `"parse"`, `"eval"` or `"decode"`, the adapter command to run. JSON syntax tests are always decode tests. |
+| `input` | no | The input file name in the test directory, if not `input.hcl` for native syntax tests or `input.hcl.json` for JSON syntax tests. Lint requires the default. |
+| `features` | no | Optional features the test needs: `"typed-values"`, `"unknown-values"`, `"functions"` or `"json-syntax"` (see [capabilities](protocol.md#capabilities)). Adapters without them skip the test. Lint requires `typed-values` when a variable, a function or the expected result has a list, set or map, or a null or unknown value of a type other than dynamic, or a function has a parameter of a collection or structural type, because an implementation without those types can't receive, declare or produce them. It requires `unknown-values` when any of them has an unknown value, `functions` when the test declares functions, and `json-syntax` for JSON syntax tests and only for them. |
 | `status` | no | `"disputed"` if the spec doesn't clearly support the expected result (see below). |
 | `notes` | no | Anything a reader needs to know. Required for disputed tests. |
-| `variables` | no | Variables for `eval`, as a JSON object of [values](protocol.md#values). |
-| `functions` | no | Functions for `eval`, as a JSON object mapping function names to [declarations](protocol.md#functions). Lint checks that function and parameter names are identifiers (function names may join several with `::`), and that the `functions` feature is listed exactly when the test declares functions. |
+| `variables` | no | Variables for `eval` and `decode`, as a JSON object of [values](protocol.md#values). |
+| `functions` | no | Functions for `eval` and `decode`, as a JSON object mapping function names to [declarations](protocol.md#functions). Lint checks that function and parameter names are identifiers (function names may join several with `::`), and that the `functions` feature is listed exactly when the test declares functions. |
+| `evaluation_mode` | no | `"literal-only"` to evaluate in literal-only mode (see [eval](protocol.md#eval)), for `eval` and `decode` tests without variables or functions. |
+| `schema` | for `decode` | The [schema](protocol.md#schemas) to apply. Lint requires leaving out fields that only repeat a default (empty `attributes`, `blocks` or `labels`, and `"required": false`), and an expected result that the schema could give: only the attributes it requests, with every required one, blocks of the types it requests with as many labels as it names, and `remain` exactly where it has a remain schema. |
 | `reference_error` | for expected errors | Text that the error reported by hashicorp/hcl contains (see below). |
 | `expect` | yes | The expected result (see below). |
 
@@ -58,7 +62,8 @@ the table above.
 ## Expected results
 
 A successful result gives the body, in the format of the
-[`parse`](protocol.md#parse) or [`eval`](protocol.md#eval) output:
+[`parse`](protocol.md#parse), [`eval`](protocol.md#eval) or
+[`decode`](protocol.md#decode) output:
 
 ```json
 {"valid": true, "body": {...}}
@@ -70,10 +75,12 @@ An expected error:
 {"valid": false}
 ```
 
-`eval` tests that expect an error must also give the phase: `"phase": "parse"`
-if the file itself is invalid, or `"phase": "eval"` if it parses and then
-fails during evaluation. Error messages and positions are never compared
-between implementations.
+`parse` tests don't give a phase. `eval` and `decode` tests that expect an
+error must give it:
+`"phase": "parse"` if the file itself is invalid, or `"phase": "eval"` if it
+parses and then fails during evaluation. `decode` tests can also expect
+`"phase": "schema"`, for a file that parses but doesn't fit the schema. Error
+messages and positions are never compared between implementations.
 
 ### Reference errors
 
@@ -89,6 +96,11 @@ The runner looks for this text anywhere in the message, which is the summary
 and the detail joined by `": "`. When hashicorp/hcl uses one summary for
 several different mistakes (such as "Invalid 'for' expression"), use a
 distinctive part of the detail instead, so the check tells the mistakes apart.
+
+Some hashicorp/hcl messages cover several mistakes, such as "Invalid JSON
+string" for every malformed JSON string. Use them when nothing more distinctive
+exists, and make sure the input has no other mistake that could produce the
+same message.
 
 This is checked only when the runner is given `--reference-errors`, which is
 meant for the hashicorp/hcl adapter. Other implementations may word their
@@ -151,7 +163,7 @@ covered: every rule has tests, and every test checks a rule.
   disputed, its text ends with `(disputed)`; lint checks this.
 - A rule has either `tests` (which may be in any area) or an `untested`
   reason. Use `untested` only for rules that can't be tested through the
-  protocol yet, such as rules about static analysis or schemas.
+  protocol yet, such as rules about static analysis.
 - Every test must be listed by at least one rule.
 
 ## Writing tests
@@ -160,9 +172,10 @@ covered: every rule has tests, and every test checks a rule.
   as small as possible, with one attribute unless the rule needs more.
 - **Work from the spec.** Write the expected result from the spec text
   first, then check it against the reference implementation:
-  `bin/hcl-go-adapter eval tests/.../input.hcl`, or for a test with variables
-  or functions, `python3 runner/hcltest.py --adapter bin/hcl-go-adapter -v
-  tests/.../name`, which shows the difference when the result doesn't match.
+  `bin/hcl-go-adapter eval tests/.../input.hcl`, or for a test with a context
+  (variables, functions, a schema or an evaluation mode),
+  `python3 runner/hcltest.py --adapter bin/hcl-go-adapter -v tests/.../name`,
+  which shows the difference when the result doesn't match.
   If they disagree, find the reason in the hashicorp/hcl source before
   deciding, and mark the test disputed if the spec is wrong or silent.
 - **Test both sides of every rule.** Include inputs that must be rejected,

@@ -1,0 +1,27 @@
+{
+  "description": "A lone carriage return in a string template makes the rest of the string literal",
+  "spec": [
+    "json/spec.md#strings",
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "status": "disputed",
+  "notes": "The spec says a string is a standalone template, whose literal text can hold any character except the sequences that start interpolations and directives. So the carriage return is literal text and the interpolation after it gives 1. hashicorp/hcl's template scanner has no rule for a carriage return that isn't followed by a line feed, so it stops there and returns the rest of the string as literal text (the bareTemplate machine in hclsyntax/scan_tokens.rl, reached from (*expression).Value in json/structure.go).",
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x\ry${1}"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

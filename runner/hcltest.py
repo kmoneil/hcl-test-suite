@@ -23,12 +23,15 @@ from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-TESTS_DIR = ROOT / "tests"
+TESTS_DIR = (ROOT / "tests").resolve()
 SPEC_URL = "https://github.com/hashicorp/hcl/blob/v2.24.0/"
-OPERATIONS = ("parse", "eval")
+OPERATIONS = ("parse", "eval", "decode")
+PHASES = {"eval": ("parse", "eval"), "decode": ("parse", "schema", "eval")}  # where errors can be reported
+INPUT_NAMES = {"native": "input.hcl", "json": "input.hcl.json"}  # the input file of a test, by its syntax
 TEST_FIELDS = {"description", "spec", "op", "input", "features", "status", "notes", "variables", "functions",
-               "reference_error", "expect"}
-CONTEXT_FIELDS = ("variables", "functions")  # the test fields passed to eval in its context file
+               "evaluation_mode", "schema", "reference_error", "expect"}
+# The test fields passed to eval and decode in their context file.
+CONTEXT_FIELDS = ("variables", "functions", "evaluation_mode", "schema")
 
 # Enough precision that normalizing a number never rounds it.
 decimal.getcontext().prec = 10_000
@@ -89,25 +92,44 @@ class Test:
         self.features = meta.get("features", [])
         self.disputed = meta.get("status") == "disputed"
         self.notes = meta.get("notes")
-        self.context = {}  # the evaluation context (docs/protocol.md#eval)
-        for field, check in zip(CONTEXT_FIELDS, (check_variables, check_functions)):
+        self.context = {}  # the context file (docs/protocol.md#eval)
+        checks = {"variables": check_variables, "functions": check_functions,
+                  "evaluation_mode": check_evaluation_mode, "schema": check_schema}
+        for field in CONTEXT_FIELDS:
             if field not in meta:
                 continue
-            if self.op != "eval":
-                raise TestError(f'{path}: only eval tests can have "{field}"')
+            if field == "schema" and self.op != "decode":
+                raise TestError(f'{path}: only decode tests can have a "schema"')
+            if self.op == "parse":
+                raise TestError(f'{path}: only eval and decode tests can have "{field}"')
             try:
-                check(meta[field])
+                checks[field](meta[field])
             except ValueError as e:
                 raise TestError(f'{path}: malformed "{field}": {e}')
             self.context[field] = meta[field]
+        if self.op == "decode" and "schema" not in self.context:
+            raise TestError(f'{path}: decode tests need a "schema"')
+        if "evaluation_mode" in self.context and ("variables" in self.context or "functions" in self.context):
+            raise TestError(f"{path}: literal-only evaluation has no variables or functions")
         self.reference_error = meta.get("reference_error")
-        self.input = self.dir / meta.get("input", "input.hcl")
+        self.syntax = self.dir.resolve().parent.parent.name  # tests/<syntax>/<area>/<name>
+        input_name = meta.get("input", INPUT_NAMES.get(self.syntax, "input.hcl"))
+        if "/" in input_name or "\\" in input_name or input_name in ("", ".", ".."):
+            raise TestError(f'{path}: "input" must be the name of a file in the test directory')
+        self.input = self.dir / input_name
         if not self.input.is_file():
             raise TestError(f"{path}: input file {self.input.name} not found")
+        if self.input.name.endswith(".hcl.json") and self.op != "decode":
+            raise TestError(f"{path}: the JSON syntax can only be read with a schema, so JSON syntax tests are decode tests")
 
         self.expect = meta["expect"]
         if not isinstance(self.expect.get("valid"), bool):
             raise TestError(f'{path}: "expect" needs a boolean "valid"')
+        phase = self.expect.get("phase")
+        if phase is not None and self.expect["valid"]:
+            raise TestError(f'{path}: only expected errors have a "phase"')
+        if phase is not None and phase not in PHASES.get(self.op, ()):
+            raise TestError(f'{path}: "phase" {phase!r} is not a phase where a {self.op} test can expect an error')
         self.expected_body = None
         if self.expect["valid"]:
             try:
@@ -231,11 +253,14 @@ def compare(test, actual, reference_errors=False):
     """Returns None if the adapter's output matches the test, or (message, detail)."""
     if not isinstance(actual, dict) or not isinstance(actual.get("valid"), bool):
         raise AdapterError('output must be a JSON object with a boolean "valid"')
+    errors = actual.get("errors")
+    if errors is not None and not (isinstance(errors, list) and all(isinstance(e, dict) for e in errors)):
+        raise AdapterError('"errors" must be a list of error objects')
     if not test.expect["valid"]:
         if actual["valid"]:
             return "expected an error, but the input was accepted", None
         phase = test.expect.get("phase")
-        if test.op == "eval" and phase and actual.get("phase") != phase:
+        if test.op in PHASES and phase and actual.get("phase") != phase:
             return f"expected an error during {phase}, but it was reported during {actual.get('phase')}", error_messages(actual)
         if reference_errors and test.reference_error:
             messages = [str(e.get("message", "")) for e in actual.get("errors") or []]
@@ -258,8 +283,8 @@ def error_messages(actual):
     lines = []
     for error in actual.get("errors") or []:
         where = ""
-        start = (error.get("range") or {}).get("start")
-        if start:
+        start = error["range"].get("start") if isinstance(error.get("range"), dict) else None
+        if isinstance(start, dict):
             where = f"{start.get('line')}:{start.get('column')}: "
         lines.append(where + str(error.get("message", "")))
     return "\n".join(lines) or None
@@ -364,6 +389,51 @@ def type_problems(value, path="value"):
     return problems
 
 
+SCHEMA_MODES = ("exhaustive", "partial", "dynamic-attributes")
+
+
+def check_evaluation_mode(mode):
+    if mode != "literal-only":
+        raise ValueError('must be "literal-only"; leave it out for full expression mode')
+
+
+def check_schema(schema, where="schema"):
+    """Raises ValueError if a body schema doesn't follow the format in docs/protocol.md#decode."""
+    if not isinstance(schema, dict) or schema.get("mode") not in SCHEMA_MODES:
+        raise ValueError(f'{where} must be an object whose "mode" is one of {", ".join(SCHEMA_MODES)}')
+    mode = schema["mode"]
+    allowed = {"mode"} if mode == "dynamic-attributes" else {"mode", "attributes", "blocks"}
+    if mode == "partial":
+        allowed.add("remain")
+    unknown = set(schema) - allowed
+    if unknown:
+        raise ValueError(f"{where}: {mode} mode doesn't take {', '.join(sorted(unknown))}")
+    attributes = schema.get("attributes", [])
+    if not isinstance(attributes, list):
+        raise ValueError(f'{where}: "attributes" must be a list')
+    for attr in attributes:
+        if not (isinstance(attr, dict) and not set(attr) - {"name", "required"} and isinstance(attr.get("name"), str)
+                and isinstance(attr.get("required", False), bool)):
+            raise ValueError(f'{where}: attributes are {{"name": <string>, "required": <bool>}}, not {json.dumps(attr)}')
+    blocks = schema.get("blocks", [])
+    if not isinstance(blocks, list):
+        raise ValueError(f'{where}: "blocks" must be a list')
+    types = set()
+    for block in blocks:
+        labels = block.get("labels", []) if isinstance(block, dict) else None
+        if not (isinstance(block, dict) and not set(block) - {"type", "labels", "body"}
+                and isinstance(block.get("type"), str) and "body" in block
+                and isinstance(labels, list) and all(isinstance(label, str) for label in labels)):
+            raise ValueError(f'{where}: blocks are {{"type": <string>, "labels": [<string>, ...], "body": <schema>}}, '
+                             f"not {json.dumps(block)}")
+        if block["type"] in types:
+            raise ValueError(f"{where}: block type {block['type']!r} is in the schema twice, with two body schemas")
+        types.add(block["type"])
+        check_schema(block["body"], f"{where}: body of block {block['type']!r}")
+    if "remain" in schema:
+        check_schema(schema["remain"], f"{where}: remain")
+
+
 def check_functions(functions):
     """Raises ValueError if a "functions" object doesn't follow the declaration format."""
     if not isinstance(functions, dict):
@@ -443,19 +513,24 @@ def normalize_body(body, op):
     if not isinstance(body, dict):
         raise AdapterError(f"body must be an object, got {body!r}")
     try:
-        return {
+        out = {
             "attributes": {name: normalize_attr(v) for name, v in body.get("attributes", {}).items()},
-            "blocks": [
-                {
-                    "type": block["type"],
-                    "labels": list(block.get("labels", [])),
-                    "body": normalize_body(block.get("body", {}), op),
-                }
-                for block in body.get("blocks", [])
-            ],
+            "blocks": [normalize_block(block, op) for block in body.get("blocks", [])],
         }
+        if body.get("remain") is not None:
+            if op != "decode":
+                raise AdapterError("only decode results have a remain body")
+            out["remain"] = normalize_body(body["remain"], op)  # the body that partial processing left
+        return out
     except (KeyError, TypeError, AttributeError) as e:
         raise AdapterError(f"malformed body ({type(e).__name__}: {e})")
+
+
+def normalize_block(block, op):
+    labels = block.get("labels", [])
+    if not isinstance(block["type"], str) or not isinstance(labels, list) or not all(isinstance(label, str) for label in labels):
+        raise AdapterError(f"a block needs a string type and a list of string labels, got {block!r}")
+    return {"type": block["type"], "labels": labels, "body": normalize_body(block.get("body", {}), op)}
 
 
 VALUE_KINDS = ("string", "number", "bool", "null", "unknown", "tuple", "object", "list", "set", "map")

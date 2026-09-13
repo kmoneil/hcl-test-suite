@@ -1,0 +1,28 @@
+{
+  "description": "A \\u escape of a lone low surrogate becomes U+FFFD",
+  "spec": [
+    "json/spec.md#hcl-json-syntax-specification",
+    "json/spec.md#strings"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "status": "disputed",
+  "notes": "RFC 7159, which the spec adopts as its grammar, allows a \\u escape of a lone surrogate but says the behavior of software receiving it is unpredictable, and an HCL string is a sequence of Unicode characters, which a lone surrogate isn't. hashicorp/hcl decodes strings with Go's encoding/json (parseString in json/parser.go), which replaces a lone surrogate with U+FFFD REPLACEMENT CHARACTER.",
+  "evaluation_mode": "literal-only",
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "�x"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

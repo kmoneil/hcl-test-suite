@@ -285,7 +285,7 @@
       "id": "types-null-attribute-means-absent",
       "spec": "spec.md#null-values",
       "rule": "Calling applications should treat an attribute whose value is null as if it were absent",
-      "untested": "This is guidance for calling applications; the protocol reports every attribute's value, including nulls, and has no schema to apply it"
+      "untested": "This is guidance for calling applications about attribute values; schema processing only looks for a definition, so a required attribute whose value is null is present (native/structure/schema-required-attribute-null)"
     },
     {
       "id": "types-function-null-argument",

@@ -1,0 +1,37 @@
+{
+  "description": "A required attribute can be defined by a later object of a body array",
+  "spec": [
+    "spec.md#schema-driven-processing",
+    "json/spec.md#structural-elements"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "required": true
+      },
+      {
+        "name": "b"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "2"
+        },
+        "b": {
+          "number": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

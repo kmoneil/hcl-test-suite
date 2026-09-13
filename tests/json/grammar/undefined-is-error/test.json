@@ -1,0 +1,18 @@
+{
+  "description": "The JavaScript value undefined is not a JSON value",
+  "spec": [
+    "json/spec.md#hcl-json-syntax-specification"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "The JavaScript identifier \"undefined\" cannot be used in JSON",
+  "expect": {
+    "valid": false,
+    "phase": "parse"
+  }
+}

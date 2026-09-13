@@ -1,0 +1,24 @@
+{
+  "description": "In exhaustive processing, a property the schema doesn't request is an error",
+  "spec": [
+    "spec.md#partial-processing-of-body-content",
+    "json/spec.md#structural-elements"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "No argument or block type is named \"b\"",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

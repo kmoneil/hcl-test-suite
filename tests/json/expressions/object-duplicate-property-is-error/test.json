@@ -1,0 +1,18 @@
+{
+  "description": "A property name defined twice in an object expression is an error",
+  "spec": [
+    "json/spec.md#objects"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "Duplicate object attribute",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

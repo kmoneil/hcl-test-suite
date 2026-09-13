@@ -1,0 +1,27 @@
+{
+  "description": "A block with fewer labels than its header schema names is an error",
+  "spec": [
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "labels": [
+          "one",
+          "two"
+        ],
+        "body": {
+          "mode": "dynamic-attributes"
+        }
+      }
+    ]
+  },
+  "reference_error": "All b blocks must have 2 labels (one, two)",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

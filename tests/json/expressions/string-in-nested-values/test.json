@@ -1,0 +1,37 @@
+{
+  "description": "Strings inside arrays and objects are templates too",
+  "spec": [
+    "json/spec.md#strings",
+    "json/spec.md#arrays",
+    "json/spec.md#objects"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "number": "2"
+            },
+            {
+              "object": {
+                "b": {
+                  "bool": true
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

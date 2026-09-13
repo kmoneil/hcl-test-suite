@@ -1,0 +1,29 @@
+{
+  "description": "Dynamic attributes processing of what partial processing leaves of a body array is an error",
+  "spec": [
+    "spec.md#partial-processing-of-body-content",
+    "spec.md#dynamic-attributes-processing"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "status": "disputed",
+  "notes": "The spec says partial processing gives a new body of the remaining elements, and that dynamic attributes processing needs a single JSON object, but not whether the body left from an array is one. hashicorp/hcl's remaining body wraps the same array ((*body).PartialContent in json/structure.go), and its dynamic attributes processing requires an object ((*body).JustAttributes), so it fails.",
+  "schema": {
+    "mode": "partial",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ],
+    "remain": {
+      "mode": "dynamic-attributes"
+    }
+  },
+  "reference_error": "A JSON object is required here, setting the arguments for this block",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

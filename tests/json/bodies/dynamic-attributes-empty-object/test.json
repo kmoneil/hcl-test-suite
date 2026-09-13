@@ -1,0 +1,21 @@
+{
+  "description": "Dynamic attributes processing of an empty object gives no attributes",
+  "spec": [
+    "spec.md#dynamic-attributes-processing",
+    "json/spec.md#structural-elements"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": []
+    }
+  }
+}

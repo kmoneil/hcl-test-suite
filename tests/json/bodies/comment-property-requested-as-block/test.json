@@ -1,0 +1,43 @@
+{
+  "description": "A schema that requests a block type named // gets blocks from the property named //",
+  "spec": [
+    "json/spec.md#structural-elements"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "status": "disputed",
+  "notes": "The spec says a property named // in an object representing a body is parsed and ignored. hashicorp/hcl only skips it when it isn't requested: (*body).PartialContent in json/structure.go matches properties against the schema before Content skips unmatched // properties, so a schema that requests a block type named // gets it.",
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "//",
+        "body": {
+          "mode": "dynamic-attributes"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "//",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "x": {
+                "number": "1"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

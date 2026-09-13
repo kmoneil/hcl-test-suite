@@ -1,0 +1,18 @@
+{
+  "description": "FALSE in uppercase is an error",
+  "spec": [
+    "json/spec.md#hcl-json-syntax-specification"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "\"FALSE\" is not a valid JSON keyword",
+  "expect": {
+    "valid": false,
+    "phase": "parse"
+  }
+}

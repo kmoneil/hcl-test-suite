@@ -1,0 +1,72 @@
+{
+  "description": "Blocks of different types are in the order of their properties",
+  "spec": [
+    "json/spec.md#blocks",
+    "json/spec.md#structural-elements"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "a",
+        "body": {
+          "mode": "dynamic-attributes"
+        }
+      },
+      {
+        "type": "b",
+        "body": {
+          "mode": "dynamic-attributes"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "a",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "n": {
+                "number": "1"
+              }
+            },
+            "blocks": []
+          }
+        },
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "n": {
+                "number": "2"
+              }
+            },
+            "blocks": []
+          }
+        },
+        {
+          "type": "a",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "n": {
+                "number": "3"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

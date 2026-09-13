@@ -1,0 +1,31 @@
+{
+  "description": "A JSON object is an object value with an attribute for each property",
+  "spec": [
+    "json/spec.md#objects"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "b": {
+              "number": "1"
+            },
+            "c": {
+              "string": "x"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

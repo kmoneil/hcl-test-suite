@@ -1,0 +1,18 @@
+{
+  "description": "A literal U+001F in a string is an error",
+  "spec": [
+    "json/spec.md#hcl-json-syntax-specification"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "Invalid JSON string",
+  "expect": {
+    "valid": false,
+    "phase": "parse"
+  }
+}

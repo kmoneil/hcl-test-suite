@@ -1,0 +1,18 @@
+{
+  "description": "An object closed by a bracket is an error",
+  "spec": [
+    "json/spec.md#hcl-json-syntax-specification"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "A JSON object must be closed with a brace, not a bracket",
+  "expect": {
+    "valid": false,
+    "phase": "parse"
+  }
+}

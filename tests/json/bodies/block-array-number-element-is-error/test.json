@@ -1,0 +1,26 @@
+{
+  "description": "A number in a block type's array is an error",
+  "spec": [
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "dynamic-attributes"
+        }
+      }
+    ]
+  },
+  "reference_error": "A JSON object is required here, setting the arguments for this block",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

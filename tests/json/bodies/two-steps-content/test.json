@@ -1,0 +1,66 @@
+{
+  "description": "Partial then exhaustive processing gives the content of one pass with both schemas: in two steps",
+  "spec": [
+    "spec.md#partial-processing-of-body-content"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "partial",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ],
+    "remain": {
+      "mode": "exhaustive",
+      "attributes": [
+        {
+          "name": "c"
+        }
+      ],
+      "blocks": [
+        {
+          "type": "b",
+          "body": {
+            "mode": "dynamic-attributes"
+          }
+        }
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": [],
+      "remain": {
+        "attributes": {
+          "c": {
+            "number": "3"
+          }
+        },
+        "blocks": [
+          {
+            "type": "b",
+            "labels": [],
+            "body": {
+              "attributes": {
+                "x": {
+                  "number": "2"
+                }
+              },
+              "blocks": []
+            }
+          }
+        ]
+      }
+    }
+  }
+}

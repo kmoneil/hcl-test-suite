@@ -1,0 +1,18 @@
+{
+  "description": "A member without a colon between name and value is an error",
+  "spec": [
+    "json/spec.md#hcl-json-syntax-specification"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "A colon must appear between an object property's name and its value",
+  "expect": {
+    "valid": false,
+    "phase": "parse"
+  }
+}

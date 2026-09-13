@@ -1,0 +1,25 @@
+{
+  "description": "A string template can use an if directive",
+  "spec": [
+    "json/spec.md#strings",
+    "hclsyntax/spec.md#template-if-directive"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "yes"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

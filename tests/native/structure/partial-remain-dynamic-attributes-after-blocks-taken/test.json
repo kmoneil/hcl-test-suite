@@ -1,0 +1,34 @@
+{
+  "description": "Dynamic attributes processing of a remaining body fails on blocks already taken",
+  "spec": [
+    "spec.md#dynamic-attributes-processing",
+    "spec.md#partial-processing-of-body-content"
+  ],
+  "op": "decode",
+  "status": "disputed",
+  "notes": "The spec says partial processing leaves out every block of a type the schema requests, so the remaining body has only the attribute c, and dynamic attributes processing gives c. hashicorp/hcl hides taken blocks from further schema processing, but its dynamic attributes processing checks for any block in the original body ((*Body).JustAttributes in hclsyntax/structure.go), so it reports the block b.",
+  "schema": {
+    "mode": "partial",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "dynamic-attributes"
+        }
+      }
+    ],
+    "remain": {
+      "mode": "dynamic-attributes"
+    }
+  },
+  "reference_error": "Unexpected \"b\" block",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

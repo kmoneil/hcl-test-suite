@@ -1,0 +1,37 @@
+{
+  "description": "A JSON array is a tuple whose elements keep their own types",
+  "spec": [
+    "json/spec.md#arrays"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "number": "1"
+            },
+            {
+              "string": "x"
+            },
+            {
+              "bool": true
+            },
+            {
+              "null": "dynamic"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

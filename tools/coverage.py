@@ -29,6 +29,7 @@ COVER_PACKAGES = [
     "./...",  # Go only writes coverage data if the main package is instrumented too
     "github.com/hashicorp/hcl/v2",
     "github.com/hashicorp/hcl/v2/hclsyntax",
+    "github.com/hashicorp/hcl/v2/json",
     "github.com/zclconf/go-cty/cty",
     "github.com/zclconf/go-cty/cty/convert",
     "github.com/zclconf/go-cty/cty/function",
@@ -126,10 +127,11 @@ def cmd_go(args):
             lines = profile.read_text().splitlines(keepends=True)
             profile.write_text("".join(line for line in lines if ".rl:" not in line))
             report = run(["go", "tool", "cover", "-func", str(profile)], cwd=adapter_dir)
-            print("\nhclsyntax functions below 100%:")
-            for line in report.splitlines():
-                if "/hclsyntax/" in line and not line.rstrip().endswith("100.0%"):
-                    print("  " + re.sub(r"^.*/hclsyntax/", "", line))
+            for package in ("hclsyntax", "json"):
+                print(f"\n{package} functions below 100%:")
+                for line in report.splitlines():
+                    if f"/v2/{package}/" in line and not line.rstrip().endswith("100.0%"):
+                        print("  " + re.sub(rf"^.*/v2/{package}/", "", line))
 
 
 def cmd_anchors(args):
@@ -139,7 +141,7 @@ def cmd_anchors(args):
         for line in (Path(args.spec_dir) / doc).read_text(encoding="utf-8").splitlines():
             if line.startswith("```"):
                 in_code = not in_code
-            match = None if in_code else re.match(r"^#{2,6}\s+(.*)$", line)
+            match = None if in_code else re.match(r"^#{1,6}\s+(.*)$", line)
             if not match:
                 continue
             # The same rules GitHub uses to turn headings into link anchors.
@@ -169,7 +171,7 @@ def main():
     commands.add_parser("spec", help="rules and tests per spec section").set_defaults(func=cmd_spec)
     commands.add_parser("disputes", help="disputed tests by spec section, as Markdown").set_defaults(func=cmd_disputes)
     go = commands.add_parser("go", help="code of hashicorp/hcl exercised by the tests")
-    go.add_argument("--functions", action="store_true", help="list hclsyntax functions that aren't fully covered")
+    go.add_argument("--functions", action="store_true", help="list hclsyntax and json functions that aren't fully covered")
     go.set_defaults(func=cmd_go)
     anchors = commands.add_parser("anchors", help="regenerate tools/spec-anchors.txt")
     anchors.add_argument("spec_dir", help="directory containing spec.md, hclsyntax/spec.md and json/spec.md")

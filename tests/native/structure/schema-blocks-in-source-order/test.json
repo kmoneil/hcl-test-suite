@@ -1,0 +1,78 @@
+{
+  "description": "Blocks of the requested types are in source order",
+  "spec": [
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "a",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "n"
+            }
+          ]
+        }
+      },
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "n"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "a",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "n": {
+                "number": "1"
+              }
+            },
+            "blocks": []
+          }
+        },
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "n": {
+                "number": "2"
+              }
+            },
+            "blocks": []
+          }
+        },
+        {
+          "type": "a",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "n": {
+                "number": "3"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

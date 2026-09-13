@@ -1,0 +1,43 @@
+{
+  "description": "A property requested both as an attribute and a block type is the attribute",
+  "spec": [
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "status": "disputed",
+  "notes": "The spec says a schema that requests a block type whose name is also an attribute name is an error. hashicorp/hcl doesn't check schemas, and matches a property against the attribute schemata first ((*body).PartialContent in json/structure.go).",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "a",
+        "body": {
+          "mode": "dynamic-attributes"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "x": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

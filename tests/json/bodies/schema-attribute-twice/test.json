@@ -1,0 +1,34 @@
+{
+  "description": "A schema requesting the same attribute twice gives that attribute once",
+  "spec": [
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "status": "disputed",
+  "notes": "The spec says a schema that requests the same attribute name twice is an error. hashicorp/hcl doesn't check schemas, and for the JSON syntax keeps one schema per attribute name ((*body).PartialContent in json/structure.go).",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      },
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "description": "A property defined twice in the remaining body is an error when it is processed",
+  "spec": [
+    "spec.md#partial-processing-of-body-content",
+    "spec.md#dynamic-attributes-processing"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "partial",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ],
+    "remain": {
+      "mode": "dynamic-attributes"
+    }
+  },
+  "reference_error": "Duplicate attribute definition",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

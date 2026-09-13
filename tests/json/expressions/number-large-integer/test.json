@@ -1,0 +1,25 @@
+{
+  "description": "A JSON integer beyond 64 bits keeps its exact value",
+  "spec": [
+    "json/spec.md#numbers",
+    "spec.md#primitive-types"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "340282366920938463463374607431768211457"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

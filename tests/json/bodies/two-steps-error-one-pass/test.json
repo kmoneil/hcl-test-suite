@@ -1,0 +1,26 @@
+{
+  "description": "An unrequested property is an error in two steps as it is in one: in one pass",
+  "spec": [
+    "spec.md#partial-processing-of-body-content"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      },
+      {
+        "name": "c"
+      }
+    ]
+  },
+  "reference_error": "No argument or block type is named \"d\"",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

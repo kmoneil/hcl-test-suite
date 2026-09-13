@@ -1,0 +1,26 @@
+{
+  "description": "The escape \\u0000 stands for U+0000",
+  "spec": [
+    "json/spec.md#hcl-json-syntax-specification",
+    "json/spec.md#strings"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "evaluation_mode": "literal-only",
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x\u0000y"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

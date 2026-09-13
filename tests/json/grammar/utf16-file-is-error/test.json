@@ -1,0 +1,20 @@
+{
+  "description": "A file encoded in UTF-16 is an error",
+  "spec": [
+    "json/spec.md#hcl-json-syntax-specification"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "status": "disputed",
+  "notes": "RFC 7159 says JSON text is encoded in UTF-8, UTF-16 or UTF-32 (section 8.1), and the spec adopts it without choosing an encoding. hashicorp/hcl only reads UTF-8: in UTF-16 the NUL byte after the opening brace is an invalid token (scan in json/scanner.go).",
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "Invalid start of value",
+  "expect": {
+    "valid": false,
+    "phase": "parse"
+  }
+}

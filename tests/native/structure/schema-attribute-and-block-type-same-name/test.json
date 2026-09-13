@@ -1,0 +1,45 @@
+{
+  "description": "A schema requesting an attribute and a block type of one name gives both",
+  "spec": [
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "status": "disputed",
+  "notes": "The spec says a schema that requests a block type whose name is also an attribute name is an error. hashicorp/hcl doesn't check schemas, and the native syntax keeps attributes and blocks apart ((*Body).PartialContent in hclsyntax/structure.go), so it gives both.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "a",
+        "body": {
+          "mode": "dynamic-attributes"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": [
+        {
+          "type": "a",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

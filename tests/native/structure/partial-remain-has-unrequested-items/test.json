@@ -1,0 +1,59 @@
+{
+  "description": "The body partial processing leaves has the attributes and blocks it didn't take",
+  "spec": [
+    "spec.md#partial-processing-of-body-content"
+  ],
+  "op": "decode",
+  "schema": {
+    "mode": "partial",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ],
+    "remain": {
+      "mode": "exhaustive",
+      "attributes": [
+        {
+          "name": "b"
+        }
+      ],
+      "blocks": [
+        {
+          "type": "c",
+          "body": {
+            "mode": "dynamic-attributes"
+          }
+        }
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": [],
+      "remain": {
+        "attributes": {
+          "b": {
+            "number": "2"
+          }
+        },
+        "blocks": [
+          {
+            "type": "c",
+            "labels": [],
+            "body": {
+              "attributes": {},
+              "blocks": []
+            }
+          }
+        ]
+      }
+    }
+  }
+}

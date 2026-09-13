@@ -1,0 +1,18 @@
+{
+  "description": "A number ending with a decimal point is an error",
+  "spec": [
+    "json/spec.md#hcl-json-syntax-specification"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "Invalid JSON number",
+  "expect": {
+    "valid": false,
+    "phase": "parse"
+  }
+}

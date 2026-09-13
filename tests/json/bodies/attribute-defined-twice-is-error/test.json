@@ -1,0 +1,24 @@
+{
+  "description": "Two properties defining the same attribute are an error",
+  "spec": [
+    "json/spec.md#attributes",
+    "spec.md#structural-elements"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "Duplicate argument",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

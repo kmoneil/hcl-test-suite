@@ -1,0 +1,32 @@
+{
+  "description": "A required attribute whose property is null is present",
+  "spec": [
+    "spec.md#schema-driven-processing",
+    "json/spec.md#attributes"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "notes": "The spec's guidance that applications should treat a null attribute as absent is about values, while schema processing only looks for a definition.",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "required": true
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "null": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

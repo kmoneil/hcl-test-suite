@@ -1,0 +1,28 @@
+{
+  "description": "A byte that isn't valid UTF-8 in a string becomes U+FFFD",
+  "spec": [
+    "json/spec.md#hcl-json-syntax-specification",
+    "json/spec.md#strings"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "status": "disputed",
+  "notes": "RFC 7159, which the spec adopts as its grammar, says JSON text is Unicode encoded in UTF-8, UTF-16 or UTF-32, so a byte sequence that isn't valid UTF-8 isn't JSON text, and the spec doesn't say what to do with it. hashicorp/hcl decodes strings with Go's encoding/json (parseString in json/parser.go), which replaces each invalid byte with U+FFFD REPLACEMENT CHARACTER.",
+  "evaluation_mode": "literal-only",
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x�y"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

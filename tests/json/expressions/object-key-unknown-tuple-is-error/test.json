@@ -1,0 +1,31 @@
+{
+  "description": "A property name template giving an unknown tuple is an error",
+  "spec": [
+    "json/spec.md#objects",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "json-syntax"
+  ],
+  "variables": {
+    "u": {
+      "unknown": [
+        "tuple",
+        [
+          "string"
+        ]
+      ]
+    }
+  },
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "Cannot use this expression as an object key",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

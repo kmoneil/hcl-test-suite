@@ -1,0 +1,20 @@
+{
+  "description": "Two property names equal under NFC are the same attribute name",
+  "spec": [
+    "json/spec.md#objects",
+    "spec.md#primitive-types"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "notes": "The first name is the precomposed U+00E9, and the second an e followed by U+0301 COMBINING ACUTE ACCENT.",
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "Duplicate object attribute",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

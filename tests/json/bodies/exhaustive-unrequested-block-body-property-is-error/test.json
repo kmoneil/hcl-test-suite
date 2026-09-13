@@ -1,0 +1,32 @@
+{
+  "description": "An unrequested property in a block body is an error",
+  "spec": [
+    "spec.md#partial-processing-of-body-content",
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "x"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "No argument or block type is named \"y\"",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

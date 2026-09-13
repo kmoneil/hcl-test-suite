@@ -1,0 +1,37 @@
+{
+  "description": "In literal-only mode, strings inside arrays and objects are literal text too",
+  "spec": [
+    "json/spec.md#strings",
+    "spec.md#expression-evaluation"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "evaluation_mode": "literal-only",
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "${x}"
+            },
+            {
+              "object": {
+                "b": {
+                  "string": "%{ y }"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

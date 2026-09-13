@@ -1,0 +1,31 @@
+{
+  "description": "A required attribute with a property is in the body content",
+  "spec": [
+    "spec.md#schema-driven-processing",
+    "json/spec.md#attributes"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "required": true
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

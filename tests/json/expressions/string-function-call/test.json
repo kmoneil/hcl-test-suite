@@ -1,0 +1,39 @@
+{
+  "description": "A string template can call functions",
+  "spec": [
+    "json/spec.md#strings"
+  ],
+  "op": "decode",
+  "features": [
+    "functions",
+    "json-syntax"
+  ],
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": "string"
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "x"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

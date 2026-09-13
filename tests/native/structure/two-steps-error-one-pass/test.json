@@ -1,0 +1,23 @@
+{
+  "description": "An unrequested attribute is an error in two steps as it is in one: in one pass",
+  "spec": [
+    "spec.md#partial-processing-of-body-content"
+  ],
+  "op": "decode",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      },
+      {
+        "name": "c"
+      }
+    ]
+  },
+  "reference_error": "An argument named \"d\" is not expected here",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

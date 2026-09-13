@@ -1,0 +1,340 @@
+{
+  "area": "json/bodies",
+  "rules": [
+    {
+      "id": "bodies-schema-decides",
+      "spec": "spec.md#body-content",
+      "rule": "Whether a property defines an attribute or blocks depends only on the schema: the same property is an attribute for one schema and a block for another",
+      "tests": [
+        "json/bodies/property-as-attribute",
+        "json/bodies/property-as-block"
+      ]
+    },
+    {
+      "id": "bodies-object",
+      "spec": "json/spec.md#structural-elements",
+      "rule": "A body can be a JSON object, whose properties define its attributes and blocks",
+      "tests": [
+        "json/bodies/body-object"
+      ]
+    },
+    {
+      "id": "bodies-array-of-objects",
+      "spec": "json/spec.md#structural-elements",
+      "rule": "A body can be a JSON array of objects, whose properties are visited object by object, in order, as if they were in one object; an empty array is an empty body",
+      "tests": [
+        "json/bodies/body-array-attributes",
+        "json/bodies/body-array-blocks-in-order",
+        "json/bodies/body-empty-array",
+        "json/bodies/body-array-attribute-defined-twice-is-error"
+      ]
+    },
+    {
+      "id": "bodies-array-elements-are-objects",
+      "spec": "json/spec.md#structural-elements",
+      "rule": "An element of a body array that isn't an object, such as a string, null or an array, is an error",
+      "tests": [
+        "json/bodies/body-array-string-element-is-error",
+        "json/bodies/body-array-null-element-is-error",
+        "json/bodies/body-array-nested-array-is-error"
+      ]
+    },
+    {
+      "id": "bodies-dynamic-attributes-object",
+      "spec": "json/spec.md#structural-elements",
+      "rule": "Dynamic attributes processing needs a single JSON object: a body that is an array of objects, or the null that a null element of a block array gives, is an error in that mode",
+      "tests": [
+        "json/bodies/dynamic-attributes-array-body-is-error",
+        "json/bodies/block-array-null-element-dynamic-attributes-is-error"
+      ]
+    },
+    {
+      "id": "bodies-dynamic-attributes",
+      "spec": "spec.md#dynamic-attributes-processing",
+      "rule": "Dynamic attributes processing gives an attribute for each property of the body object, whatever its value, named as written, and no blocks, and a property defined twice is an error",
+      "tests": [
+        "json/bodies/dynamic-attributes-every-property",
+        "json/bodies/dynamic-attributes-empty-object",
+        "json/bodies/dynamic-attributes-duplicate-property-is-error",
+        "json/bodies/dynamic-attributes-names-not-templates"
+      ]
+    },
+    {
+      "id": "bodies-dynamic-attributes-names-not-normalized",
+      "spec": "spec.md#dynamic-attributes-processing",
+      "rule": "In dynamic attributes processing, property names that differ only in Unicode normalization are different attributes (disputed)",
+      "tests": [
+        "json/bodies/dynamic-attributes-names-not-normalized"
+      ]
+    },
+    {
+      "id": "bodies-comment-property",
+      "spec": "json/spec.md#structural-elements",
+      "rule": "A property named // in a body is ignored, whatever its value and however its name is escaped, in exhaustive, partial and dynamic attributes processing and in block bodies and body arrays",
+      "tests": [
+        "json/bodies/comment-property-exhaustive",
+        "json/bodies/comment-property-object-value",
+        "json/bodies/comment-property-repeated",
+        "json/bodies/comment-property-dynamic-attributes",
+        "json/bodies/comment-property-partial-remain",
+        "json/bodies/comment-property-block-body",
+        "json/bodies/comment-property-body-array",
+        "json/bodies/comment-property-escaped-name"
+      ]
+    },
+    {
+      "id": "bodies-comment-property-requested",
+      "spec": "json/spec.md#structural-elements",
+      "rule": "A schema that requests an attribute or block type named // gets the property named // (disputed)",
+      "tests": [
+        "json/bodies/comment-property-requested-as-attribute",
+        "json/bodies/comment-property-requested-as-block"
+      ]
+    },
+    {
+      "id": "bodies-comment-property-label",
+      "spec": "json/spec.md#structural-elements",
+      "rule": "A property named // at a block's label level is a label, because a label level isn't a body",
+      "tests": [
+        "json/bodies/comment-property-as-label"
+      ]
+    },
+    {
+      "id": "bodies-attribute-definition",
+      "spec": "json/spec.md#attributes",
+      "rule": "An attribute the schema requests is defined by the property with its name, whose value is the attribute's expression",
+      "tests": [
+        "json/bodies/attribute-property",
+        "json/bodies/attribute-property-any-value",
+        "json/bodies/attribute-name-not-identifier"
+      ]
+    },
+    {
+      "id": "bodies-attribute-optional",
+      "spec": "spec.md#schema-driven-processing",
+      "rule": "An attribute that isn't required and has no property is absent from the body content",
+      "tests": [
+        "json/bodies/optional-attribute-absent"
+      ]
+    },
+    {
+      "id": "bodies-attribute-required",
+      "spec": "spec.md#schema-driven-processing",
+      "rule": "A required attribute without a property is an error, also in partial processing and in a body array, and an attribute whose value is null is present",
+      "tests": [
+        "json/bodies/required-attribute-present",
+        "json/bodies/required-attribute-missing-is-error",
+        "json/bodies/required-attribute-missing-partial-is-error",
+        "json/bodies/required-attribute-missing-empty-array-is-error",
+        "json/bodies/required-attribute-in-later-array-element",
+        "json/bodies/required-attribute-null"
+      ]
+    },
+    {
+      "id": "bodies-attribute-unique",
+      "spec": "json/spec.md#attributes",
+      "rule": "An attribute defined by two properties is an error, in exhaustive and partial processing, across the objects of a body array, and when one name is escaped",
+      "tests": [
+        "json/bodies/attribute-defined-twice-is-error",
+        "json/bodies/attribute-defined-twice-partial-is-error",
+        "json/bodies/body-array-attribute-defined-twice-is-error",
+        "json/bodies/attribute-defined-twice-escaped-name-is-error"
+      ]
+    },
+    {
+      "id": "bodies-exhaustive",
+      "spec": "spec.md#partial-processing-of-body-content",
+      "rule": "In exhaustive processing, a property that the schema requests neither as an attribute nor as a block type is an error",
+      "tests": [
+        "json/bodies/exhaustive-unrequested-property-is-error",
+        "json/bodies/exhaustive-unrequested-object-property-is-error",
+        "json/bodies/exhaustive-unrequested-block-body-property-is-error"
+      ]
+    },
+    {
+      "id": "bodies-partial-remain",
+      "spec": "spec.md#partial-processing-of-body-content",
+      "rule": "Partial processing puts the properties the schema doesn't request into a new body, leaving out the requested attributes and every property of a requested block type; that body can be processed in any mode, and a property defined twice is an error only when later processing takes it as an attribute",
+      "tests": [
+        "json/bodies/partial-unrequested-property-not-error",
+        "json/bodies/partial-remain-has-unrequested-properties",
+        "json/bodies/partial-remain-without-requested-attribute",
+        "json/bodies/partial-remain-requested-attribute-required-is-error",
+        "json/bodies/partial-remain-without-requested-blocks",
+        "json/bodies/partial-remain-dynamic-attributes",
+        "json/bodies/partial-remain-duplicate-unrequested-property-is-error",
+        "json/bodies/partial-duplicate-unrequested-property-not-error",
+        "json/bodies/partial-remain-dynamic-attributes-after-blocks-taken",
+        "json/bodies/nested-partial-remain",
+        "json/bodies/partial-remain-partial-again"
+      ]
+    },
+    {
+      "id": "bodies-partial-two-steps",
+      "spec": "spec.md#partial-processing-of-body-content",
+      "rule": "Partial processing followed by exhaustive processing of the remaining body gives the same attributes, blocks and errors as one exhaustive pass with both schemas",
+      "tests": [
+        "json/bodies/two-steps-content",
+        "json/bodies/two-steps-content-one-pass",
+        "json/bodies/two-steps-blocks-taken",
+        "json/bodies/two-steps-blocks-taken-one-pass",
+        "json/bodies/two-steps-error",
+        "json/bodies/two-steps-error-one-pass"
+      ]
+    },
+    {
+      "id": "bodies-block-object",
+      "spec": "json/spec.md#blocks",
+      "rule": "For a block type without labels, an object value defines one block whose body is that object",
+      "tests": [
+        "json/bodies/block-object",
+        "json/bodies/block-empty-object"
+      ]
+    },
+    {
+      "id": "bodies-block-array",
+      "spec": "json/spec.md#blocks",
+      "rule": "For a block type without labels, an array of objects defines a block for each object, in order, and an empty array defines none",
+      "tests": [
+        "json/bodies/block-array",
+        "json/bodies/block-empty-array"
+      ]
+    },
+    {
+      "id": "bodies-block-repeated-property",
+      "spec": "json/spec.md#blocks",
+      "rule": "A block type's property repeated in one body defines blocks for every definition, in order, interleaved with other block types",
+      "tests": [
+        "json/bodies/block-property-repeated",
+        "json/bodies/blocks-in-property-order"
+      ]
+    },
+    {
+      "id": "bodies-block-invalid-value",
+      "spec": "json/spec.md#blocks",
+      "rule": "A block type's property whose value is a string, number or boolean is an error, and so is an array element that is a string or number",
+      "tests": [
+        "json/bodies/block-string-value-is-error",
+        "json/bodies/block-number-value-is-error",
+        "json/bodies/block-boolean-value-is-error",
+        "json/bodies/block-array-string-element-is-error",
+        "json/bodies/block-array-number-element-is-error"
+      ]
+    },
+    {
+      "id": "bodies-block-null",
+      "spec": "json/spec.md#blocks",
+      "rule": "A null where a block body or array of block bodies is expected defines no block, and a null element of a block array defines a block with an empty body when the body is processed by schema (disputed)",
+      "tests": [
+        "json/bodies/block-null-value",
+        "json/bodies/block-null-body-after-label",
+        "json/bodies/block-array-null-element"
+      ]
+    },
+    {
+      "id": "bodies-block-array-nested-array",
+      "spec": "json/spec.md#blocks",
+      "rule": "An array element of a block array defines one block whose body is that array of objects, when the body is processed by schema (disputed)",
+      "tests": [
+        "json/bodies/block-array-nested-array-element"
+      ]
+    },
+    {
+      "id": "bodies-labels-levels",
+      "spec": "json/spec.md#blocks",
+      "rule": "Each label of a block type is one nested level of object properties, whose names are the label values, before the block body",
+      "tests": [
+        "json/bodies/block-one-label",
+        "json/bodies/block-two-labels",
+        "json/bodies/block-label-any-string",
+        "json/bodies/block-label-not-template",
+        "json/bodies/block-label-empty-body"
+      ]
+    },
+    {
+      "id": "bodies-labels-several-properties",
+      "spec": "json/spec.md#blocks",
+      "rule": "Several properties at a label level, including a repeated property, define blocks for each, in order",
+      "tests": [
+        "json/bodies/block-label-level-several-properties",
+        "json/bodies/block-label-property-repeated",
+        "json/bodies/block-label-property-repeated-interleaved"
+      ]
+    },
+    {
+      "id": "bodies-labels-array",
+      "spec": "json/spec.md#blocks",
+      "rule": "A label level can be an array of objects, whose properties are visited in order, and after the labels an array of objects defines several blocks with the same labels",
+      "tests": [
+        "json/bodies/block-label-level-array",
+        "json/bodies/block-labels-body-array",
+        "json/bodies/block-labels-spec-example"
+      ]
+    },
+    {
+      "id": "bodies-labels-invalid-level",
+      "spec": "json/spec.md#blocks",
+      "rule": "A label level that is a string, number, null or array of non-objects is an error, and so is a string or number where a block body follows the labels, including when a block has fewer label levels than its type has labels",
+      "tests": [
+        "json/bodies/block-label-level-string-is-error",
+        "json/bodies/block-label-level-number-is-error",
+        "json/bodies/block-body-after-label-string-is-error",
+        "json/bodies/block-label-level-null-is-error",
+        "json/bodies/block-label-level-array-of-strings-is-error",
+        "json/bodies/block-body-after-label-number-is-error",
+        "json/bodies/block-too-few-label-levels-is-error"
+      ]
+    },
+    {
+      "id": "bodies-labels-empty-level",
+      "spec": "json/spec.md#blocks",
+      "rule": "A label level with no properties, an empty object or an empty array, is an error (disputed)",
+      "tests": [
+        "json/bodies/block-label-level-empty-object-is-error",
+        "json/bodies/block-label-level-empty-array-is-error"
+      ]
+    },
+    {
+      "id": "bodies-nested",
+      "spec": "spec.md#schema-driven-processing",
+      "rule": "Each block's body is processed with the schema for its block type, recursively, and an error in a nested body is an error",
+      "tests": [
+        "json/bodies/nested-block-bodies",
+        "json/bodies/nested-block-required-attribute-missing-is-error"
+      ]
+    },
+    {
+      "id": "bodies-schema-attribute-and-block-type",
+      "spec": "spec.md#schema-driven-processing",
+      "rule": "A schema that requests an attribute and a block type with the same name is not an error, and the property defines the attribute (disputed)",
+      "tests": [
+        "json/bodies/schema-attribute-and-block-type-same-name"
+      ]
+    },
+    {
+      "id": "bodies-schema-attribute-twice",
+      "spec": "spec.md#schema-driven-processing",
+      "rule": "A schema that requests the same attribute twice, optional or required, is not an error for the JSON syntax (disputed)",
+      "tests": [
+        "json/bodies/schema-attribute-twice",
+        "json/bodies/schema-required-attribute-twice"
+      ]
+    },
+    {
+      "id": "bodies-partial-remain-array-dynamic-attributes",
+      "spec": "spec.md#partial-processing-of-body-content",
+      "rule": "Dynamic attributes processing of the body that partial processing leaves from a body array is an error, because that body is still the array (disputed)",
+      "tests": [
+        "json/bodies/partial-remain-dynamic-attributes-array-body-is-error"
+      ]
+    },
+    {
+      "id": "bodies-partial-remain-hides-attribute-name",
+      "spec": "spec.md#partial-processing-of-body-content",
+      "rule": "A property that partial processing took as an attribute isn't a block when a later schema asks for a block type of that name (disputed)",
+      "tests": [
+        "json/bodies/partial-remain-attribute-not-a-later-block"
+      ]
+    }
+  ]
+}

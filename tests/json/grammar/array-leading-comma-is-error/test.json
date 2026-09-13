@@ -1,0 +1,18 @@
+{
+  "description": "A comma before the first array value is an error",
+  "spec": [
+    "json/spec.md#hcl-json-syntax-specification"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "Invalid start of value",
+  "expect": {
+    "valid": false,
+    "phase": "parse"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "description": "In literal-only mode, a property name with template syntax is the attribute name as written",
+  "spec": [
+    "json/spec.md#objects",
+    "json/spec.md#strings",
+    "spec.md#expression-evaluation"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "evaluation_mode": "literal-only",
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "${x}": {
+              "number": "1"
+            },
+            "$${x}": {
+              "number": "2"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

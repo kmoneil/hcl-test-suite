@@ -1,0 +1,35 @@
+{
+  "description": "An attribute's name can be any string the schema requests",
+  "spec": [
+    "json/spec.md#attributes"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a b"
+      },
+      {
+        "name": ""
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a b": {
+          "number": "1"
+        },
+        "": {
+          "number": "2"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

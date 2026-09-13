@@ -1,0 +1,51 @@
+{
+  "description": "A property that partial processing took as an attribute isn't a block in the remaining body",
+  "spec": [
+    "spec.md#partial-processing-of-body-content",
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "status": "disputed",
+  "notes": "The spec leaves the attributes that partial processing takes out of the body it returns, which gives no blocks here. But it also says two steps are equivalent to one pass with the union of both schemas, and a schema with an attribute and a block type both named a is an error, so the spec contradicts itself. hashicorp/hcl records the taken name in the remaining body's hidden attributes ((*body).PartialContent in json/structure.go), and processing that body skips every property with a hidden name, whatever the schema asks for (the hiddenAttrs checks in (*body).PartialContent and (*body).Content).",
+  "schema": {
+    "mode": "partial",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ],
+    "remain": {
+      "mode": "exhaustive",
+      "blocks": [
+        {
+          "type": "a",
+          "body": {
+            "mode": "dynamic-attributes"
+          }
+        }
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "x": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": [],
+      "remain": {
+        "attributes": {},
+        "blocks": []
+      }
+    }
+  }
+}

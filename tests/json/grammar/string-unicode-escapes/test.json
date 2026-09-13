@@ -1,0 +1,26 @@
+{
+  "description": "A \\u escape stands for the code point its four hexadecimal digits give",
+  "spec": [
+    "json/spec.md#hcl-json-syntax-specification",
+    "json/spec.md#strings"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "evaluation_mode": "literal-only",
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "Aéé中"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

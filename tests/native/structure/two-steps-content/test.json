@@ -1,0 +1,68 @@
+{
+  "description": "Partial then exhaustive processing of a native body gives the content of one pass: in two steps",
+  "spec": [
+    "spec.md#partial-processing-of-body-content"
+  ],
+  "op": "decode",
+  "schema": {
+    "mode": "partial",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ],
+    "remain": {
+      "mode": "exhaustive",
+      "attributes": [
+        {
+          "name": "c"
+        }
+      ],
+      "blocks": [
+        {
+          "type": "b",
+          "body": {
+            "mode": "exhaustive",
+            "attributes": [
+              {
+                "name": "x"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": [],
+      "remain": {
+        "attributes": {
+          "c": {
+            "number": "3"
+          }
+        },
+        "blocks": [
+          {
+            "type": "b",
+            "labels": [],
+            "body": {
+              "attributes": {
+                "x": {
+                  "number": "2"
+                }
+              },
+              "blocks": []
+            }
+          }
+        ]
+      }
+    }
+  }
+}

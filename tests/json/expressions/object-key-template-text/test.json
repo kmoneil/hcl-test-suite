@@ -1,0 +1,29 @@
+{
+  "description": "A property name template can mix text and interpolations",
+  "spec": [
+    "json/spec.md#objects",
+    "json/spec.md#strings"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "x2y": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "description": "A string template interpolating an unknown value gives an unknown string",
+  "spec": [
+    "json/spec.md#strings",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "json-syntax"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "string"
+    }
+  },
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "string"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "description": "A schema that requests the same optional attribute twice gives the attribute once",
+  "spec": [
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "status": "disputed",
+  "notes": "The spec says a schema that requests the same attribute name twice is an error. hashicorp/hcl doesn't check schemas: it takes the attribute for the first schema, and the second finds it taken and, not being required, doesn't complain ((*Body).PartialContent in hclsyntax/structure.go).",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      },
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "description": "An exponent's digits can have leading zeros",
+  "spec": [
+    "json/spec.md#hcl-json-syntax-specification",
+    "json/spec.md#numbers"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1000"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

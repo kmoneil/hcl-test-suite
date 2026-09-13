@@ -1,0 +1,29 @@
+{
+  "description": "A property name template giving a number uses the number converted to a string",
+  "spec": [
+    "json/spec.md#objects",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "1.5": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

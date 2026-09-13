@@ -1,0 +1,39 @@
+{
+  "description": "Dynamic attributes processing makes every property an attribute, including objects",
+  "spec": [
+    "spec.md#dynamic-attributes-processing",
+    "json/spec.md#structural-elements"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        },
+        "b": {
+          "object": {
+            "x": {
+              "number": "2"
+            }
+          }
+        },
+        "c": {
+          "tuple": [
+            {
+              "number": "3"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

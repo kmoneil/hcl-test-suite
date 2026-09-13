@@ -1,0 +1,24 @@
+{
+  "description": "Dynamic attributes processing gives every attribute of the body",
+  "spec": [
+    "spec.md#dynamic-attributes-processing"
+  ],
+  "op": "decode",
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        },
+        "b": {
+          "string": "x"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

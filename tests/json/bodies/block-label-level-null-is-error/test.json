@@ -1,0 +1,29 @@
+{
+  "description": "A null where a label level is expected is an error",
+  "spec": [
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "labels": [
+          "name"
+        ],
+        "body": {
+          "mode": "dynamic-attributes"
+        }
+      }
+    ]
+  },
+  "reference_error": "Missing block label",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

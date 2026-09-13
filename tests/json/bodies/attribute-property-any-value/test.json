@@ -1,0 +1,41 @@
+{
+  "description": "An attribute's property can have any value",
+  "spec": [
+    "json/spec.md#attributes",
+    "json/spec.md#expressions"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "number": "1"
+            },
+            {
+              "object": {
+                "b": {
+                  "null": "dynamic"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

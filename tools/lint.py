@@ -23,8 +23,8 @@ import hcltest  # noqa: E402  reuses the runner's test loading and normalization
 TESTS = ROOT / "tests"
 COVERAGE = ROOT / "coverage"
 KEY_ORDER = ["description", "spec", "op", "input", "features", "status", "notes", "variables", "functions",
-             "reference_error", "expect"]
-FEATURES = {"unknown-values", "typed-values", "functions"}
+             "evaluation_mode", "schema", "reference_error", "expect"]
+FEATURES = {"unknown-values", "typed-values", "functions", "json-syntax"}
 NAME = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 MAX_INPUT_BYTES = 2048
 MAX_DESCRIPTION = 100
@@ -65,11 +65,62 @@ def needs_typed_values(value):
     return False
 
 
+def decode_body_problems(body, schema, where="expected body"):
+    """Lists the ways an expected decode result couldn't come from applying its schema."""
+    problems = []
+    if schema["mode"] == "dynamic-attributes":
+        if body.get("blocks"):
+            problems.append(f"{where} has blocks, but dynamic attributes processing gives none")
+    else:
+        requested = {attr["name"] for attr in schema.get("attributes", [])}
+        for name in body.get("attributes", {}):
+            if name not in requested:
+                problems.append(f"{where} has the attribute {name!r}, which its schema doesn't request")
+        for attr in schema.get("attributes", []):
+            if attr.get("required") and attr["name"] not in body.get("attributes", {}):
+                problems.append(f"{where} lacks the attribute {attr['name']!r}, which its schema requires")
+        block_schemas = {block["type"]: block for block in schema.get("blocks", [])}
+        for i, block in enumerate(body.get("blocks", [])):
+            block_schema = block_schemas.get(block.get("type"))
+            if block_schema is None:
+                problems.append(f"{where} has a block of type {block.get('type')!r}, which its schema doesn't request")
+                continue
+            if len(block.get("labels", [])) != len(block_schema.get("labels", [])):
+                problems.append(f"{where}: block {i} has {len(block.get('labels', []))} labels, but its schema names "
+                                f"{len(block_schema.get('labels', []))}")
+            problems.extend(decode_body_problems(block.get("body", {}), block_schema["body"], f"{where}: body of block {i}"))
+    if (body.get("remain") is not None) != ("remain" in schema):
+        problems.append(f"{where} must have a remain body exactly when its schema has a remain schema")
+    elif "remain" in schema:
+        problems.extend(decode_body_problems(body["remain"], schema["remain"], f"{where}: remain"))
+    return problems
+
+
+def schema_default_problems(schema, where="schema"):
+    """Lists fields of a schema that only repeat their default, which would hide duplicate tests."""
+    problems = []
+    for field in ("attributes", "blocks"):
+        if field in schema and not schema[field]:
+            problems.append(f'{where}: leave out the empty "{field}"')
+    for attr in schema.get("attributes", []):
+        if attr.get("required") is False:
+            problems.append(f'{where}: leave out "required": false for {attr["name"]!r}')
+    for block in schema.get("blocks", []):
+        if "labels" in block and not block["labels"]:
+            problems.append(f'{where}: leave out the empty "labels" of block type {block["type"]!r}')
+        problems.extend(schema_default_problems(block["body"], f"{where}: body of block type {block['type']!r}"))
+    if "remain" in schema:
+        problems.extend(schema_default_problems(schema["remain"], f"{where}: remain"))
+    return problems
+
+
 def body_values(body):
     for value in body.get("attributes", {}).values():
         yield value
     for block in body.get("blocks", []):
         yield from body_values(block.get("body", {}))
+    if body.get("remain") is not None:
+        yield from body_values(body["remain"])
 
 
 def load_anchors():
@@ -125,6 +176,20 @@ class Linter:
             self.problem(where, str(e))
             return None
 
+        syntax = parts[0]
+        if syntax not in hcltest.INPUT_NAMES:
+            self.problem(where, f"unknown syntax {syntax!r}; tests are under tests/native or tests/json")
+        elif test.input.name != hcltest.INPUT_NAMES[syntax]:
+            self.problem(where, f"{syntax} syntax tests read the input file {hcltest.INPUT_NAMES[syntax]}")
+        elif "input" in meta:
+            self.problem(where, f'leave out "input", which is {hcltest.INPUT_NAMES[syntax]} for {syntax} syntax tests anyway')
+        if "schema" in test.context:
+            for issue in schema_default_problems(test.context["schema"]):
+                self.problem(where, issue)
+            if meta["expect"].get("valid") and isinstance(meta["expect"].get("body"), dict):
+                for issue in decode_body_problems(meta["expect"]["body"], test.context["schema"]):
+                    self.problem(where, issue)
+
         extra = sorted(p.name for p in test_json.parent.iterdir() if p.name not in ("test.json", test.input.name))
         if extra:
             self.problem(where, f"unexpected files: {', '.join(extra)}")
@@ -176,6 +241,10 @@ class Linter:
             if needs_unknown_values(value):
                 needs.setdefault("unknown-values", f"variable {name!r} is unknown or holds an unknown value")
 
+        if test.input.name.endswith(".hcl.json"):
+            needs["json-syntax"] = "the input is in the JSON syntax"
+        elif "json-syntax" in features:
+            self.problem(where, 'lists the "json-syntax" feature, but the input is in the native syntax')
         if "functions" in test.context:
             needs["functions"] = "the test declares functions"
             for name, decl in test.context["functions"].items():
@@ -201,7 +270,7 @@ class Linter:
                     self.text_field(where, f"function {name!r} error", result["error"])
 
         expect = meta["expect"]
-        if test.op == "eval" and expect.get("valid"):
+        if test.op in hcltest.PHASES and expect.get("valid"):
             values = list(body_values(expect.get("body", {})))
             for value in values:
                 try:
@@ -231,17 +300,19 @@ class Linter:
             if "body" in expect:
                 self.problem(where, "an expected error cannot have a body")
             self.text_field(where, "reference_error", meta.get("reference_error"))
-            if test.op == "eval" and expect.get("phase") not in ("parse", "eval"):
-                self.problem(where, 'eval tests that expect an error need "phase": "parse" or "eval"')
+            phases = hcltest.PHASES.get(test.op)
+            if phases and expect.get("phase") not in phases:
+                self.problem(where, f'{test.op} tests that expect an error need a "phase": '
+                                    f'{" or ".join(json.dumps(p) for p in phases)}')
             if test.op == "parse" and "phase" in expect:
                 self.problem(where, 'parse tests don\'t need a "phase"')
 
         data = test.input.read_bytes()
         if len(data) > MAX_INPUT_BYTES:
             self.problem(where, f"input is larger than {MAX_INPUT_BYTES} bytes; keep tests minimal")
-        key = (test.op, data, json.dumps(test.context, sort_keys=True))
+        key = (test.op, test.input.name, data, json.dumps(test.context, sort_keys=True))
         if key in inputs:
-            self.problem(where, f"same op, input, variables and functions as {inputs[key]}")
+            self.problem(where, f"same op, input and context as {inputs[key]}")
         inputs.setdefault(key, where)
         return where
 
@@ -253,7 +324,7 @@ class Linter:
         except (OSError, hcltest.TestError):
             return where  # reported when the test is in scope
         descriptions.setdefault(test.description, where)
-        inputs.setdefault((test.op, data, json.dumps(test.context, sort_keys=True)), where)
+        inputs.setdefault((test.op, test.input.name, data, json.dumps(test.context, sort_keys=True)), where)
         return where
 
     def check_coverage(self, test_names):

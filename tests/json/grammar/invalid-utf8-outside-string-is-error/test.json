@@ -1,0 +1,18 @@
+{
+  "description": "A byte that isn't valid UTF-8 between tokens is an error",
+  "spec": [
+    "json/spec.md#hcl-json-syntax-specification"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "A comma must appear between each property definition in an object",
+  "expect": {
+    "valid": false,
+    "phase": "parse"
+  }
+}

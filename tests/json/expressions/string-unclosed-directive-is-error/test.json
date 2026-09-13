@@ -1,0 +1,19 @@
+{
+  "description": "A string with an unclosed if directive is an error during evaluation",
+  "spec": [
+    "json/spec.md#strings",
+    "hclsyntax/spec.md#template-if-directive"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "is missing its corresponding endif directive",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

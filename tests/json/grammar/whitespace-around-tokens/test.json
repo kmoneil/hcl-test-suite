@@ -1,0 +1,31 @@
+{
+  "description": "Spaces, tabs, line feeds and carriage returns are allowed around every token",
+  "spec": [
+    "json/spec.md#hcl-json-syntax-specification"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "number": "1"
+            },
+            {
+              "number": "2"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

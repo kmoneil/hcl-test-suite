@@ -93,7 +93,10 @@
       "id": "templates-standalone-literals",
       "spec": "hclsyntax/spec.md#template-literals",
       "rule": "In a standalone template, literals can contain any character (including quotes and newlines) without escapes, except the sequence introducers",
-      "untested": "The protocol only evaluates native syntax files, so templates can't be used standalone"
+      "tests": [
+        "json/expressions/string-standalone-template-literal-characters",
+        "json/expressions/string-heredoc-syntax-is-text"
+      ]
     },
     {
       "id": "templates-interpolation-evaluates-expression",
@@ -915,6 +918,17 @@
         "native/templates/heredoc-template-parse-tree",
         "native/templates/if-else-directive-spanning-heredoc-lines",
         "native/templates/for-directive-in-heredoc"
+      ]
+    },
+    {
+      "id": "templates-literal-only-mode",
+      "spec": "spec.md#expression-evaluation",
+      "rule": "In literal-only mode, native syntax templates and other expressions without variables or function calls, such as splats and object constructors with bare keys, are evaluated as usual",
+      "tests": [
+        "native/templates/template-literal-only-mode",
+        "native/splat/splat-literal-only-mode",
+        "native/collections/object-bare-key-literal-only-mode",
+        "native/templates/template-literal-only-mode-decode"
       ]
     }
   ]

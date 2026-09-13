@@ -1,0 +1,18 @@
+{
+  "description": "A string that isn't a valid template is an error during evaluation",
+  "spec": [
+    "json/spec.md#strings"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "Expected the start of an expression, but found the end of the file",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "description": "In literal-only mode, ${ in a string is literal text",
+  "spec": [
+    "json/spec.md#strings",
+    "spec.md#expression-evaluation"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "evaluation_mode": "literal-only",
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x ${y} z"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

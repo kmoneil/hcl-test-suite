@@ -1,0 +1,34 @@
+{
+  "description": "A property the schema requests as an attribute is an attribute, even with an object value",
+  "spec": [
+    "spec.md#body-content",
+    "json/spec.md#attributes"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "b"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "b": {
+          "object": {
+            "x": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

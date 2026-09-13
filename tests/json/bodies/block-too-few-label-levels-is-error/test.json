@@ -1,0 +1,30 @@
+{
+  "description": "A block with fewer label levels than its type has labels is an error",
+  "spec": [
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "labels": [
+          "one",
+          "two"
+        ],
+        "body": {
+          "mode": "dynamic-attributes"
+        }
+      }
+    ]
+  },
+  "reference_error": "Either a JSON object or a JSON array is required, representing the contents of one or more \"b\" blocks",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

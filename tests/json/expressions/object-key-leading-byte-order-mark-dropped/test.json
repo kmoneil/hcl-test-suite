@@ -1,0 +1,32 @@
+{
+  "description": "A U+FEFF at the start of an object expression's property name is dropped",
+  "spec": [
+    "json/spec.md#objects",
+    "hclsyntax/spec.md#template-literals",
+    "hclsyntax/spec.md#source-code-representation"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "status": "disputed",
+  "notes": "The spec says a string is a standalone template, whose literal text can hold any character except the sequences that start interpolations and directives, which keeps U+FEFF ZERO WIDTH NO-BREAK SPACE. The native syntax spec also says byte order marks aren't permitted in source, which read as applying to a template's text would make this an error; neither reading drops the character. hashicorp/hcl parses the string with the native template parser ((*expression).Value in json/structure.go), which removes a leading byte order mark from any source it scans (stripUTF8BOM in hclsyntax/token.go), also for property names, which are templates too.",
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "k": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

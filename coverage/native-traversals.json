@@ -120,13 +120,15 @@
       "id": "traversals-variable-literal-only-mode",
       "spec": "spec.md#expression-evaluation",
       "rule": "In literal-only evaluation mode no variables are available",
-      "untested": "The protocol always evaluates in full expression mode and has no way to request literal-only mode"
+      "tests": [
+        "native/traversals/variable-literal-only-mode-is-error"
+      ]
     },
     {
       "id": "traversals-literal-only-mode-with-scope",
       "spec": "spec.md#expression-evaluation",
       "rule": "Enabling literal-only evaluation mode while also providing a variable scope or a function table is an error",
-      "untested": "The protocol has no command for choosing the evaluation mode, so it can't combine literal-only mode with variables or functions"
+      "untested": "hashicorp/hcl evaluates in literal-only mode by evaluating without an evaluation context, so there is no way to also give it variables or functions, and the runner rejects tests that ask for both"
     },
     {
       "id": "traversals-static-traversal",

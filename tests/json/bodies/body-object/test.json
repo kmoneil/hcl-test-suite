@@ -1,0 +1,36 @@
+{
+  "description": "The properties of a body object define its attributes",
+  "spec": [
+    "json/spec.md#structural-elements",
+    "json/spec.md#attributes"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      },
+      {
+        "name": "b"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        },
+        "b": {
+          "string": "x"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

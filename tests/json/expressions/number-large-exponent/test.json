@@ -1,0 +1,25 @@
+{
+  "description": "A JSON number with an exponent keeps its exact value beyond 64-bit float precision",
+  "spec": [
+    "json/spec.md#numbers",
+    "spec.md#primitive-types"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1234567890123456789012345678900000000000"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

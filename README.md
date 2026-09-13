@@ -7,19 +7,21 @@ HashiCorp configuration language, in the spirit of
 Any HCL implementation, in any language, can run it by providing a small
 adapter program.
 
-**Status:** draft. 2,149 tests of the native syntax, checking 798 rules from
-the spec at hashicorp/hcl v2.24.0. The test and adapter formats may still
-change.
+**Status:** draft. 2,468 tests of the native and JSON syntaxes, checking 900
+rules from the spec at hashicorp/hcl v2.24.0. The test and adapter formats may
+still change.
 
 ## How it works
 
-- **`tests/`** has one directory per test, containing an `input.hcl` file and
+- **`tests/`** has one directory per test, containing an input file
+  (`input.hcl` for the native syntax, `input.hcl.json` for the JSON syntax) and
   a `test.json` file with the expected result
   ([test format](docs/test-format.md)).
 - **`coverage/`** lists every rule the spec states, area by area, and the
   tests that check each one.
 - **Adapters** connect one implementation to the runner. An adapter reads a
-  file and prints JSON ([protocol](docs/protocol.md)). `adapters/` has
+  file, parses, evaluates or decodes it with a schema, and prints JSON
+  ([protocol](docs/protocol.md)). `adapters/` has
   adapters for [hashicorp/hcl](https://github.com/hashicorp/hcl) (Go, the
   reference implementation) and [hcl-rs](https://github.com/martinohmann/hcl-rs)
   (Rust).
@@ -54,8 +56,8 @@ run the tests at all.
 
 1. Write an adapter ([protocol](docs/protocol.md)). You can start with just
    `capabilities` and `parse`. Tests for operations or features you don't
-   support (such as `eval`, typed values, unknown values or functions) are
-   skipped, not failed.
+   support (such as `eval`, `decode`, the JSON syntax, typed values, unknown
+   values or functions) are skipped, not failed.
 2. Run `python3 runner/hcltest.py --adapter "<command that runs your adapter>"`.
 3. If you're unsure how some input should be read, ask the reference
    implementation: `bin/hcl-go-adapter parse file.hcl`.
@@ -66,33 +68,35 @@ run the tests at all.
 | --- | ---: | ---: | ---: |
 | lexical elements | 146 | 64 | 1 |
 | numbers | 59 | 28 | 1 |
-| structure (bodies, attributes, blocks) | 137 | 61 | 9 |
-| collections (tuples, objects) | 151 | 69 | 3 |
+| structure (bodies, attributes, blocks, schemas) | 177 | 67 | 0 |
+| collections (tuples, objects) | 152 | 69 | 3 |
 | strings | 74 | 27 | 0 |
 | heredocs | 104 | 36 | 0 |
-| templates | 300 | 85 | 2 |
-| variables, attribute access, index | 137 | 59 | 3 |
-| splat | 87 | 30 | 0 |
-| function calls | 135 | 39 | 2 |
-| for expressions | 173 | 63 | 0 |
+| templates | 302 | 86 | 1 |
+| variables, attribute access, index | 138 | 59 | 2 |
+| splat | 88 | 30 | 0 |
+| function calls | 136 | 39 | 1 |
+| for expressions | 174 | 64 | 0 |
 | operators | 329 | 104 | 0 |
 | types, conversions, unification | 136 | 80 | 4 |
 | unknown values | 181 | 78 | 0 |
-| **total** | **2,149** | **823** | **25** |
+| JSON grammar | 94 | 29 | 0 |
+| JSON bodies (attributes, blocks, schemas) | 103 | 33 | 0 |
+| JSON expressions | 75 | 20 | 0 |
+| **total** | **2,468** | **913** | **13** |
 
 - Most rules without tests need something the protocol can't express yet:
-  schema-driven body processing, static analysis, literal-only evaluation,
-  standalone templates, conversion to a target type, error positions or
-  capsule values. Two depend on choices the spec leaves to implementations
+  static analysis, conversion to a target type, error positions, capsule
+  values, or literal-only evaluation with variables, which hashicorp/hcl can't
+  express either. Two depend on choices the spec leaves to implementations
   (rounding and the order of set elements), and one is guidance for
   applications. `python3 tools/coverage.py rules` lists them.
-- The tests exercise 75.8% of the statements in hashicorp/hcl's `hclsyntax`
-  package (`python3 tools/coverage.py go`). Most of the rest is static
-  analysis, syntax tree walking and source ranges, which the protocol doesn't
-  reach. The untested parts of function call evaluation are for literal-only
-  mode, capsule types, name suggestions in error messages and functions that
-  report errors for arguments they weren't given.
-- Not covered yet: the JSON syntax, static analysis and the `ext/` packages.
+- The tests exercise 81.2% of the statements in hashicorp/hcl's `hclsyntax`
+  package and 80.3% of its `json` package (`python3 tools/coverage.py go`).
+  Most of the rest is static analysis, syntax tree walking and source ranges,
+  which the protocol doesn't reach yet, and error handling for states that
+  valid use can't produce.
+- Not covered yet: static analysis and the `ext/` packages.
 
 ## How the tests are checked
 
@@ -115,8 +119,8 @@ run the tests at all.
 
 | Implementation | Passed | Failed | Adapter errors | Skipped |
 | --- | ---: | ---: | ---: | ---: |
-| hashicorp/hcl v2.24.0 | 2,149 | 0 | 0 | 0 |
-| hcl-rs 0.19.8 | 1,564 | 203 (74 disputed) | 21 | 361 |
+| hashicorp/hcl v2.24.0 | 2,468 | 0 | 0 | 0 |
+| hcl-rs 0.19.8 | 1,570 | 203 (74 disputed) | 21 | 674 |
 
 ### hcl-rs 0.19.8
 
@@ -140,12 +144,12 @@ The 129 failures on tests that aren't disputed fall into these groups:
   - `<<-` turns CR LF into LF and doesn't remove indentation inside
     directives, and a closing marker inside a directive doesn't end a heredoc.
 - **Not supported (skipped or adapter errors):** list, set and map types,
-  unknown values, infinity, and function parameters of collection or
-  structural types.
+  unknown values, infinity, function parameters of collection or structural
+  types, schema-driven processing (`decode`) and the JSON syntax.
 
 ### Where the spec and hashicorp/hcl disagree
 
-317 tests are disputed. `python3 tools/coverage.py disputes` lists them all by
+344 tests are disputed. `python3 tools/coverage.py disputes` lists them all by
 spec section, with notes. The main themes:
 
 - **Source text:** a byte order mark, identifiers starting with `_`, and some
@@ -177,6 +181,17 @@ spec section, with notes. The main themes:
   `null` keyword like the dynamic value.
 - **Syntax that isn't in the spec:** namespaced function calls like
   `provider::aws::arn()`.
+- **JSON grammar:** a byte order mark and UTF-16 files are errors, which
+  RFC 7159 leaves open, and lone surrogate escapes and invalid UTF-8 in strings
+  become U+FFFD.
+- **JSON bodies:** a null block value defines no blocks, and a null or an array
+  inside a block array defines one block, although the spec only allows
+  objects there. An empty label level is an error, and a schema that asks for
+  `//` gets it.
+- **Schemas:** requesting an optional attribute twice (or in the JSON syntax a
+  required one), or an attribute and a block type with the same name, isn't
+  reported as an error, and dynamic attributes of the body left from a JSON
+  array fail.
 
 ### Suspected bugs in hashicorp/hcl and go-cty
 
@@ -198,10 +213,14 @@ spec section, with notes. The main themes:
   gives the dynamic value while `f(null, d)` is an error.
 - Expanding an unknown list with `...` skips evaluating the other arguments,
   so `f(nope, u...)` reports no error for the undefined `nope`.
+- In the native syntax, dynamic attributes processing of the body left by
+  partial processing fails on blocks that partial processing already took.
+- In a JSON string evaluated as a template, a carriage return not followed by
+  a line feed stops template processing, so `"x\ry${1}"` gives
+  `x\ry${1}`, and a leading U+FEFF is silently removed.
 
 ## Next steps
 
-- The JSON syntax, which needs schemas in the protocol.
 - Static analysis operations (static list, map, call and traversal).
 - The `ext/` packages (`typeexpr`, `dynblock`, `tryfunc`, `userfunc`) as
   optional features.

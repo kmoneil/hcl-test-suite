@@ -1,0 +1,25 @@
+{
+  "description": "A JSON number with more digits than a 64-bit float holds keeps its exact value",
+  "spec": [
+    "json/spec.md#numbers",
+    "spec.md#primitive-types"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "9007199254740993.5"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

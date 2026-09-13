@@ -1,0 +1,29 @@
+{
+  "description": "An attribute the schema for a block body doesn't request is an error",
+  "spec": [
+    "spec.md#schema-driven-processing",
+    "spec.md#partial-processing-of-body-content"
+  ],
+  "op": "decode",
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "y"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "An argument named \"x\" is not expected here",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

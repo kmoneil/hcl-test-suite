@@ -1,0 +1,42 @@
+{
+  "description": "Blocks with as many labels as their header schema names are in the body content",
+  "spec": [
+    "spec.md#schema-driven-processing",
+    "hclsyntax/spec.md#blocks"
+  ],
+  "op": "decode",
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "labels": [
+          "one",
+          "two"
+        ],
+        "body": {
+          "mode": "dynamic-attributes"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [
+            "x",
+            "y"
+          ],
+          "body": {
+            "attributes": {},
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "description": "A null element of a block array defines a block with an empty body",
+  "spec": [
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "status": "disputed",
+  "notes": "The spec says the value that defines blocks is either a JSON object or a JSON array of objects, so a null element of the array isn't allowed. hashicorp/hcl makes a block of each element, and a null body has no properties when it is processed by schema ((*body).unpackBlock and (*body).collectDeepAttrs in json/structure.go).",
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "x"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

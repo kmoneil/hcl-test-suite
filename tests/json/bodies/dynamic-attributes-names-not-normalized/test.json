@@ -1,0 +1,30 @@
+{
+  "description": "Property names differing only in normalization are two dynamic attributes",
+  "spec": [
+    "spec.md#dynamic-attributes-processing",
+    "json/spec.md#attributes"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "status": "disputed",
+  "notes": "The spec says attribute names are unique within a body and that strings are equal when their NFC normalizations are, but doesn't say whether attribute names compare as strings; the native syntax says identifiers aren't normalized. hashicorp/hcl compares property names byte for byte ((*body).JustAttributes in json/structure.go), so the precomposed and decomposed names are two attributes. The input spells them with the precomposed U+00E9 and with an e followed by U+0301 COMBINING ACUTE ACCENT.",
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "café": {
+          "number": "1"
+        },
+        "café": {
+          "number": "2"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "description": "In literal-only mode, a property name defined twice is an error",
+  "spec": [
+    "json/spec.md#objects",
+    "spec.md#expression-evaluation"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "evaluation_mode": "literal-only",
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "Duplicate object attribute",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "description": "An empty array where a label level is expected is an error",
+  "spec": [
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "status": "disputed",
+  "notes": "The spec flattens each label level into a sequence of properties, each naming a label value, so an empty array gives no label values and no blocks. hashicorp/hcl requires at least one property at each label level and reports an error ((*body).unpackBlock in json/structure.go).",
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "labels": [
+          "name"
+        ],
+        "body": {
+          "mode": "dynamic-attributes"
+        }
+      }
+    ]
+  },
+  "reference_error": "Missing block label",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

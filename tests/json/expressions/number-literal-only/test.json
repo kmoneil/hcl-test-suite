@@ -1,0 +1,26 @@
+{
+  "description": "In literal-only mode, a JSON number is still a number",
+  "spec": [
+    "json/spec.md#numbers",
+    "spec.md#expression-evaluation"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "evaluation_mode": "literal-only",
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1.5"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

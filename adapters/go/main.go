@@ -5,6 +5,7 @@
 //	hcl-go-adapter capabilities
 //	hcl-go-adapter parse <file.hcl>
 //	hcl-go-adapter eval <file.hcl> [<context.json>]
+//	hcl-go-adapter decode <file.hcl or file.hcl.json> <context.json>
 //
 // The output formats are described in docs/protocol.md.
 package main
@@ -23,6 +24,7 @@ import (
 
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
+	hcljson "github.com/hashicorp/hcl/v2/json"
 	"github.com/zclconf/go-cty/cty"
 	"github.com/zclconf/go-cty/cty/function"
 	ctyjson "github.com/zclconf/go-cty/cty/json"
@@ -33,7 +35,8 @@ type object = map[string]any
 const usage = `usage:
   hcl-go-adapter capabilities
   hcl-go-adapter parse <file.hcl>
-  hcl-go-adapter eval <file.hcl> [<context.json>]`
+  hcl-go-adapter eval <file.hcl> [<context.json>]
+  hcl-go-adapter decode <file.hcl or file.hcl.json> <context.json>`
 
 // unsupported is panicked when the input contains something the protocol has
 // no representation for yet. run recovers it and reports an adapter error.
@@ -72,6 +75,8 @@ func run(args []string) (out any, err error) {
 		return eval(args[1], "")
 	case len(args) == 3 && args[0] == "eval":
 		return eval(args[1], args[2])
+	case len(args) == 3 && args[0] == "decode":
+		return decode(args[1], args[2])
 	}
 	return nil, errors.New(usage)
 }
@@ -88,13 +93,13 @@ func capabilities() object {
 	return object{
 		"implementation": "hashicorp/hcl",
 		"version":        version,
-		"operations":     []string{"parse", "eval"},
-		"features":       []string{"typed-values", "unknown-values", "functions"},
+		"operations":     []string{"parse", "eval", "decode"},
+		"features":       []string{"typed-values", "unknown-values", "functions", "json-syntax"},
 	}
 }
 
 func parse(path string) (any, error) {
-	src, err := os.ReadFile(path)
+	src, err := readNativeFile(path)
 	if err != nil {
 		return nil, err
 	}
@@ -106,26 +111,251 @@ func parse(path string) (any, error) {
 	return object{"valid": true, "body": c.body(file.Body.(*hclsyntax.Body))}, nil
 }
 
+// readNativeFile reads a file for parse or eval, which only take the native
+// syntax: the JSON syntax can't be read without a schema.
+func readNativeFile(path string) ([]byte, error) {
+	if isJSONSyntax(path) {
+		return nil, errors.New("JSON syntax files can only be decoded with a schema")
+	}
+	return os.ReadFile(path)
+}
+
+func isJSONSyntax(path string) bool {
+	return strings.HasSuffix(path, ".hcl.json")
+}
+
 func eval(path, contextPath string) (any, error) {
-	src, err := os.ReadFile(path)
+	src, err := readNativeFile(path)
 	if err != nil {
 		return nil, err
 	}
-	ctx := &hcl.EvalContext{Variables: map[string]cty.Value{}, Functions: map[string]function.Function{}}
+	settings := evalSettings{ctx: emptyEvalContext()}
 	if contextPath != "" {
-		if err := readContext(contextPath, ctx); err != nil {
+		if settings, err = readContext(contextPath); err != nil {
 			return nil, err
 		}
+	}
+	if settings.schema != nil {
+		return nil, errors.New("eval doesn't take a schema; use decode")
 	}
 	file, diags := hclsyntax.ParseConfig(src, path, hcl.InitialPos)
 	if diags.HasErrors() {
 		return invalid("parse", diags), nil
 	}
-	body, diags := evalBody(file.Body.(*hclsyntax.Body), ctx)
+	body, diags := evalBody(file.Body.(*hclsyntax.Body), settings.ctx)
 	if diags.HasErrors() {
 		return invalid("eval", diags), nil
 	}
 	return object{"valid": true, "body": body}, nil
+}
+
+// decode applies a schema to a file's body, then evaluates the attributes the
+// schema selected. It applies the whole schema, including to nested blocks,
+// before evaluating anything, so that schema errors are reported as such.
+func decode(path, contextPath string) (any, error) {
+	src, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+	settings, err := readContext(contextPath)
+	if err != nil {
+		return nil, err
+	}
+	if settings.schema == nil {
+		return nil, errors.New("decode needs a schema")
+	}
+	schema, err := newBodySchema(settings.schema)
+	if err != nil {
+		return nil, fmt.Errorf("%s: schema: %w", contextPath, err)
+	}
+	var file *hcl.File
+	var diags hcl.Diagnostics
+	if isJSONSyntax(path) {
+		file, diags = hcljson.Parse(src, path)
+	} else {
+		file, diags = hclsyntax.ParseConfig(src, path, hcl.InitialPos)
+	}
+	if diags.HasErrors() {
+		return invalid("parse", diags), nil
+	}
+	content, diags := applySchema(file.Body, schema)
+	if diags.HasErrors() {
+		return invalid("schema", diags), nil
+	}
+	body, diags := evalContent(content, settings.ctx)
+	if diags.HasErrors() {
+		return invalid("eval", diags), nil
+	}
+	return object{"valid": true, "body": body}, nil
+}
+
+// The schema format of the context file.
+type bodySchemaDecl struct {
+	Mode       string            `json:"mode"`
+	Attributes []json.RawMessage `json:"attributes"`
+	Blocks     []json.RawMessage `json:"blocks"`
+	Remain     json.RawMessage   `json:"remain"`
+}
+
+type attributeSchemaDecl struct {
+	Name     *string `json:"name"`
+	Required bool    `json:"required"`
+}
+
+type blockSchemaDecl struct {
+	Type   *string         `json:"type"`
+	Labels []*string       `json:"labels"`
+	Body   json.RawMessage `json:"body"`
+}
+
+// bodySchema says how to process a body: with hashicorp/hcl's Content,
+// PartialContent or JustAttributes, and how to process the bodies that
+// produces.
+type bodySchema struct {
+	mode   string
+	schema *hcl.BodySchema
+	blocks map[string]*bodySchema // by block type
+	remain *bodySchema            // for the body PartialContent leaves, if any
+}
+
+func newBodySchema(data json.RawMessage) (*bodySchema, error) {
+	var decl bodySchemaDecl
+	if err := unmarshalObject(data, &decl); err != nil {
+		return nil, err
+	}
+	s := &bodySchema{mode: decl.Mode, schema: &hcl.BodySchema{}, blocks: map[string]*bodySchema{}}
+	switch decl.Mode {
+	case "exhaustive", "partial":
+	case "dynamic-attributes":
+		if decl.Attributes != nil || decl.Blocks != nil || decl.Remain != nil {
+			return nil, errors.New("dynamic-attributes mode takes no attributes, blocks or remain")
+		}
+		return s, nil
+	default:
+		return nil, fmt.Errorf("unknown mode %q", decl.Mode)
+	}
+	for _, raw := range decl.Attributes {
+		var attr attributeSchemaDecl
+		if err := unmarshalObject(raw, &attr); err != nil {
+			return nil, fmt.Errorf("attribute: %w", err)
+		}
+		if attr.Name == nil {
+			return nil, errors.New(`attribute without a "name"`)
+		}
+		s.schema.Attributes = append(s.schema.Attributes, hcl.AttributeSchema{Name: *attr.Name, Required: attr.Required})
+	}
+	for _, raw := range decl.Blocks {
+		var block blockSchemaDecl
+		if err := unmarshalObject(raw, &block); err != nil {
+			return nil, fmt.Errorf("block: %w", err)
+		}
+		switch {
+		case block.Type == nil:
+			return nil, errors.New(`block without a "type"`)
+		case block.Body == nil:
+			return nil, fmt.Errorf("block %q: missing body", *block.Type)
+		}
+		if _, exists := s.blocks[*block.Type]; exists {
+			return nil, fmt.Errorf("block type %q is in the schema twice", *block.Type)
+		}
+		body, err := newBodySchema(block.Body)
+		if err != nil {
+			return nil, fmt.Errorf("block %q: %w", *block.Type, err)
+		}
+		labels := make([]string, len(block.Labels))
+		for i, label := range block.Labels {
+			if label == nil {
+				return nil, fmt.Errorf("block %q: a label name is null", *block.Type)
+			}
+			labels[i] = *label
+		}
+		s.schema.Blocks = append(s.schema.Blocks, hcl.BlockHeaderSchema{Type: *block.Type, LabelNames: labels})
+		s.blocks[*block.Type] = body
+	}
+	if decl.Remain != nil {
+		if decl.Mode != "partial" {
+			return nil, errors.New("only partial mode has a remain schema")
+		}
+		remain, err := newBodySchema(decl.Remain)
+		if err != nil {
+			return nil, fmt.Errorf("remain: %w", err)
+		}
+		s.remain = remain
+	}
+	return s, nil
+}
+
+// decodedBody is the result of applying a bodySchema to a body.
+type decodedBody struct {
+	attributes hcl.Attributes
+	blocks     []decodedBlock
+	remain     *decodedBody
+}
+
+type decodedBlock struct {
+	block *hcl.Block
+	body  *decodedBody
+}
+
+func applySchema(body hcl.Body, s *bodySchema) (*decodedBody, hcl.Diagnostics) {
+	out := &decodedBody{}
+	var content *hcl.BodyContent
+	var diags hcl.Diagnostics
+	switch s.mode {
+	case "dynamic-attributes":
+		out.attributes, diags = body.JustAttributes()
+		return out, diags
+	case "exhaustive":
+		content, diags = body.Content(s.schema)
+	case "partial":
+		var remain hcl.Body
+		content, remain, diags = body.PartialContent(s.schema)
+		if s.remain != nil {
+			var remainDiags hcl.Diagnostics
+			out.remain, remainDiags = applySchema(remain, s.remain)
+			diags = append(diags, remainDiags...)
+		}
+	}
+	out.attributes = content.Attributes
+	for _, block := range content.Blocks {
+		inner, blockDiags := applySchema(block.Body, s.blocks[block.Type])
+		diags = append(diags, blockDiags...)
+		out.blocks = append(out.blocks, decodedBlock{block: block, body: inner})
+	}
+	return out, diags
+}
+
+func evalContent(d *decodedBody, ctx *hcl.EvalContext) (object, hcl.Diagnostics) {
+	var diags hcl.Diagnostics
+	names := make([]string, 0, len(d.attributes))
+	for name := range d.attributes {
+		names = append(names, name)
+	}
+	sort.Strings(names) // keeps the order of reported errors stable
+
+	attrs := object{}
+	for _, name := range names {
+		val, valDiags := d.attributes[name].Expr.Value(ctx)
+		diags = append(diags, valDiags...)
+		attrs[name] = encodeValue(val)
+	}
+	blocks := []any{}
+	for _, b := range d.blocks {
+		inner, blockDiags := evalContent(b.body, ctx)
+		diags = append(diags, blockDiags...)
+		labels := b.block.Labels
+		if labels == nil {
+			labels = []string{}
+		}
+		blocks = append(blocks, object{"type": b.block.Type, "labels": labels, "body": inner})
+	}
+	out := object{"attributes": attrs, "blocks": blocks}
+	if d.remain != nil {
+		remain, remainDiags := evalContent(d.remain, ctx)
+		diags = append(diags, remainDiags...)
+		out["remain"] = remain
+	}
+	return out, diags
 }
 
 func evalBody(body *hclsyntax.Body, ctx *hcl.EvalContext) (object, hcl.Diagnostics) {
@@ -444,12 +674,24 @@ func typeJSON(ty cty.Type) json.RawMessage {
 	return raw
 }
 
-// The context file given to eval. Its declarations are decoded one level at a
+// The context file given to eval and decode. Its declarations are decoded one level at a
 // time with unmarshalObject, and its values with decodeValue, so that every
 // level is checked strictly.
 type evalContext struct {
-	Variables map[string]json.RawMessage `json:"variables"`
-	Functions map[string]json.RawMessage `json:"functions"`
+	Variables      map[string]json.RawMessage `json:"variables"`
+	Functions      map[string]json.RawMessage `json:"functions"`
+	Schema         json.RawMessage            `json:"schema"`
+	EvaluationMode *string                    `json:"evaluation_mode"`
+}
+
+// evalSettings is what a context file sets up.
+type evalSettings struct {
+	ctx    *hcl.EvalContext // nil in literal-only mode, as hashicorp/hcl expects
+	schema json.RawMessage
+}
+
+func emptyEvalContext() *hcl.EvalContext {
+	return &hcl.EvalContext{Variables: map[string]cty.Value{}, Functions: map[string]function.Function{}}
 }
 
 type functionDecl struct {
@@ -499,26 +741,37 @@ func unmarshalObject(data []byte, v any) error {
 	return json.Unmarshal(data, v)
 }
 
-func readContext(path string, ctx *hcl.EvalContext) error {
+func readContext(path string) (evalSettings, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
-		return err
+		return evalSettings{}, err
 	}
 	var decl evalContext
 	if err := unmarshalObject(data, &decl); err != nil {
-		return fmt.Errorf("%s: %w", path, err)
+		return evalSettings{}, fmt.Errorf("%s: %w", path, err)
 	}
+	settings := evalSettings{ctx: emptyEvalContext(), schema: decl.Schema}
 	for name, raw := range decl.Variables {
-		if ctx.Variables[name], err = decodeValue(raw); err != nil {
-			return fmt.Errorf("%s: variable %q: %w", path, name, err)
+		if settings.ctx.Variables[name], err = decodeValue(raw); err != nil {
+			return evalSettings{}, fmt.Errorf("%s: variable %q: %w", path, name, err)
 		}
 	}
 	for name, raw := range decl.Functions {
-		if ctx.Functions[name], err = newFunction(raw); err != nil {
-			return fmt.Errorf("%s: function %q: %w", path, name, err)
+		if settings.ctx.Functions[name], err = newFunction(raw); err != nil {
+			return evalSettings{}, fmt.Errorf("%s: function %q: %w", path, name, err)
 		}
 	}
-	return nil
+	switch {
+	case decl.EvaluationMode == nil:
+	case *decl.EvaluationMode == "literal-only":
+		if decl.Variables != nil || decl.Functions != nil {
+			return evalSettings{}, fmt.Errorf("%s: literal-only mode has no variables or functions", path)
+		}
+		settings.ctx = nil
+	default:
+		return evalSettings{}, fmt.Errorf("%s: the only evaluation mode is %q, not %q", path, "literal-only", *decl.EvaluationMode)
+	}
+	return settings, nil
 }
 
 // newFunction builds a go-cty function from a declaration. Its Type and Impl

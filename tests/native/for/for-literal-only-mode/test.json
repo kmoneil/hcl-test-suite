@@ -1,0 +1,25 @@
+{
+  "description": "A for expression can use its own variables in literal-only mode",
+  "spec": [
+    "spec.md#expression-evaluation",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "notes": "spec.md says that for syntaxes with their own expression syntax, literal-only mode may be considered equivalent to full expression mode without variables or functions, and the native syntax spec defines nothing else for it.",
+  "evaluation_mode": "literal-only",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "0x"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

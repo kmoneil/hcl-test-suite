@@ -1,0 +1,25 @@
+{
+  "description": "An empty JSON object is an object value with no attributes",
+  "spec": [
+    "json/spec.md#objects",
+    "json/spec.md#hcl-json-syntax-specification"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {}
+        }
+      },
+      "blocks": []
+    }
+  }
+}

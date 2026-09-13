@@ -1,0 +1,25 @@
+{
+  "description": "A property name defined twice is an error even when another property name is unknown",
+  "spec": [
+    "json/spec.md#objects",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "decode",
+  "features": [
+    "unknown-values",
+    "json-syntax"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "dynamic"
+    }
+  },
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "Duplicate object attribute",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

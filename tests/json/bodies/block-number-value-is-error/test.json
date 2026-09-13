@@ -1,0 +1,26 @@
+{
+  "description": "A block type's property whose value is a number is an error",
+  "spec": [
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "dynamic-attributes"
+        }
+      }
+    ]
+  },
+  "reference_error": "Either a JSON object or a JSON array is required, representing the contents of one or more \"b\" blocks",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

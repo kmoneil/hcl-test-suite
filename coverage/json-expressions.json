@@ -1,0 +1,218 @@
+{
+  "area": "json/expressions",
+  "rules": [
+    {
+      "id": "expressions-object",
+      "spec": "json/spec.md#objects",
+      "rule": "A JSON object is an object value with an attribute for each property, whose value is the property value's expression, recursively, including unknown values",
+      "tests": [
+        "json/expressions/object-value",
+        "json/expressions/object-nested-values",
+        "json/expressions/object-empty",
+        "json/expressions/object-unknown-property-value"
+      ]
+    },
+    {
+      "id": "expressions-object-comment-property",
+      "spec": "json/spec.md#structural-elements",
+      "rule": "A property named // in an object that is an expression is an ordinary attribute, not a comment",
+      "tests": [
+        "json/expressions/object-comment-property"
+      ]
+    },
+    {
+      "id": "expressions-object-key-templates",
+      "spec": "json/spec.md#objects",
+      "rule": "In full expression mode, each property name is a template, and its result converted to string is the attribute name",
+      "tests": [
+        "json/expressions/object-key-interpolation",
+        "json/expressions/object-key-template-text",
+        "json/expressions/object-key-variable",
+        "json/expressions/object-key-number-converted",
+        "json/expressions/object-key-bool-converted"
+      ]
+    },
+    {
+      "id": "expressions-object-key-errors",
+      "spec": "json/spec.md#objects",
+      "rule": "A property name that isn't a valid template, or whose template gives null or a value that can't convert to string such as a tuple, is an error",
+      "tests": [
+        "json/expressions/object-key-null-is-error",
+        "json/expressions/object-key-tuple-is-error",
+        "json/expressions/object-key-invalid-template-is-error",
+        "json/expressions/object-key-unknown-tuple-is-error"
+      ]
+    },
+    {
+      "id": "expressions-object-key-unknown",
+      "spec": "json/spec.md#objects",
+      "rule": "A property name template giving an unknown value that can be a string, or the dynamic value, makes the whole object the dynamic value",
+      "tests": [
+        "json/expressions/object-key-unknown",
+        "json/expressions/object-key-unknown-among-known",
+        "json/expressions/object-key-dynamic-value",
+        "json/expressions/object-key-unknown-number"
+      ]
+    },
+    {
+      "id": "expressions-object-duplicate-names",
+      "spec": "json/spec.md#objects",
+      "rule": "A property name defined twice in one object expression is an error, even when another name is unknown, and in full expression mode so are two names that evaluate to strings equal under NFC",
+      "tests": [
+        "json/expressions/object-duplicate-property-is-error",
+        "json/expressions/object-duplicate-after-evaluation-is-error",
+        "json/expressions/object-duplicate-after-conversion-is-error",
+        "json/expressions/object-duplicate-under-nfc-is-error",
+        "json/expressions/object-duplicate-with-unknown-key-is-error",
+        "json/expressions/object-duplicate-literal-only-is-error"
+      ]
+    },
+    {
+      "id": "expressions-object-literal-only-names",
+      "spec": "json/spec.md#objects",
+      "rule": "In literal-only mode, property names are the attribute names exactly as written, without template processing",
+      "tests": [
+        "json/expressions/object-key-literal-only"
+      ]
+    },
+    {
+      "id": "expressions-array",
+      "spec": "json/spec.md#arrays",
+      "rule": "A JSON array is a tuple value with an element for each array element, in order, each keeping the type of its own expression",
+      "tests": [
+        "json/expressions/array-tuple",
+        "json/expressions/array-nested",
+        "json/expressions/array-empty",
+        "json/expressions/array-unknown-element"
+      ]
+    },
+    {
+      "id": "expressions-numbers",
+      "spec": "json/spec.md#numbers",
+      "rule": "A JSON number is the number value it spells, exactly, including integers beyond 64 bits, exponents and fractions",
+      "tests": [
+        "json/expressions/number-integer",
+        "json/expressions/number-negative-fraction",
+        "json/expressions/number-exponent",
+        "json/expressions/number-negative-exponent",
+        "json/expressions/number-large-integer",
+        "json/expressions/number-large-exponent",
+        "json/expressions/number-precise-fraction",
+        "json/expressions/number-literal-only"
+      ]
+    },
+    {
+      "id": "expressions-number-overflow",
+      "spec": "json/spec.md#numbers",
+      "rule": "A JSON number too large for hashicorp/hcl's exponent range, with an exponent below 2^31, becomes infinity instead of an error (disputed)",
+      "tests": [
+        "json/expressions/number-exponent-overflow"
+      ]
+    },
+    {
+      "id": "expressions-booleans",
+      "spec": "json/spec.md#boolean-values",
+      "rule": "The JSON values true and false are the bool values true and false",
+      "tests": [
+        "json/expressions/bool-values"
+      ]
+    },
+    {
+      "id": "expressions-null",
+      "spec": "json/spec.md#the-null-value",
+      "rule": "The JSON value null is a null of the dynamic pseudo-type",
+      "tests": [
+        "json/expressions/null-value"
+      ]
+    },
+    {
+      "id": "expressions-string-literal-only",
+      "spec": "json/spec.md#strings",
+      "rule": "In literal-only mode a string is its exact text: ${ and %{ sequences aren't processed, and $${ and %%{ aren't escapes",
+      "tests": [
+        "json/expressions/string-literal-only-interpolation",
+        "json/expressions/string-literal-only-directive",
+        "json/expressions/string-literal-only-escapes",
+        "json/expressions/string-literal-only-invalid-template",
+        "json/expressions/string-literal-only-nested"
+      ]
+    },
+    {
+      "id": "expressions-string-template",
+      "spec": "json/spec.md#strings",
+      "rule": "In full expression mode a string is a native syntax standalone template, evaluated with the variables and functions",
+      "tests": [
+        "json/expressions/string-plain-text",
+        "json/expressions/string-empty",
+        "json/expressions/string-interpolation-with-text",
+        "json/expressions/string-variable",
+        "json/expressions/string-function-call",
+        "json/expressions/string-if-directive",
+        "json/expressions/string-for-directive",
+        "json/expressions/string-strip-markers",
+        "json/expressions/string-unknown-interpolation",
+        "json/expressions/string-in-nested-values"
+      ]
+    },
+    {
+      "id": "expressions-string-unwrapping",
+      "spec": "json/spec.md#strings",
+      "rule": "A string that is a single interpolation gives the interpolated value itself, keeping its type, while any other text around it gives a string",
+      "tests": [
+        "json/expressions/string-unwrapping-number",
+        "json/expressions/string-unwrapping-tuple",
+        "json/expressions/string-unwrapping-null",
+        "json/expressions/string-unwrapping-not-with-space",
+        "json/expressions/string-unwrapping-large-number"
+      ]
+    },
+    {
+      "id": "expressions-string-template-escapes",
+      "spec": "json/spec.md#strings",
+      "rule": "In full expression mode, $${ and %%{ in a string give literal ${ and %{",
+      "tests": [
+        "json/expressions/string-template-escapes"
+      ]
+    },
+    {
+      "id": "expressions-string-carriage-return",
+      "spec": "json/spec.md#strings",
+      "rule": "A carriage return not followed by a line feed ends template processing, so the rest of the string is literal text (disputed)",
+      "tests": [
+        "json/expressions/string-lone-carriage-return-ends-template"
+      ]
+    },
+    {
+      "id": "expressions-string-leading-byte-order-mark",
+      "spec": "json/spec.md#strings",
+      "rule": "A U+FEFF at the start of a string evaluated as a template is dropped, in values and in property names (disputed)",
+      "tests": [
+        "json/expressions/string-leading-byte-order-mark-dropped",
+        "json/expressions/object-key-leading-byte-order-mark-dropped",
+        "json/expressions/string-leading-byte-order-mark-unwrapped"
+      ]
+    },
+    {
+      "id": "expressions-string-json-escapes-first",
+      "spec": "json/spec.md#strings",
+      "rule": "JSON escapes are decoded before the template is read, so an escaped dollar sign, quote or backslash takes part in template syntax, including the escapes of native quoted strings",
+      "tests": [
+        "json/expressions/string-escaped-dollar-starts-interpolation",
+        "json/expressions/string-escaped-quote-in-interpolation",
+        "json/expressions/string-escaped-newline-in-template",
+        "json/expressions/string-nested-quoted-string-escapes"
+      ]
+    },
+    {
+      "id": "expressions-string-template-errors",
+      "spec": "json/spec.md#strings",
+      "rule": "A string that isn't a valid template, or whose template fails, is an error when the string is evaluated, not when the file is parsed",
+      "tests": [
+        "json/expressions/string-invalid-template-is-error",
+        "json/expressions/string-unclosed-directive-is-error",
+        "json/expressions/string-undefined-variable-is-error",
+        "json/expressions/string-invalid-template-unselected-attribute"
+      ]
+    }
+  ]
+}

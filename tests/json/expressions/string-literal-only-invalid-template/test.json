@@ -1,0 +1,26 @@
+{
+  "description": "In literal-only mode, a string that isn't a valid template is still its text",
+  "spec": [
+    "json/spec.md#strings",
+    "spec.md#expression-evaluation"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "evaluation_mode": "literal-only",
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "${"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

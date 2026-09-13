@@ -1,0 +1,29 @@
+{
+  "description": "A property named // in an object expression is an attribute",
+  "spec": [
+    "json/spec.md#structural-elements",
+    "json/spec.md#objects"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "//": {
+              "string": "note"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "description": "Object property values are expressions, including nested objects and arrays",
+  "spec": [
+    "json/spec.md#objects"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "b": {
+              "object": {
+                "c": {
+                  "tuple": [
+                    {
+                      "bool": true
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

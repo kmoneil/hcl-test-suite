@@ -1,0 +1,25 @@
+{
+  "description": "An empty JSON array is an empty tuple",
+  "spec": [
+    "json/spec.md#arrays",
+    "json/spec.md#hcl-json-syntax-specification"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": []
+        }
+      },
+      "blocks": []
+    }
+  }
+}

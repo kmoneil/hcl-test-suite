@@ -1,0 +1,24 @@
+{
+  "description": "A required attribute that the body doesn't define is an error",
+  "spec": [
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "required": true
+      },
+      {
+        "name": "b"
+      }
+    ]
+  },
+  "reference_error": "The argument \"a\" is required",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "description": "A required attribute missing from an empty body array is an error",
+  "spec": [
+    "spec.md#schema-driven-processing",
+    "json/spec.md#structural-elements"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "required": true
+      }
+    ]
+  },
+  "reference_error": "The argument \"a\" is required",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

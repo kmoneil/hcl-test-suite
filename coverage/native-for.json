@@ -655,6 +655,14 @@
       "tests": [
         "native/for/same-name-key-and-value-refers-to-value"
       ]
+    },
+    {
+      "id": "for-literal-only-mode",
+      "spec": "spec.md#expression-evaluation",
+      "rule": "In literal-only mode, a for expression can still use the variables it defines",
+      "tests": [
+        "native/for/for-literal-only-mode"
+      ]
     }
   ]
 }

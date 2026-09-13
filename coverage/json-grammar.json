@@ -1,0 +1,304 @@
+{
+  "area": "json/grammar",
+  "rules": [
+    {
+      "id": "grammar-root-object-or-array",
+      "spec": "json/spec.md#structural-elements",
+      "rule": "A file's root value is its body, so it must be an object or an array; a string, number, boolean or null root is an error",
+      "tests": [
+        "json/grammar/root-object",
+        "json/grammar/root-array-of-objects",
+        "json/grammar/root-string-is-error",
+        "json/grammar/root-number-is-error",
+        "json/grammar/root-boolean-is-error",
+        "json/grammar/root-null-is-error"
+      ]
+    },
+    {
+      "id": "grammar-one-value",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "A file holds exactly one value: an empty file, one holding only whitespace, or one with anything but whitespace after its value is an error",
+      "tests": [
+        "json/grammar/empty-file-is-error",
+        "json/grammar/whitespace-only-file-is-error",
+        "json/grammar/two-root-values-is-error",
+        "json/grammar/comma-after-root-value-is-error"
+      ]
+    },
+    {
+      "id": "grammar-whitespace",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "Spaces, tabs, line feeds and carriage returns can appear before and after any token but not inside one, and other characters such as form feed, vertical tab, no-break space and line separator aren't whitespace",
+      "tests": [
+        "json/grammar/whitespace-around-tokens",
+        "json/grammar/no-whitespace-between-tokens",
+        "json/grammar/space-inside-number-is-error",
+        "json/grammar/form-feed-is-error",
+        "json/grammar/vertical-tab-is-error",
+        "json/grammar/no-break-space-is-error",
+        "json/grammar/line-separator-is-error"
+      ]
+    },
+    {
+      "id": "grammar-no-comments",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "JSON has no comments, so //, /* */ and # comments are errors",
+      "tests": [
+        "json/grammar/line-comment-is-error",
+        "json/grammar/block-comment-is-error",
+        "json/grammar/hash-comment-is-error"
+      ]
+    },
+    {
+      "id": "grammar-literal-names",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "The literal names true, false and null are written in lowercase; any other capitalization or unknown name is an error",
+      "tests": [
+        "json/grammar/literal-names",
+        "json/grammar/capitalized-true-is-error",
+        "json/grammar/uppercase-null-is-error",
+        "json/grammar/uppercase-false-is-error",
+        "json/grammar/misspelled-null-is-error",
+        "json/grammar/unquoted-word-value-is-error"
+      ]
+    },
+    {
+      "id": "grammar-no-javascript-values",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "The JavaScript values undefined, NaN, Infinity and -Infinity are not JSON values",
+      "tests": [
+        "json/grammar/undefined-is-error",
+        "json/grammar/nan-is-error",
+        "json/grammar/infinity-is-error",
+        "json/grammar/negative-infinity-is-error"
+      ]
+    },
+    {
+      "id": "grammar-object-syntax",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "An object is a pair of braces around zero or more members separated by commas, each a string name, a colon and a value",
+      "tests": [
+        "json/grammar/object-members",
+        "json/expressions/object-empty"
+      ]
+    },
+    {
+      "id": "grammar-object-names-are-strings",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "An object member's name must be a double-quoted string: an unquoted name, a single-quoted name or a number is an error",
+      "tests": [
+        "json/grammar/unquoted-member-name-is-error",
+        "json/grammar/single-quoted-member-name-is-error",
+        "json/grammar/number-member-name-is-error"
+      ]
+    },
+    {
+      "id": "grammar-object-colon",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "A colon separates each member's name from its value: a missing colon or an equals sign is an error",
+      "tests": [
+        "json/grammar/member-without-colon-is-error",
+        "json/grammar/member-with-equals-sign-is-error"
+      ]
+    },
+    {
+      "id": "grammar-object-member-value",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "Every member has a value after its colon",
+      "tests": [
+        "json/grammar/member-without-value-at-end-is-error",
+        "json/grammar/member-without-value-before-comma-is-error",
+        "json/grammar/member-name-without-colon-or-value-is-error"
+      ]
+    },
+    {
+      "id": "grammar-object-commas",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "Object members are separated by single commas: a missing comma, a trailing comma, a leading comma or two commas are errors",
+      "tests": [
+        "json/grammar/object-members-without-comma-is-error",
+        "json/grammar/object-trailing-comma-is-error",
+        "json/grammar/object-leading-comma-is-error",
+        "json/grammar/object-double-comma-is-error"
+      ]
+    },
+    {
+      "id": "grammar-object-closed",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "An object must be closed by a brace: a missing brace or a bracket is an error",
+      "tests": [
+        "json/grammar/unclosed-object-is-error",
+        "json/grammar/object-closed-by-bracket-is-error"
+      ]
+    },
+    {
+      "id": "grammar-array-syntax",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "An array is a pair of brackets around zero or more values separated by commas",
+      "tests": [
+        "json/grammar/array-values",
+        "json/expressions/array-empty"
+      ]
+    },
+    {
+      "id": "grammar-array-commas",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "Array values are separated by single commas: a missing comma, a trailing comma, a leading comma, two commas or a colon are errors",
+      "tests": [
+        "json/grammar/array-values-without-comma-is-error",
+        "json/grammar/array-trailing-comma-is-error",
+        "json/grammar/array-leading-comma-is-error",
+        "json/grammar/array-double-comma-is-error",
+        "json/grammar/array-colon-is-error"
+      ]
+    },
+    {
+      "id": "grammar-array-closed",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "An array must be closed by a bracket: a missing bracket or a brace is an error",
+      "tests": [
+        "json/grammar/unclosed-array-is-error",
+        "json/grammar/array-closed-by-brace-is-error"
+      ]
+    },
+    {
+      "id": "grammar-number-syntax",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "A number is an optional minus sign, an integer part without leading zeros, an optional fraction and an optional exponent whose e may be uppercase and may have a sign",
+      "tests": [
+        "json/grammar/number-forms",
+        "json/grammar/number-exponent-with-leading-zeros"
+      ]
+    },
+    {
+      "id": "grammar-number-invalid-forms",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "Other number spellings are errors: a plus sign, leading zeros, a decimal point without digits on both sides, an exponent without digits, a lone minus, two minus signs, hexadecimal and digit separators",
+      "tests": [
+        "json/grammar/number-plus-sign-is-error",
+        "json/grammar/number-leading-zero-is-error",
+        "json/grammar/number-negative-leading-zero-is-error",
+        "json/grammar/number-leading-point-is-error",
+        "json/grammar/number-trailing-point-is-error",
+        "json/grammar/number-exponent-without-digits-is-error",
+        "json/grammar/number-signed-exponent-without-digits-is-error",
+        "json/grammar/number-lone-minus-is-error",
+        "json/grammar/number-double-minus-is-error",
+        "json/grammar/number-two-points-is-error",
+        "json/grammar/number-hexadecimal-is-error",
+        "json/grammar/number-digit-separator-is-error"
+      ]
+    },
+    {
+      "id": "grammar-string-quotes",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "A string is enclosed in double quotes: single quotes are an error, and so is a string without a closing quote",
+      "tests": [
+        "json/grammar/single-quoted-string-is-error",
+        "json/grammar/unterminated-string-is-error"
+      ]
+    },
+    {
+      "id": "grammar-string-escapes",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "The escapes \\\" \\\\ \\/ \\b \\f \\n \\r \\t stand for a quote, backslash, slash, backspace, form feed, line feed, carriage return and tab, also at the end of a string",
+      "tests": [
+        "json/grammar/string-escapes",
+        "json/grammar/string-ending-with-escaped-backslash"
+      ]
+    },
+    {
+      "id": "grammar-string-unicode-escapes",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "A \\u escape with four hexadecimal digits of either case stands for that code point, including U+0000",
+      "tests": [
+        "json/grammar/string-unicode-escapes",
+        "json/grammar/string-unicode-escape-nul"
+      ]
+    },
+    {
+      "id": "grammar-string-surrogate-pairs",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "Two \\u escapes forming a surrogate pair stand for the one character outside the Basic Multilingual Plane that they encode",
+      "tests": [
+        "json/grammar/string-surrogate-pair-escape"
+      ]
+    },
+    {
+      "id": "grammar-string-lone-surrogate",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "A \\u escape of a lone high or low surrogate stands for U+FFFD REPLACEMENT CHARACTER (disputed)",
+      "tests": [
+        "json/grammar/string-lone-high-surrogate-escape",
+        "json/grammar/string-lone-low-surrogate-escape"
+      ]
+    },
+    {
+      "id": "grammar-string-invalid-escapes",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "Any other backslash sequence is an error: an unknown escape letter, \\x, \\U, \\', \\0, a backslash before a space, or \\u without four hexadecimal digits",
+      "tests": [
+        "json/grammar/string-escape-letter-a-is-error",
+        "json/grammar/string-escape-hex-byte-is-error",
+        "json/grammar/string-escape-long-unicode-is-error",
+        "json/grammar/string-escape-single-quote-is-error",
+        "json/grammar/string-escape-zero-is-error",
+        "json/grammar/string-escape-space-is-error",
+        "json/grammar/string-escape-short-unicode-is-error",
+        "json/grammar/string-escape-non-hex-unicode-is-error"
+      ]
+    },
+    {
+      "id": "grammar-string-control-characters",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "The control characters U+0000 to U+001F can't appear unescaped in a string, so a literal tab, line feed, carriage return or NUL is an error",
+      "tests": [
+        "json/grammar/string-literal-tab-is-error",
+        "json/grammar/string-literal-line-feed-is-error",
+        "json/grammar/string-literal-carriage-return-is-error",
+        "json/grammar/string-literal-nul-is-error",
+        "json/grammar/string-literal-unit-separator-is-error"
+      ]
+    },
+    {
+      "id": "grammar-string-literal-characters",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "Every other character can appear unescaped in a string, including DEL, non-ASCII characters and characters outside the Basic Multilingual Plane",
+      "tests": [
+        "json/grammar/string-literal-characters"
+      ]
+    },
+    {
+      "id": "grammar-invalid-utf8-in-string",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "Bytes that aren't valid UTF-8 inside a string each stand for U+FFFD REPLACEMENT CHARACTER (disputed)",
+      "tests": [
+        "json/grammar/string-invalid-utf8"
+      ]
+    },
+    {
+      "id": "grammar-invalid-utf8-outside-strings",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "Bytes that aren't valid UTF-8 outside a string are an error",
+      "tests": [
+        "json/grammar/invalid-utf8-outside-string-is-error"
+      ]
+    },
+    {
+      "id": "grammar-byte-order-mark",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "A UTF-8 byte order mark at the start of a file is an error (disputed)",
+      "tests": [
+        "json/grammar/byte-order-mark-is-error"
+      ]
+    },
+    {
+      "id": "grammar-utf16",
+      "spec": "json/spec.md#hcl-json-syntax-specification",
+      "rule": "A file encoded in UTF-16 is an error (disputed)",
+      "tests": [
+        "json/grammar/utf16-file-is-error"
+      ]
+    }
+  ]
+}

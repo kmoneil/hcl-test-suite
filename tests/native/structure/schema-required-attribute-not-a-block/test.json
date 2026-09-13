@@ -1,0 +1,22 @@
+{
+  "description": "A block doesn't define a required attribute of the same name",
+  "spec": [
+    "spec.md#schema-driven-processing",
+    "hclsyntax/spec.md#bodies"
+  ],
+  "op": "decode",
+  "schema": {
+    "mode": "partial",
+    "attributes": [
+      {
+        "name": "a",
+        "required": true
+      }
+    ]
+  },
+  "reference_error": "The argument \"a\" is required",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

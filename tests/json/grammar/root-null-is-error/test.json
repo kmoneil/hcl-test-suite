@@ -1,0 +1,18 @@
+{
+  "description": "A file whose root value is null is an error",
+  "spec": [
+    "json/spec.md#structural-elements"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "Root value must be object",
+  "expect": {
+    "valid": false,
+    "phase": "parse"
+  }
+}

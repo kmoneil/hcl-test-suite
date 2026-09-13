@@ -1,0 +1,27 @@
+{
+  "description": "A JSON number too large for hashicorp/hcl's exponent range becomes infinity",
+  "spec": [
+    "json/spec.md#numbers",
+    "spec.md#primitive-types"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "status": "disputed",
+  "notes": "The spec says a JSON number is translated exactly within the constraints of the information model, which requires an error when an integer can't be represented precisely or a number overflows. hashicorp/hcl parses numbers with go-cty's ParseNumberVal (parseNumber in json/parser.go), and Go's big.Float overflows to infinity while scaling by the exponent (Float.setExpAndRound in math/big); exponents from 2^31 on are rejected instead, as the native syntax's numbers tests show.",
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "Infinity"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

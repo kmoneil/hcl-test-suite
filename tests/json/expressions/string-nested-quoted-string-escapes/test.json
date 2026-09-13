@@ -1,0 +1,25 @@
+{
+  "description": "A native quoted string inside an interpolation processes its own escapes",
+  "spec": [
+    "json/spec.md#strings",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x\ny"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -407,7 +407,9 @@
       "id": "functions-literal-only-mode",
       "spec": "spec.md#expression-evaluation",
       "rule": "In literal-only evaluation mode no functions are available",
-      "untested": "The protocol always evaluates in full expression mode and has no way to request literal-only mode"
+      "tests": [
+        "native/functions/call-literal-only-mode-is-error"
+      ]
     },
     {
       "id": "functions-static-call",

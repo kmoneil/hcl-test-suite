@@ -1,0 +1,31 @@
+{
+  "description": "A string in a block type's array is an error",
+  "spec": [
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "x"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "Either a JSON object or JSON array of objects is required here, to define arguments and child blocks",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

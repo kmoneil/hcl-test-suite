@@ -1,0 +1,23 @@
+{
+  "description": "A null element in a body array is an error",
+  "spec": [
+    "json/spec.md#structural-elements"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "A JSON object is required here, to define arguments and child blocks",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "description": "A UTF-8 byte order mark before the root value is an error",
+  "spec": [
+    "json/spec.md#hcl-json-syntax-specification"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "status": "disputed",
+  "notes": "RFC 7159 says that implementations must not add a byte order mark, but that parsers may ignore one instead of treating it as an error (section 8.1). The spec adopts RFC 7159's grammar as-is, which rules out the non-JSON extensions that section 9 lets parsers accept, but the encoding allowances of section 8.1 aren't grammar, so the spec allows both. hashicorp/hcl's JSON scanner treats the mark's first byte as an invalid token (scan in json/scanner.go).",
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "Invalid start of value",
+  "expect": {
+    "valid": false,
+    "phase": "parse"
+  }
+}

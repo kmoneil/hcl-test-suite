@@ -1,0 +1,36 @@
+{
+  "description": "An array element that evaluates to an unknown value gives a known tuple holding it",
+  "spec": [
+    "json/spec.md#arrays",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "json-syntax"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "string"
+    }
+  },
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "unknown": "string"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "description": "An optional attribute that the body doesn't define is not in the body content",
+  "spec": [
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      },
+      {
+        "name": "b"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "b": {
+          "number": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

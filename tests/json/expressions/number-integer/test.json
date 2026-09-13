@@ -1,0 +1,24 @@
+{
+  "description": "A JSON integer is that number",
+  "spec": [
+    "json/spec.md#numbers"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "42"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

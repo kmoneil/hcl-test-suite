@@ -1,0 +1,28 @@
+{
+  "description": "Dynamic attributes processing of a null element of a block array is an error",
+  "spec": [
+    "json/spec.md#structural-elements",
+    "spec.md#dynamic-attributes-processing",
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "dynamic-attributes"
+        }
+      }
+    ]
+  },
+  "reference_error": "A JSON object is required here, setting the arguments for this block",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

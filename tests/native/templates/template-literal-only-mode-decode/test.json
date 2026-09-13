@@ -1,0 +1,29 @@
+{
+  "description": "A native syntax template is evaluated in literal-only mode when decoding",
+  "spec": [
+    "spec.md#expression-evaluation",
+    "hclsyntax/spec.md#template-interpolation-unwrapping"
+  ],
+  "op": "decode",
+  "notes": "spec.md says that for syntaxes with their own expression syntax, literal-only mode may be considered equivalent to full expression mode without variables or functions, and the native syntax spec defines nothing else for it.",
+  "evaluation_mode": "literal-only",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}
