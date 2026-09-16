@@ -1,0 +1,35 @@
+{
+  "description": "Partial processing doesn't expand or evaluate a dynamic block for a block type it doesn't request",
+  "spec": [
+    "ext/dynblock/README.md#usage",
+    "spec.md#partial-processing-of-body-content"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "partial",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": []
+    }
+  }
+}

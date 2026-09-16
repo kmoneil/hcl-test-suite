@@ -1,0 +1,67 @@
+{
+  "description": "The can function in content evaluates its argument with the iterator in scope",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "ext/tryfunc/README.md#try-and-can-functions"
+  ],
+  "op": "decode",
+  "features": [
+    "functions",
+    "try-functions",
+    "dynamic-blocks"
+  ],
+  "functions": {
+    "can": {
+      "extension": "can"
+    }
+  },
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "bool": true
+              }
+            },
+            "blocks": []
+          }
+        },
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "bool": false
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "description": "In literal-only mode, attributes in content can still use the iterator",
+  "spec": [
+    "ext/dynblock/README.md#usage",
+    "spec.md#expression-evaluation"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "In literal-only mode the spec makes no variables available, and the README doesn't say whether iterators are an exception. hashicorp/hcl evaluates labels, the attributes of generated blocks and the for_each of nested dynamic blocks with an evaluation context of its own that holds the iterators (iteration.EvalContext in ext/dynblock/iteration.go), which it creates even when it was given none.",
+  "evaluation_mode": "literal-only",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "string": "x"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

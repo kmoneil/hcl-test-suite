@@ -1,0 +1,63 @@
+{
+  "description": "An unknown tuple as for_each generates a single block",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The README generates a single block when the length of the collection can't be known, \"because it is an unknown value of list, map, or set type\". The type of an unknown tuple gives its length, so the README doesn't cover this case, and a block for each element with an unknown value would be another reading. hashicorp/hcl generates a single block for any unknown for_each that passes its type check (expandBody.expandBlocks in ext/dynblock/expand_body.go).",
+  "variables": {
+    "u": {
+      "unknown": [
+        "tuple",
+        [
+          "string",
+          "string"
+        ]
+      ]
+    }
+  },
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "unknown": "dynamic"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

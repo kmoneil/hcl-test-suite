@@ -1,0 +1,35 @@
+{
+  "description": "Partial processing reports a dynamic block without a label",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "spec.md#partial-processing-of-body-content"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The README makes dynamic a special block type, but doesn't say whether a malformed dynamic block that partial processing doesn't take is an error. hashicorp/hcl adds a header schema for dynamic blocks, with one label, to every schema it applies (expandBody.extendSchema in ext/dynblock/expand_body.go), so the wrong number of labels is reported even in partial processing, which leaves a block of a type it doesn't request alone.",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "partial",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "All dynamic blocks must have 1 labels",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

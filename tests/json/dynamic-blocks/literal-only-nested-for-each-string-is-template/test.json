@@ -1,0 +1,69 @@
+{
+  "description": "In literal-only mode, the for_each string of a dynamic block nested in a block is still a template",
+  "spec": [
+    "ext/dynblock/README.md#usage",
+    "spec.md#expression-evaluation",
+    "json/spec.md#strings"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "In literal-only mode, the spec reads JSON strings as literal text. hashicorp/hcl's JSON expressions read a string as a template whenever they are given an evaluation context (expression.Value in json/structure.go), and the dynamic blocks extension evaluates the for_each of dynamic blocks in any nested body with an evaluation context of its own (iteration.EvalContext in ext/dynblock/iteration.go), which it creates even when it was given none. Only a dynamic block in the file's body gets no context (see json/dynamic-blocks/literal-only-for-each-string-is-text).",
+  "evaluation_mode": "literal-only",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "s",
+        "body": {
+          "mode": "exhaustive",
+          "blocks": [
+            {
+              "type": "b",
+              "body": {
+                "mode": "exhaustive"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "s",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": [
+              {
+                "type": "b",
+                "labels": [],
+                "body": {
+                  "attributes": {},
+                  "blocks": []
+                }
+              },
+              {
+                "type": "b",
+                "labels": [],
+                "body": {
+                  "attributes": {},
+                  "blocks": []
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

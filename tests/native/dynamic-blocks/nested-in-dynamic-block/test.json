@@ -1,0 +1,118 @@
+{
+  "description": "A dynamic block in content expands for each outer block, using the outer iterator",
+  "spec": [
+    "ext/dynblock/README.md#usage"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "a",
+        "body": {
+          "mode": "exhaustive",
+          "blocks": [
+            {
+              "type": "b",
+              "labels": [
+                "name"
+              ],
+              "body": {
+                "mode": "exhaustive",
+                "attributes": [
+                  {
+                    "name": "outer"
+                  },
+                  {
+                    "name": "inner"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "a",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": [
+              {
+                "type": "b",
+                "labels": [
+                  "x"
+                ],
+                "body": {
+                  "attributes": {
+                    "outer": {
+                      "string": "x"
+                    },
+                    "inner": {
+                      "string": "p"
+                    }
+                  },
+                  "blocks": []
+                }
+              },
+              {
+                "type": "b",
+                "labels": [
+                  "x"
+                ],
+                "body": {
+                  "attributes": {
+                    "outer": {
+                      "string": "x"
+                    },
+                    "inner": {
+                      "string": "q"
+                    }
+                  },
+                  "blocks": []
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "a",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": [
+              {
+                "type": "b",
+                "labels": [
+                  "y"
+                ],
+                "body": {
+                  "attributes": {
+                    "outer": {
+                      "string": "y"
+                    },
+                    "inner": {
+                      "string": "r"
+                    }
+                  },
+                  "blocks": []
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

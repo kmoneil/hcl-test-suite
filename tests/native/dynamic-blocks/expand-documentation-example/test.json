@@ -1,0 +1,169 @@
+{
+  "description": "The example in the documentation of Expand generates child blocks holding labeled grandchild blocks",
+  "spec": [
+    "ext/dynblock/README.md#usage",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The example doesn't define child_objs. The test gives it as an object of objects, since the example uses their keys. The README doesn't say what the iterator's key is, or whether and in which order objects are iterated. hashicorp/hcl iterates objects in the lexicographic order of their attribute names, with the names as keys (expandBody.expandBlocks in ext/dynblock/expand_body.go, using go-cty's ElementIterator), as the native syntax spec defines for for expressions.",
+  "variables": {
+    "child_objs": {
+      "object": {
+        "first": {
+          "object": {
+            "children": {
+              "object": {
+                "y": {
+                  "string": "2"
+                },
+                "x": {
+                  "string": "1"
+                }
+              }
+            }
+          }
+        },
+        "second": {
+          "object": {
+            "children": {
+              "object": {
+                "z": {
+                  "string": "3"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "parent",
+        "body": {
+          "mode": "exhaustive",
+          "blocks": [
+            {
+              "type": "child",
+              "body": {
+                "mode": "exhaustive",
+                "blocks": [
+                  {
+                    "type": "grandchild",
+                    "labels": [
+                      "key"
+                    ],
+                    "body": {
+                      "mode": "exhaustive",
+                      "attributes": [
+                        {
+                          "name": "parent_key"
+                        },
+                        {
+                          "name": "value"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "parent",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": [
+              {
+                "type": "child",
+                "labels": [],
+                "body": {
+                  "attributes": {},
+                  "blocks": [
+                    {
+                      "type": "grandchild",
+                      "labels": [
+                        "x"
+                      ],
+                      "body": {
+                        "attributes": {
+                          "parent_key": {
+                            "string": "first"
+                          },
+                          "value": {
+                            "string": "1"
+                          }
+                        },
+                        "blocks": []
+                      }
+                    },
+                    {
+                      "type": "grandchild",
+                      "labels": [
+                        "y"
+                      ],
+                      "body": {
+                        "attributes": {
+                          "parent_key": {
+                            "string": "first"
+                          },
+                          "value": {
+                            "string": "2"
+                          }
+                        },
+                        "blocks": []
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "child",
+                "labels": [],
+                "body": {
+                  "attributes": {},
+                  "blocks": [
+                    {
+                      "type": "grandchild",
+                      "labels": [
+                        "z"
+                      ],
+                      "body": {
+                        "attributes": {
+                          "parent_key": {
+                            "string": "second"
+                          },
+                          "value": {
+                            "string": "3"
+                          }
+                        },
+                        "blocks": []
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

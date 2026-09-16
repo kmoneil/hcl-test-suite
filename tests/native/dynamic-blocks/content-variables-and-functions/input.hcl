@@ -1,0 +1,6 @@
+dynamic "b" {
+  for_each = ["x"]
+  content {
+    v = f(prefix, b.value)
+  }
+}

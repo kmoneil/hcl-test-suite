@@ -1,0 +1,35 @@
+{
+  "description": "The content of a dynamic block with an empty collection isn't checked against the schema",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": []
+    }
+  }
+}

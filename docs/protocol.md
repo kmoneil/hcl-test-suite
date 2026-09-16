@@ -68,6 +68,9 @@ Describes the implementation and what the adapter supports.
   - `try-functions`: the implementation has the `try` and `can` functions of
     hashicorp/hcl's `ext/tryfunc`, which tests declare as
     [extension functions](#extension-functions).
+  - `dynamic-blocks`: the implementation has the dynamic blocks extension
+    (hashicorp/hcl's `ext/dynblock`), which tests use through
+    [`decode`](#dynamic-blocks).
 
 ## `parse`
 
@@ -119,7 +122,8 @@ The optional context file describes the evaluation context:
   Without it, they are evaluated in full expression mode. In the native syntax
   the two modes differ only in that; in the JSON syntax, literal-only mode also
   reads strings as literal text instead of as templates.
-- `schema` is only for [`decode`](#decode), which always has one.
+- `schema` and [`dynamic_blocks`](#dynamic-blocks) are only for
+  [`decode`](#decode), which always has a schema.
 
 The other fields are optional. Without a context file there are no variables,
 and the function table is empty, so every function call is an error.
@@ -143,9 +147,10 @@ syntaxes with their own expression syntax.
   `allow_dynamic_type` flags can appear in any test. Schemas only have an
   `analysis` in tests that need `static-analysis`. Type analyses and the
   type expression [extension functions](#extension-functions) only appear in
-  tests that need `type-expressions`, and the extension functions `try` and
-  `can` only in tests that need `try-functions`. Context files never have object types with optional
-  attributes.
+  tests that need `type-expressions`, the extension functions `try` and
+  `can` only in tests that need `try-functions`, and `dynamic_blocks` only in
+  tests that need `dynamic-blocks`. Context files never have object types with
+  optional attributes.
 
 ## `decode`
 
@@ -165,7 +170,8 @@ or
 ```
 
 The context file has the same fields as for `eval`, and a `schema`, which it
-always has. The adapter applies the schema with the implementation's own body
+always has. It can also ask for [dynamic blocks](#dynamic-blocks) to be
+expanded. The adapter applies the schema with the implementation's own body
 processing; an implementation without schema-driven processing doesn't list
 `decode` in its operations.
 
@@ -177,7 +183,8 @@ processing; an implementation without schema-driven processing doesn't list
   body structure the schema can't use, such as an array element that isn't an
   object or a block property that is a string, which is only found when a
   schema is applied to that body. An implementation that rejects the schema
-  itself also reports that as a schema error.
+  itself also reports that as a schema error. Errors in expanding
+  [dynamic blocks](#dynamic-blocks) are schema errors too.
 - `"analysis"`: a [static analysis](#static-analysis) that the schema asks
   for failed, including for a JSON string whose content isn't the native
   syntax expression the analysis needs.
@@ -234,7 +241,9 @@ status and say why on standard error.
 Schemas only concern body structure. Attribute names, block types and labels
 are never templates, and `evaluation_mode` doesn't change how a body is
 processed, only how the selected attributes are evaluated (including the
-property names of JSON objects that are expressions).
+property names of JSON objects that are expressions). Expanding
+[dynamic blocks](#dynamic-blocks) is the exception: it evaluates the
+`for_each` and `labels` of dynamic blocks while the schema is applied.
 
 The body content is a [body](#bodies) with evaluated attribute values, or
 analysis results: `attributes` has the attributes the schema selected, and
@@ -324,6 +333,43 @@ a type expression of the type expression extension (hashicorp/hcl's
   `{"kind": "static-map", "values": {"kind": "type"}}`. A test with a type
   analysis needs the `static-analysis` and `type-expressions` features (and
   `typed-values` when the result has a list, set or map type).
+
+### Dynamic blocks
+
+With the `dynamic-blocks` feature, a context file can have
+`"dynamic_blocks": true`, which asks for the blocks of type `dynamic` in the
+file to be expanded with the dynamic blocks extension (hashicorp/hcl's
+`ext/dynblock`, whose README describes it):
+
+- Expansion is part of applying the schema. Schema-driven and partial
+  processing expand the dynamic blocks for the block types they request, in
+  the file's body and in the bodies they reach from it: the bodies of the
+  blocks they give, generated blocks included, and remaining bodies. Dynamic
+  attributes processing expands nothing. (For hashicorp/hcl, the adapter
+  applies the schema to the body that `dynblock.Expand` returns for the file's
+  body.)
+- `for_each` and `labels` are evaluated like attributes, in the context's
+  evaluation mode and with its variables and functions. The `for_each` of a
+  dynamic block has the iterators of the dynamic blocks enclosing it in scope,
+  and its `labels` also its own iterator. The attributes of generated blocks,
+  and of the blocks in them, are evaluated with the context's variables and
+  functions and the iterators of all the dynamic blocks they are in. In
+  literal-only mode there are no variables or functions, and JSON strings are
+  literal text. That hashicorp/hcl still puts iterators in scope there, and
+  reads JSON strings as templates in labels, in generated blocks and in the
+  `for_each` of nested dynamic blocks, is covered by disputed tests.
+- Errors in expanding a dynamic block, including errors evaluating its
+  `for_each` and `labels`, are errors in the `"schema"` phase. The attributes
+  of generated blocks are analyzed and evaluated like any others, in the
+  `"analysis"` and `"eval"` phases.
+- Generated blocks are in the body content in place of their dynamic block,
+  like blocks written there.
+- The tests check the extension's rules, which
+  `coverage/native-dynamic-blocks.json` and `coverage/json-dynamic-blocks.json`
+  list. The adapter uses the implementation's own dynamic blocks extension; an
+  implementation without one leaves out `dynamic-blocks`.
+- Only `decode` tests have `dynamic_blocks`, and it is never `false`. Without
+  it, `dynamic` is an ordinary block type.
 
 ## `validate`
 

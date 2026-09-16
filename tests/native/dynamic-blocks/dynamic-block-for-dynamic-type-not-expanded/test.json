@@ -1,0 +1,80 @@
+{
+  "description": "Blocks of type dynamic that a dynamic block generates aren't expanded",
+  "spec": [
+    "ext/dynblock/README.md#usage",
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The documentation of Expand says dynamic blocks can't themselves be generated except through nesting, but doesn't say what a dynamic block labeled dynamic does, and it only generates anything when the schema requests the block type dynamic, which the README doesn't provide for (see native/dynamic-blocks/requested-dynamic-type-still-expanded). hashicorp/hcl reads the dynamic block with its own header schema, which has one label, in place of the requested one without labels (expandBody.extendSchema in ext/dynblock/expand_body.go, and Body.PartialContent in hclsyntax/structure.go, which keeps the last header schema for a type). It generates ordinary blocks of type dynamic with the requested schema, and doesn't expand them, since it only expands the dynamic blocks it reads from the original body (expandBody.expandBlocks).",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "dynamic",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "for_each"
+            }
+          ],
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "mode": "exhaustive",
+                "attributes": [
+                  {
+                    "name": "v"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "dynamic",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "for_each": {
+                "tuple": [
+                  {
+                    "string": "y"
+                  }
+                ]
+              }
+            },
+            "blocks": [
+              {
+                "type": "content",
+                "labels": [],
+                "body": {
+                  "attributes": {
+                    "v": {
+                      "number": "1"
+                    }
+                  },
+                  "blocks": []
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "description": "In literal-only mode, labels can't call functions",
+  "spec": [
+    "ext/dynblock/README.md#usage",
+    "spec.md#expression-evaluation"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "evaluation_mode": "literal-only",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "labels": [
+          "name"
+        ],
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "Functions may not be called here",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

@@ -23,12 +23,12 @@ import hcltest  # noqa: E402  reuses the runner's test loading and normalization
 TESTS = ROOT / "tests"
 COVERAGE = ROOT / "coverage"
 KEY_ORDER = ["description", "spec", "op", "input", "features", "status", "notes", "variables", "functions",
-             "evaluation_mode", "schema", "reference_error", "expect"]
+             "evaluation_mode", "dynamic_blocks", "schema", "reference_error", "expect"]
 FEATURES = {"unknown-values", "typed-values", "functions", "json-syntax", "static-analysis", "type-expressions",
-            "try-functions"}
+            "try-functions", "dynamic-blocks"}
 TYPE_KINDS = ("type", "type-constraint", "type-constraint-with-defaults")
 # Features of extensions, which a test must list exactly when it uses the extension.
-EXTENSION_FEATURES = sorted(set(hcltest.EXTENSION_FUNCTIONS.values()) | {"type-expressions"})
+EXTENSION_FEATURES = sorted(set(hcltest.EXTENSION_FUNCTIONS.values()) | {"type-expressions", "dynamic-blocks"})
 assert set(EXTENSION_FEATURES) <= FEATURES
 # Extension functions that implementations may only have under their own names.
 OWN_NAME_EXTENSIONS = ("try", "can")
@@ -72,8 +72,10 @@ def needs_typed_values(value):
     return False
 
 
-def decode_body_problems(body, schema, where="expected body"):
-    """Lists the ways an expected decode result couldn't come from applying its schema."""
+def decode_body_problems(body, schema, where="expected body", lenient_remain=False, required=True):
+    """Lists the ways an expected decode result couldn't come from applying its schema. With lenient_remain, it
+    doesn't check that the required attributes of remaining bodies are there, which hashicorp/hcl doesn't either when
+    it expands dynamic blocks (see the disputed tests in tests/*/dynamic-blocks). required is False for such a body."""
     problems = []
     analyses = {attr["name"]: attr["analysis"] for attr in schema.get("attributes", []) if "analysis" in attr}
     for name, result in body.get("attributes", {}).items():
@@ -87,7 +89,7 @@ def decode_body_problems(body, schema, where="expected body"):
             if name not in requested:
                 problems.append(f"{where} has the attribute {name!r}, which its schema doesn't request")
         for attr in schema.get("attributes", []):
-            if attr.get("required") and attr["name"] not in body.get("attributes", {}):
+            if required and attr.get("required") and attr["name"] not in body.get("attributes", {}):
                 problems.append(f"{where} lacks the attribute {attr['name']!r}, which its schema requires")
         block_schemas = {block["type"]: block for block in schema.get("blocks", [])}
         for i, block in enumerate(body.get("blocks", [])):
@@ -98,11 +100,13 @@ def decode_body_problems(body, schema, where="expected body"):
             if len(block.get("labels", [])) != len(block_schema.get("labels", [])):
                 problems.append(f"{where}: block {i} has {len(block.get('labels', []))} labels, but its schema names "
                                 f"{len(block_schema.get('labels', []))}")
-            problems.extend(decode_body_problems(block.get("body", {}), block_schema["body"], f"{where}: body of block {i}"))
+            problems.extend(decode_body_problems(block.get("body", {}), block_schema["body"], f"{where}: body of block {i}",
+                                                 lenient_remain))
     if (body.get("remain") is not None) != ("remain" in schema):
         problems.append(f"{where} must have a remain body exactly when its schema has a remain schema")
     elif "remain" in schema:
-        problems.extend(decode_body_problems(body["remain"], schema["remain"], f"{where}: remain"))
+        problems.extend(decode_body_problems(body["remain"], schema["remain"], f"{where}: remain", lenient_remain,
+                                             required=not lenient_remain))
     return problems
 
 
@@ -338,7 +342,8 @@ class Linter:
             for issue in schema_default_problems(test.context["schema"]):
                 self.problem(where, issue)
             if meta["expect"].get("valid") and isinstance(meta["expect"].get("body"), dict):
-                for issue in decode_body_problems(meta["expect"]["body"], test.context["schema"]):
+                lenient = test.disputed and "dynamic_blocks" in test.context
+                for issue in decode_body_problems(meta["expect"]["body"], test.context["schema"], lenient_remain=lenient):
                     self.problem(where, issue)
 
         extra = sorted(p.name for p in test_json.parent.iterdir() if p.name not in ("test.json", test.input.name))
@@ -405,6 +410,8 @@ class Linter:
             self.problem(where, 'lists the "static-analysis" feature, but its schema analyzes no attribute')
         if kinds & set(TYPE_KINDS):
             needs["type-expressions"] = "the schema analyzes a type expression"
+        if "dynamic_blocks" in test.context:
+            needs["dynamic-blocks"] = "the test expands dynamic blocks"
         for name, decl in test.context.get("functions", {}).items():
             if "extension" in decl:
                 needs.setdefault(hcltest.EXTENSION_FUNCTIONS[decl["extension"]],

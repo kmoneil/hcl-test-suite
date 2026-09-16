@@ -1,0 +1,66 @@
+{
+  "description": "A dynamic property in content expands with both iterators in scope",
+  "spec": [
+    "ext/dynblock/README.md#usage",
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "dynamic-blocks"
+  ],
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "a",
+        "body": {
+          "mode": "exhaustive",
+          "blocks": [
+            {
+              "type": "b",
+              "body": {
+                "mode": "exhaustive",
+                "attributes": [
+                  {
+                    "name": "v"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "a",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": [
+              {
+                "type": "b",
+                "labels": [],
+                "body": {
+                  "attributes": {
+                    "v": {
+                      "string": "pq"
+                    }
+                  },
+                  "blocks": []
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

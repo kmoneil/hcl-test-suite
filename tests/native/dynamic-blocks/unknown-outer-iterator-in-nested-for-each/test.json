@@ -1,0 +1,72 @@
+{
+  "description": "A nested for_each using the iterator of an unknown outer for_each generates a single block",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "ext/dynblock/README.md#usage",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "decode",
+  "features": [
+    "unknown-values",
+    "dynamic-blocks"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "dynamic"
+    }
+  },
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "a",
+        "body": {
+          "mode": "exhaustive",
+          "blocks": [
+            {
+              "type": "b",
+              "body": {
+                "mode": "exhaustive",
+                "attributes": [
+                  {
+                    "name": "v"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "a",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": [
+              {
+                "type": "b",
+                "labels": [],
+                "body": {
+                  "attributes": {
+                    "v": {
+                      "unknown": "dynamic"
+                    }
+                  },
+                  "blocks": []
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "description": "With an unknown for_each, an attribute that would fail to evaluate is unknown instead",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "decode",
+  "features": [
+    "unknown-values",
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The README says an unknown for_each generates a single block whose iterator key and value are unknown, so that attributes derived from the iteration are unknown, which leaves the other attributes as they are. hashicorp/hcl replaces every attribute of the generated block, and of the blocks nested in it, with the dynamic value without evaluating it (unknownBody in ext/dynblock/unknown_body.go), so the undefined variable nope isn't reported.",
+  "variables": {
+    "u": {
+      "unknown": "dynamic"
+    }
+  },
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "unknown": "dynamic"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

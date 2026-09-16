@@ -1,0 +1,40 @@
+{
+  "description": "A static list element in a generated block can't use the iterator",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "spec.md#static-analysis",
+    "hclsyntax/spec.md#static-list"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The README lets the attributes of generated blocks use the iterator, and the spec's static list analysis gives the element expressions to be evaluated. hashicorp/hcl only puts the iterator in scope when the whole attribute is evaluated: static analyses unwrap the attribute's expression (exprWrap.UnwrapExpression in ext/dynblock/expr_wrap.go) and give the element expressions, which are then evaluated without it.",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v",
+              "analysis": {
+                "kind": "static-list"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "There is no variable named \"b\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

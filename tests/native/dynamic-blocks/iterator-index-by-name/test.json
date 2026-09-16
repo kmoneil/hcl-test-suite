@@ -1,0 +1,50 @@
+{
+  "description": "The iterator can be indexed with the name of its value attribute",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "hclsyntax/spec.md#attribute-access-operator",
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "notes": "The documentation of Expand calls the iterator a variable, and the examples use its key and value with attribute access, which the native syntax spec only applies to objects, so the iterator is an object, and indexing an object with an attribute's name gives that attribute.",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "string": "x"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

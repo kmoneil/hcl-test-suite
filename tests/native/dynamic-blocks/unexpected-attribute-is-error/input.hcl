@@ -1,0 +1,7 @@
+dynamic "b" {
+  for_each = ["x"]
+  other = 1
+  content {
+    v = 1
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "description": "A block of type dynamic is expanded even when the schema requests that type",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The README makes dynamic a special block type, but doesn't say what happens when a schema requests blocks of that type itself, which could then be read as ordinary blocks. hashicorp/hcl treats every block of type dynamic that the body gives as a dynamic block, whatever the schema requests (expandBody.expandBlocks in ext/dynblock/expand_body.go), so it expands this one and reports the block type b, which the schema doesn't request.",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "dynamic",
+        "labels": [
+          "name"
+        ],
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "for_each"
+            }
+          ],
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "mode": "exhaustive",
+                "attributes": [
+                  {
+                    "name": "v"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "Blocks of type \"b\" are not expected here",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

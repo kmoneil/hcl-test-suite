@@ -1,0 +1,35 @@
+{
+  "description": "A quoted iterator name is an error",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "hclsyntax/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The README's example gives the iterator as a bare name, and doesn't say how the iterator attribute is read, or whether a quoted name, which is how the JSON syntax gives it (json/dynamic-blocks/iterator-name), also gives it. hashicorp/hcl reads the attribute with hcl.AbsTraversalForExpr (expandBody.decodeSpec in ext/dynblock/expand_spec.go), which doesn't accept a template in the native syntax.",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "A single static variable reference is required",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

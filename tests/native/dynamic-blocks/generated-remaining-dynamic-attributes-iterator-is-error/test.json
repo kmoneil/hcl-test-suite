@@ -1,0 +1,39 @@
+{
+  "description": "Dynamic attributes of a generated block's remaining body don't have the iterator in scope",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "spec.md#partial-processing-of-body-content",
+    "spec.md#dynamic-attributes-processing"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The README's example uses the iterator in the attributes of the content block, and nothing in the README depends on how the generated block's body is processed. hashicorp/hcl only puts the iterator in scope for the attributes that Content and PartialContent give: JustAttributes passes the original body's attributes through unchanged (expandBody.JustAttributes in ext/dynblock/expand_body.go), also in the body that partial processing leaves.",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "partial",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ],
+          "remain": {
+            "mode": "dynamic-attributes"
+          }
+        }
+      }
+    ]
+  },
+  "reference_error": "There is no variable named \"b\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

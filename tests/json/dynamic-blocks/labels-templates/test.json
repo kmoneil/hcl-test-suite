@@ -1,0 +1,56 @@
+{
+  "description": "The labels array holds string templates evaluated with the iterator",
+  "spec": [
+    "ext/dynblock/README.md#usage",
+    "json/spec.md#static-list"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "dynamic-blocks"
+  ],
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "labels": [
+          "first",
+          "second"
+        ],
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [
+            "x",
+            "fixed"
+          ],
+          "body": {
+            "attributes": {
+              "v": {
+                "string": "1"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

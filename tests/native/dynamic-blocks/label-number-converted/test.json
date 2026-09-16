@@ -1,0 +1,68 @@
+{
+  "description": "A number label value becomes its decimal string",
+  "spec": [
+    "ext/dynblock/README.md#usage",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "notes": "Block labels are strings. The information model attempts automatic conversion when a value doesn't have the type that is needed, and gives a number the string of its decimal digits.",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "labels": [
+          "name"
+        ],
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [
+            "1"
+          ],
+          "body": {
+            "attributes": {
+              "v": {
+                "number": "1"
+              }
+            },
+            "blocks": []
+          }
+        },
+        {
+          "type": "b",
+          "labels": [
+            "2.5"
+          ],
+          "body": {
+            "attributes": {
+              "v": {
+                "number": "2.5"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

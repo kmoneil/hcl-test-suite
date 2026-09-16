@@ -1,0 +1,32 @@
+{
+  "description": "With an iterator attribute, the block type's name no longer names the iterator",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "There is no variable named \"b\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

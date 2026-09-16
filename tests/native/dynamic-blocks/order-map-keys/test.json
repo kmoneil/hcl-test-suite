@@ -1,0 +1,91 @@
+{
+  "description": "Blocks generated from a map follow the lexicographic order of its keys",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The README doesn't say in which order the blocks generated from a map come. hashicorp/hcl follows go-cty's ElementIterator, which visits the keys in lexicographic order (expandBody.expandBlocks in ext/dynblock/expand_body.go), as the native syntax spec defines for for expressions.",
+  "variables": {
+    "m": {
+      "map": {
+        "z": {
+          "string": "3"
+        },
+        "a": {
+          "string": "1"
+        },
+        "m": {
+          "string": "2"
+        }
+      },
+      "element_type": "string"
+    }
+  },
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "string": "1"
+              }
+            },
+            "blocks": []
+          }
+        },
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "string": "2"
+              }
+            },
+            "blocks": []
+          }
+        },
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "string": "3"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

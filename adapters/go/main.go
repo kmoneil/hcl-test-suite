@@ -25,6 +25,7 @@ import (
 
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/ext/customdecode"
+	"github.com/hashicorp/hcl/v2/ext/dynblock"
 	"github.com/hashicorp/hcl/v2/ext/tryfunc"
 	"github.com/hashicorp/hcl/v2/ext/typeexpr"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
@@ -110,7 +111,7 @@ func capabilities() object {
 		"version":        version,
 		"operations":     []string{"parse", "eval", "decode", "validate"},
 		"features": []string{"typed-values", "unknown-values", "functions", "json-syntax", "static-analysis", "type-expressions",
-			"try-functions"},
+			"try-functions", "dynamic-blocks"},
 	}
 }
 
@@ -171,8 +172,8 @@ func eval(path, contextPath string) (any, error) {
 			return nil, err
 		}
 	}
-	if settings.schema != nil {
-		return nil, errors.New("eval doesn't take a schema; use decode")
+	if settings.schema != nil || settings.dynamicBlocks {
+		return nil, errors.New("eval doesn't take a schema or dynamic blocks; use decode")
 	}
 	file, diags := hclsyntax.ParseConfig(src, path, hcl.InitialPos)
 	if diags.HasErrors() {
@@ -209,7 +210,14 @@ func decode(path, contextPath string) (any, error) {
 	if diags.HasErrors() {
 		return invalid("parse", diags), nil
 	}
-	content, diags := applySchema(file.Body, schema)
+	root := file.Body
+	if settings.dynamicBlocks {
+		// The expanded body expands dynamic blocks as the schema is applied to
+		// it and to the bodies nested in it, evaluating for_each and labels
+		// with the same variables and functions as the attributes.
+		root = dynblock.Expand(root, settings.ctx)
+	}
+	content, diags := applySchema(root, schema)
 	if diags.HasErrors() {
 		return invalid("schema", diags), nil
 	}
@@ -941,12 +949,14 @@ type evalContext struct {
 	Functions      map[string]json.RawMessage `json:"functions"`
 	Schema         json.RawMessage            `json:"schema"`
 	EvaluationMode *string                    `json:"evaluation_mode"`
+	DynamicBlocks  *bool                      `json:"dynamic_blocks"`
 }
 
 // evalSettings is what a context file sets up.
 type evalSettings struct {
-	ctx    *hcl.EvalContext // nil in literal-only mode, as hashicorp/hcl expects
-	schema json.RawMessage
+	ctx           *hcl.EvalContext // nil in literal-only mode, as hashicorp/hcl expects
+	schema        json.RawMessage
+	dynamicBlocks bool
 }
 
 func emptyEvalContext() *hcl.EvalContext {
@@ -1011,6 +1021,12 @@ func readContext(path string) (evalSettings, error) {
 		return evalSettings{}, fmt.Errorf("%s: %w", path, err)
 	}
 	settings := evalSettings{ctx: emptyEvalContext(), schema: decl.Schema}
+	if decl.DynamicBlocks != nil {
+		if !*decl.DynamicBlocks {
+			return evalSettings{}, fmt.Errorf("%s: leave out dynamic_blocks instead of setting it to false", path)
+		}
+		settings.dynamicBlocks = true
+	}
 	for name, raw := range decl.Variables {
 		if settings.ctx.Variables[name], err = decodeValue(raw); err != nil {
 			return evalSettings{}, fmt.Errorf("%s: variable %q: %w", path, name, err)

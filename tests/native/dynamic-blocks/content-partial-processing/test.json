@@ -1,0 +1,84 @@
+{
+  "description": "Partial processing of a generated block keeps the iterator in its remaining body",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "spec.md#partial-processing-of-body-content"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "partial",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ],
+          "remain": {
+            "mode": "exhaustive",
+            "attributes": [
+              {
+                "name": "w"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "string": "x"
+              }
+            },
+            "blocks": [],
+            "remain": {
+              "attributes": {
+                "w": {
+                  "string": "x!"
+                }
+              },
+              "blocks": []
+            }
+          }
+        },
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "string": "y"
+              }
+            },
+            "blocks": [],
+            "remain": {
+              "attributes": {
+                "w": {
+                  "string": "y!"
+                }
+              },
+              "blocks": []
+            }
+          }
+        }
+      ]
+    }
+  }
+}

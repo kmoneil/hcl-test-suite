@@ -1,0 +1,73 @@
+{
+  "description": "Attributes in content can use variables and functions as well as the iterator",
+  "spec": [
+    "ext/dynblock/README.md#usage"
+  ],
+  "op": "decode",
+  "features": [
+    "functions",
+    "dynamic-blocks"
+  ],
+  "variables": {
+    "prefix": {
+      "string": "p"
+    }
+  },
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "tuple": [
+                  {
+                    "string": "p"
+                  },
+                  {
+                    "string": "x"
+                  }
+                ]
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

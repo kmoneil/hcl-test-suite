@@ -1,0 +1,60 @@
+{
+  "description": "An unknown for_each generates one block with an unknown key and value",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "decode",
+  "features": [
+    "unknown-values",
+    "dynamic-blocks"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "dynamic"
+    }
+  },
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "k"
+            },
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "k": {
+                "unknown": "dynamic"
+              },
+              "v": {
+                "unknown": "dynamic"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

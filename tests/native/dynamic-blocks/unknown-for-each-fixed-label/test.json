@@ -1,0 +1,59 @@
+{
+  "description": "With an unknown for_each, a label not using the iterator labels the generated block",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "decode",
+  "features": [
+    "unknown-values",
+    "dynamic-blocks"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "dynamic"
+    }
+  },
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "labels": [
+          "name"
+        ],
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [
+            "fixed"
+          ],
+          "body": {
+            "attributes": {
+              "v": {
+                "unknown": "dynamic"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

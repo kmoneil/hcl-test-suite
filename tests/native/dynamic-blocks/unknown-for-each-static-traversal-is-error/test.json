@@ -1,0 +1,46 @@
+{
+  "description": "With an unknown for_each, a static traversal of a generated block's attribute fails",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "spec.md#static-analysis",
+    "hclsyntax/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "unknown-values",
+    "static-analysis",
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The spec's static analyses read an expression as written, and with a known for_each hashicorp/hcl analyzes the content's expressions (see native/dynamic-blocks/static-traversal-of-iterator), while the README only makes the attributes derived from the iteration unknown when for_each is. hashicorp/hcl replaces the expression of every attribute of a block generated from an unknown for_each with the constant dynamic value (unknownBody.fixupAttrs in ext/dynblock/unknown_body.go), which has no syntax to analyze.",
+  "variables": {
+    "u": {
+      "unknown": "dynamic"
+    }
+  },
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v",
+              "analysis": {
+                "kind": "static-traversal"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "A single static variable reference is required",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

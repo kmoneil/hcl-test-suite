@@ -1,0 +1,208 @@
+{
+  "area": "json/dynamic-blocks",
+  "rules": [
+    {
+      "id": "dynamic-blocks-json-blocks",
+      "spec": "json/spec.md#blocks",
+      "rule": "In the JSON syntax, dynamic blocks are a property named dynamic whose object has a property for each block type to generate, holding a dynamic block's body or an array of bodies, and the dynamic property can also hold an array of such objects",
+      "tests": [
+        "json/dynamic-blocks/generates-blocks",
+        "json/dynamic-blocks/dynamic-blocks-in-array",
+        "json/dynamic-blocks/dynamic-block-bodies-in-array"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-json-order",
+      "spec": "json/spec.md#blocks",
+      "rule": "Blocks generated from a dynamic property take its place among the properties that define blocks, in property order",
+      "tests": [
+        "json/dynamic-blocks/order-among-static-blocks",
+        "json/dynamic-blocks/order-among-other-block-types",
+        "json/dynamic-blocks/dynamic-block-types-in-property-order"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-json-nesting",
+      "spec": "ext/dynblock/README.md#usage",
+      "rule": "A dynamic property in the content of a dynamic block is expanded with both iterators in scope",
+      "tests": [
+        "json/dynamic-blocks/nested-dynamic-block"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-json-for-each",
+      "spec": "json/spec.md#expressions",
+      "rule": "The for_each property is an expression like any other, so an array is a tuple and a string is a template, which can give a collection, while a string of plain text is a string, and so an error",
+      "tests": [
+        "json/dynamic-blocks/for-each-template",
+        "json/dynamic-blocks/for-each-plain-string-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-json-invalid-templates",
+      "spec": "ext/dynblock/README.md#usage",
+      "rule": "A for_each or label string that isn't a valid template is an error in expanding the dynamic block, in the schema phase",
+      "tests": [
+        "json/dynamic-blocks/for-each-invalid-template-is-error",
+        "json/dynamic-blocks/label-invalid-template-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-json-object-for-each",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "An object as for_each generates a block for each property, in the lexicographic order of the property names, with the name as the iterator's key (disputed)",
+      "tests": [
+        "json/dynamic-blocks/for-each-object"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-json-iterator",
+      "spec": "json/spec.md#static-traversal",
+      "rule": "The iterator property is a string holding the iterator's name: a string holding an attribute access, and a number, are errors",
+      "tests": [
+        "json/dynamic-blocks/iterator-name",
+        "json/dynamic-blocks/iterator-attribute-access-is-error",
+        "json/dynamic-blocks/iterator-number-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-json-iterator-read-as-traversal",
+      "spec": "json/spec.md#static-traversal",
+      "rule": "The iterator property is read as a native syntax static traversal, so a template is an error, even one giving a name, and spaces around the name are ignored (disputed)",
+      "tests": [
+        "json/dynamic-blocks/iterator-surrounding-spaces",
+        "json/dynamic-blocks/iterator-template-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-json-labels",
+      "spec": "json/spec.md#static-list",
+      "rule": "The labels property is an array whose elements are expressions evaluated for each generated block with the iterator in scope: string templates, or numbers converted to strings",
+      "tests": [
+        "json/dynamic-blocks/labels-templates",
+        "json/dynamic-blocks/label-number-converted"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-json-labels-static-list",
+      "spec": "json/spec.md#static-list",
+      "rule": "A string for the labels property is an error, even a template giving a tuple of labels (disputed)",
+      "tests": [
+        "json/dynamic-blocks/labels-string-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-json-content",
+      "spec": "json/spec.md#blocks",
+      "rule": "The content property is an object, or an array holding one object, which gives the body of each generated block",
+      "tests": [
+        "json/dynamic-blocks/content-array-with-one-object"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-json-content-null",
+      "spec": "json/spec.md#blocks",
+      "rule": "A null content property is an error, since a block's body is an object or an array of objects",
+      "tests": [
+        "json/dynamic-blocks/content-null-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-json-content-count",
+      "spec": "json/spec.md#blocks",
+      "rule": "A dynamic block body needs exactly one content block: two objects in the content property's array, no content property, or an empty array are errors, while an array holding null gives an empty body (disputed)",
+      "tests": [
+        "json/dynamic-blocks/content-array-with-two-objects-is-error",
+        "json/dynamic-blocks/content-missing-is-error",
+        "json/dynamic-blocks/content-empty-array-is-error",
+        "json/dynamic-blocks/content-array-null-element"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-json-null-dynamic-property",
+      "spec": "json/spec.md#blocks",
+      "rule": "A null dynamic property is an error, as for any block type with a label",
+      "tests": [
+        "json/dynamic-blocks/dynamic-property-null-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-json-null-dynamic-block-body",
+      "spec": "json/spec.md#blocks",
+      "rule": "A null in place of a dynamic block's body defines no dynamic block (disputed)",
+      "tests": [
+        "json/dynamic-blocks/dynamic-block-body-null"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-json-properties",
+      "spec": "json/spec.md#structural-elements",
+      "rule": "A dynamic block's body can't have properties other than for_each, iterator, labels and content, apart from comment properties named //, which it and the content ignore, while a // property in the dynamic property's own object is a block type like any other",
+      "tests": [
+        "json/dynamic-blocks/unexpected-property-is-error",
+        "json/dynamic-blocks/comment-properties",
+        "json/dynamic-blocks/comment-property-in-dynamic-property-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-json-unknown-collection",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "A for_each template whose value is unknown generates a single block, in which the iterator's value is the dynamic value",
+      "tests": [
+        "json/dynamic-blocks/unknown-for-each-template"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-json-dynamic-attributes-processing",
+      "spec": "spec.md#dynamic-attributes-processing",
+      "rule": "Dynamic attributes processing doesn't expand dynamic blocks, so a dynamic property is an attribute like any other",
+      "tests": [
+        "json/dynamic-blocks/dynamic-attributes-processing-dynamic-property"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-json-remaining-dynamic-attributes",
+      "spec": "spec.md#partial-processing-of-body-content",
+      "rule": "When dynamic blocks are expanded, dynamic attributes processing of the body that partial processing leaves gives the properties partial processing took as well, including those it took as blocks or dynamic blocks (disputed)",
+      "tests": [
+        "json/dynamic-blocks/partial-remaining-dynamic-attributes-repeats-properties",
+        "json/dynamic-blocks/partial-remaining-dynamic-attributes-repeats-block-properties"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-json-remaining-required-attributes",
+      "spec": "spec.md#partial-processing-of-body-content",
+      "rule": "When dynamic blocks are expanded, a later step can require a property that partial processing took without an error, although the body it processes doesn't have the property (disputed)",
+      "tests": [
+        "json/dynamic-blocks/partial-remaining-required-taken-property-not-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-json-attribute-named-dynamic",
+      "spec": "spec.md#schema-driven-processing",
+      "rule": "A schema that requests an attribute named dynamic gets the dynamic property as that attribute, so no dynamic blocks are expanded (disputed)",
+      "tests": [
+        "json/dynamic-blocks/attribute-named-dynamic"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-json-literal-only-mode",
+      "spec": "spec.md#expression-evaluation",
+      "rule": "In literal-only mode, the for_each of a dynamic block in the file's body is literal text, so a string is an error, and dynamic attributes processing of a generated block gives its strings as literal text",
+      "tests": [
+        "json/dynamic-blocks/literal-only-for-each-string-is-text",
+        "json/dynamic-blocks/literal-only-generated-dynamic-attributes-string-is-text"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-json-literal-only-templates",
+      "spec": "spec.md#expression-evaluation",
+      "rule": "In literal-only mode, strings in the labels and content of generated blocks, and the for_each of a dynamic block nested in a block, are still templates (disputed)",
+      "tests": [
+        "json/dynamic-blocks/literal-only-content-string-is-template",
+        "json/dynamic-blocks/literal-only-label-string-is-template",
+        "json/dynamic-blocks/literal-only-nested-for-each-string-is-template"
+      ]
+    }
+  ]
+}

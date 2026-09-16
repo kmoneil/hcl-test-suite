@@ -1,0 +1,36 @@
+{
+  "description": "In literal-only mode, a for_each string is text, and so an error",
+  "spec": [
+    "ext/dynblock/README.md#usage",
+    "spec.md#expression-evaluation",
+    "json/spec.md#strings"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "dynamic-blocks"
+  ],
+  "evaluation_mode": "literal-only",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "Cannot use a string value in for_each",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

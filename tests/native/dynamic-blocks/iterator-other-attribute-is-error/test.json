@@ -1,0 +1,33 @@
+{
+  "description": "Accessing an attribute of the iterator other than key and value is an error",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "hclsyntax/spec.md#attribute-access-operator"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "does not have an attribute named \"index\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "description": "A nested label using the iterator of an unknown outer for_each is an error",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "ext/dynblock/README.md#usage",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "decode",
+  "features": [
+    "unknown-values",
+    "dynamic-blocks"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "dynamic"
+    }
+  },
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "a",
+        "body": {
+          "mode": "exhaustive",
+          "blocks": [
+            {
+              "type": "b",
+              "labels": [
+                "name"
+              ],
+              "body": {
+                "mode": "exhaustive",
+                "attributes": [
+                  {
+                    "name": "v"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "Dynamic block labels must be immediately-known values",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

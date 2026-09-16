@@ -1,0 +1,47 @@
+{
+  "description": "With an unknown for_each, a type expression in a generated block's attribute can't be read",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "ext/typeexpr/README.md#type-expression-syntax",
+    "spec.md#static-analysis"
+  ],
+  "op": "decode",
+  "features": [
+    "unknown-values",
+    "static-analysis",
+    "type-expressions",
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The spec's static analyses read an expression as written, and with a known for_each hashicorp/hcl analyzes the content's expressions (see native/dynamic-blocks/type-expression-in-content), while the README only makes the attributes derived from the iteration unknown when for_each is. hashicorp/hcl replaces the expression of every attribute of a block generated from an unknown for_each with the constant dynamic value (unknownBody.fixupAttrs in ext/dynblock/unknown_body.go), which has no syntax to analyze.",
+  "variables": {
+    "u": {
+      "unknown": "dynamic"
+    }
+  },
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v",
+              "analysis": {
+                "kind": "type"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "A type specification is either a primitive type keyword",
+  "expect": {
+    "valid": false,
+    "phase": "analysis"
+  }
+}

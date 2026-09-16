@@ -1,0 +1,636 @@
+{
+  "area": "native/dynamic-blocks",
+  "rules": [
+    {
+      "id": "dynamic-blocks-generates-blocks",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "A dynamic block whose label is a block type the schema requests is replaced by a block of that type for each element of its for_each collection, each with the content block's body as its body",
+      "tests": [
+        "native/dynamic-blocks/block-for-each-element",
+        "native/dynamic-blocks/content-body-is-block-body"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-readme-example",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "The README's example gives the two static blocks with the three generated blocks between them, each with the element interpolated into its attribute",
+      "tests": [
+        "native/dynamic-blocks/readme-example"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-order",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "Generated blocks take the place of their dynamic block among the body's blocks, whatever the other blocks' types, in the order of the elements of a tuple or list",
+      "tests": [
+        "native/dynamic-blocks/readme-example",
+        "native/dynamic-blocks/order-among-other-block-types",
+        "native/dynamic-blocks/order-list-elements",
+        "native/dynamic-blocks/order-two-dynamic-blocks"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-empty-collection",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "A dynamic block whose collection is empty generates no blocks, so its labels aren't evaluated and its content is neither processed with the schema nor evaluated",
+      "tests": [
+        "native/dynamic-blocks/empty-tuple-generates-no-blocks",
+        "native/dynamic-blocks/empty-map-generates-no-blocks",
+        "native/dynamic-blocks/empty-collection-content-not-processed",
+        "native/dynamic-blocks/empty-collection-content-not-evaluated",
+        "native/dynamic-blocks/empty-collection-labels-not-evaluated"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-collection-types",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "for_each can be a tuple, a list, a map or a set, and the iterator's value attribute is the value of the element a block is generated for, which can be null or unknown",
+      "tests": [
+        "native/dynamic-blocks/for-each-tuple-values",
+        "native/dynamic-blocks/order-list-elements",
+        "native/dynamic-blocks/for-each-map-value",
+        "native/dynamic-blocks/for-each-set-value",
+        "native/dynamic-blocks/for-each-set-block-per-element",
+        "native/dynamic-blocks/for-each-null-element",
+        "native/dynamic-blocks/for-each-unknown-element"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-object-collection",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "for_each can be an object, which generates a block for each attribute, in the lexicographic order of the attribute names, with the attribute's name as the iterator's key and its value as the value (disputed)",
+      "tests": [
+        "native/dynamic-blocks/for-each-object"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-iterator-key",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "The iterator's key attribute is the element's index for a tuple or list, the element's key for a map, and the element itself for a set (disputed)",
+      "tests": [
+        "native/dynamic-blocks/key-tuple-index",
+        "native/dynamic-blocks/key-list-index",
+        "native/dynamic-blocks/key-map-key",
+        "native/dynamic-blocks/key-set-element"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-map-order",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "The blocks generated from a map follow the lexicographic order of its keys (disputed)",
+      "tests": [
+        "native/dynamic-blocks/order-map-keys"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-for-each-primitive",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "A for_each value of a primitive type, a string, a number or a bool, is an error, even when it is unknown",
+      "tests": [
+        "native/dynamic-blocks/for-each-string-is-error",
+        "native/dynamic-blocks/for-each-number-is-error",
+        "native/dynamic-blocks/for-each-bool-is-error",
+        "native/dynamic-blocks/for-each-unknown-string-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-for-each-missing-or-null",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "A dynamic block without for_each, or whose for_each is the null keyword or a null list, is an error (disputed)",
+      "tests": [
+        "native/dynamic-blocks/for-each-missing-is-error",
+        "native/dynamic-blocks/for-each-null-is-error",
+        "native/dynamic-blocks/for-each-null-list-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-for-each-context",
+      "spec": "ext/dynblock/README.md#usage",
+      "rule": "for_each is evaluated with the variables and functions given to the expansion, and a for_each that fails to evaluate is an error",
+      "tests": [
+        "native/dynamic-blocks/for-each-variable",
+        "native/dynamic-blocks/for-each-function",
+        "native/dynamic-blocks/for-each-evaluation-error-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-for-each-scope",
+      "spec": "ext/dynblock/README.md#usage",
+      "rule": "A dynamic block's own iterator isn't in scope in its for_each, where its name means what it means around the dynamic block: an enclosing iterator, a variable given to the expansion, or nothing",
+      "tests": [
+        "native/dynamic-blocks/for-each-own-iterator-is-undefined",
+        "native/dynamic-blocks/for-each-variable-named-like-iterator",
+        "native/dynamic-blocks/nested-for-each-uses-enclosing-iterator-of-same-name"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-iterator-default-name",
+      "spec": "ext/dynblock/README.md#usage",
+      "rule": "Without an iterator attribute, the iterator's name is the dynamic block's label",
+      "tests": [
+        "native/dynamic-blocks/iterator-default-name"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-iterator-name",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "The iterator attribute names the iterator, and the block type then no longer does",
+      "tests": [
+        "native/dynamic-blocks/iterator-attribute-names-iterator",
+        "native/dynamic-blocks/iterator-attribute-replaces-default-name",
+        "native/dynamic-blocks/labels-use-iterator-attribute-name",
+        "native/dynamic-blocks/iterator-attribute-replaces-default-name-in-labels",
+        "native/dynamic-blocks/nested-for-each-uses-outer-iterator-attribute-name"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-iterator-syntax",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "The iterator attribute must be a single variable name: an attribute access, an index or a number is an error",
+      "tests": [
+        "native/dynamic-blocks/iterator-attribute-access-is-error",
+        "native/dynamic-blocks/iterator-index-is-error",
+        "native/dynamic-blocks/iterator-number-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-iterator-read-as-traversal",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "The iterator attribute is read as a static traversal, so a parenthesized or quoted name is an error, while the keyword true names an iterator (disputed)",
+      "tests": [
+        "native/dynamic-blocks/iterator-parenthesized-is-error",
+        "native/dynamic-blocks/iterator-quoted-is-error",
+        "native/dynamic-blocks/iterator-keyword-true"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-iterator-attributes",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "The iterator is an object with the attributes key and value, so it can be indexed with their names, and any other attribute of it is an error",
+      "tests": [
+        "native/dynamic-blocks/iterator-index-by-name",
+        "native/dynamic-blocks/iterator-other-attribute-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-iterator-as-value",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "Used as a value, the iterator is an object holding its key and value (disputed)",
+      "tests": [
+        "native/dynamic-blocks/iterator-as-value"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-iterator-scope",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "The iterator is in scope in its content block, including in blocks nested in it and in the body that partial processing of a generated block leaves, when they are processed with schema-driven or partial processing",
+      "tests": [
+        "native/dynamic-blocks/iterator-in-nested-static-block",
+        "native/dynamic-blocks/content-partial-processing"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-iterator-hides-variables",
+      "spec": "hclsyntax/spec.md#variables-and-variable-expressions",
+      "rule": "Where an iterator is in scope, in the content, in labels and in the for_each of nested dynamic blocks, it hides a variable or an enclosing iterator of the same name",
+      "tests": [
+        "native/dynamic-blocks/iterator-hides-variable-in-content",
+        "native/dynamic-blocks/iterator-hides-variable-in-labels",
+        "native/dynamic-blocks/iterator-hides-variable-in-nested-for-each",
+        "native/dynamic-blocks/nested-iterator-same-name"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-iterator-out-of-scope",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "The iterator isn't in scope outside its dynamic block, including in other dynamic blocks",
+      "tests": [
+        "native/dynamic-blocks/iterator-not-in-scope-after-dynamic-block",
+        "native/dynamic-blocks/iterator-not-in-scope-in-other-dynamic-block"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-labels",
+      "spec": "ext/dynblock/README.md#usage",
+      "rule": "The labels attribute lists an expression for each label of the block type. They are evaluated for each generated block, with the iterator and the variables and functions given to the expansion in scope, and give that block's labels, which several blocks can share",
+      "tests": [
+        "native/dynamic-blocks/labels-from-iterator",
+        "native/dynamic-blocks/labels-two",
+        "native/dynamic-blocks/labels-template",
+        "native/dynamic-blocks/labels-variables-and-functions",
+        "native/dynamic-blocks/labels-shared-by-blocks"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-label-conversion",
+      "spec": "spec.md#primitive-type-conversions",
+      "rule": "A label's value is converted to a string, so numbers and bools give their string forms",
+      "tests": [
+        "native/dynamic-blocks/label-number-converted",
+        "native/dynamic-blocks/label-bool-converted"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-label-normalized",
+      "spec": "spec.md#primitive-types",
+      "rule": "A label's value is normalized to NFC, like other string values (disputed)",
+      "tests": [
+        "native/dynamic-blocks/label-value-normalized"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-label-invalid",
+      "spec": "spec.md#structural-elements",
+      "rule": "Block labels are strings, so a label whose value is null, unknown or can't be converted to a string is an error, and so is a label expression that fails to evaluate",
+      "tests": [
+        "native/dynamic-blocks/label-null-is-error",
+        "native/dynamic-blocks/label-unknown-is-error",
+        "native/dynamic-blocks/label-tuple-is-error",
+        "native/dynamic-blocks/label-evaluation-error-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-label-count",
+      "spec": "ext/dynblock/README.md#usage",
+      "rule": "A labels list needs an expression for each label of the block type in the schema: too many or too few is an error, and so is a missing labels attribute for a block type with labels or a label for a block type without labels",
+      "tests": [
+        "native/dynamic-blocks/labels-too-many-is-error",
+        "native/dynamic-blocks/labels-too-few-is-error",
+        "native/dynamic-blocks/labels-missing-is-error",
+        "native/dynamic-blocks/labels-for-type-without-labels-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-labels-empty-for-type-without-labels",
+      "spec": "ext/dynblock/README.md#usage",
+      "rule": "An empty labels list for a block type without labels is an error (disputed)",
+      "tests": [
+        "native/dynamic-blocks/labels-empty-for-type-without-labels-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-labels-static-list",
+      "spec": "ext/dynblock/README.md#usage",
+      "rule": "The labels attribute must be written as a tuple constructor, whose elements are evaluated one by one: a variable, a for expression or parentheses giving a list of labels are errors (disputed)",
+      "tests": [
+        "native/dynamic-blocks/labels-variable-is-error",
+        "native/dynamic-blocks/labels-for-expression-is-error",
+        "native/dynamic-blocks/labels-parenthesized-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-content",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "Each generated block's body is the content block's body, processed with the block type's schema: a schema error in it is an error, an attribute the schema selects that fails to evaluate is an error, the attributes it doesn't select aren't evaluated, partial and dynamic attributes processing apply to it, and an empty content gives an empty body",
+      "tests": [
+        "native/dynamic-blocks/content-required-attribute-missing-is-error",
+        "native/dynamic-blocks/content-unexpected-attribute-is-error",
+        "native/dynamic-blocks/content-evaluation-error-is-error",
+        "native/dynamic-blocks/content-unrequested-attribute-not-evaluated",
+        "native/dynamic-blocks/content-empty",
+        "native/dynamic-blocks/content-partial-processing",
+        "native/dynamic-blocks/content-dynamic-attributes-processing"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-content-label",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "A content block has no labels",
+      "tests": [
+        "native/dynamic-blocks/content-with-label-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-content-block-count",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "A dynamic block needs exactly one content block (disputed)",
+      "tests": [
+        "native/dynamic-blocks/content-missing-is-error",
+        "native/dynamic-blocks/content-twice-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-arguments",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "A dynamic block has no attributes or blocks other than for_each, iterator, labels and content",
+      "tests": [
+        "native/dynamic-blocks/unexpected-attribute-is-error",
+        "native/dynamic-blocks/unexpected-block-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-block-label",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "A dynamic block has exactly one label, the type of the blocks it generates",
+      "tests": [
+        "native/dynamic-blocks/dynamic-block-without-label-is-error",
+        "native/dynamic-blocks/dynamic-block-with-two-labels-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-block-label-partial",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "A dynamic block without exactly one label is an error in partial processing too, which otherwise leaves blocks of types it doesn't request alone (disputed)",
+      "tests": [
+        "native/dynamic-blocks/dynamic-block-without-label-partial-is-error",
+        "native/dynamic-blocks/dynamic-block-with-two-labels-partial-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-structure-checked-without-blocks",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "A malformed dynamic block is an error even when its collection is empty and it generates no blocks: a missing or second content block, a missing labels attribute or the wrong number of labels, labels given by a variable, an invalid iterator or an unexpected attribute (disputed)",
+      "tests": [
+        "native/dynamic-blocks/labels-too-many-empty-collection-is-error",
+        "native/dynamic-blocks/labels-too-few-empty-collection-is-error",
+        "native/dynamic-blocks/labels-missing-empty-collection-is-error",
+        "native/dynamic-blocks/content-missing-empty-collection-is-error",
+        "native/dynamic-blocks/content-twice-empty-collection-is-error",
+        "native/dynamic-blocks/labels-variable-empty-collection-is-error",
+        "native/dynamic-blocks/iterator-attribute-access-empty-collection-is-error",
+        "native/dynamic-blocks/unexpected-attribute-empty-collection-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-requested-types",
+      "spec": "ext/dynblock/README.md#usage",
+      "rule": "Only dynamic blocks for block types the schema requests are expanded: schema-driven processing reports any other dynamic block as an unexpected block, and partial processing leaves it without evaluating it",
+      "tests": [
+        "native/dynamic-blocks/unrequested-block-type-is-error",
+        "native/dynamic-blocks/unrequested-block-type-partial-not-expanded"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-unrequested-type-without-blocks",
+      "spec": "ext/dynblock/README.md#usage",
+      "rule": "A dynamic block for a block type the schema doesn't request is an error in schema-driven processing even when its collection is empty (disputed)",
+      "tests": [
+        "native/dynamic-blocks/unrequested-block-type-empty-collection-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-partial-processing",
+      "spec": "spec.md#partial-processing-of-body-content",
+      "rule": "Partial processing of an expanded body expands the dynamic blocks of the block types it requests, leaving them out of the remaining body and the bodies later steps leave, while the attributes and dynamic blocks it doesn't take stay in the remaining body, where a later step that requests their block types expands them",
+      "tests": [
+        "native/dynamic-blocks/partial-expands-requested-block-type",
+        "native/dynamic-blocks/partial-remaining-body-expands",
+        "native/dynamic-blocks/partial-twice-remaining-body-expands",
+        "native/dynamic-blocks/partial-taken-blocks-stay-out-of-later-bodies",
+        "native/dynamic-blocks/partial-remaining-body-keeps-attributes"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-dynamic-attributes-processing",
+      "spec": "spec.md#dynamic-attributes-processing",
+      "rule": "Dynamic attributes processing doesn't expand dynamic blocks, so a dynamic block in a native syntax body processed that way is an error like any other block",
+      "tests": [
+        "native/dynamic-blocks/dynamic-attributes-processing-dynamic-block-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-generated-dynamic-attributes",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "Dynamic attributes processing of the body of a generated block, of a block nested in it, or of the body partial processing leaves of it, gives the attributes without the iterator in scope, so an attribute using it fails to evaluate (disputed)",
+      "tests": [
+        "native/dynamic-blocks/generated-dynamic-attributes-iterator-is-error",
+        "native/dynamic-blocks/generated-remaining-dynamic-attributes-iterator-is-error",
+        "native/dynamic-blocks/generated-static-block-dynamic-attributes-iterator-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-remaining-dynamic-attributes",
+      "spec": "spec.md#partial-processing-of-body-content",
+      "rule": "When dynamic blocks are expanded, dynamic attributes processing of the body that partial processing leaves gives the attributes partial processing took as well (disputed)",
+      "tests": [
+        "native/dynamic-blocks/partial-remaining-dynamic-attributes-repeats-attributes"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-remaining-required-attributes",
+      "spec": "spec.md#partial-processing-of-body-content",
+      "rule": "When dynamic blocks are expanded, a later step can require an attribute that partial processing took without an error, although the body it processes doesn't have the attribute (disputed)",
+      "tests": [
+        "native/dynamic-blocks/partial-remaining-required-taken-attribute-not-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-nesting",
+      "spec": "ext/dynblock/README.md#usage",
+      "rule": "Dynamic blocks are expanded in the bodies of static blocks, in the content of other dynamic blocks and in the bodies nested in it, including remaining bodies, once for each generated block, and a nested dynamic block's for_each, labels and content can use the iterators of the dynamic blocks around it",
+      "tests": [
+        "native/dynamic-blocks/nested-in-static-block",
+        "native/dynamic-blocks/nested-in-dynamic-block",
+        "native/dynamic-blocks/nested-three-levels",
+        "native/dynamic-blocks/nested-in-static-block-in-content",
+        "native/dynamic-blocks/partial-remaining-body-nested-dynamic-block",
+        "native/dynamic-blocks/nested-in-static-block-variables-and-functions",
+        "native/dynamic-blocks/nested-in-dynamic-block-variables-and-functions"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-expand-documentation-example",
+      "spec": "ext/dynblock/README.md#usage",
+      "rule": "The example in the documentation of Expand generates a child block for each element of child_objs, each with a grandchild block for each of its children, labeled with the grandchild's key and holding the child's key and the grandchild's value (disputed)",
+      "tests": [
+        "native/dynamic-blocks/expand-documentation-example"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-dynamic-type-not-expanded",
+      "spec": "ext/dynblock/README.md#usage",
+      "rule": "A dynamic block labeled dynamic generates ordinary blocks of type dynamic when the schema requests that type, and they aren't expanded again (disputed)",
+      "tests": [
+        "native/dynamic-blocks/dynamic-block-for-dynamic-type-not-expanded"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-dynamic-type-reserved",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "A block of type dynamic is a dynamic block even when the schema requests the block type dynamic (disputed)",
+      "tests": [
+        "native/dynamic-blocks/requested-dynamic-type-still-expanded"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-attribute-named-dynamic",
+      "spec": "spec.md#schema-driven-processing",
+      "rule": "A schema that requests an attribute named dynamic gets that attribute, and dynamic blocks are still expanded (disputed)",
+      "tests": [
+        "native/dynamic-blocks/attribute-named-dynamic"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-content-outside-dynamic-blocks",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "A block of type content outside a dynamic block is an ordinary block",
+      "tests": [
+        "native/dynamic-blocks/content-block-outside-dynamic-block"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-not-expanded-without-request",
+      "spec": "ext/dynblock/README.md#usage",
+      "rule": "Without dynamic block expansion, a block of type dynamic is an ordinary block",
+      "tests": [
+        "native/dynamic-blocks/not-expanded-without-dynamic-blocks"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-unknown-collection",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "A for_each whose value is unknown, of the dynamic pseudo-type or of a list, map or set type, generates a single block, in which the iterator's key and value are the dynamic value",
+      "tests": [
+        "native/dynamic-blocks/unknown-for-each-one-block",
+        "native/dynamic-blocks/unknown-list-for-each-one-block",
+        "native/dynamic-blocks/unknown-map-for-each-one-block",
+        "native/dynamic-blocks/unknown-set-for-each-one-block",
+        "native/dynamic-blocks/unknown-for-each-dynamic-attributes-processing"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-unknown-collection-attributes",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "With an unknown for_each, every attribute of the generated block and of the blocks nested in it is the dynamic value, including attributes that don't use the iterator, templates using it, and attributes that would fail to evaluate (disputed)",
+      "tests": [
+        "native/dynamic-blocks/unknown-for-each-attribute-without-iterator",
+        "native/dynamic-blocks/unknown-for-each-template-with-iterator",
+        "native/dynamic-blocks/unknown-for-each-evaluation-error-hidden",
+        "native/dynamic-blocks/unknown-for-each-nested-block-attribute",
+        "native/dynamic-blocks/unknown-for-each-nested-dynamic-block",
+        "native/dynamic-blocks/unknown-for-each-partial-processing",
+        "native/dynamic-blocks/unknown-for-each-dynamic-attributes-without-iterator"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-unknown-collection-static-analysis",
+      "spec": "spec.md#static-analysis",
+      "rule": "With an unknown for_each, a static analysis of an attribute of the generated block fails, even one that succeeds with a known for_each (disputed)",
+      "tests": [
+        "native/dynamic-blocks/unknown-for-each-static-traversal-is-error",
+        "native/dynamic-blocks/unknown-for-each-type-expression-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-unknown-structural-collection",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "An unknown for_each of a tuple or object type also generates a single block, although its type gives the number of elements (disputed)",
+      "tests": [
+        "native/dynamic-blocks/unknown-tuple-for-each-one-block",
+        "native/dynamic-blocks/unknown-object-for-each-one-block"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-set-with-unknown-elements",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "A known set with unknown elements generates a block for each element it holds, although its length isn't known (disputed)",
+      "tests": [
+        "native/dynamic-blocks/set-with-unknown-element-block-per-element"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-unknown-collection-schema",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "With an unknown for_each, the generated block's body is still processed with the block type's schema, and the dynamic blocks in it are still expanded, so errors in either are errors",
+      "tests": [
+        "native/dynamic-blocks/unknown-for-each-content-schema-error-is-error",
+        "native/dynamic-blocks/unknown-for-each-nested-for-each-not-iterable-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-unknown-collection-labels",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "With an unknown for_each, a label that uses its iterator, in the dynamic block or in one nested in its content, is unknown and so an error, while labels that don't use it label the single generated block",
+      "tests": [
+        "native/dynamic-blocks/unknown-for-each-label-from-iterator-is-error",
+        "native/dynamic-blocks/unknown-for-each-fixed-label",
+        "native/dynamic-blocks/unknown-outer-iterator-in-nested-label-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-unknown-nested-collection",
+      "spec": "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+      "rule": "A nested dynamic block whose for_each uses the iterator of an enclosing dynamic block with an unknown for_each generates a single block too",
+      "tests": [
+        "native/dynamic-blocks/unknown-outer-iterator-in-nested-for-each"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-content-evaluation-context",
+      "spec": "ext/dynblock/README.md#usage",
+      "rule": "The attributes of generated blocks are evaluated with the variables and functions given to the decode as well as the iterators",
+      "tests": [
+        "native/dynamic-blocks/content-variables-and-functions"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-static-analysis",
+      "spec": "spec.md#static-analysis",
+      "rule": "A static analysis of an attribute of a generated block analyzes its expression as the content gives it: a static traversal can name the iterator, and a type expression is read as usual",
+      "tests": [
+        "native/dynamic-blocks/static-traversal-of-iterator",
+        "native/dynamic-blocks/type-expression-in-content"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-static-analysis-scope",
+      "spec": "spec.md#static-analysis",
+      "rule": "The expressions that a static analysis finds in an attribute of a generated block are evaluated without the iterator in scope, so using it in them is an error (disputed)",
+      "tests": [
+        "native/dynamic-blocks/static-list-element-with-iterator-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-try-functions",
+      "spec": "ext/tryfunc/README.md#try-and-can-functions",
+      "rule": "try and can evaluate their arguments with the iterator in scope, in the attributes of generated blocks and in labels",
+      "tests": [
+        "native/dynamic-blocks/try-with-iterator",
+        "native/dynamic-blocks/can-with-iterator",
+        "native/dynamic-blocks/try-in-labels-with-iterator"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-literal-only-mode",
+      "spec": "spec.md#expression-evaluation",
+      "rule": "In literal-only mode, dynamic blocks are still expanded, but a dynamic block's for_each and labels, and the attributes of the blocks it generates, can't use variables or call functions",
+      "tests": [
+        "native/dynamic-blocks/literal-only-expands-dynamic-blocks",
+        "native/dynamic-blocks/literal-only-for-each-variable-is-error",
+        "native/dynamic-blocks/literal-only-for-each-function-is-error",
+        "native/dynamic-blocks/literal-only-label-variable-is-error",
+        "native/dynamic-blocks/literal-only-label-function-is-error",
+        "native/dynamic-blocks/literal-only-content-variable-is-error",
+        "native/dynamic-blocks/literal-only-content-function-is-error"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-literal-only-iterator",
+      "spec": "spec.md#expression-evaluation",
+      "rule": "In literal-only mode, iterators are still in scope in labels, in the content of dynamic blocks and in the for_each of dynamic blocks nested in it (disputed)",
+      "tests": [
+        "native/dynamic-blocks/literal-only-iterator-in-content",
+        "native/dynamic-blocks/literal-only-iterator-in-labels",
+        "native/dynamic-blocks/literal-only-outer-iterator-in-nested-for-each"
+      ]
+    },
+    {
+      "id": "dynamic-blocks-variables-walk",
+      "spec": "ext/dynblock/README.md#detecting-variables",
+      "rule": "Walking a body level by level, with a schema for each level, gives the variables that its attributes and the for_each and labels of its dynamic blocks use, leaving out the iterators they define, or with the walk for expansion only those of for_each and labels, and the nested bodies to walk next",
+      "untested": "The protocol doesn't list the variables that expressions use"
+    },
+    {
+      "id": "dynamic-blocks-variables-hcldec",
+      "spec": "ext/dynblock/README.md#detecting-variables-with-hcldec-specifications",
+      "rule": "With an hcldec specification, one call gives the variables needed to expand a body's dynamic blocks, and another the variables needed to decode the expanded body",
+      "untested": "The protocol has no hcldec specifications, and doesn't list the variables that expressions use"
+    },
+    {
+      "id": "dynamic-blocks-separate-evaluation-contexts",
+      "spec": "ext/dynblock/README.md#usage",
+      "rule": "The attributes of generated blocks can be evaluated with other variables and functions than the ones given to the expansion for for_each and labels",
+      "untested": "The protocol gives a decode one set of variables and functions"
+    }
+  ]
+}

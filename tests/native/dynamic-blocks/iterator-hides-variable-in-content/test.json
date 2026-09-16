@@ -1,0 +1,62 @@
+{
+  "description": "The iterator hides a variable of the same name in the content only",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "hclsyntax/spec.md#variables-and-variable-expressions"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "variables": {
+    "b": {
+      "string": "outer"
+    }
+  },
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "w"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "w": {
+          "string": "outer"
+        }
+      },
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "string": "x"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

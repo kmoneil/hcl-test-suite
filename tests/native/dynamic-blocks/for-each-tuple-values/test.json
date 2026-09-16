@@ -1,0 +1,71 @@
+{
+  "description": "The iterator's value is each element of a tuple in turn",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "string": "x"
+              }
+            },
+            "blocks": []
+          }
+        },
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "number": "2"
+              }
+            },
+            "blocks": []
+          }
+        },
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "bool": true
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

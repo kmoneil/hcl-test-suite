@@ -1,0 +1,35 @@
+{
+  "description": "A // property in the dynamic property's object is a block type",
+  "spec": [
+    "ext/dynblock/README.md#usage",
+    "json/spec.md#structural-elements",
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "dynamic-blocks"
+  ],
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "representing the contents of one or more \"dynamic\" blocks",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

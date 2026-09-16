@@ -1,0 +1,37 @@
+{
+  "description": "A content property holding an empty array is an error",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "json/spec.md#blocks",
+    "json/spec.md#arrays"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The README and the documentation of Expand speak of the content block of a dynamic block, but don't say that exactly one is required. An empty array defines no content blocks, and hashicorp/hcl requires one (expandBody.decodeSpec in ext/dynblock/expand_spec.go).",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "Missing dynamic content block",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "description": "A type expression in a generated block's attribute is read as usual",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "ext/typeexpr/README.md#type-expression-syntax"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "static-analysis",
+    "type-expressions",
+    "dynamic-blocks"
+  ],
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v",
+              "analysis": {
+                "kind": "type"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "type": [
+                  "list",
+                  "string"
+                ]
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

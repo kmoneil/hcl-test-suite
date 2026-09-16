@@ -1,0 +1,83 @@
+{
+  "description": "Dynamic blocks that partial processing took stay out of the bodies of later partial steps",
+  "spec": [
+    "ext/dynblock/README.md#usage",
+    "spec.md#partial-processing-of-body-content"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "partial",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ],
+    "remain": {
+      "mode": "partial",
+      "attributes": [
+        {
+          "name": "c"
+        }
+      ],
+      "remain": {
+        "mode": "exhaustive"
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "string": "static"
+              }
+            },
+            "blocks": []
+          }
+        },
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "string": "x"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ],
+      "remain": {
+        "attributes": {
+          "c": {
+            "number": "1"
+          }
+        },
+        "blocks": [],
+        "remain": {
+          "attributes": {},
+          "blocks": []
+        }
+      }
+    }
+  }
+}

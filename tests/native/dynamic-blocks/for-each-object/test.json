@@ -1,0 +1,71 @@
+{
+  "description": "An object generates a block for each attribute in lexicographic order, with its name as the key",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The README's example iterates a tuple and its section on unknown values names lists, maps and sets, but it never mentions objects, what the iterator's key is, or in which order blocks are generated. hashicorp/hcl iterates objects with go-cty's ElementIterator, which gives the attribute names as keys in lexicographic order (expandBody.expandBlocks in ext/dynblock/expand_body.go), as the native syntax spec defines for for expressions.",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "k"
+            },
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "k": {
+                "string": "a"
+              },
+              "v": {
+                "string": "first"
+              }
+            },
+            "blocks": []
+          }
+        },
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "k": {
+                "string": "z"
+              },
+              "v": {
+                "string": "last"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

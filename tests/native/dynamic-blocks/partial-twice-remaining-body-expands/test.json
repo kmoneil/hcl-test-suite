@@ -1,0 +1,83 @@
+{
+  "description": "Dynamic blocks left by two partial steps are expanded in the last body",
+  "spec": [
+    "ext/dynblock/README.md#usage",
+    "spec.md#partial-processing-of-body-content"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "partial",
+    "attributes": [
+      {
+        "name": "c"
+      }
+    ],
+    "remain": {
+      "mode": "partial",
+      "remain": {
+        "mode": "exhaustive",
+        "blocks": [
+          {
+            "type": "b",
+            "body": {
+              "mode": "exhaustive",
+              "attributes": [
+                {
+                  "name": "v"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "c": {
+          "number": "1"
+        }
+      },
+      "blocks": [],
+      "remain": {
+        "attributes": {},
+        "blocks": [],
+        "remain": {
+          "attributes": {},
+          "blocks": [
+            {
+              "type": "b",
+              "labels": [],
+              "body": {
+                "attributes": {
+                  "v": {
+                    "string": "static"
+                  }
+                },
+                "blocks": []
+              }
+            },
+            {
+              "type": "b",
+              "labels": [],
+              "body": {
+                "attributes": {
+                  "v": {
+                    "string": "x"
+                  }
+                },
+                "blocks": []
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

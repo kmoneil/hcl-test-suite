@@ -1,0 +1,34 @@
+{
+  "description": "A dynamic block without for_each is an error",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The README and the documentation of Expand don't say that a dynamic block needs a for_each, and generating no blocks without one would be another reading. hashicorp/hcl reads dynamic blocks with a schema that requires for_each (dynamicBlockBodySchemaLabels and dynamicBlockBodySchemaNoLabels in ext/dynblock/schema.go).",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "The argument \"for_each\" is required",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

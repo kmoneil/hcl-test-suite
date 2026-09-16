@@ -1,0 +1,43 @@
+{
+  "description": "Dynamic attributes processing gives a dynamic property as an attribute",
+  "spec": [
+    "ext/dynblock/README.md#usage",
+    "spec.md#dynamic-attributes-processing",
+    "json/spec.md#objects"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "dynamic-blocks"
+  ],
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "dynamic": {
+          "object": {
+            "b": {
+              "object": {
+                "for_each": {
+                  "tuple": [
+                    {
+                      "string": "x"
+                    }
+                  ]
+                },
+                "content": {
+                  "object": {}
+                }
+              }
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

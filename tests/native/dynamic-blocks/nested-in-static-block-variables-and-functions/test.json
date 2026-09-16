@@ -1,0 +1,105 @@
+{
+  "description": "A dynamic block in a static block uses the variables and functions given to the expansion",
+  "spec": [
+    "ext/dynblock/README.md#usage"
+  ],
+  "op": "decode",
+  "features": [
+    "functions",
+    "dynamic-blocks"
+  ],
+  "variables": {
+    "xs": {
+      "tuple": [
+        {
+          "string": "x"
+        },
+        {
+          "string": "y"
+        }
+      ]
+    }
+  },
+  "functions": {
+    "f": {
+      "result": {
+        "value": {
+          "string": "l"
+        }
+      }
+    }
+  },
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "s",
+        "body": {
+          "mode": "exhaustive",
+          "blocks": [
+            {
+              "type": "b",
+              "labels": [
+                "name"
+              ],
+              "body": {
+                "mode": "exhaustive",
+                "attributes": [
+                  {
+                    "name": "v"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "s",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": [
+              {
+                "type": "b",
+                "labels": [
+                  "l"
+                ],
+                "body": {
+                  "attributes": {
+                    "v": {
+                      "string": "x"
+                    }
+                  },
+                  "blocks": []
+                }
+              },
+              {
+                "type": "b",
+                "labels": [
+                  "l"
+                ],
+                "body": {
+                  "attributes": {
+                    "v": {
+                      "string": "y"
+                    }
+                  },
+                  "blocks": []
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "description": "Without dynamic block expansion, a dynamic block is an ordinary block",
+  "spec": [
+    "ext/dynblock/README.md#usage",
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "dynamic",
+        "labels": [
+          "type"
+        ],
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "for_each"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "dynamic",
+          "labels": [
+            "b"
+          ],
+          "body": {
+            "attributes": {
+              "for_each": {
+                "tuple": [
+                  {
+                    "string": "x"
+                  }
+                ]
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

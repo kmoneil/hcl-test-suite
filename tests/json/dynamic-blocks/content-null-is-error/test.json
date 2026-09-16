@@ -1,0 +1,35 @@
+{
+  "description": "A null content property is an error",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "dynamic-blocks"
+  ],
+  "notes": "The JSON spec requires a block's body to be an object or an array of objects, so null is an error. hashicorp/hcl reports it differently: it reads a null block property as no blocks (see json/bodies/block-null-value), and then finds no content block (expandBody.decodeSpec in ext/dynblock/expand_spec.go).",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "Missing dynamic content block",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

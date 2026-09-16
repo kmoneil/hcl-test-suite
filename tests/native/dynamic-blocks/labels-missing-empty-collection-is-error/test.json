@@ -1,0 +1,38 @@
+{
+  "description": "A missing labels attribute is an error even when the collection is empty",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "ext/dynblock/README.md#usage"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The README says the generated blocks are read as if they were written in place of the dynamic block, and an empty collection generates none, so this mistake affects no block. hashicorp/hcl reads a dynamic block for a block type with labels with a schema that requires the labels attribute (dynamicBlockBodySchemaLabels in ext/dynblock/schema.go), before it evaluates for_each (expandBody.decodeSpec in ext/dynblock/expand_spec.go).",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "labels": [
+          "name"
+        ],
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "The argument \"labels\" is required",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

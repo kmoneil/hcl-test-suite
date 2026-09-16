@@ -1,0 +1,1 @@
+{"dynamic": {"a": {"for_each": ["p"], "content": {"dynamic": {"b": {"for_each": ["q"], "content": {"v": "${a.value}${b.value}"}}}}}}}

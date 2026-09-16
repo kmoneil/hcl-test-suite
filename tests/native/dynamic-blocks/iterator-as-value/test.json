@@ -1,0 +1,57 @@
+{
+  "description": "The iterator used as a value is an object holding its key and value",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The examples use the iterator's key and value with attribute access, which makes the iterator an object with those attributes (see native/dynamic-blocks/iterator-index-by-name), but the README doesn't say what the key is (see native/dynamic-blocks/key-tuple-index). hashicorp/hcl gives the element's index, and builds the object in iteration.Object in ext/dynblock/iteration.go.",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "object": {
+                  "key": {
+                    "number": "0"
+                  },
+                  "value": {
+                    "string": "x"
+                  }
+                }
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

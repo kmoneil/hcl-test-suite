@@ -1,0 +1,69 @@
+{
+  "description": "Label expressions can use the variables and functions given to the expansion",
+  "spec": [
+    "ext/dynblock/README.md#usage"
+  ],
+  "op": "decode",
+  "features": [
+    "functions",
+    "dynamic-blocks"
+  ],
+  "variables": {
+    "prefix": {
+      "string": "p"
+    }
+  },
+  "functions": {
+    "f": {
+      "result": {
+        "value": {
+          "string": "q"
+        }
+      }
+    }
+  },
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "labels": [
+          "first",
+          "second"
+        ],
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [
+            "p",
+            "q"
+          ],
+          "body": {
+            "attributes": {
+              "v": {
+                "number": "1"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

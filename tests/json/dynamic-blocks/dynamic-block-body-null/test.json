@@ -1,0 +1,38 @@
+{
+  "description": "A null in place of a dynamic block's body defines no dynamic block",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The JSON spec requires an object or an array of objects for a block's body. hashicorp/hcl reads a null after a block's labels as no blocks (see json/bodies/block-null-body-after-label), so there is no dynamic block to expand.",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": []
+    }
+  }
+}

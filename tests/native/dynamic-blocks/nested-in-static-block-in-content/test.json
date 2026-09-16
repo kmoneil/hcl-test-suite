@@ -1,0 +1,118 @@
+{
+  "description": "A dynamic block in a static block inside content can use the enclosing iterator",
+  "spec": [
+    "ext/dynblock/README.md#usage"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "a",
+        "body": {
+          "mode": "exhaustive",
+          "blocks": [
+            {
+              "type": "s",
+              "body": {
+                "mode": "exhaustive",
+                "blocks": [
+                  {
+                    "type": "b",
+                    "labels": [
+                      "name"
+                    ],
+                    "body": {
+                      "mode": "exhaustive",
+                      "attributes": [
+                        {
+                          "name": "v"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "a",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": [
+              {
+                "type": "s",
+                "labels": [],
+                "body": {
+                  "attributes": {},
+                  "blocks": [
+                    {
+                      "type": "b",
+                      "labels": [
+                        "x"
+                      ],
+                      "body": {
+                        "attributes": {
+                          "v": {
+                            "string": "p"
+                          }
+                        },
+                        "blocks": []
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "a",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": [
+              {
+                "type": "s",
+                "labels": [],
+                "body": {
+                  "attributes": {},
+                  "blocks": [
+                    {
+                      "type": "b",
+                      "labels": [
+                        "y"
+                      ],
+                      "body": {
+                        "attributes": {
+                          "v": {
+                            "string": "q"
+                          }
+                        },
+                        "blocks": []
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

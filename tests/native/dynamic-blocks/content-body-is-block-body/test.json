@@ -1,0 +1,73 @@
+{
+  "description": "The content block's attributes and blocks make up the body of each generated block",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ],
+          "blocks": [
+            {
+              "type": "c",
+              "body": {
+                "mode": "exhaustive",
+                "attributes": [
+                  {
+                    "name": "w"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "number": "1"
+              }
+            },
+            "blocks": [
+              {
+                "type": "c",
+                "labels": [],
+                "body": {
+                  "attributes": {
+                    "w": {
+                      "number": "2"
+                    }
+                  },
+                  "blocks": []
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

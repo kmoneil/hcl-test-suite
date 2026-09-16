@@ -1,0 +1,1 @@
+{"s": {"dynamic": {"b": {"for_each": "${[1, 2]}", "content": {}}}}}

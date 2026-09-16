@@ -1,0 +1,60 @@
+{
+  "description": "A static traversal of a generated block's attribute can name the iterator",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "spec.md#static-analysis",
+    "hclsyntax/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "static-analysis",
+    "dynamic-blocks"
+  ],
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v",
+              "analysis": {
+                "kind": "static-traversal"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "static_traversal": [
+                  {
+                    "root": "b"
+                  },
+                  {
+                    "attr": "value"
+                  }
+                ]
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

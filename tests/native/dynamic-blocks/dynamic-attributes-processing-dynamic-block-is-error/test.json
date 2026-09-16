@@ -1,0 +1,20 @@
+{
+  "description": "Dynamic attributes processing reports a dynamic block like any other block, without expanding it",
+  "spec": [
+    "ext/dynblock/README.md#usage",
+    "spec.md#dynamic-attributes-processing"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "Unexpected \"dynamic\" block",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

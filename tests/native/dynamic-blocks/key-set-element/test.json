@@ -1,0 +1,61 @@
+{
+  "description": "The iterator's key is the element itself for a set",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The README calls the iterator's attributes key and value, and the documentation of Expand uses key in its example, but neither says what the key is. hashicorp/hcl takes the key from go-cty's ElementIterator (expandBody.expandBlocks in ext/dynblock/expand_body.go): the index for tuples and lists, the key for maps and objects, and the element for sets, as the native syntax spec defines for for expressions.",
+  "variables": {
+    "xs": {
+      "set": [
+        {
+          "string": "x"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "k"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "k": {
+                "string": "x"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

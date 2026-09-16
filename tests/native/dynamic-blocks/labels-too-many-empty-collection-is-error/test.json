@@ -1,0 +1,38 @@
+{
+  "description": "Too many label expressions are an error even when the collection is empty",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "ext/dynblock/README.md#usage"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The README says the generated blocks are read as if they were written in place of the dynamic block, and an empty collection generates none, so this mistake affects no block. hashicorp/hcl checks the number of label expressions when it reads the dynamic block, after evaluating for_each but before iterating over it (expandBody.decodeSpec in ext/dynblock/expand_spec.go).",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "labels": [
+          "name"
+        ],
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "Extraneous dynamic block label",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

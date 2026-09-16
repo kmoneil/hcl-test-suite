@@ -1,0 +1,40 @@
+{
+  "description": "An unknown string for_each is an error, since strings can't be iterated",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "dynamic-blocks"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "string"
+    }
+  },
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "Cannot use a string value in for_each",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

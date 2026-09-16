@@ -1,0 +1,41 @@
+{
+  "description": "An iterator property holding a template is an error, even one giving a name",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "json/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The README doesn't say how the iterator attribute is read, and a JSON string is a template in most places, so a template giving the name it would be another reading. hashicorp/hcl reads the attribute with hcl.AbsTraversalForExpr (expandBody.decodeSpec in ext/dynblock/expand_spec.go), for which the JSON syntax reads the string as a native syntax traversal, where a template sequence is an error.",
+  "variables": {
+    "name": {
+      "string": "it"
+    }
+  },
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "A single static variable reference is required",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

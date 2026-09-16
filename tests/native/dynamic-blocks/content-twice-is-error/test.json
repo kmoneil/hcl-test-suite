@@ -1,0 +1,37 @@
+{
+  "description": "A dynamic block with two content blocks is an error",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The README and the documentation of Expand speak of the content block of a dynamic block, but don't say that a second one is an error, and the spec's schemas don't limit the number of blocks of a type. hashicorp/hcl reports any content block after the first (expandBody.decodeSpec in ext/dynblock/expand_spec.go).",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            },
+            {
+              "name": "w"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "Extraneous dynamic content block",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

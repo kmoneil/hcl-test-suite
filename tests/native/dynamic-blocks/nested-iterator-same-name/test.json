@@ -1,0 +1,75 @@
+{
+  "description": "A nested iterator hides an enclosing iterator of the same name in its content",
+  "spec": [
+    "ext/dynblock/README.md#usage",
+    "hclsyntax/spec.md#variables-and-variable-expressions"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "notes": "The documentation of Expand calls the iterator a variable, and the native syntax spec uses the most locally defined variable of a name, so in the nested content the name means the nested iterator, and in the enclosing content the enclosing one.",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "a",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "w"
+            }
+          ],
+          "blocks": [
+            {
+              "type": "b",
+              "body": {
+                "mode": "exhaustive",
+                "attributes": [
+                  {
+                    "name": "v"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "a",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "w": {
+                "string": "outer"
+              }
+            },
+            "blocks": [
+              {
+                "type": "b",
+                "labels": [],
+                "body": {
+                  "attributes": {
+                    "v": {
+                      "string": "inner"
+                    }
+                  },
+                  "blocks": []
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

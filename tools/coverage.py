@@ -32,6 +32,7 @@ COVER_PACKAGES = [
     "github.com/hashicorp/hcl/v2/hclsyntax",
     "github.com/hashicorp/hcl/v2/json",
     "github.com/hashicorp/hcl/v2/ext/customdecode",
+    "github.com/hashicorp/hcl/v2/ext/dynblock",
     "github.com/hashicorp/hcl/v2/ext/tryfunc",
     "github.com/hashicorp/hcl/v2/ext/typeexpr",
     "github.com/zclconf/go-cty/cty",
@@ -131,7 +132,7 @@ def cmd_go(args):
             lines = profile.read_text().splitlines(keepends=True)
             profile.write_text("".join(line for line in lines if ".rl:" not in line))
             report = run(["go", "tool", "cover", "-func", str(profile)], cwd=adapter_dir)
-            for package in ("hclsyntax", "json", "ext/typeexpr", "ext/tryfunc"):
+            for package in ("hclsyntax", "json", "ext/typeexpr", "ext/tryfunc", "ext/dynblock"):
                 print(f"\n{package} functions below 100%:")
                 for line in report.splitlines():
                     if f"/v2/{package}/" in line and not line.rstrip().endswith("100.0%"):
@@ -177,7 +178,8 @@ def main():
     commands.add_parser("disputes", help="disputed tests by spec section, as Markdown").set_defaults(func=cmd_disputes)
     go = commands.add_parser("go", help="code of hashicorp/hcl exercised by the tests")
     go.add_argument("--functions", action="store_true",
-                    help="list hclsyntax, json, ext/typeexpr and ext/tryfunc functions that aren't fully covered")
+                    help="list hclsyntax, json, ext/typeexpr, ext/tryfunc and ext/dynblock functions that aren't fully "
+                         "covered")
     go.set_defaults(func=cmd_go)
     anchors = commands.add_parser("anchors", help="regenerate tools/spec-anchors.txt")
     anchors.add_argument("spec_dir", help="a checkout of hashicorp/hcl v2.24.0, which has the spec documents")

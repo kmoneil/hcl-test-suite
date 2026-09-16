@@ -1,0 +1,37 @@
+{
+  "description": "A label string that isn't a valid template is an error",
+  "spec": [
+    "ext/dynblock/README.md#usage",
+    "json/spec.md#strings"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "dynamic-blocks"
+  ],
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "labels": [
+          "name"
+        ],
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "Expected the start of an expression",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

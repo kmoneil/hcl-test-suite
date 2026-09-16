@@ -1,0 +1,1 @@
+{"dynamic": {"c": {"for_each": ["1"], "content": {"v": "${c.value}"}}, "b": {"for_each": ["2"], "content": {"v": "${b.value}"}}}}

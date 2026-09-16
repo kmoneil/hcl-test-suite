@@ -1,0 +1,49 @@
+{
+  "description": "Dynamic attributes of an expanded JSON body's remaining body include taken properties",
+  "spec": [
+    "ext/dynblock/README.md#usage",
+    "spec.md#partial-processing-of-body-content",
+    "spec.md#dynamic-attributes-processing"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The spec's partial processing leaves what the schema requested out of the remaining body. With dynamic blocks expanded, hashicorp/hcl answers dynamic attributes processing of the remaining body with every property of the original body (expandBody.JustAttributes in ext/dynblock/expand_body.go doesn't leave out what PartialContent took), so a is in the remaining body too.",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "partial",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ],
+    "remain": {
+      "mode": "dynamic-attributes"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": [],
+      "remain": {
+        "attributes": {
+          "a": {
+            "number": "1"
+          },
+          "c": {
+            "number": "2"
+          }
+        },
+        "blocks": []
+      }
+    }
+  }
+}

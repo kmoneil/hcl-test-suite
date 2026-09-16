@@ -1,0 +1,36 @@
+{
+  "description": "A dynamic block with an attribute other than its own is an error",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            },
+            {
+              "name": "other"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "An argument named \"other\" is not expected here",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

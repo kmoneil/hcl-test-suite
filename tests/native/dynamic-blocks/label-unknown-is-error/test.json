@@ -1,0 +1,43 @@
+{
+  "description": "An unknown label value is an error",
+  "spec": [
+    "ext/dynblock/README.md#usage",
+    "spec.md#structural-elements"
+  ],
+  "op": "decode",
+  "features": [
+    "unknown-values",
+    "dynamic-blocks"
+  ],
+  "notes": "Block labels are strings, and an unknown value has no string yet to give a block as its label.",
+  "variables": {
+    "u": {
+      "unknown": "dynamic"
+    }
+  },
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "labels": [
+          "name"
+        ],
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "Dynamic block labels must be immediately-known values",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

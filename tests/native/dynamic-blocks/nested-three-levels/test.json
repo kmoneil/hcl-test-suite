@@ -1,0 +1,81 @@
+{
+  "description": "Dynamic blocks nested three deep can use all three iterators",
+  "spec": [
+    "ext/dynblock/README.md#usage"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "a",
+        "body": {
+          "mode": "exhaustive",
+          "blocks": [
+            {
+              "type": "b",
+              "body": {
+                "mode": "exhaustive",
+                "blocks": [
+                  {
+                    "type": "c",
+                    "body": {
+                      "mode": "exhaustive",
+                      "attributes": [
+                        {
+                          "name": "v"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "a",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": [
+              {
+                "type": "b",
+                "labels": [],
+                "body": {
+                  "attributes": {},
+                  "blocks": [
+                    {
+                      "type": "c",
+                      "labels": [],
+                      "body": {
+                        "attributes": {
+                          "v": {
+                            "string": "123"
+                          }
+                        },
+                        "blocks": []
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

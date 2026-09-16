@@ -1,0 +1,88 @@
+{
+  "description": "Blocks generated from a list follow the order of its elements",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "dynamic-blocks"
+  ],
+  "variables": {
+    "xs": {
+      "list": [
+        {
+          "string": "q"
+        },
+        {
+          "string": "p"
+        },
+        {
+          "string": "r"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "string": "q"
+              }
+            },
+            "blocks": []
+          }
+        },
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "string": "p"
+              }
+            },
+            "blocks": []
+          }
+        },
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "string": "r"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

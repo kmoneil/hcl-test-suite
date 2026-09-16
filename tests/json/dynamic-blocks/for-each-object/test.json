@@ -1,0 +1,73 @@
+{
+  "description": "An object as for_each gives blocks in lexicographic order of its property names, not source order",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "json/spec.md#objects",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "A JSON object is an object value. The README's example iterates a tuple and its section on unknown values names lists, maps and sets, but it never mentions objects, what the iterator's key is, or in which order blocks are generated. hashicorp/hcl iterates objects with go-cty's ElementIterator, which gives the property names as keys in lexicographic order rather than the order of the JSON text (expandBody.expandBlocks in ext/dynblock/expand_body.go), as the native syntax spec defines for for expressions.",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "k"
+            },
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "k": {
+                "string": "a"
+              },
+              "v": {
+                "string": "first"
+              }
+            },
+            "blocks": []
+          }
+        },
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "k": {
+                "string": "z"
+              },
+              "v": {
+                "string": "last"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "description": "A tuple constructor in parentheses can't be the labels attribute",
+  "spec": [
+    "ext/dynblock/README.md#usage",
+    "hclsyntax/spec.md#static-list"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The documentation of Expand says the labels attribute is evaluated with the given variables and functions, which an expression that evaluates to a list of labels would allow. hashicorp/hcl requires a static list and evaluates its elements one by one with the iterator in scope (hcl.ExprList in expandBody.decodeSpec, and expandSpec.newBlock, in ext/dynblock/expand_spec.go), which can't see through the parentheses (see native/analysis/list-parenthesized-tuple).",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "labels": [
+          "name"
+        ],
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "A static list expression is required",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

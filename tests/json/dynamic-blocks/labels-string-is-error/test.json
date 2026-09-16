@@ -1,0 +1,39 @@
+{
+  "description": "A string template can't give the labels property its labels, even one giving a tuple",
+  "spec": [
+    "ext/dynblock/README.md#usage",
+    "json/spec.md#static-list"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The documentation of Expand says the labels attribute is evaluated, which a template giving a tuple of labels would allow. hashicorp/hcl requires a static list, which the JSON spec only allows as an array (hcl.ExprList in expandBody.decodeSpec in ext/dynblock/expand_spec.go).",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "labels": [
+          "name"
+        ],
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "A static list expression is required",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

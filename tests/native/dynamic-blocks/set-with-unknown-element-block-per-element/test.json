@@ -1,0 +1,77 @@
+{
+  "description": "A known set with an unknown element generates a block for each element it holds",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "A set with an unknown element has an unknown length, since the element may turn out equal to another one, and the README generates a single block when the length of the collection can't be known. hashicorp/hcl only checks whether the set itself is known, and then generates a block for each element it holds (expandBody.expandBlocks in ext/dynblock/expand_body.go).",
+  "variables": {
+    "xs": {
+      "set": [
+        {
+          "unknown": "string"
+        },
+        {
+          "string": "x"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "number": "1"
+              }
+            },
+            "blocks": []
+          }
+        },
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "number": "1"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

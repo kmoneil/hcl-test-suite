@@ -1,0 +1,51 @@
+{
+  "description": "Spaces around the name in the iterator property are ignored",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "json/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The README doesn't say how the iterator attribute is read. Read as a static traversal, whose string the JSON syntax reads as a native syntax expression (json/spec.md#static-traversal; see json/analysis/traversal-surrounding-spaces), spaces around the name are allowed, while a string that must be the name itself would be an error. hashicorp/hcl reads the attribute with hcl.AbsTraversalForExpr (expandBody.decodeSpec in ext/dynblock/expand_spec.go).",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "string": "x"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

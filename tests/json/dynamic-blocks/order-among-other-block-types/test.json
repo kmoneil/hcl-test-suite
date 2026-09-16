@@ -1,0 +1,84 @@
+{
+  "description": "Generated blocks take the dynamic property's place among blocks of other types",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "dynamic-blocks"
+  ],
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      },
+      {
+        "type": "c",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "c",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "string": "first"
+              }
+            },
+            "blocks": []
+          }
+        },
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "string": "x"
+              }
+            },
+            "blocks": []
+          }
+        },
+        {
+          "type": "c",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "string": "last"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

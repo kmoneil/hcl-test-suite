@@ -1,0 +1,1 @@
+{"dynamic": {"b": {"for_each": ["x"], "labels": ["${b.value}", "fixed"], "content": {"v": "1"}}}}

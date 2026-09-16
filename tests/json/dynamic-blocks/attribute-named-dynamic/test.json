@@ -1,0 +1,67 @@
+{
+  "description": "A requested attribute named dynamic takes the dynamic property",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "spec.md#schema-driven-processing",
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "In the JSON syntax, a property named dynamic can define either an attribute or dynamic blocks, and the README doesn't say which one a schema that requests an attribute named dynamic gets (see native/dynamic-blocks/attribute-named-dynamic for the native syntax, where they can't be confused). hashicorp/hcl adds the block type dynamic to the schema (expandBody.extendSchema in ext/dynblock/expand_body.go), and the JSON syntax matches a property to an attribute before a block type (body.PartialContent in json/structure.go; see json/bodies/schema-attribute-and-block-type-same-name), so the dynamic property is the attribute.",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "dynamic"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "dynamic": {
+          "object": {
+            "b": {
+              "object": {
+                "for_each": {
+                  "tuple": [
+                    {
+                      "string": "x"
+                    }
+                  ]
+                },
+                "content": {
+                  "object": {
+                    "v": {
+                      "string": "1"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

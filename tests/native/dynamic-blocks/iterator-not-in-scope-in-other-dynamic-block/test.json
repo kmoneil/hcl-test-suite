@@ -1,0 +1,43 @@
+{
+  "description": "The iterator of one dynamic block isn't in scope in another",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "a",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      },
+      {
+        "type": "c",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "w"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reference_error": "There is no variable named \"c\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

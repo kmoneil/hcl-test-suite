@@ -1,0 +1,51 @@
+{
+  "description": "The keyword true as the iterator attribute names an iterator",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "hclsyntax/spec.md#static-traversal",
+    "hclsyntax/spec.md#keywords"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The native syntax spec lets the keywords true, false and null be read as static traversals, as references to variables of those names (see native/analysis/traversal-keyword-true), so read as a static traversal, true names the iterator. The README doesn't say how the iterator attribute is read (see native/dynamic-blocks/iterator-quoted-is-error). hashicorp/hcl reads it with hcl.AbsTraversalForExpr (expandBody.decodeSpec in ext/dynblock/expand_spec.go), which gives the literal true a traversal of its name (LiteralValueExpr.AsTraversal in hclsyntax/expression.go), so the dynamic block gets an iterator named true.",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "v": {
+                "number": "1"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

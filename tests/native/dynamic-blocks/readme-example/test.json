@@ -1,0 +1,113 @@
+{
+  "description": "The README's example gives the static blocks around the three generated blocks, in source order",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "notes": "The README's example without its blank lines, which the native syntax grammar has no place for.",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "toplevel",
+        "body": {
+          "mode": "exhaustive",
+          "blocks": [
+            {
+              "type": "nested",
+              "body": {
+                "mode": "exhaustive",
+                "attributes": [
+                  {
+                    "name": "foo"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "toplevel",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": [
+              {
+                "type": "nested",
+                "labels": [],
+                "body": {
+                  "attributes": {
+                    "foo": {
+                      "string": "static block 1"
+                    }
+                  },
+                  "blocks": []
+                }
+              },
+              {
+                "type": "nested",
+                "labels": [],
+                "body": {
+                  "attributes": {
+                    "foo": {
+                      "string": "dynamic block a"
+                    }
+                  },
+                  "blocks": []
+                }
+              },
+              {
+                "type": "nested",
+                "labels": [],
+                "body": {
+                  "attributes": {
+                    "foo": {
+                      "string": "dynamic block b"
+                    }
+                  },
+                  "blocks": []
+                }
+              },
+              {
+                "type": "nested",
+                "labels": [],
+                "body": {
+                  "attributes": {
+                    "foo": {
+                      "string": "dynamic block c"
+                    }
+                  },
+                  "blocks": []
+                }
+              },
+              {
+                "type": "nested",
+                "labels": [],
+                "body": {
+                  "attributes": {
+                    "foo": {
+                      "string": "static block 2"
+                    }
+                  },
+                  "blocks": []
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

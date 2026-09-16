@@ -1,0 +1,55 @@
+{
+  "description": "A generated block's label is its value normalized to NFC",
+  "spec": [
+    "ext/dynblock/README.md#usage",
+    "spec.md#primitive-types"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The label is written as e followed by U+0301 COMBINING ACUTE ACCENT, whose NFC form is U+00E9. Strings are equal under NFC in the spec, which doesn't say whether block labels are normalized (see native/structure/block-label-not-normalized, where a label written in a block header keeps its code points). hashicorp/hcl gives the generated block the string value of the label expression (expandSpec.newBlock in ext/dynblock/expand_spec.go), and normalizes every string value to NFC (cty.StringVal in go-cty; see native/strings/decomposed-literal-text-is-normalized).",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "labels": [
+          "name"
+        ],
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "v"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [
+            "é"
+          ],
+          "body": {
+            "attributes": {
+              "v": {
+                "number": "1"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "description": "A content property holding an array with null gives generated blocks empty bodies",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "json/spec.md#blocks",
+    "json/spec.md#arrays"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "dynamic-blocks"
+  ],
+  "status": "disputed",
+  "notes": "The JSON spec only allows objects in a block array. hashicorp/hcl reads a null element as a block with an empty body (see json/bodies/block-array-null-element), so the dynamic block has one content block, with an empty body.",
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}
