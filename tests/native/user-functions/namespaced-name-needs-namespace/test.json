@@ -1,0 +1,27 @@
+{
+  "description": "A function named with :: isn't called by its last part alone",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The README doesn't say what a function name may be, so an implementation could reject the label ns::f, which isn't an identifier (see native/user-functions/name-with-space-is-not-error), with a schema error. hashicorp/hcl declares the function under the label as written (decodeUserFunctions in ext/userfunc/decode.go), and f() doesn't call a function named ns::f (see native/functions/namespaced-function-is-not-plain-function).",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "There is no function named \"f\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

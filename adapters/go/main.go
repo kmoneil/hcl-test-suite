@@ -28,6 +28,7 @@ import (
 	"github.com/hashicorp/hcl/v2/ext/dynblock"
 	"github.com/hashicorp/hcl/v2/ext/tryfunc"
 	"github.com/hashicorp/hcl/v2/ext/typeexpr"
+	"github.com/hashicorp/hcl/v2/ext/userfunc"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 	hcljson "github.com/hashicorp/hcl/v2/json"
 	"github.com/zclconf/go-cty/cty"
@@ -111,7 +112,7 @@ func capabilities() object {
 		"version":        version,
 		"operations":     []string{"parse", "eval", "decode", "validate"},
 		"features": []string{"typed-values", "unknown-values", "functions", "json-syntax", "static-analysis", "type-expressions",
-			"try-functions", "dynamic-blocks"},
+			"try-functions", "dynamic-blocks", "user-functions"},
 	}
 }
 
@@ -172,8 +173,8 @@ func eval(path, contextPath string) (any, error) {
 			return nil, err
 		}
 	}
-	if settings.schema != nil || settings.dynamicBlocks {
-		return nil, errors.New("eval doesn't take a schema or dynamic blocks; use decode")
+	if settings.schema != nil || settings.dynamicBlocks || settings.userFunctions != "" {
+		return nil, errors.New("eval doesn't take a schema, dynamic blocks or user functions; use decode")
 	}
 	file, diags := hclsyntax.ParseConfig(src, path, hcl.InitialPos)
 	if diags.HasErrors() {
@@ -211,6 +212,25 @@ func decode(path, contextPath string) (any, error) {
 		return invalid("parse", diags), nil
 	}
 	root := file.Body
+	if settings.userFunctions != "" {
+		// The functions are decoded from the file's body, and the schema is
+		// applied to the body that remains. Their results are evaluated with the
+		// context's variables and functions, which include the user functions.
+		ctx := settings.ctx
+		funcs, remain, diags := userfunc.DecodeUserFunctions(root, settings.userFunctions, func() *hcl.EvalContext { return ctx })
+		if diags.HasErrors() {
+			return invalid("schema", diags), nil
+		}
+		if ctx != nil {
+			for name, f := range funcs {
+				if _, declared := ctx.Functions[name]; declared {
+					return nil, fmt.Errorf("%s: the user function %q has the name of a function the context declares", contextPath, name)
+				}
+				ctx.Functions[name] = f
+			}
+		}
+		root = remain
+	}
 	if settings.dynamicBlocks {
 		// The expanded body expands dynamic blocks as the schema is applied to
 		// it and to the bodies nested in it, evaluating for_each and labels
@@ -950,6 +970,7 @@ type evalContext struct {
 	Schema         json.RawMessage            `json:"schema"`
 	EvaluationMode *string                    `json:"evaluation_mode"`
 	DynamicBlocks  *bool                      `json:"dynamic_blocks"`
+	UserFunctions  *string                    `json:"user_functions"`
 }
 
 // evalSettings is what a context file sets up.
@@ -957,6 +978,7 @@ type evalSettings struct {
 	ctx           *hcl.EvalContext // nil in literal-only mode, as hashicorp/hcl expects
 	schema        json.RawMessage
 	dynamicBlocks bool
+	userFunctions string // the block type that declares user functions, if any
 }
 
 func emptyEvalContext() *hcl.EvalContext {
@@ -1026,6 +1048,15 @@ func readContext(path string) (evalSettings, error) {
 			return evalSettings{}, fmt.Errorf("%s: leave out dynamic_blocks instead of setting it to false", path)
 		}
 		settings.dynamicBlocks = true
+	}
+	if decl.UserFunctions != nil {
+		if *decl.UserFunctions == "" {
+			return evalSettings{}, fmt.Errorf("%s: user_functions must name a block type", path)
+		}
+		if settings.dynamicBlocks {
+			return evalSettings{}, fmt.Errorf("%s: a context has user_functions or dynamic_blocks, not both", path)
+		}
+		settings.userFunctions = *decl.UserFunctions
 	}
 	for name, raw := range decl.Variables {
 		if settings.ctx.Variables[name], err = decodeValue(raw); err != nil {

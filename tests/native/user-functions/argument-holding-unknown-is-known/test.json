@@ -1,0 +1,39 @@
+{
+  "description": "An argument holding an unknown value is known, so the result is evaluated as usual",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#functions-and-function-calls",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "user-functions"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "number"
+    }
+  },
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "const"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

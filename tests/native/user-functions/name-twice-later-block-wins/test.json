@@ -1,0 +1,32 @@
+{
+  "description": "Two functions with the same name are not an error, and the later one is used",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The README doesn't say what two functions with the same name do. hashicorp/hcl stores each function in a map under its name (funcs[name] in decodeUserFunctions in ext/userfunc/decode.go), so a later block replaces an earlier one without an error.",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "2"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

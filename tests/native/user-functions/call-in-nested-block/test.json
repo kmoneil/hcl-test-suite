@@ -1,0 +1,47 @@
+{
+  "description": "An attribute of a nested block can call a function declared in the file's body",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "c"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {
+              "c": {
+                "string": "v"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

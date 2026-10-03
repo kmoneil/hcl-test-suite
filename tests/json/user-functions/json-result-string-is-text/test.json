@@ -1,0 +1,32 @@
+{
+  "description": "A result string without interpolations is text, not a reference to a parameter",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "json/spec.md#strings"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "user-functions"
+  ],
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -23,12 +23,13 @@ import hcltest  # noqa: E402  reuses the runner's test loading and normalization
 TESTS = ROOT / "tests"
 COVERAGE = ROOT / "coverage"
 KEY_ORDER = ["description", "spec", "op", "input", "features", "status", "notes", "variables", "functions",
-             "evaluation_mode", "dynamic_blocks", "schema", "reference_error", "expect"]
+             "evaluation_mode", "dynamic_blocks", "user_functions", "schema", "reference_error", "expect"]
 FEATURES = {"unknown-values", "typed-values", "functions", "json-syntax", "static-analysis", "type-expressions",
-            "try-functions", "dynamic-blocks"}
+            "try-functions", "dynamic-blocks", "user-functions"}
 TYPE_KINDS = ("type", "type-constraint", "type-constraint-with-defaults")
 # Features of extensions, which a test must list exactly when it uses the extension.
-EXTENSION_FEATURES = sorted(set(hcltest.EXTENSION_FUNCTIONS.values()) | {"type-expressions", "dynamic-blocks"})
+EXTENSION_FEATURES = sorted(set(hcltest.EXTENSION_FUNCTIONS.values()) | {"type-expressions", "dynamic-blocks",
+                                                                        "user-functions"})
 assert set(EXTENSION_FEATURES) <= FEATURES
 # Extension functions that implementations may only have under their own names.
 OWN_NAME_EXTENSIONS = ("try", "can")
@@ -412,6 +413,10 @@ class Linter:
             needs["type-expressions"] = "the schema analyzes a type expression"
         if "dynamic_blocks" in test.context:
             needs["dynamic-blocks"] = "the test expands dynamic blocks"
+        if "user_functions" in test.context:
+            needs["user-functions"] = "the test declares user functions"
+            if "::" in test.context["user_functions"] or not is_function_name(test.context["user_functions"]):
+                self.problem(where, f"user_functions {test.context['user_functions']!r} is not an identifier")
         for name, decl in test.context.get("functions", {}).items():
             if "extension" in decl:
                 needs.setdefault(hcltest.EXTENSION_FUNCTIONS[decl["extension"]],

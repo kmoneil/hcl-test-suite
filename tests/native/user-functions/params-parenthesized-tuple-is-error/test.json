@@ -1,0 +1,27 @@
+{
+  "description": "A params tuple in parentheses is an error",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "hclsyntax/spec.md#static-list"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The README doesn't say how params and variadic_param are read. hashicorp/hcl reads params with hcl.ExprList and each name with hcl.ExprAsKeyword (decodeUserFunctions in ext/userfunc/decode.go), and neither looks inside parentheses in the native syntax (see native/analysis/list-parenthesized-tuple and native/analysis/traversal-parenthesized).",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "A static list expression is required",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

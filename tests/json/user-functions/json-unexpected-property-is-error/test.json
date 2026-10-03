@@ -1,0 +1,28 @@
+{
+  "description": "A property other than params, variadic_param and result in a function block is an error",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The README only shows params, variadic_param and result in its examples, without saying whether anything else may be in a function block. hashicorp/hcl processes the block's body with Content and a schema of those three attributes (funcBodySchema in ext/userfunc/decode.go), so anything else is an error.",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "No argument or block type is named \"extra\"",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

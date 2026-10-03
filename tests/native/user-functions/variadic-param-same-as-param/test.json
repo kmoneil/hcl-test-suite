@@ -1,0 +1,33 @@
+{
+  "description": "A variadic parameter named like a positional one replaces it",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The README doesn't say what naming the variadic parameter like a positional one does. hashicorp/hcl sets the variadic parameter's variable after the positional ones (decodeUserFunctions in ext/userfunc/decode.go), so it replaces the positional argument without an error.",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "2"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "description": "An unknown variadic argument makes the result unknown",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#functions-and-function-calls",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The README and the package documentation don't say whether parameters accept unknown values. hashicorp/hcl declares them without AllowUnknown (decodeUserFunctions in ext/userfunc/decode.go), so by the spec's call rules the result is an unknown value of the result type, which go-cty's Function.Call returns without calling the implementation. That type comes from the function's type callback, which evaluates the result expression with the unknown arguments (spec.Type in decodeUserFunctions).",
+  "variables": {
+    "u": {
+      "unknown": "number"
+    }
+  },
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": [
+            "tuple",
+            [
+              "number",
+              "number"
+            ]
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

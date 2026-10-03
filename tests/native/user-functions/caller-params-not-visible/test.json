@@ -1,0 +1,35 @@
+{
+  "description": "A function called in another's result can't see the caller's parameters",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "variables": {
+    "x": {
+      "string": "global"
+    }
+  },
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "global"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

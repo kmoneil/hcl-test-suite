@@ -1,0 +1,30 @@
+{
+  "description": "The README's add function returns the sum of its two arguments",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "3"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

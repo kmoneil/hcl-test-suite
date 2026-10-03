@@ -1,0 +1,38 @@
+{
+  "description": "The result's type depends on each call's arguments",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "number": "1"
+            },
+            {
+              "string": "b"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

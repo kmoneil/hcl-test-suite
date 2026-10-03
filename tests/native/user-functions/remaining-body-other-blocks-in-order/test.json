@@ -1,0 +1,54 @@
+{
+  "description": "The blocks around a function block remain, in their order",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "labels": [
+          "n"
+        ],
+        "body": {
+          "mode": "exhaustive"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [
+            "1"
+          ],
+          "body": {
+            "attributes": {},
+            "blocks": []
+          }
+        },
+        {
+          "type": "b",
+          "labels": [
+            "2"
+          ],
+          "body": {
+            "attributes": {},
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

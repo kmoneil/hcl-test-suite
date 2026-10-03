@@ -1,0 +1,5 @@
+function "f" {
+  params = [x.y]
+  result = 1
+}
+a = 1

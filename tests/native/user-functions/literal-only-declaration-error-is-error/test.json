@@ -1,0 +1,26 @@
+{
+  "description": "In literal-only mode function blocks are still checked",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "evaluation_mode": "literal-only",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "Invalid param element",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

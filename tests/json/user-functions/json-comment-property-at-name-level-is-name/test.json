@@ -1,0 +1,26 @@
+{
+  "description": "A // property among function names is a name, so its string value is an error",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "json/spec.md#structural-elements"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "user-functions"
+  ],
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "representing the contents of one or more \"function\" blocks",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

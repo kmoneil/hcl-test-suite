@@ -1,0 +1,62 @@
+{
+  "description": "With another block type chosen, a function block is an ordinary block",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "user_functions": "fn",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "function",
+        "labels": [
+          "name"
+        ],
+        "body": {
+          "mode": "exhaustive",
+          "attributes": [
+            {
+              "name": "result"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": [
+        {
+          "type": "function",
+          "labels": [
+            "f"
+          ],
+          "body": {
+            "attributes": {
+              "result": {
+                "number": "1"
+              }
+            },
+            "blocks": []
+          }
+        }
+      ]
+    }
+  }
+}

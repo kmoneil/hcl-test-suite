@@ -1,0 +1,25 @@
+{
+  "description": "A for expression as params is an error",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "hclsyntax/spec.md#static-list"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "A static list expression is required",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

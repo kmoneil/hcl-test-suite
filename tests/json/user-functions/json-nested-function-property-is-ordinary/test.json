@@ -1,0 +1,69 @@
+{
+  "description": "A function property inside a block is an ordinary block of that block's body",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "user-functions"
+  ],
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive",
+          "blocks": [
+            {
+              "type": "function",
+              "labels": [
+                "name"
+              ],
+              "body": {
+                "mode": "dynamic-attributes"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "type": "b",
+          "labels": [],
+          "body": {
+            "attributes": {},
+            "blocks": [
+              {
+                "type": "function",
+                "labels": [
+                  "f"
+                ],
+                "body": {
+                  "attributes": {
+                    "params": {
+                      "tuple": []
+                    },
+                    "result": {
+                      "number": "1"
+                    }
+                  },
+                  "blocks": []
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

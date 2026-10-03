@@ -1,0 +1,32 @@
+{
+  "description": "The package documentation's quoted parameter name works in the JSON syntax",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "json/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "user-functions"
+  ],
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "Hello, x!"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

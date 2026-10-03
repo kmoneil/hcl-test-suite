@@ -1,0 +1,1 @@
+{"function": {"f": {"params": [], "result": "%{ for v in r }${v}%{ endfor }", "variadic_param": "r"}}, "a": "${f(\"a\", \"b\")}"}

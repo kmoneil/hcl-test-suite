@@ -1,0 +1,42 @@
+{
+  "description": "A schema requesting the function block type gets no blocks, since the extension took them",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "function",
+        "labels": [
+          "name"
+        ],
+        "body": {
+          "mode": "dynamic-attributes"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "2"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

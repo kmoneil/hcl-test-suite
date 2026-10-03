@@ -1,0 +1,27 @@
+{
+  "description": "A function block without params is an error",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The README doesn't say whether params is required, although its example writes params = [] for a function without positional parameters. hashicorp/hcl's schema for function blocks requires it (funcBodySchema in ext/userfunc/decode.go).",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "The argument \"params\" is required",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

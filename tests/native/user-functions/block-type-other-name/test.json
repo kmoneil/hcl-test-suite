@@ -1,0 +1,30 @@
+{
+  "description": "The application can choose another block type than function for declaring functions",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "user_functions": "fn",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

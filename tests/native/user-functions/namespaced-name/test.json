@@ -1,0 +1,33 @@
+{
+  "description": "A function named with :: is called with a namespaced call",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec has no namespaced function calls. hashicorp/hcl's native syntax reads ns::f() as a call of the function named ns::f (see native/functions/namespaced-call), and a user function's label is its name as written (decodeUserFunctions in ext/userfunc/decode.go).",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

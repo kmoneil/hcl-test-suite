@@ -7,10 +7,10 @@ HashiCorp configuration language, in the spirit of
 Any HCL implementation, in any language, can run it by providing a small
 adapter program.
 
-**Status:** draft. 3,241 tests of the native and JSON syntaxes, checking 1,133
-rules from the spec and the type expression, try function and dynamic block
-extensions at hashicorp/hcl v2.24.0. The test and adapter formats may still
-change.
+**Status:** draft. 3,414 tests of the native and JSON syntaxes, checking 1,200
+rules from the spec and the type expression, try function, dynamic block and
+user function extensions at hashicorp/hcl v2.24.0. The test and adapter
+formats may still change.
 
 ## How it works
 
@@ -80,9 +80,9 @@ run the tests at all.
 1. Write an adapter ([protocol](docs/protocol.md)). You can start with just
    `capabilities` and `parse`. Tests for operations or features you don't
    support (such as `eval`, `decode`, the JSON syntax, typed values, unknown
-   values, functions, static analysis, type expressions, `try` and `can`, or
-   dynamic blocks) are skipped, not failed. A parser that can't describe what
-   it parsed can support `validate` instead.
+   values, functions, static analysis, type expressions, `try` and `can`,
+   dynamic blocks, or user functions) are skipped, not failed. A parser that
+   can't describe what it parsed can support `validate` instead.
 2. Run `python3 runner/hcltest.py --adapter "<command that runs your adapter>"`,
    adding `--validate` for an adapter that supports only `validate`.
 3. If you're unsure how some input should be read, ask the reference
@@ -117,19 +117,23 @@ run the tests at all.
 | JSON `try` and `can` | 8 | 2 | 0 |
 | dynamic blocks (`ext/dynblock`) | 169 | 66 | 3 |
 | JSON dynamic blocks | 42 | 23 | 0 |
-| **total** | **3,241** | **1,144** | **11** |
+| user functions (`ext/userfunc`) | 116 | 46 | 1 |
+| JSON user functions | 57 | 22 | 0 |
+| **total** | **3,414** | **1,212** | **12** |
 
 - Most rules without tests need something the protocol can't express yet:
   error positions or messages, capsule values, literal-only evaluation with
-  variables (which hashicorp/hcl can't express either), and for dynamic
-  blocks, lists of the variables that expressions use, hcldec specifications,
-  and separate variables and functions for `for_each` and generated blocks.
-  Two depend on choices the spec leaves to implementations (rounding and the
-  order of set elements), and one is guidance for applications.
+  variables (which hashicorp/hcl can't express either), user functions
+  without a context, and for dynamic blocks, lists of the variables that
+  expressions use, hcldec specifications, and separate variables and
+  functions for `for_each` and generated blocks. Two depend on choices the
+  spec leaves to implementations (rounding and the order of set elements),
+  and one is guidance for applications.
   `python3 tools/coverage.py rules` lists them.
 - The tests exercise 84.9% of the statements in hashicorp/hcl's `hclsyntax`
   package, 85.8% of its `json` package, 78.6% of `ext/typeexpr`, 97.1% of
-  `ext/tryfunc` and 71.2% of `ext/dynblock` (`python3 tools/coverage.py go`).
+  `ext/tryfunc`, 71.2% of `ext/dynblock` and all of `ext/userfunc`
+  (`python3 tools/coverage.py go`).
   Most of the rest is syntax tree walking, listing the variables an
   expression uses, lookups by source position and source ranges, which the
   protocol doesn't reach, and error handling for states that valid use can't
@@ -137,7 +141,6 @@ run the tests at all.
   type constraint values; reading type expressions is fully covered. In
   `ext/dynblock` it is listing the variables that dynamic blocks use, value
   marks, hcldec interfaces and the option for checking `for_each` values.
-- Not covered yet: the `userfunc` extension.
 
 ## How the tests are checked
 
@@ -160,9 +163,9 @@ run the tests at all.
 
 | Implementation | Passed | Failed | Adapter errors | Skipped |
 | --- | ---: | ---: | ---: | ---: |
-| hashicorp/hcl v2.24.0 | 3,241 | 0 | 0 | 0 |
-| opentofu/hcl, as used by OpenTofu v1.12.6 | 3,239 | 2 | 0 | 0 |
-| hcl-rs 0.19.8 | 1,593 | 207 (74 disputed) | 21 | 1,420 |
+| hashicorp/hcl v2.24.0 | 3,414 | 0 | 0 | 0 |
+| opentofu/hcl, as used by OpenTofu v1.12.6 | 3,412 | 2 | 0 | 0 |
+| hcl-rs 0.19.8 | 1,593 | 207 (74 disputed) | 21 | 1,593 |
 
 OpenTofu has no HCL implementation of its own: its `go.mod` replaces
 hashicorp/hcl with the fork [opentofu/hcl](https://github.com/opentofu/hcl), so
@@ -171,17 +174,17 @@ its row shows how that fork differs from hashicorp/hcl v2.24.0.
 Every test also says whether its input parses, and `--validate` checks only
 that. This measures parsers that can't run the tests, like python-hcl2 and
 tree-sitter-hcl, and checks the other implementations' parsers on the inputs
-of all 2,787 native syntax tests, including tests they skip. Only
-hashicorp/hcl and its fork read the JSON syntax, so the others skip its 454
+of all 2,903 native syntax tests, including tests they skip. Only
+hashicorp/hcl and its fork read the JSON syntax, so the others skip its 511
 tests.
 
 | Implementation | Passed | Accepted invalid input | Rejected valid input | Adapter errors | Skipped |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| hashicorp/hcl v2.24.0 | 3,241 | 0 | 0 | 0 | 0 |
-| opentofu/hcl, as used by OpenTofu v1.12.6 | 3,241 | 0 | 0 | 0 | 0 |
-| hcl-rs 0.19.8 | 2,726 | 29 (6 disputed) | 32 (15 disputed) | 0 | 454 |
-| python-hcl2 8.1.4 | 2,544 | 88 (9 disputed) | 155 (57 disputed) | 0 | 454 |
-| tree-sitter-hcl 1.2.0 | 2,655 | 93 (13 disputed) | 39 (14 disputed) | 0 | 454 |
+| hashicorp/hcl v2.24.0 | 3,414 | 0 | 0 | 0 | 0 |
+| opentofu/hcl, as used by OpenTofu v1.12.6 | 3,414 | 0 | 0 | 0 | 0 |
+| hcl-rs 0.19.8 | 2,842 | 29 (6 disputed) | 32 (15 disputed) | 0 | 511 |
+| python-hcl2 8.1.4 | 2,656 | 88 (9 disputed) | 159 (59 disputed) | 0 | 511 |
+| tree-sitter-hcl 1.2.0 | 2,771 | 93 (13 disputed) | 39 (14 disputed) | 0 | 511 |
 
 hcl-rs fails all 61 of these tests in the first table too. As in the first
 table, a failure counts as disputed when its test is disputed, even if the
@@ -235,9 +238,9 @@ The 133 failures on tests that aren't disputed fall into these groups:
     directives, and a closing marker inside a directive doesn't end a heredoc.
 - **Not supported (skipped or adapter errors):** list, set and map types,
   unknown values, infinity, function parameters of collection or structural
-  types, schema-driven processing (`decode`) with the static analysis and
-  dynamic blocks tests that use it, type expressions, `try` and `can`, and the
-  JSON syntax.
+  types, schema-driven processing (`decode`) with the static analysis,
+  dynamic blocks and user functions tests that use it, type expressions, `try`
+  and `can`, and the JSON syntax.
 
 ### python-hcl2 8.1.4
 
@@ -253,7 +256,7 @@ silently dropped). python-hcl2 only accepts text, so as for hcl-rs, the adapter
 reports invalid UTF-8 as a parse error, which decides the 15 tests whose input
 isn't UTF-8.
 
-The 177 failures on tests that aren't disputed fall into these groups:
+The 179 failures on tests that aren't disputed fall into these groups:
 
 - **Strip markers:** it rejects them on interpolations in quoted strings, as in
   `"${~ x}"` and `"${x ~}"`, although it accepts them in heredocs and on
@@ -296,7 +299,7 @@ The 177 failures on tests that aren't disputed fall into these groups:
   `!!x`), and spaces or newlines inside `[*]` or between the `.` and `*` of
   `.*` (`t[ * ]`, `t. *`).
 
-Some of its 66 failures on disputed tests come from the problems above, such
+Some of its 68 failures on disputed tests come from the problems above, such
 as the 17 tests disputed about which characters strip markers remove, whose
 strip markers it rejects. Most concern the syntax the tests are disputed about. For
 example, of the namespaced calls that aren't in the spec, it accepts
@@ -342,7 +345,7 @@ The 105 failures on tests that aren't disputed fall into these groups:
 
 ### Where the spec and hashicorp/hcl disagree
 
-499 tests are disputed. `python3 tools/coverage.py disputes` lists them all by
+554 tests are disputed. `python3 tools/coverage.py disputes` lists them all by
 spec section, with notes. The main themes:
 
 - **Source text:** a byte order mark, identifiers starting with `_`, and some
@@ -427,6 +430,23 @@ spec section, with notes. The main themes:
   scope in dynamic attributes processing or in the expressions static
   analyses give, and in literal-only mode iterators are still in scope and
   JSON strings in generated blocks are still templates.
+- **User functions:** the README and package documentation don't say what
+  the variadic parameter holds (a tuple), whether parameters accept null or
+  unknown values (they don't, so an unknown argument makes even a constant
+  result unknown, and the dynamic value skips evaluating the result), or what
+  repeated function or parameter names do (the later one wins). `params` is
+  required and read statically, so a variable holding names is an error, and
+  nothing else may be in a function block. Parentheses make a parameter list
+  or name invalid, while `true`, `false` and `null` are accepted as names that
+  can't be referenced. In the native syntax a quoted parameter name, as in
+  the package documentation, is an error, and in the JSON syntax spaces
+  around a name are ignored, while a name string isn't a template. `params`
+  set to null, or in the JSON syntax `variadic_param` set to null, is an
+  error rather than missing, a function name that isn't an identifier is
+  declared without an error, labels aren't normalized, and an attribute named
+  `function` is left for the schema in the native syntax and absent from it
+  in the JSON syntax. In the native syntax, dynamic attributes processing of
+  the body left after the function blocks are taken fails on them.
 - **Schemas:** requesting an optional attribute twice (or in the JSON syntax a
   required one), or an attribute and a block type with the same name, isn't
   reported as an error, and dynamic attributes of the body left from a JSON
@@ -484,10 +504,21 @@ spec section, with notes. The main themes:
 - The `ext/dynblock` README names the helpers `WalkForEachVariables` and
   `ForEachVariablesHCLDec`, which are `WalkExpandVariables` and
   `ExpandVariablesHCLDec` in v2.24.0.
+- A user function that calls itself in a conditional's result, as in
+  `n <= 1 ? 1 : n * fact(n - 1)`, overflows Go's stack and ends the program
+  instead of giving a value: `ConditionalExpr.Value` in `hclsyntax`
+  evaluates both results before looking at the condition. Recursion that a
+  for expression stops, by calling the function for no elements, works.
+- The `ext/userfunc` package documentation declares `params = ["name"]`,
+  which hashicorp/hcl rejects in the native syntax: parameter names must be
+  bare identifiers there, as in the README.
 
 ## Next steps
 
-- The `userfunc` extension as an optional feature.
+- Newlines next to traversals and operators inside for expressions,
+  interpolations, template directives and object braces.
+- A heredoc marker with a character above U+00FF, which tree-sitter-hcl
+  can't match on any platform.
 
 ## License
 

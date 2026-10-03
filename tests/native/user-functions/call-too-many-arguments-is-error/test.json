@@ -1,0 +1,25 @@
+{
+  "description": "A call with more arguments than parameters is an error without a variadic parameter",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "Too many function arguments",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

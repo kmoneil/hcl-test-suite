@@ -1,0 +1,39 @@
+{
+  "description": "The result can't see the variables of a for expression around the call",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "variables": {
+    "v": {
+      "string": "global"
+    }
+  },
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "global"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

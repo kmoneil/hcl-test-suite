@@ -30,11 +30,11 @@ OPERATIONS = ("parse", "eval", "decode")
 PHASES = {"eval": ("parse", "eval"), "decode": ("parse", "schema", "analysis", "eval")}  # where errors can be reported
 INPUT_NAMES = {"native": "input.hcl", "json": "input.hcl.json"}  # the input file of a test, by its syntax
 TEST_FIELDS = {"description", "spec", "op", "input", "features", "status", "notes", "variables", "functions",
-               "evaluation_mode", "dynamic_blocks", "schema", "reference_error", "expect"}
+               "evaluation_mode", "dynamic_blocks", "user_functions", "schema", "reference_error", "expect"}
 # The test fields passed to eval and decode in their context file.
-CONTEXT_FIELDS = ("variables", "functions", "evaluation_mode", "dynamic_blocks", "schema")
+CONTEXT_FIELDS = ("variables", "functions", "evaluation_mode", "dynamic_blocks", "user_functions", "schema")
 # The context fields that only decode takes.
-DECODE_ONLY_FIELDS = ("dynamic_blocks", "schema")
+DECODE_ONLY_FIELDS = ("dynamic_blocks", "user_functions", "schema")
 
 
 class TestError(Exception):
@@ -104,7 +104,8 @@ class Test:
         self.notes = meta.get("notes")
         self.context = {}  # the context file (docs/protocol.md#eval)
         checks = {"variables": check_variables, "functions": check_functions,
-                  "evaluation_mode": check_evaluation_mode, "dynamic_blocks": check_dynamic_blocks, "schema": check_schema}
+                  "evaluation_mode": check_evaluation_mode, "dynamic_blocks": check_dynamic_blocks,
+                  "user_functions": check_user_functions, "schema": check_schema}
         for field in CONTEXT_FIELDS:
             if field not in meta:
                 continue
@@ -121,6 +122,10 @@ class Test:
             raise TestError(f'{path}: declaring functions needs the "functions" feature')
         if "dynamic_blocks" in self.context and "dynamic-blocks" not in self.features:
             raise TestError(f'{path}: expanding dynamic blocks needs the "dynamic-blocks" feature')
+        if "user_functions" in self.context and "user-functions" not in self.features:
+            raise TestError(f'{path}: declaring user functions needs the "user-functions" feature')
+        if "user_functions" in self.context and "dynamic_blocks" in self.context:
+            raise TestError(f'{path}: a test has "user_functions" or "dynamic_blocks", not both')
         for name, decl in self.context.get("functions", {}).items():
             if "extension" in decl and EXTENSION_FUNCTIONS[decl["extension"]] not in self.features:
                 raise TestError(f'{path}: function {name!r} needs the "{EXTENSION_FUNCTIONS[decl["extension"]]}" feature')
@@ -491,6 +496,11 @@ def check_evaluation_mode(mode):
 def check_dynamic_blocks(flag):
     if flag is not True:
         raise ValueError(f"must be true, not {json.dumps(flag)}; leave it out to read dynamic as an ordinary block type")
+
+
+def check_user_functions(block_type):
+    if not isinstance(block_type, str) or not block_type:
+        raise ValueError(f"must be the block type that declares user functions, not {json.dumps(block_type)}")
 
 
 def check_schema(schema, where="schema"):

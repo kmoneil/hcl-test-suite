@@ -1,0 +1,38 @@
+{
+  "description": "A result using an unknown context variable is unknown",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "user-functions"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "number"
+    }
+  },
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "number"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "description": "A list expanded into the variadic parameter becomes a tuple",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The README and the package documentation don't say what value the variadic parameter has; the README's example only names its function list. hashicorp/hcl makes it a tuple of the remaining arguments (cty.TupleVal in decodeUserFunctions in ext/userfunc/decode.go).",
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "number": "1"
+        },
+        {
+          "number": "2"
+        }
+      ],
+      "element_type": "number"
+    }
+  },
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "number": "1"
+            },
+            {
+              "number": "2"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

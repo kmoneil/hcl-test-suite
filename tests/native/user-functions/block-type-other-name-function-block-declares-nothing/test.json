@@ -1,0 +1,25 @@
+{
+  "description": "With another block type chosen, a function block doesn't declare a function",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "user_functions": "fn",
+  "schema": {
+    "mode": "partial",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "There is no function named \"f\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "description": "A list argument stays a list in the result",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "user-functions"
+  ],
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "number": "1"
+        }
+      ],
+      "element_type": "number"
+    }
+  },
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [
+            {
+              "number": "1"
+            }
+          ],
+          "element_type": "number"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

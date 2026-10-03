@@ -1,0 +1,26 @@
+{
+  "description": "An empty array in place of a function body declares no function",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "user-functions"
+  ],
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "There is no function named \"f\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

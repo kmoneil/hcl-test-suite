@@ -1,0 +1,27 @@
+{
+  "description": "A JSON function block without result is an error",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#functions-and-function-calls",
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "user-functions"
+  ],
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "The argument \"result\" is required",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

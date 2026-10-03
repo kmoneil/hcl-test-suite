@@ -1,0 +1,33 @@
+{
+  "description": "In literal-only mode function blocks are taken, and a call in a string is text",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "json/spec.md#strings"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "user-functions"
+  ],
+  "evaluation_mode": "literal-only",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "${f()}"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

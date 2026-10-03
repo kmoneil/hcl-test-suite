@@ -1,0 +1,38 @@
+{
+  "description": "A recursive function can compute a factorial",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "ext/tryfunc/README.md#try-and-can-functions"
+  ],
+  "op": "decode",
+  "features": [
+    "functions",
+    "try-functions",
+    "user-functions"
+  ],
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "120"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

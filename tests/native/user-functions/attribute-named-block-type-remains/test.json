@@ -1,0 +1,33 @@
+{
+  "description": "An attribute named function doesn't declare a function and remains for the schema",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#partial-processing-of-body-content"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec says that processing a body in two steps is equivalent to one pass with the union of both schemas, and a schema with an attribute and a block type of the same name is an error, so an attribute named function could be an error here; the package documentation also suggests choosing another block type when function conflicts with an attribute name. hashicorp/hcl's native syntax keeps attributes and blocks apart ((*Body).PartialContent in hclsyntax/structure.go), so the extension leaves the attribute in the remaining body (see native/dynamic-blocks/attribute-named-dynamic).",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "function"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "function": {
+          "number": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

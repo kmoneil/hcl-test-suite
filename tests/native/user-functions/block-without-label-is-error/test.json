@@ -1,0 +1,25 @@
+{
+  "description": "A function block without a label is an error",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#schema-driven-processing"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "Missing name for function",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

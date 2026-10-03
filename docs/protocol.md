@@ -71,6 +71,9 @@ Describes the implementation and what the adapter supports.
   - `dynamic-blocks`: the implementation has the dynamic blocks extension
     (hashicorp/hcl's `ext/dynblock`), which tests use through
     [`decode`](#dynamic-blocks).
+  - `user-functions`: the implementation has the user functions extension
+    (hashicorp/hcl's `ext/userfunc`), which tests use through
+    [`decode`](#user-functions).
 
 ## `parse`
 
@@ -122,8 +125,9 @@ The optional context file describes the evaluation context:
   Without it, they are evaluated in full expression mode. In the native syntax
   the two modes differ only in that; in the JSON syntax, literal-only mode also
   reads strings as literal text instead of as templates.
-- `schema` and [`dynamic_blocks`](#dynamic-blocks) are only for
-  [`decode`](#decode), which always has a schema.
+- `schema`, [`dynamic_blocks`](#dynamic-blocks) and
+  [`user_functions`](#user-functions) are only for [`decode`](#decode), which
+  always has a schema.
 
 The other fields are optional. Without a context file there are no variables,
 and the function table is empty, so every function call is an error.
@@ -148,9 +152,10 @@ syntaxes with their own expression syntax.
   `analysis` in tests that need `static-analysis`. Type analyses and the
   type expression [extension functions](#extension-functions) only appear in
   tests that need `type-expressions`, the extension functions `try` and
-  `can` only in tests that need `try-functions`, and `dynamic_blocks` only in
-  tests that need `dynamic-blocks`. Context files never have object types with
-  optional attributes.
+  `can` only in tests that need `try-functions`, `dynamic_blocks` only in
+  tests that need `dynamic-blocks`, and `user_functions` only in tests that
+  need `user-functions`. Context files never have object types with optional
+  attributes.
 
 ## `decode`
 
@@ -171,7 +176,8 @@ or
 
 The context file has the same fields as for `eval`, and a `schema`, which it
 always has. It can also ask for [dynamic blocks](#dynamic-blocks) to be
-expanded. The adapter applies the schema with the implementation's own body
+expanded, or for [user functions](#user-functions) to be declared by the
+file's blocks. The adapter applies the schema with the implementation's own body
 processing; an implementation without schema-driven processing doesn't list
 `decode` in its operations.
 
@@ -184,7 +190,8 @@ processing; an implementation without schema-driven processing doesn't list
   object or a block property that is a string, which is only found when a
   schema is applied to that body. An implementation that rejects the schema
   itself also reports that as a schema error. Errors in expanding
-  [dynamic blocks](#dynamic-blocks) are schema errors too.
+  [dynamic blocks](#dynamic-blocks) and in declaring
+  [user functions](#user-functions) are schema errors too.
 - `"analysis"`: a [static analysis](#static-analysis) that the schema asks
   for failed, including for a JSON string whose content isn't the native
   syntax expression the analysis needs.
@@ -371,6 +378,68 @@ file to be expanded with the dynamic blocks extension (hashicorp/hcl's
 - Only `decode` tests have `dynamic_blocks`, and it is never `false`. Without
   it, `dynamic` is an ordinary block type.
 
+### User functions
+
+With the `user-functions` feature, a context file can have
+`"user_functions": "<block type>"`, which asks for the blocks of that type in
+the file's body to declare functions with the user functions extension
+(hashicorp/hcl's `ext/userfunc`, whose README and package documentation
+describe it). The block type is usually `function`, but the application
+chooses it:
+
+```hcl
+function "add" {
+  params = [a, b]
+  result = a + b
+}
+```
+
+- A function block has one label, the function's name. `params` lists the
+  positional parameters' names as identifiers in a tuple, which is read
+  statically, not evaluated; the optional `variadic_param` names the variadic
+  parameter, whose variable holds the remaining arguments as a tuple; and
+  `result` is the expression that gives the function's value. In the JSON
+  syntax the names are strings, and `result` is any JSON value, evaluated as
+  an expression when the function is called.
+- The functions are declared before the schema is applied: the blocks of that
+  type in the file's body declare them, and the schema is applied to the body
+  that remains, which doesn't have those blocks. (For hashicorp/hcl, the
+  adapter calls `userfunc.DecodeUserFunctions` on the file's body and applies
+  the schema to the body it returns. That in the native syntax hashicorp/hcl's
+  dynamic attributes processing of that body still fails on the function
+  blocks is covered by a disputed test.) Blocks of that type inside other
+  blocks are ordinary blocks.
+- Errors in declaring the functions, such as a missing `result` or a number
+  or an attribute access as a parameter name, are errors in the `"schema"`
+  phase, in literal-only mode too. Errors in calling them are evaluation
+  errors.
+- The functions are added to the context's function table, so every
+  expression evaluated with the context can call them. Tests never declare a
+  function in `functions` with the name of a user function.
+- A function's `result` is evaluated with the context's variables and
+  functions, the user functions included, and with a variable for each
+  parameter, which hides a context variable of the same name. Nothing from
+  the call site is in scope: not the iterators of a for expression or
+  template `for` directive around the call, nor the parameters of a calling
+  function. (For hashicorp/hcl, the adapter passes a `ContextFunc` that
+  returns the context.) In literal-only mode there are no variables or
+  functions, so no function can be called, but the function blocks are still
+  taken from the body and checked.
+- A function can call itself, directly or through another function. In
+  hashicorp/hcl, recursion that only a conditional stops overflows the stack
+  and ends the program, because both results of a conditional are evaluated,
+  so the tests stop recursion with a for expression that calls the function
+  for no elements, because its collection is empty or its `if` clause
+  excludes them.
+- The tests check the extension's rules, which
+  `coverage/native-user-functions.json` and `coverage/json-user-functions.json`
+  list. The adapter uses the implementation's own user functions extension; an
+  implementation without one leaves out `user-functions`.
+- Only `decode` tests have `user_functions`, whose value is always an
+  identifier, and never together with `dynamic_blocks`, since the extensions
+  don't say in which order they apply. Without it, `function` is an ordinary
+  block type.
+
 ## `validate`
 
 Reports whether the file parses, without describing it.
@@ -413,7 +482,8 @@ implementation on its own.
 
 HCL has no built-in functions: the application defines them. Tests that call
 functions declare test-only functions, which the adapter adds to the function
-table. A declaration describes a function the way the spec does:
+table, or declare [user functions](#user-functions) in their input. A
+declaration describes a function the way the spec does:
 
 ```json
 {

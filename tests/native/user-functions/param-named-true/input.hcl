@@ -1,0 +1,5 @@
+function "f" {
+  params = [true]
+  result = true
+}
+a = f(false)

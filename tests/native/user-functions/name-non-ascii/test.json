@@ -1,0 +1,31 @@
+{
+  "description": "A function name can be a non-ASCII identifier",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

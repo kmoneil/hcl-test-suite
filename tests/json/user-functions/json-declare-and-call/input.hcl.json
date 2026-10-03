@@ -1,0 +1,1 @@
+{"function": {"add": {"params": ["a", "b"], "result": "${a + b}"}}, "a": "${add(1, 2)}"}

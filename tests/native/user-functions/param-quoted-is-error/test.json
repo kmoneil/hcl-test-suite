@@ -1,0 +1,27 @@
+{
+  "description": "The package documentation's quoted parameter name is an error",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "hclsyntax/spec.md#static-list"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The README's parameter names are bare identifiers, while the package documentation's example writes params = [\"name\"], and the JSON syntax gives names as strings. hashicorp/hcl reads each name with hcl.ExprAsKeyword (decodeUserFunctions in ext/userfunc/decode.go), which gives no name for a template in the native syntax, so a quoted name is an error.",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "Invalid param element",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

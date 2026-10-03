@@ -1,0 +1,35 @@
+{
+  "description": "The keyword null can name the variadic parameter, but null in the result is still the literal",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "hclsyntax/spec.md#static-traversal",
+    "hclsyntax/spec.md#keywords",
+    "spec.md#null-values"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec asks applications to treat an attribute whose value is null as if it weren't there, which would make this a function without a variadic parameter, so f(1) would have too many arguments. The native syntax spec also lets null be read as a static traversal (see native/analysis/traversal-keyword-null), which names the variadic parameter null. hashicorp/hcl reads the name with hcl.ExprAsKeyword (decodeUserFunctions in ext/userfunc/decode.go), which gives the keyword's name (LiteralValueExpr.AsTraversal in hclsyntax/expression.go), so the variadic parameter is declared, and null in the result is the literal.",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "null": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

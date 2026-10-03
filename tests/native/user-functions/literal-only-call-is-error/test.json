@@ -1,0 +1,26 @@
+{
+  "description": "In literal-only mode a user function can't be called",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#expression-evaluation"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "evaluation_mode": "literal-only",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "Function calls not allowed",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

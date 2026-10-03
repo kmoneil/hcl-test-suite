@@ -1,0 +1,35 @@
+{
+  "description": "The result can use the variables of the evaluation context",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "variables": {
+    "v": {
+      "number": "10"
+    }
+  },
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "11"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "description": "The dynamic value as an argument makes the result the dynamic value",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#functions-and-function-calls",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "decode",
+  "features": [
+    "unknown-values",
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The README and the package documentation don't say whether parameters accept the dynamic value. hashicorp/hcl declares them without AllowDynamicType (decodeUserFunctions in ext/userfunc/decode.go), so go-cty's Function.returnTypeForValues gives the dynamic pseudo-type without calling the function's type callback, and Function.Call then returns the dynamic value without calling the implementation, so the result expression isn't evaluated.",
+  "variables": {
+    "d": {
+      "unknown": "dynamic"
+    }
+  },
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

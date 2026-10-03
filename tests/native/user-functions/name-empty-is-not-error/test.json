@@ -1,0 +1,33 @@
+{
+  "description": "An empty function name is not an error",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "hclsyntax/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The README doesn't say what a function name may be. hashicorp/hcl uses the label as the name without checking it (decodeUserFunctions in ext/userfunc/decode.go), so a name that no call can write is declared without an error.",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "2"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

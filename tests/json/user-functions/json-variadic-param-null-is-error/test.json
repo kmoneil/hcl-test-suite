@@ -1,0 +1,29 @@
+{
+  "description": "A variadic_param of null is an error",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "json/spec.md#static-traversal",
+    "spec.md#null-values"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec asks applications to treat an attribute whose value is null as if it weren't there, which would make this a function without a variadic parameter. hashicorp/hcl reads the name with hcl.ExprAsKeyword (decodeUserFunctions in ext/userfunc/decode.go), which gives no name for null, so it is an error.",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "Invalid variadic_param",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "description": "A function's name is case-sensitive",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "There is no function named \"F\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

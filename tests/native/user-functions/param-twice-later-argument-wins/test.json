@@ -1,0 +1,33 @@
+{
+  "description": "Naming a parameter twice is not an error, and the later argument is used",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The README doesn't say what naming a parameter twice does. hashicorp/hcl sets one variable per parameter name, in parameter order (decodeUserFunctions in ext/userfunc/decode.go), so the later argument replaces the earlier one without an error.",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "2"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

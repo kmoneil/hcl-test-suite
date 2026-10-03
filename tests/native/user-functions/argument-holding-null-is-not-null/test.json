@@ -1,0 +1,36 @@
+{
+  "description": "An argument holding a null is not null, so it is accepted",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#functions-and-function-calls",
+    "spec.md#null-values"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "null": "dynamic"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

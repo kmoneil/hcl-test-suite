@@ -1,0 +1,29 @@
+{
+  "description": "A params property of null is an error",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "json/spec.md#static-list",
+    "spec.md#null-values"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec asks applications to treat an attribute whose value is null as if it weren't there, so params set to null could mean that params is missing, which is itself disputed (see json/user-functions/json-params-missing-is-error). hashicorp/hcl requires a static list (hcl.ExprList in decodeUserFunctions in ext/userfunc/decode.go), so null is an error.",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "A static list expression is required",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

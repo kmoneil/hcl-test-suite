@@ -1,0 +1,28 @@
+{
+  "description": "A null argument for the variadic parameter is an error",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#functions-and-function-calls",
+    "spec.md#null-values"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The README and the package documentation don't say whether parameters accept null. hashicorp/hcl declares them without AllowNull (decodeUserFunctions in ext/userfunc/decode.go), so by the spec's call rules a null argument makes the call an error.",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "Invalid value for \"r\" parameter: argument must not be null",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "description": "A variadic_param name with an attribute access is an error",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "hclsyntax/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "Invalid variadic_param",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

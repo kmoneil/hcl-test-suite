@@ -1,0 +1,41 @@
+{
+  "description": "A function can call itself, stopping where a for expression has no elements left",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "tuple": [
+                {
+                  "tuple": []
+                }
+              ]
+            },
+            {
+              "tuple": []
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,444 @@
+{
+  "area": "native/user-functions",
+  "rules": [
+    {
+      "id": "user-functions-readme-example",
+      "spec": "ext/userfunc/README.md#hcl-user-functions-extension",
+      "rule": "The README's add function, declared with params = [a, b] and result = a + b, returns the sum of its arguments",
+      "tests": [
+        "native/user-functions/readme-example-add"
+      ]
+    },
+    {
+      "id": "user-functions-block-declares-function",
+      "spec": "ext/userfunc/README.md#hcl-user-functions-extension",
+      "rule": "Each block of the chosen type in the given body declares a function named by its label, which any expression evaluated with the context can call, before or after the block",
+      "tests": [
+        "native/user-functions/call-before-declaration",
+        "native/user-functions/declare-and-call"
+      ]
+    },
+    {
+      "id": "user-functions-callable-everywhere",
+      "spec": "ext/userfunc/README.md#hcl-user-functions-extension",
+      "rule": "A user function can be called wherever function calls are allowed: in nested blocks, in the remaining body, in templates, in for expressions and in arguments",
+      "tests": [
+        "native/user-functions/call-as-argument",
+        "native/user-functions/call-in-for-expression",
+        "native/user-functions/call-in-nested-block",
+        "native/user-functions/call-in-remaining-body",
+        "native/user-functions/call-in-template"
+      ]
+    },
+    {
+      "id": "user-functions-block-type",
+      "spec": "ext/userfunc/README.md#hcl-user-functions-extension",
+      "rule": "The application chooses the block type; with another type chosen, function blocks are ordinary blocks that declare nothing",
+      "tests": [
+        "native/user-functions/block-type-other-name",
+        "native/user-functions/block-type-other-name-function-block-declares-nothing",
+        "native/user-functions/block-type-other-name-function-block-is-ordinary"
+      ]
+    },
+    {
+      "id": "user-functions-only-in-given-body",
+      "spec": "ext/userfunc/README.md#hcl-user-functions-extension",
+      "rule": "Only the blocks of the given body declare functions: one inside another block is an ordinary block of that block's body",
+      "tests": [
+        "native/user-functions/nested-function-block-declares-nothing",
+        "native/user-functions/nested-function-block-is-ordinary"
+      ]
+    },
+    {
+      "id": "user-functions-remaining-body",
+      "spec": "ext/userfunc/README.md#hcl-user-functions-extension",
+      "rule": "The remaining body has every attribute and block of the given body except the function blocks, in their order, so schema-driven and partial processing of it never see them",
+      "tests": [
+        "native/user-functions/call-in-remaining-body",
+        "native/user-functions/remaining-body-exhaustive",
+        "native/user-functions/remaining-body-other-blocks-in-order",
+        "native/user-functions/remaining-body-requested-block-type-has-no-blocks"
+      ]
+    },
+    {
+      "id": "user-functions-remaining-body-dynamic-attributes",
+      "spec": "spec.md#dynamic-attributes-processing",
+      "rule": "In the native syntax, dynamic attributes processing of the remaining body fails on the function blocks (disputed)",
+      "tests": [
+        "native/user-functions/remaining-body-dynamic-attributes-is-error"
+      ]
+    },
+    {
+      "id": "user-functions-attribute-named-block-type",
+      "spec": "spec.md#partial-processing-of-body-content",
+      "rule": "An attribute named like the block type is not a function declaration and stays in the remaining body (disputed)",
+      "tests": [
+        "native/user-functions/attribute-named-block-type-remains"
+      ]
+    },
+    {
+      "id": "user-functions-one-label",
+      "spec": "ext/userfunc/README.md#hcl-user-functions-extension",
+      "rule": "A function block has exactly one label, the function's name; none or two is an error",
+      "tests": [
+        "native/user-functions/block-with-two-labels-is-error",
+        "native/user-functions/block-without-label-is-error"
+      ]
+    },
+    {
+      "id": "user-functions-name",
+      "spec": "ext/userfunc/README.md#hcl-user-functions-extension",
+      "rule": "A function's name is its label exactly, quoted or bare: names are case-sensitive, can contain dashes and non-ASCII letters, and are apart from variable and parameter names, which neither hide functions nor are hidden by them",
+      "tests": [
+        "native/user-functions/name-bare-label",
+        "native/user-functions/name-is-case-sensitive",
+        "native/user-functions/name-non-ascii",
+        "native/user-functions/name-same-as-parameter",
+        "native/user-functions/name-with-dash",
+        "native/user-functions/param-does-not-hide-function",
+        "native/user-functions/variable-named-like-function"
+      ]
+    },
+    {
+      "id": "user-functions-name-not-normalized",
+      "spec": "hclsyntax/spec.md#source-code-representation",
+      "rule": "A label isn't normalized, so a call that writes another normalization form of it doesn't find the function (disputed)",
+      "tests": [
+        "native/user-functions/name-not-normalized"
+      ]
+    },
+    {
+      "id": "user-functions-namespaced-name",
+      "spec": "hclsyntax/spec.md#functions-and-function-calls",
+      "rule": "A name containing :: is called with the namespaced call syntax and not by its last part (disputed)",
+      "tests": [
+        "native/user-functions/namespaced-name",
+        "native/user-functions/namespaced-name-needs-namespace"
+      ]
+    },
+    {
+      "id": "user-functions-name-not-identifier",
+      "spec": "ext/userfunc/README.md#hcl-user-functions-extension",
+      "rule": "A label that isn't an identifier, such as one with a space or an empty one, is not an error (disputed)",
+      "tests": [
+        "native/user-functions/name-empty-is-not-error",
+        "native/user-functions/name-with-space-is-not-error"
+      ]
+    },
+    {
+      "id": "user-functions-name-twice",
+      "spec": "ext/userfunc/README.md#hcl-user-functions-extension",
+      "rule": "Two function blocks with the same name are not an error, and the later one is the function (disputed)",
+      "tests": [
+        "native/user-functions/name-twice-later-block-wins"
+      ]
+    },
+    {
+      "id": "user-functions-params-required",
+      "spec": "ext/userfunc/README.md#hcl-user-functions-extension",
+      "rule": "params is required, even for a function without positional parameters (disputed)",
+      "tests": [
+        "native/user-functions/params-missing-is-error"
+      ]
+    },
+    {
+      "id": "user-functions-result-required",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "result is required",
+      "tests": [
+        "native/user-functions/result-missing-is-error"
+      ]
+    },
+    {
+      "id": "user-functions-block-content",
+      "spec": "ext/userfunc/README.md#hcl-user-functions-extension",
+      "rule": "A function block can't have other attributes or nested blocks (disputed)",
+      "tests": [
+        "native/user-functions/block-nested-block-is-error",
+        "native/user-functions/block-unexpected-attribute-is-error"
+      ]
+    },
+    {
+      "id": "user-functions-variadic-param-optional",
+      "spec": "ext/userfunc/README.md#hcl-user-functions-extension",
+      "rule": "variadic_param is optional; without it the function takes exactly its positional parameters",
+      "tests": [
+        "native/user-functions/call-too-many-arguments-is-error"
+      ]
+    },
+    {
+      "id": "user-functions-params-static-list",
+      "spec": "hclsyntax/spec.md#static-list",
+      "rule": "params must be a tuple constructor: a string or a for expression is an error",
+      "tests": [
+        "native/user-functions/params-for-expression-is-error",
+        "native/user-functions/params-string-is-error"
+      ]
+    },
+    {
+      "id": "user-functions-params-variable",
+      "spec": "hclsyntax/spec.md#static-list",
+      "rule": "params is read statically, so a variable holding a tuple of names is an error (disputed)",
+      "tests": [
+        "native/user-functions/params-variable-is-error"
+      ]
+    },
+    {
+      "id": "user-functions-params-null",
+      "spec": "spec.md#null-values",
+      "rule": "params set to null is an error (disputed)",
+      "tests": [
+        "native/user-functions/params-null-is-error"
+      ]
+    },
+    {
+      "id": "user-functions-params-parentheses",
+      "spec": "hclsyntax/spec.md#static-list",
+      "rule": "params in parentheses, or a parameter or variadic parameter name in parentheses, is an error (disputed)",
+      "tests": [
+        "native/user-functions/param-parenthesized-is-error",
+        "native/user-functions/params-parenthesized-tuple-is-error",
+        "native/user-functions/variadic-param-parenthesized-is-error"
+      ]
+    },
+    {
+      "id": "user-functions-param-identifier",
+      "spec": "hclsyntax/spec.md#identifiers",
+      "rule": "Each element of params is an identifier, which can have dashes or non-ASCII letters; an attribute access, an index or a number is an error",
+      "tests": [
+        "native/user-functions/param-attribute-access-is-error",
+        "native/user-functions/param-index-is-error",
+        "native/user-functions/param-name-non-ascii",
+        "native/user-functions/param-name-with-dash",
+        "native/user-functions/param-number-is-error"
+      ]
+    },
+    {
+      "id": "user-functions-param-quoted",
+      "spec": "ext/userfunc/README.md#hcl-user-functions-extension",
+      "rule": "A quoted parameter name, as in the package documentation's example, is an error (disputed)",
+      "tests": [
+        "native/user-functions/param-quoted-is-error"
+      ]
+    },
+    {
+      "id": "user-functions-param-keyword",
+      "spec": "hclsyntax/spec.md#static-traversal",
+      "rule": "The keywords true, false and null can name parameters, including the variadic one, but in the result they are still the literal values (disputed)",
+      "tests": [
+        "native/user-functions/param-named-false",
+        "native/user-functions/param-named-null",
+        "native/user-functions/param-named-true",
+        "native/user-functions/variadic-param-named-null"
+      ]
+    },
+    {
+      "id": "user-functions-variadic-param-identifier",
+      "spec": "hclsyntax/spec.md#static-traversal",
+      "rule": "variadic_param is an identifier, which can have dashes; a tuple or an attribute access is an error",
+      "tests": [
+        "native/user-functions/variadic-param-attribute-access-is-error",
+        "native/user-functions/variadic-param-name-with-dash",
+        "native/user-functions/variadic-param-tuple-is-error"
+      ]
+    },
+    {
+      "id": "user-functions-variadic-param-quoted",
+      "spec": "ext/userfunc/README.md#hcl-user-functions-extension",
+      "rule": "A quoted variadic_param is an error (disputed)",
+      "tests": [
+        "native/user-functions/variadic-param-quoted-is-error"
+      ]
+    },
+    {
+      "id": "user-functions-param-name-twice",
+      "spec": "ext/userfunc/README.md#hcl-user-functions-extension",
+      "rule": "Naming a parameter twice, or naming the variadic parameter like a positional one, is not an error, and the later one's argument is used (disputed)",
+      "tests": [
+        "native/user-functions/param-twice-later-argument-wins",
+        "native/user-functions/variadic-param-same-as-param"
+      ]
+    },
+    {
+      "id": "user-functions-result-lazy",
+      "spec": "ext/userfunc/README.md#hcl-user-functions-extension",
+      "rule": "The result expression isn't evaluated until the function is called, and is evaluated again for each call with its arguments",
+      "tests": [
+        "native/user-functions/result-evaluated-for-each-call",
+        "native/user-functions/result-not-evaluated-until-called"
+      ]
+    },
+    {
+      "id": "user-functions-arity",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "A call needs one argument for each positional parameter, and takes more only with a variadic parameter",
+      "tests": [
+        "native/user-functions/call-too-few-arguments-is-error",
+        "native/user-functions/call-too-few-with-variadic-is-error",
+        "native/user-functions/call-too-many-arguments-is-error"
+      ]
+    },
+    {
+      "id": "user-functions-params-bind",
+      "spec": "ext/userfunc/README.md#hcl-user-functions-extension",
+      "rule": "In the result each parameter is a variable holding the argument in its position, which nested scopes such as for expressions can use, and which their iterators hide only inside them",
+      "tests": [
+        "native/user-functions/for-iterator-hides-param",
+        "native/user-functions/param-in-for-expression",
+        "native/user-functions/params-bind-in-order",
+        "native/user-functions/template-for-iterator-hides-param"
+      ]
+    },
+    {
+      "id": "user-functions-argument-any-type",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "Parameters take arguments of any type, which reach the result unchanged",
+      "tests": [
+        "native/user-functions/argument-list-unchanged",
+        "native/user-functions/argument-string-not-converted"
+      ]
+    },
+    {
+      "id": "user-functions-argument-holding-unknown-or-null",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "An argument that is a known value holding unknown values or nulls is neither unknown nor null, so the result is evaluated with it as usual",
+      "tests": [
+        "native/user-functions/argument-holding-null-is-not-null",
+        "native/user-functions/argument-holding-unknown-is-known"
+      ]
+    },
+    {
+      "id": "user-functions-variadic-collects",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "The variadic parameter holds the arguments after the positional ones, in order, none when there are none, and can be expanded into another call",
+      "tests": [
+        "native/user-functions/variadic-collects-remaining-arguments",
+        "native/user-functions/variadic-element-index",
+        "native/user-functions/variadic-forwarded-with-expansion",
+        "native/user-functions/variadic-no-remaining-arguments"
+      ]
+    },
+    {
+      "id": "user-functions-variadic-tuple",
+      "spec": "ext/userfunc/README.md#hcl-user-functions-extension",
+      "rule": "The variadic parameter's value is a tuple of those arguments, even when they come from an expanded list, so the README's list function returns a tuple (disputed)",
+      "tests": [
+        "native/user-functions/expand-list-into-variadic-is-tuple",
+        "native/user-functions/readme-example-list",
+        "native/user-functions/variadic-empty-tuple",
+        "native/user-functions/variadic-value-is-tuple"
+      ]
+    },
+    {
+      "id": "user-functions-expansion",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "Arguments expanded with ... fill the positional parameters and then the variadic one, including from a single expanded tuple",
+      "tests": [
+        "native/user-functions/expand-fills-positional-then-variadic",
+        "native/user-functions/expand-into-positional-params",
+        "native/user-functions/expand-into-variadic-param"
+      ]
+    },
+    {
+      "id": "user-functions-result-value",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "A call's value is the value of the result expression, which can be of any type, null included, and differ from call to call",
+      "tests": [
+        "native/user-functions/result-null",
+        "native/user-functions/result-traversed",
+        "native/user-functions/result-type-varies-by-call"
+      ]
+    },
+    {
+      "id": "user-functions-isolated",
+      "spec": "ext/userfunc/README.md#hcl-user-functions-extension",
+      "rule": "The result is evaluated in its own scope: it can't see the iterators of a for expression or template for directive around the call, or the parameters of a calling function",
+      "tests": [
+        "native/user-functions/call-site-iterator-not-visible",
+        "native/user-functions/call-site-template-iterator-not-visible",
+        "native/user-functions/caller-params-not-visible"
+      ]
+    },
+    {
+      "id": "user-functions-context",
+      "spec": "ext/userfunc/README.md#hcl-user-functions-extension",
+      "rule": "The result can use the evaluation context's variables and functions, including the user functions and the try function, and a parameter, variadic or not, hides a variable of the same name",
+      "tests": [
+        "native/user-functions/param-hides-variable",
+        "native/user-functions/result-calls-context-function",
+        "native/user-functions/result-calls-user-function",
+        "native/user-functions/result-uses-try",
+        "native/user-functions/result-uses-unknown-variable",
+        "native/user-functions/result-uses-variable",
+        "native/user-functions/variadic-param-hides-variable"
+      ]
+    },
+    {
+      "id": "user-functions-recursion",
+      "spec": "ext/userfunc/README.md#hcl-user-functions-extension",
+      "rule": "A function can call itself, directly or through another function, through the context, and the recursion ends where a for expression calls it for no elements, because its collection is empty or its if clause excludes them",
+      "tests": [
+        "native/user-functions/recursion-computes-value",
+        "native/user-functions/recursion-direct",
+        "native/user-functions/recursion-mutual"
+      ]
+    },
+    {
+      "id": "user-functions-result-error",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "An error evaluating the result makes the call fail, which try can catch (disputed)",
+      "tests": [
+        "native/user-functions/result-error-fails-call",
+        "native/user-functions/result-error-for-some-arguments",
+        "native/user-functions/try-catches-call-error"
+      ]
+    },
+    {
+      "id": "user-functions-null-argument",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "Parameters don't accept null, so a null argument is an error even if the result doesn't use it (disputed)",
+      "tests": [
+        "native/user-functions/null-argument-is-error",
+        "native/user-functions/null-variadic-argument-is-error"
+      ]
+    },
+    {
+      "id": "user-functions-unknown-argument",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "Parameters don't accept unknown values: an unknown argument makes the result an unknown value of the type the result has with that argument, even for a constant result, and an error evaluating it is still an error (disputed)",
+      "tests": [
+        "native/user-functions/unknown-argument-constant-result-is-unknown",
+        "native/user-functions/unknown-argument-result-error-is-error",
+        "native/user-functions/unknown-argument-unknown-result",
+        "native/user-functions/unknown-variadic-argument"
+      ]
+    },
+    {
+      "id": "user-functions-dynamic-argument",
+      "spec": "spec.md#functions-and-function-calls",
+      "rule": "The dynamic value as a positional or variadic argument, or an unknown expanded argument, makes the result the dynamic value without evaluating the result (disputed)",
+      "tests": [
+        "native/user-functions/dynamic-argument-dynamic-result",
+        "native/user-functions/dynamic-argument-result-not-evaluated",
+        "native/user-functions/dynamic-variadic-argument-result-not-evaluated",
+        "native/user-functions/expand-unknown-result-not-evaluated"
+      ]
+    },
+    {
+      "id": "user-functions-literal-only",
+      "spec": "ext/userfunc/README.md#hcl-user-functions-extension",
+      "rule": "In literal-only mode function blocks are still taken from the body and checked, and calls are errors because there are no functions",
+      "tests": [
+        "native/user-functions/literal-only-call-is-error",
+        "native/user-functions/literal-only-declaration-error-is-error",
+        "native/user-functions/literal-only-function-blocks-taken"
+      ]
+    },
+    {
+      "id": "user-functions-no-context",
+      "spec": "ext/userfunc/README.md#hcl-user-functions-extension",
+      "rule": "Without a context, the result can only use the parameters",
+      "untested": "The protocol always gives user functions the context's variables and functions"
+    }
+  ]
+}

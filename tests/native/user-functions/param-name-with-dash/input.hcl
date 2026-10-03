@@ -1,0 +1,5 @@
+function "f" {
+  params = [my-x]
+  result = my-x * 2
+}
+a = f(3)

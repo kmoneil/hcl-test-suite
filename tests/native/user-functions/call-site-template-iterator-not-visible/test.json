@@ -1,0 +1,35 @@
+{
+  "description": "The result can't see the iterator of a template for directive around the call",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "variables": {
+    "v": {
+      "string": "global"
+    }
+  },
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "global"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

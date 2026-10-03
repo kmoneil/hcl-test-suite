@@ -1,0 +1,216 @@
+{
+  "area": "json/user-functions",
+  "rules": [
+    {
+      "id": "user-functions-json-block",
+      "spec": "json/spec.md#blocks",
+      "rule": "In the JSON syntax, the property named by the block type holds an object (or an array of objects, also across the elements of a root array) whose property names are function names, // included, and whose values are function bodies; null or an empty array in place of a body declares nothing (null disputed), while any other value, or null or a number in place of the object, is an error",
+      "tests": [
+        "json/user-functions/json-blocks-in-array",
+        "json/user-functions/json-comment-property-at-name-level-is-name",
+        "json/user-functions/json-declare-and-call",
+        "json/user-functions/json-empty-array-body-declares-nothing",
+        "json/user-functions/json-function-body-number-is-error",
+        "json/user-functions/json-function-property-null-is-error",
+        "json/user-functions/json-function-property-number-is-error",
+        "json/user-functions/json-null-body-declares-nothing",
+        "json/user-functions/json-root-array-declares-across-elements"
+      ]
+    },
+    {
+      "id": "user-functions-json-callable",
+      "spec": "json/spec.md#blocks",
+      "rule": "A JSON function can be called from any expression evaluated with the context, before its declaration or in a nested block",
+      "tests": [
+        "json/user-functions/json-call-before-declaration",
+        "json/user-functions/json-call-in-nested-block"
+      ]
+    },
+    {
+      "id": "user-functions-json-empty-names",
+      "spec": "json/spec.md#blocks",
+      "rule": "A function property holding an empty object is an error (disputed)",
+      "tests": [
+        "json/user-functions/json-function-property-empty-object-is-error"
+      ]
+    },
+    {
+      "id": "user-functions-json-block-type",
+      "spec": "json/spec.md#blocks",
+      "rule": "The application chooses the property name; with another one chosen, a function property is an ordinary block",
+      "tests": [
+        "json/user-functions/json-block-type-other-name",
+        "json/user-functions/json-block-type-other-name-function-property-is-ordinary"
+      ]
+    },
+    {
+      "id": "user-functions-json-only-in-given-body",
+      "spec": "json/spec.md#blocks",
+      "rule": "Only the given body's properties declare functions: a function property inside a block is an ordinary block of that block's body",
+      "tests": [
+        "json/user-functions/json-nested-function-property-declares-nothing",
+        "json/user-functions/json-nested-function-property-is-ordinary"
+      ]
+    },
+    {
+      "id": "user-functions-json-name-twice",
+      "spec": "json/spec.md#blocks",
+      "rule": "A name declared twice, by an array of bodies, a repeated name or a repeated property, is not an error and the later body is the function (disputed)",
+      "tests": [
+        "json/user-functions/json-name-twice-in-object-later-wins",
+        "json/user-functions/json-name-with-array-of-bodies-later-wins",
+        "json/user-functions/json-property-twice-later-wins"
+      ]
+    },
+    {
+      "id": "user-functions-json-params",
+      "spec": "json/spec.md#static-traversal",
+      "rule": "Each parameter name is a string holding an identifier, which can have dashes, as in the package documentation's example; an attribute access, an index, an empty string, an undefined interpolation, or a number, null or array is an error",
+      "tests": [
+        "json/user-functions/json-package-doc-example",
+        "json/user-functions/json-param-array-is-error",
+        "json/user-functions/json-param-empty-string-is-error",
+        "json/user-functions/json-param-index-is-error",
+        "json/user-functions/json-param-name-with-dash",
+        "json/user-functions/json-param-null-is-error",
+        "json/user-functions/json-param-number-is-error",
+        "json/user-functions/json-param-traversal-is-error",
+        "json/user-functions/json-param-undefined-interpolation-is-error"
+      ]
+    },
+    {
+      "id": "user-functions-json-param-template",
+      "spec": "json/spec.md#static-traversal",
+      "rule": "A parameter name string isn't a template, so one whose template gives a name is an error (disputed)",
+      "tests": [
+        "json/user-functions/json-param-template-giving-name-is-error"
+      ]
+    },
+    {
+      "id": "user-functions-json-name-spaces",
+      "spec": "json/spec.md#static-traversal",
+      "rule": "Spaces around a parameter or variadic parameter name string are ignored (disputed)",
+      "tests": [
+        "json/user-functions/json-param-surrounding-spaces",
+        "json/user-functions/json-variadic-param-surrounding-spaces"
+      ]
+    },
+    {
+      "id": "user-functions-json-param-keyword",
+      "spec": "json/spec.md#static-traversal",
+      "rule": "The string \"true\" can name a parameter, but true in the result is still the literal",
+      "tests": [
+        "json/user-functions/json-param-named-true"
+      ]
+    },
+    {
+      "id": "user-functions-json-params-array",
+      "spec": "json/spec.md#static-list",
+      "rule": "params must be an array: a string or an object is an error",
+      "tests": [
+        "json/user-functions/json-params-object-is-error",
+        "json/user-functions/json-params-string-is-error"
+      ]
+    },
+    {
+      "id": "user-functions-json-params-null",
+      "spec": "spec.md#null-values",
+      "rule": "params set to null is an error (disputed)",
+      "tests": [
+        "json/user-functions/json-params-null-is-error"
+      ]
+    },
+    {
+      "id": "user-functions-json-variadic-param",
+      "spec": "json/spec.md#static-traversal",
+      "rule": "variadic_param is a string naming the variadic parameter; an attribute access or an array is an error",
+      "tests": [
+        "json/user-functions/json-variadic-param",
+        "json/user-functions/json-variadic-param-array-is-error",
+        "json/user-functions/json-variadic-param-traversal-is-error"
+      ]
+    },
+    {
+      "id": "user-functions-json-variadic-param-null",
+      "spec": "spec.md#null-values",
+      "rule": "variadic_param set to null is an error (disputed)",
+      "tests": [
+        "json/user-functions/json-variadic-param-null-is-error"
+      ]
+    },
+    {
+      "id": "user-functions-json-result",
+      "spec": "json/spec.md#expressions",
+      "rule": "The result is a JSON value evaluated as an expression with the parameters: a string is a template, so a string without interpolations is text, and objects and arrays have evaluated property names, values and elements",
+      "tests": [
+        "json/user-functions/json-result-array",
+        "json/user-functions/json-result-interpolation",
+        "json/user-functions/json-result-number",
+        "json/user-functions/json-result-object",
+        "json/user-functions/json-result-object-key-template",
+        "json/user-functions/json-result-string-is-text",
+        "json/user-functions/json-result-template-directive"
+      ]
+    },
+    {
+      "id": "user-functions-json-result-template-when-called",
+      "spec": "json/spec.md#strings",
+      "rule": "A result string is only interpreted as a template when the function is called, so an invalid template is only an error in a call",
+      "tests": [
+        "json/user-functions/json-result-invalid-template-called-is-error",
+        "json/user-functions/json-result-invalid-template-uncalled"
+      ]
+    },
+    {
+      "id": "user-functions-json-content",
+      "spec": "json/spec.md#blocks",
+      "rule": "A function block's // property is a comment, and result is required",
+      "tests": [
+        "json/user-functions/json-comment-property-ignored",
+        "json/user-functions/json-result-missing-is-error"
+      ]
+    },
+    {
+      "id": "user-functions-json-params-required",
+      "spec": "json/spec.md#blocks",
+      "rule": "params is required (disputed)",
+      "tests": [
+        "json/user-functions/json-params-missing-is-error"
+      ]
+    },
+    {
+      "id": "user-functions-json-unexpected-content",
+      "spec": "json/spec.md#blocks",
+      "rule": "A property other than params, variadic_param and result in a function block is an error (disputed)",
+      "tests": [
+        "json/user-functions/json-unexpected-property-is-error"
+      ]
+    },
+    {
+      "id": "user-functions-json-remaining-body",
+      "spec": "ext/userfunc/README.md#hcl-user-functions-extension",
+      "rule": "The remaining body lacks the function property, so schema-driven and dynamic attributes processing see only the other properties",
+      "tests": [
+        "json/user-functions/json-remaining-body-dynamic-attributes",
+        "json/user-functions/json-remaining-body-exhaustive"
+      ]
+    },
+    {
+      "id": "user-functions-json-attribute-named-block-type",
+      "spec": "spec.md#partial-processing-of-body-content",
+      "rule": "An attribute named like the block type, requested from the remaining body, is absent (disputed)",
+      "tests": [
+        "json/user-functions/json-remaining-body-lacks-function-property"
+      ]
+    },
+    {
+      "id": "user-functions-json-literal-only",
+      "spec": "ext/userfunc/README.md#hcl-user-functions-extension",
+      "rule": "In literal-only mode function blocks are still taken and checked, and strings are text, so a call in one isn't evaluated",
+      "tests": [
+        "json/user-functions/json-literal-only-declaration-error-is-error",
+        "json/user-functions/json-literal-only-function-blocks-taken"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+function "foo" {
+  params = ["name"]
+  result = "Hello, ${name}!"
+}
+a = foo("x")

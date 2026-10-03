@@ -1,0 +1,34 @@
+{
+  "description": "Spaces around a variadic_param string are ignored",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "json/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The README doesn't say how the variadic parameter's name is read. Read as a static traversal, whose string the JSON syntax reads as a native syntax expression (json/spec.md#static-traversal; see json/analysis/traversal-surrounding-spaces), spaces around the name are allowed, while a string that must be the name itself would be an error. hashicorp/hcl reads the name with hcl.ExprAsKeyword (decodeUserFunctions in ext/userfunc/decode.go), for which the JSON syntax parses the string as a traversal ((*expression).AsTraversal in json/structure.go).",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

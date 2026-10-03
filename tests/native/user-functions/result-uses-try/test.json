@@ -1,0 +1,45 @@
+{
+  "description": "The try function in the result evaluates its arguments with the parameters in scope",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "ext/tryfunc/README.md#try-and-can-functions"
+  ],
+  "op": "decode",
+  "features": [
+    "functions",
+    "try-functions",
+    "user-functions"
+  ],
+  "functions": {
+    "try": {
+      "extension": "try"
+    }
+  },
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "number": "1"
+            },
+            {
+              "string": "none"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

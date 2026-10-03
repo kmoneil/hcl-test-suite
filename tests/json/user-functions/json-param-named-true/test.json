@@ -1,0 +1,33 @@
+{
+  "description": "The string true can name a parameter, but true in the result is still the literal",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "json/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "user-functions"
+  ],
+  "notes": "The spec reserves no words, so true is an identifier and names the parameter, but in an expression true is the literal value, so the result can't refer to the parameter.",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": true
+        }
+      },
+      "blocks": []
+    }
+  }
+}

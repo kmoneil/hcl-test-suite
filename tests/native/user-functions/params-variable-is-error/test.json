@@ -1,0 +1,36 @@
+{
+  "description": "A variable holding a tuple can't be params, which must be written as a tuple",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "hclsyntax/spec.md#static-list"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The README writes params as a tuple of bare names, which only reading it statically allows, but the package documentation's example writes params = [\"name\"], which evaluating it would also allow, and then a variable holding a tuple of names would do too. hashicorp/hcl requires a static list (hcl.ExprList in decodeUserFunctions in ext/userfunc/decode.go).",
+  "variables": {
+    "x": {
+      "tuple": [
+        {
+          "string": "y"
+        }
+      ]
+    }
+  },
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "A static list expression is required",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

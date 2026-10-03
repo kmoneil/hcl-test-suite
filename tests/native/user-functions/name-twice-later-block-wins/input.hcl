@@ -1,0 +1,9 @@
+function "f" {
+  params = []
+  result = 1
+}
+function "f" {
+  params = []
+  result = 2
+}
+a = f()

@@ -1,0 +1,1 @@
+{"a": "${f()}", "function": {"f": {"params": [], "result": 1}}}

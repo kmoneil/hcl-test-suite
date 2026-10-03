@@ -1,0 +1,5 @@
+function "f" {
+  params = null
+  result = 1
+}
+a = 1

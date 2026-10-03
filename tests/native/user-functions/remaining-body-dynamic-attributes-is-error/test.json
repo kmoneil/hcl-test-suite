@@ -1,0 +1,22 @@
+{
+  "description": "Dynamic attributes processing of what remains fails on the function blocks",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#dynamic-attributes-processing"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The README says the extension returns a body with the remaining content, which has no function blocks, so dynamic attributes processing should give its attributes. In the native syntax, hashicorp/hcl's Body.JustAttributes still reports the blocks that partial processing took (see native/structure/partial-remain-dynamic-attributes-after-blocks-taken), and the extension takes the function blocks with PartialContent (decodeUserFunctions in ext/userfunc/decode.go).",
+  "user_functions": "function",
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "Unexpected \"function\" block",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

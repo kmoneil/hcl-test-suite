@@ -1,0 +1,27 @@
+{
+  "description": "A call fails when the result fails for that call's arguments",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec doesn't say what happens when a function fails (see native/functions/function-error-is-eval-error). hashicorp/hcl returns the diagnostics of evaluating the result expression as the function's error, first from the type callback that go-cty calls before the implementation (spec.Type in decodeUserFunctions in ext/userfunc/decode.go), and FunctionCallExpr.Value in hclsyntax/expression.go reports an error from a function as an error in the call.",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "This object does not have an attribute named \"k\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

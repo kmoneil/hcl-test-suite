@@ -1,0 +1,28 @@
+{
+  "description": "A parameter name string whose template gives a name is an error",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "json/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The README doesn't say how parameter names are read, and a JSON string is a template in most places, so a template giving the name would be another reading. hashicorp/hcl reads each name with hcl.ExprAsKeyword (decodeUserFunctions in ext/userfunc/decode.go), for which the JSON syntax parses the string as a native syntax traversal ((*expression).AsTraversal in json/structure.go), where a template sequence is an error.",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "Invalid param element",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

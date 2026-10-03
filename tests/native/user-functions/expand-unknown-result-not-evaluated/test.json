@@ -1,0 +1,46 @@
+{
+  "description": "Expanding an unknown tuple makes the result the dynamic value without evaluating it",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#functions-and-function-calls",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "decode",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec doesn't say how an unknown value expands (see native/unknowns/function-expand-unknown-tuple). hashicorp/hcl returns the dynamic value for an expanded argument that is unknown, before mapping the arguments to parameters (FunctionCallExpr.Value in hclsyntax/expression.go), so the function isn't called and its result isn't evaluated.",
+  "variables": {
+    "t": {
+      "unknown": [
+        "tuple",
+        [
+          "number"
+        ]
+      ]
+    }
+  },
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

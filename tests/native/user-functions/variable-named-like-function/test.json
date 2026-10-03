@@ -1,0 +1,43 @@
+{
+  "description": "A context variable named like a user function doesn't hide the function",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "variables": {
+    "f": {
+      "number": "5"
+    }
+  },
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "number": "1"
+            },
+            {
+              "number": "5"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

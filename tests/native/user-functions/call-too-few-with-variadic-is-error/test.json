@@ -1,0 +1,25 @@
+{
+  "description": "The variadic parameter doesn't make positional parameters optional",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "Not enough function arguments",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

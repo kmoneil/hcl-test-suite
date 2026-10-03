@@ -1,0 +1,36 @@
+{
+  "description": "A result object is an object whose property values are evaluated with the parameters",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "json/spec.md#expressions"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "user-functions"
+  ],
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "k": {
+              "number": "1"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

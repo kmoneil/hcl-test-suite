@@ -1,0 +1,26 @@
+{
+  "description": "A function property whose value is a number is an error",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "user-functions"
+  ],
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "to specify name labels for this block",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

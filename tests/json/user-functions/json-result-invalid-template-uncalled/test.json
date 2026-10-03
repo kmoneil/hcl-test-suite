@@ -1,0 +1,33 @@
+{
+  "description": "An invalid template in the result of a function that isn't called is not an error",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "json/spec.md#strings"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "user-functions"
+  ],
+  "notes": "The documentation of DecodeUserFunctions says result expressions are parsed during decoding but not evaluated until the function is called. The JSON spec makes a string a template only when it is evaluated, in a way that depends on the evaluation mode, so parsing the JSON value doesn't read the template, and an uncalled function's result is never evaluated.",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

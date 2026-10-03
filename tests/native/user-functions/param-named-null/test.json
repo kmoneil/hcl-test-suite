@@ -1,0 +1,34 @@
+{
+  "description": "The keyword null can name a parameter, but null in the result is still the literal",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "hclsyntax/spec.md#static-traversal",
+    "hclsyntax/spec.md#keywords"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The native syntax spec lets the keywords true, false and null be read as static traversals, as references to variables of those names (see native/analysis/traversal-keyword-null), so read as a static traversal, null names a parameter. The README doesn't say how params is read, and in an expression null is a literal value, not a name, which would make it an error. hashicorp/hcl reads each name with hcl.ExprAsKeyword (decodeUserFunctions in ext/userfunc/decode.go), which gives the literal a traversal of its name (LiteralValueExpr.AsTraversal in hclsyntax/expression.go), so the parameter is declared, and in the result null is still the literal value, so the parameter can't be referred to.",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "null": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

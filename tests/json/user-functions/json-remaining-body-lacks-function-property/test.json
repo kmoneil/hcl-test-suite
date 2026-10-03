@@ -1,0 +1,37 @@
+{
+  "description": "A schema requesting an attribute named function doesn't get the function property",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#partial-processing-of-body-content"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec says that processing a body in two steps is equivalent to one pass with the union of both schemas, and a schema with an attribute and a block type of the same name is an error, so asking for an attribute named function after the extension took the function blocks could be an error. hashicorp/hcl records the taken name in the remaining body's hidden attributes ((*body).PartialContent in json/structure.go), and processing that body skips every property with a hidden name (see json/bodies/partial-remain-attribute-not-a-later-block), so the attribute is absent.",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      },
+      {
+        "name": "function"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "2"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

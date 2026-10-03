@@ -1,0 +1,28 @@
+{
+  "description": "A function property holding an empty object is an error",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The JSON spec flattens each label level into a sequence of properties, each naming a label value, so an empty object gives no function names and declares no functions. hashicorp/hcl requires at least one property at each label level and reports an error ((*body).unpackBlock in json/structure.go; see json/bodies/block-label-level-empty-object-is-error).",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "Missing block label",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

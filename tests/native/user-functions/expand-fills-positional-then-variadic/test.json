@@ -1,0 +1,53 @@
+{
+  "description": "One expanded tuple fills the positional parameters, then the variadic one",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "decode",
+  "features": [
+    "user-functions"
+  ],
+  "variables": {
+    "xs": {
+      "tuple": [
+        {
+          "number": "1"
+        },
+        {
+          "number": "2"
+        },
+        {
+          "number": "3"
+        }
+      ]
+    }
+  },
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "number": "1"
+            },
+            {
+              "number": "3"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "description": "A null in place of a function body declares no function",
+  "spec": [
+    "ext/userfunc/README.md#hcl-user-functions-extension",
+    "json/spec.md#blocks"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "user-functions"
+  ],
+  "status": "disputed",
+  "notes": "The JSON spec only allows an object or an array of objects as a block's body. hashicorp/hcl treats a null body as no block ((*body).unpackBlock in json/structure.go; see json/bodies/block-null-body-after-label), so the name declares no function.",
+  "user_functions": "function",
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "There is no function named \"f\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}
