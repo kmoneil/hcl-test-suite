@@ -161,7 +161,7 @@
     {
       "id": "heredocs-closing-newline-belongs-to-context",
       "spec": "hclsyntax/spec.md#template-expressions",
-      "rule": "A heredoc ends at its closing marker, so the newline after the marker belongs to what contains the heredoc: it ends the attribute, and the expression can only continue on the next line inside parentheses or brackets",
+      "rule": "A heredoc ends at its closing marker, so the newline after the marker belongs to what contains the heredoc: it ends the attribute, and the expression can only continue on the next line inside delimiters that ignore newlines, such as parentheses or brackets",
       "tests": [
         "native/heredocs/attribute-after-heredoc",
         "native/heredocs/expression-cannot-continue-after-closing-marker",

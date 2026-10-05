@@ -7,7 +7,7 @@ HashiCorp configuration language, in the spirit of
 Any HCL implementation, in any language, can run it by providing a small
 adapter program.
 
-**Status:** draft. 3,417 tests of the native and JSON syntaxes, checking 1,200
+**Status:** draft. 3,460 tests of the native and JSON syntaxes, checking 1,201
 rules from the spec and the type expression, try function, dynamic block and
 user function extensions at hashicorp/hcl v2.24.0. The test and adapter
 formats may still change.
@@ -98,12 +98,12 @@ run the tests at all.
 | collections (tuples, objects) | 152 | 66 | 0 |
 | strings | 76 | 27 | 0 |
 | heredocs | 107 | 36 | 0 |
-| templates | 303 | 86 | 0 |
-| variables, attribute access, index | 146 | 58 | 1 |
-| splat | 93 | 30 | 0 |
-| function calls | 142 | 38 | 0 |
+| templates | 306 | 87 | 0 |
+| variables, attribute access, index | 155 | 58 | 1 |
+| splat | 101 | 30 | 0 |
+| function calls | 152 | 38 | 0 |
 | for expressions | 175 | 64 | 0 |
-| operators | 334 | 104 | 0 |
+| operators | 347 | 104 | 0 |
 | types, conversions, unification | 136 | 80 | 4 |
 | unknown values | 181 | 78 | 0 |
 | static analysis | 121 | 38 | 0 |
@@ -119,7 +119,7 @@ run the tests at all.
 | JSON dynamic blocks | 42 | 23 | 0 |
 | user functions (`ext/userfunc`) | 116 | 46 | 1 |
 | JSON user functions | 57 | 22 | 0 |
-| **total** | **3,417** | **1,212** | **12** |
+| **total** | **3,460** | **1,213** | **12** |
 
 - Most rules without tests need something the protocol can't express yet:
   error positions or messages, capsule values, literal-only evaluation with
@@ -163,9 +163,9 @@ run the tests at all.
 
 | Implementation | Passed | Failed | Adapter errors | Skipped |
 | --- | ---: | ---: | ---: | ---: |
-| hashicorp/hcl v2.24.0 | 3,417 | 0 | 0 | 0 |
-| opentofu/hcl, as used by OpenTofu v1.12.6 | 3,415 | 2 | 0 | 0 |
-| hcl-rs 0.19.8 | 1,596 | 207 (74 disputed) | 21 | 1,593 |
+| hashicorp/hcl v2.24.0 | 3,460 | 0 | 0 | 0 |
+| opentofu/hcl, as used by OpenTofu v1.12.6 | 3,458 | 2 | 0 | 0 |
+| hcl-rs 0.19.8 | 1,624 | 222 (89 disputed) | 21 | 1,593 |
 
 OpenTofu has no HCL implementation of its own: its `go.mod` replaces
 hashicorp/hcl with the fork [opentofu/hcl](https://github.com/opentofu/hcl), so
@@ -174,19 +174,19 @@ its row shows how that fork differs from hashicorp/hcl v2.24.0.
 Every test also says whether its input parses, and `--validate` checks only
 that. This measures parsers that can't run the tests, like python-hcl2 and
 tree-sitter-hcl, and checks the other implementations' parsers on the inputs
-of all 2,906 native syntax tests, including tests they skip. Only
+of all 2,949 native syntax tests, including tests they skip. Only
 hashicorp/hcl and its fork read the JSON syntax, so the others skip its 511
 tests.
 
 | Implementation | Passed | Accepted invalid input | Rejected valid input | Adapter errors | Skipped |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| hashicorp/hcl v2.24.0 | 3,417 | 0 | 0 | 0 | 0 |
-| opentofu/hcl, as used by OpenTofu v1.12.6 | 3,417 | 0 | 0 | 0 | 0 |
-| hcl-rs 0.19.8 | 2,845 | 29 (6 disputed) | 32 (15 disputed) | 0 | 511 |
-| python-hcl2 8.1.4 | 2,656 | 88 (9 disputed) | 162 (59 disputed) | 0 | 511 |
-| tree-sitter-hcl 1.2.0 | 2,770 | 93 (13 disputed) | 43 (13 disputed) | 0 | 511 |
+| hashicorp/hcl v2.24.0 | 3,460 | 0 | 0 | 0 | 0 |
+| opentofu/hcl, as used by OpenTofu v1.12.6 | 3,460 | 0 | 0 | 0 | 0 |
+| hcl-rs 0.19.8 | 2,873 | 29 (6 disputed) | 47 (30 disputed) | 0 | 511 |
+| python-hcl2 8.1.4 | 2,681 | 90 (11 disputed) | 178 (75 disputed) | 0 | 511 |
+| tree-sitter-hcl 1.2.0 | 2,793 | 102 (22 disputed) | 54 (24 disputed) | 0 | 511 |
 
-hcl-rs fails all 61 of these tests in the first table too. As in the first
+hcl-rs fails all 76 of these tests in the first table too. As in the first
 table, a failure counts as disputed when its test is disputed, even if the
 dispute is about evaluation rather than parsing.
 
@@ -278,8 +278,8 @@ The 182 failures on tests that aren't disputed fall into these groups:
   expression after a heredoc), several items on one line (`a = 1 b = 2`,
   `a {} b {}`, an item after a block's `}`, object elements without commas), a
   block's `{` on the line after its type or labels, a `}` on the line of the
-  item before it, and a one-line block with two items, a nested block or its `}` on
-  a later line. Inside parentheses, brackets and argument lists, where
+  item before it, and a one-line block with two items, a nested block or its
+  `}` on a later line. Inside parentheses, brackets and argument lists, where
   newlines are ignored, it rejects a newline around `.`, before `(`, `[`, `-`
   or `...`, or after a unary operator, as in `[o` then `.b]`.
 - **Strings:** it accepts backslash sequences that aren't escapes in HCL, such
@@ -299,10 +299,10 @@ The 182 failures on tests that aren't disputed fall into these groups:
   `!!x`), and spaces or newlines inside `[*]` or between the `.` and `*` of
   `.*` (`t[ * ]`, `t. *`).
 
-Some of its 68 failures on disputed tests come from the problems above, such
+Some of its 86 failures on disputed tests come from the problems above, such
 as the 17 tests disputed about which characters strip markers remove, whose
-strip markers it rejects. Most concern the syntax the tests are disputed about. For
-example, of the namespaced calls that aren't in the spec, it accepts
+strip markers it rejects. Most concern the syntax the tests are disputed
+about. For example, of the namespaced calls that aren't in the spec, it accepts
 `provider::aws::arn()`, with exactly two namespaces, but rejects `ns::f()` and
 `a::b::c::f()`.
 
@@ -360,7 +360,7 @@ The 110 failures on tests that aren't disputed fall into these groups:
 
 ### Where the spec and hashicorp/hcl disagree
 
-554 tests are disputed. `python3 tools/coverage.py disputes` lists them all by
+595 tests are disputed. `python3 tools/coverage.py disputes` lists them all by
 spec section, with notes. The main themes:
 
 - **Source text:** a byte order mark, identifiers starting with `_`, and some
@@ -368,8 +368,11 @@ spec section, with notes. The main themes:
 - **Structure:** blank lines, comment-only lines and a missing final newline
   have no place in the grammar.
 - **Newlines:** object constructors use newlines as separators although the
-  prose says they are ignored, while newlines inside for expressions and
-  interpolations are ignored although the spec doesn't say so.
+  prose says they are ignored, so a newline in an element's value ends the
+  element unless it is inside parentheses, brackets, a nested object, a for
+  expression or a template, and the next line can even be another element.
+  Newlines inside for expressions, interpolations and directives are ignored
+  although the spec doesn't say so.
 - **Templates:** which characters strip markers and `<<-` remove isn't
   decided, and stripping in heredocs stops at line ends.
 - **Nulls:** null operands and conditions are errors. The spec's rules for the
@@ -530,8 +533,7 @@ spec section, with notes. The main themes:
 
 ## Next steps
 
-- Newlines next to traversals and operators inside for expressions,
-  interpolations, template directives and object braces.
+- Results for bc-python-hcl2, the fork of python-hcl2 that Checkov pins.
 
 ## License
 

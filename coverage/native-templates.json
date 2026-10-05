@@ -133,7 +133,17 @@
         "native/templates/interpolation-allows-newlines-in-quoted-template",
         "native/templates/interpolation-allows-newlines-in-heredoc",
         "native/templates/interpolation-allows-hash-line-comment",
-        "native/templates/interpolation-allows-slash-line-comment-in-heredoc"
+        "native/templates/interpolation-allows-slash-line-comment-in-heredoc",
+        "native/traversals/getattr-newline-after-dot-in-interpolation",
+        "native/traversals/index-newline-before-bracket-in-heredoc-interpolation",
+        "native/functions/call-newline-before-parenthesis-in-interpolation",
+        "native/functions/namespaced-call-newlines-in-heredoc-interpolation",
+        "native/splat/attr-splat-newlines-in-interpolation",
+        "native/splat/full-splat-newlines-in-heredoc-interpolation",
+        "native/operators/interpolation-allows-newline-after-unary-operator",
+        "native/operators/heredoc-interpolation-allows-newline-before-binary-operator",
+        "native/operators/interpolation-allows-newlines-in-conditional",
+        "native/templates/interpolation-in-object-element-allows-newlines"
       ]
     },
     {
@@ -476,12 +486,30 @@
     },
     {
       "id": "templates-directive-newlines",
-      "spec": "hclsyntax/spec.md#template-if-directive",
+      "spec": "hclsyntax/spec.md#templates",
       "rule": "Newlines and line comments inside a directive are ignored, in quoted templates and heredocs (disputed)",
       "tests": [
         "native/templates/directives-allow-newlines",
         "native/templates/directives-allow-newlines-in-heredoc",
-        "native/templates/directives-allow-line-comments"
+        "native/templates/directives-allow-line-comments",
+        "native/traversals/getattr-newline-before-dot-in-directive",
+        "native/traversals/index-newline-before-bracket-in-heredoc-directive",
+        "native/functions/call-newline-before-parenthesis-in-directive",
+        "native/functions/namespaced-call-newlines-in-heredoc-directive",
+        "native/splat/attr-splat-newlines-in-directive",
+        "native/splat/full-splat-newlines-in-heredoc-directive",
+        "native/operators/directive-allows-newline-after-unary-operator",
+        "native/operators/directive-allows-newline-before-binary-operator",
+        "native/operators/heredoc-directive-allows-newlines-in-conditional"
+      ]
+    },
+    {
+      "id": "templates-nested-object-constructor-newlines",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "An object constructor inside an interpolation still uses newlines as separators: one separates its items, and one inside an item ends it early (disputed)",
+      "tests": [
+        "native/templates/object-constructor-in-interpolation-separates-items-by-newline",
+        "native/templates/object-constructor-in-interpolation-newline-ends-item-is-error"
       ]
     },
     {

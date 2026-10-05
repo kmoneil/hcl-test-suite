@@ -1,0 +1,41 @@
+{
+  "description": "Newlines inside an attribute splat are ignored inside an interpolation",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations",
+    "hclsyntax/spec.md#splat-operators",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec says newlines are ignored inside parentheses, brackets, braces and function call arguments, but doesn't say so for interpolation sequences, and it describes a quoted template as a single-line expression. hashicorp/hcl ignores newlines inside interpolations: parseTemplateParts in hclsyntax/parser_template.go calls PushIncludeNewlines(false) before parsing the expression.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "interpolation",
+              "expr": {
+                "kind": "splat",
+                "source": {
+                  "kind": "variable",
+                  "name": "t"
+                },
+                "each": {
+                  "kind": "get_attr",
+                  "object": {
+                    "kind": "splat_item"
+                  },
+                  "name": "b"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

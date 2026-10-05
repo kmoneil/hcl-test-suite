@@ -1,0 +1,62 @@
+{
+  "description": "Newlines before a conditional's ? and : are ignored inside a heredoc if directive",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive",
+    "hclsyntax/spec.md#conditional-operator",
+    "hclsyntax/spec.md#comments-and-whitespace",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec says newlines are ignored inside parentheses, brackets, braces and function call arguments, but doesn't say so for template directives. hashicorp/hcl ignores newlines inside directives: parseTemplateParts in hclsyntax/parser_template.go calls PushIncludeNewlines(false) before reading the directive.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "template_if",
+              "condition": {
+                "kind": "conditional",
+                "condition": {
+                  "kind": "variable",
+                  "name": "c"
+                },
+                "true_result": {
+                  "kind": "literal",
+                  "value": {
+                    "bool": true
+                  }
+                },
+                "false_result": {
+                  "kind": "literal",
+                  "value": {
+                    "bool": false
+                  }
+                }
+              },
+              "then": [
+                {
+                  "kind": "literal",
+                  "value": {
+                    "string": "y"
+                  }
+                }
+              ],
+              "else": []
+            },
+            {
+              "kind": "literal",
+              "value": {
+                "string": "\n"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

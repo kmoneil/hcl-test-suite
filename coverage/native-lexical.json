@@ -243,7 +243,7 @@
     {
       "id": "lexical-comments-where-newlines-are-ignored",
       "spec": "hclsyntax/spec.md#comments-and-whitespace",
-      "rule": "Line comments can appear inside parentheses, tuple and object delimiters, index brackets and function call arguments, where newlines are ignored",
+      "rule": "Line comments can appear inside parentheses, tuple brackets, index brackets and function call arguments, where newlines are ignored, and inside an object's braces where a newline can be",
       "tests": [
         "native/lexical/line-comment-inside-parentheses",
         "native/collections/tuple-line-comment",

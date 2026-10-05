@@ -1,0 +1,46 @@
+{
+  "description": "Newlines before a conditional's ? and : are ignored inside an interpolation",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations",
+    "hclsyntax/spec.md#conditional-operator",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec says newlines are ignored inside parentheses, brackets, braces and function call arguments, but doesn't say so for interpolation sequences, and it describes a quoted template as a single-line expression. hashicorp/hcl ignores newlines inside interpolations: parseTemplateParts in hclsyntax/parser_template.go calls PushIncludeNewlines(false) before parsing the expression.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "interpolation",
+              "expr": {
+                "kind": "conditional",
+                "condition": {
+                  "kind": "variable",
+                  "name": "c"
+                },
+                "true_result": {
+                  "kind": "literal",
+                  "value": {
+                    "number": "1"
+                  }
+                },
+                "false_result": {
+                  "kind": "literal",
+                  "value": {
+                    "number": "2"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

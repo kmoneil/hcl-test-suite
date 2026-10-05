@@ -1,0 +1,15 @@
+{
+  "description": "A newline before a call's opening parenthesis ends an object element early",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#syntax-notation"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The grammar lists Newline as a separator between object elements, but the prose says newlines between the braces are ignored as whitespace, and prose has priority over the grammar, so the newline is ignored and the input is valid. hashicorp/hcl makes newlines significant inside object constructors and ends the element at the newline (parseObjectCons in hclsyntax/parser.go calls PushIncludeNewlines(true)), and the next line is read as another element whose key, (1), has no = after it.",
+  "reference_error": "Expected an attribute value, introduced by an equals sign (\"=\")",
+  "expect": {
+    "valid": false
+  }
+}

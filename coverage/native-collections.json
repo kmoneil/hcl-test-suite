@@ -260,11 +260,22 @@
     {
       "id": "collections-object-newline-inside-element",
       "spec": "hclsyntax/spec.md#collection-values",
-      "rule": "A newline inside an object element, before or after = or within the value expression, ends the element early and is an error (disputed)",
+      "rule": "A newline inside an object element, before or after = or within the value expression outside nested delimiters, ends the element there, which is an error if that leaves the element incomplete or the next line can't start another element, and otherwise separates two elements (disputed)",
       "tests": [
         "native/collections/object-newline-before-equals",
         "native/collections/object-newline-after-equals",
-        "native/collections/object-newline-inside-value"
+        "native/collections/object-newline-inside-value",
+        "native/traversals/getattr-newline-before-dot-in-object-is-error",
+        "native/traversals/index-newline-before-bracket-in-object-is-error",
+        "native/functions/call-newline-before-parenthesis-in-object-is-error",
+        "native/functions/namespaced-call-newline-before-separator-in-object-is-error",
+        "native/splat/attr-splat-newline-before-dot-in-object-is-error",
+        "native/splat/full-splat-newline-before-bracket-in-object-is-error",
+        "native/operators/object-newline-after-unary-operator-is-error",
+        "native/operators/object-newline-before-binary-operator-is-error",
+        "native/operators/object-newline-before-question-mark-is-error",
+        "native/functions/call-newline-before-parenthesis-in-object-separates-elements",
+        "native/operators/object-newline-before-minus-separates-elements"
       ]
     },
     {
@@ -273,7 +284,8 @@
       "rule": "Newlines inside parentheses or brackets nested in an object element are ignored",
       "tests": [
         "native/collections/object-newline-inside-nested-brackets",
-        "native/collections/object-key-parentheses-allow-newlines"
+        "native/collections/object-key-parentheses-allow-newlines",
+        "native/operators/object-parentheses-allow-newline-before-binary-operator"
       ]
     },
     {

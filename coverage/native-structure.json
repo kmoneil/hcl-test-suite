@@ -129,7 +129,7 @@
     {
       "id": "structure-attribute-ends-at-newline",
       "spec": "hclsyntax/spec.md#structural-elements",
-      "rule": "A newline outside brackets ends an attribute, so the next line cannot continue its expression, while newlines inside brackets don't end it",
+      "rule": "A newline outside the delimiters of an attribute's expression ends the attribute, so the next line cannot continue the expression, while newlines inside brackets don't end it",
       "tests": [
         "native/structure/newline-ends-attribute",
         "native/structure/attribute-value-spans-lines-inside-brackets"

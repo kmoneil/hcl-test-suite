@@ -1,0 +1,51 @@
+{
+  "description": "Newlines around a namespaced call's :: are ignored inside a heredoc for directive",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive",
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#comments-and-whitespace",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec's function call grammar has a single identifier as the function name (FunctionCall = Identifier \"(\" arguments \")\"), and :: is not one of its tokens. hashicorp/hcl accepts names separated by :: and reports them joined with :: as the function name (finishParsingFunctionCall in hclsyntax/parser.go). The spec says newlines are ignored inside parentheses, brackets, braces and function call arguments, but doesn't say so for template directives. hashicorp/hcl ignores newlines inside directives: parseTemplateParts in hclsyntax/parser_template.go calls PushIncludeNewlines(false) before reading the directive.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "template_for",
+              "key_var": null,
+              "value_var": "v",
+              "collection": {
+                "kind": "call",
+                "name": "ns::f",
+                "args": [],
+                "expand_final": false
+              },
+              "body": [
+                {
+                  "kind": "interpolation",
+                  "expr": {
+                    "kind": "variable",
+                    "name": "v"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "literal",
+              "value": {
+                "string": "\n"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -241,7 +241,7 @@
     {
       "id": "traversals-getattr-newlines",
       "spec": "hclsyntax/spec.md#expression-terms",
-      "rule": "A newline before or after the dot of an attribute access is ignored only inside parentheses, tuple brackets, index brackets or function call parentheses; at the top level of an attribute it ends the expression",
+      "rule": "A newline before or after the dot of an attribute access is ignored inside parentheses, tuple brackets, index brackets or function call parentheses; at the top level of an attribute, a newline before the dot ends the expression and one after it leaves the attribute access without a name, so both are errors",
       "tests": [
         "native/traversals/getattr-newline-after-dot-is-error",
         "native/traversals/getattr-newline-before-dot-is-error",
@@ -469,7 +469,7 @@
     {
       "id": "traversals-index-newline-before-bracket",
       "spec": "hclsyntax/spec.md#expression-terms",
-      "rule": "A newline before the opening bracket of an index is ignored only inside parentheses, tuple brackets, index brackets or function call parentheses; at the top level of an attribute it ends the expression",
+      "rule": "A newline before the opening bracket of an index is ignored inside parentheses, tuple brackets, index brackets or function call parentheses; at the top level of an attribute it ends the expression",
       "tests": [
         "native/traversals/index-newline-before-bracket-in-parentheses",
         "native/traversals/index-newline-before-bracket-is-error",

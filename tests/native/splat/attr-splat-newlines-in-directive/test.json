@@ -1,0 +1,52 @@
+{
+  "description": "Newlines inside an attribute splat are ignored inside a for directive",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive",
+    "hclsyntax/spec.md#splat-operators",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec says newlines are ignored inside parentheses, brackets, braces and function call arguments, but doesn't say so for template directives, and it describes a quoted template as a single-line expression. hashicorp/hcl ignores newlines inside directives: parseTemplateParts in hclsyntax/parser_template.go calls PushIncludeNewlines(false) before reading the directive.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "template_for",
+              "key_var": null,
+              "value_var": "v",
+              "collection": {
+                "kind": "splat",
+                "source": {
+                  "kind": "variable",
+                  "name": "t"
+                },
+                "each": {
+                  "kind": "get_attr",
+                  "object": {
+                    "kind": "splat_item"
+                  },
+                  "name": "b"
+                }
+              },
+              "body": [
+                {
+                  "kind": "interpolation",
+                  "expr": {
+                    "kind": "variable",
+                    "name": "v"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "description": "A newline before an index's opening bracket is ignored inside a heredoc interpolation",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations",
+    "hclsyntax/spec.md#index-operator",
+    "hclsyntax/spec.md#comments-and-whitespace",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec says newlines are ignored inside parentheses, brackets, braces and function call arguments, but doesn't say so for interpolation sequences. hashicorp/hcl ignores newlines inside interpolations: parseTemplateParts in hclsyntax/parser_template.go calls PushIncludeNewlines(false) before parsing the expression.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "interpolation",
+              "expr": {
+                "kind": "index",
+                "collection": {
+                  "kind": "variable",
+                  "name": "xs"
+                },
+                "key": {
+                  "kind": "literal",
+                  "value": {
+                    "number": "0"
+                  }
+                }
+              }
+            },
+            {
+              "kind": "literal",
+              "value": {
+                "string": "\n"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

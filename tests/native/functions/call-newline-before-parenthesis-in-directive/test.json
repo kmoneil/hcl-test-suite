@@ -1,0 +1,42 @@
+{
+  "description": "A newline before a call's opening parenthesis is ignored inside an if directive",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive",
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec says newlines are ignored inside parentheses, brackets, braces and function call arguments, but doesn't say so for template directives, and it describes a quoted template as a single-line expression. hashicorp/hcl ignores newlines inside directives: parseTemplateParts in hclsyntax/parser_template.go calls PushIncludeNewlines(false) before reading the directive.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "template_if",
+              "condition": {
+                "kind": "call",
+                "name": "f",
+                "args": [],
+                "expand_final": false
+              },
+              "then": [
+                {
+                  "kind": "literal",
+                  "value": {
+                    "string": "y"
+                  }
+                }
+              ],
+              "else": []
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

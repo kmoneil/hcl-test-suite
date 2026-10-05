@@ -1,0 +1,48 @@
+{
+  "description": "A newline before a call's opening parenthesis in an object can separate two elements",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#syntax-notation"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The grammar lists Newline as a separator between object elements, but the prose says newlines between the braces are ignored as whitespace, and prose has priority over the grammar, so the newline is ignored, which makes the input k = f(x) = 1 an error. hashicorp/hcl makes newlines significant inside object constructors and ends the element at the newline (parseObjectCons in hclsyntax/parser.go calls PushIncludeNewlines(true)), and the next line is another element whose key is the parenthesized x.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "object",
+          "items": [
+            {
+              "key": {
+                "kind": "literal",
+                "value": {
+                  "string": "k"
+                }
+              },
+              "value": {
+                "kind": "variable",
+                "name": "f"
+              }
+            },
+            {
+              "key": {
+                "kind": "variable",
+                "name": "x"
+              },
+              "value": {
+                "kind": "literal",
+                "value": {
+                  "number": "1"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

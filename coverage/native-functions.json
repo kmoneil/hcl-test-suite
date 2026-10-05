@@ -97,7 +97,7 @@
     {
       "id": "functions-call-newline-before-parenthesis",
       "spec": "hclsyntax/spec.md#functions-and-function-calls",
-      "rule": "A newline between the function name and the opening parenthesis is ignored only inside parentheses, tuple brackets, index brackets or function call parentheses; at the top level of an attribute it ends the expression",
+      "rule": "A newline between the function name and the opening parenthesis is ignored inside parentheses, tuple brackets, index brackets or function call parentheses; at the top level of an attribute it ends the expression",
       "tests": [
         "native/functions/call-newline-before-parenthesis-in-parentheses",
         "native/functions/call-newline-before-parenthesis-is-error",
@@ -158,7 +158,7 @@
     {
       "id": "functions-namespaced-call",
       "spec": "hclsyntax/spec.md#functions-and-function-calls",
-      "rule": "A function name can be several identifiers separated by ::, reported as one name joined with ::, with spaces allowed around :: and newlines only inside parentheses, tuple brackets, index brackets or function call parentheses (disputed)",
+      "rule": "A function name can be several identifiers separated by ::, reported as one name joined with ::, with spaces allowed around :: and newlines inside parentheses, tuple brackets, index brackets or function call parentheses (disputed)",
       "tests": [
         "native/functions/namespaced-call",
         "native/functions/namespaced-call-multiple-levels",
@@ -172,13 +172,14 @@
     {
       "id": "functions-namespaced-call-malformed",
       "spec": "hclsyntax/spec.md#functions-and-function-calls",
-      "rule": "Each :: in a function name must be preceded by an identifier and followed by an identifier, and a namespaced name must be followed by an argument list",
+      "rule": "Each :: in a function name must be preceded by an identifier and followed by an identifier, and a namespaced name must be followed by an argument list; at the top level of an attribute a newline before or after :: is an error",
       "tests": [
         "native/functions/namespaced-call-leading-separator-is-error",
         "native/functions/namespaced-call-missing-name-is-error",
         "native/functions/namespaced-call-newline-after-separator-is-error",
         "native/functions/namespaced-call-triple-colon-is-error",
-        "native/functions/namespaced-name-without-call-is-error"
+        "native/functions/namespaced-name-without-call-is-error",
+        "native/functions/namespaced-call-newline-before-separator-is-error"
       ]
     },
     {

@@ -1,0 +1,46 @@
+{
+  "description": "Newlines around a namespaced call's :: are ignored inside an object for expression",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec's function call grammar has a single identifier as the function name (FunctionCall = Identifier \"(\" arguments \")\"), and :: is not one of its tokens. hashicorp/hcl accepts names separated by :: and reports them joined with :: as the function name (finishParsingFunctionCall in hclsyntax/parser.go). The Collection Values section says newlines are ignored between the delimiters of \"these sequences\", which refers to the tuple and object productions. ForExpr is a separate production whose grammar has no Newline, and the spec repeats the newline rule for parentheses, function call arguments and index brackets but never for for expressions. hashicorp/hcl ignores newlines everywhere inside a for expression: finishParsingForExpr in hclsyntax/parser.go calls PushIncludeNewlines(false). The setting stays in effect for the sub-expressions parsed inside the for expression.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "for",
+          "result": "object",
+          "key_var": "k",
+          "value_var": "v",
+          "collection": {
+            "kind": "variable",
+            "name": "m"
+          },
+          "key": {
+            "kind": "variable",
+            "name": "k"
+          },
+          "value": {
+            "kind": "call",
+            "name": "ns::f",
+            "args": [
+              {
+                "kind": "variable",
+                "name": "v"
+              }
+            ],
+            "expand_final": false
+          },
+          "condition": null,
+          "grouping": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "description": "Newlines inside an interpolation in an object element are ignored",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations",
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The newline is between the object's braces, where the prose says newlines are ignored as whitespace, but it is also inside a quoted template, which the spec describes as a single-line expression, and the spec doesn't say that interpolation sequences ignore newlines. hashicorp/hcl ignores newlines inside interpolations, even inside an object constructor whose own newlines are significant: parseTemplateParts in hclsyntax/parser_template.go calls PushIncludeNewlines(false) before parsing the expression.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "object",
+          "items": [
+            {
+              "key": {
+                "kind": "literal",
+                "value": {
+                  "string": "k"
+                }
+              },
+              "value": {
+                "kind": "template",
+                "parts": [
+                  {
+                    "kind": "interpolation",
+                    "expr": {
+                      "kind": "binary",
+                      "operator": "+",
+                      "left": {
+                        "kind": "variable",
+                        "name": "x"
+                      },
+                      "right": {
+                        "kind": "literal",
+                        "value": {
+                          "number": "1"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

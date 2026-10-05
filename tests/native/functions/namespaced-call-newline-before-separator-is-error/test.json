@@ -1,0 +1,12 @@
+{
+  "description": "A newline before a namespaced call's :: ends the attribute",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "reference_error": "Argument or block definition required",
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "description": "Newlines inside a full splat's brackets are ignored inside a heredoc interpolation",
+  "spec": [
+    "hclsyntax/spec.md#template-interpolations",
+    "hclsyntax/spec.md#splat-operators",
+    "hclsyntax/spec.md#comments-and-whitespace",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec says newlines are ignored inside parentheses, brackets, braces and function call arguments, but doesn't say so for interpolation sequences. hashicorp/hcl ignores newlines inside interpolations: parseTemplateParts in hclsyntax/parser_template.go calls PushIncludeNewlines(false) before parsing the expression.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "interpolation",
+              "expr": {
+                "kind": "splat",
+                "source": {
+                  "kind": "variable",
+                  "name": "t"
+                },
+                "each": {
+                  "kind": "splat_item"
+                }
+              }
+            },
+            {
+              "kind": "literal",
+              "value": {
+                "string": "\n"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

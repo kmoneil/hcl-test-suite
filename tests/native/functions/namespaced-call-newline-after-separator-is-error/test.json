@@ -1,5 +1,5 @@
 {
-  "description": "A newline after the double colon of a function name is an error outside parentheses",
+  "description": "A newline after the double colon of a function name is an error at the top level of an attribute",
   "spec": [
     "hclsyntax/spec.md#functions-and-function-calls",
     "hclsyntax/spec.md#comments-and-whitespace"

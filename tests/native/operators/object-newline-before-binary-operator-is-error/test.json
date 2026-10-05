@@ -1,0 +1,15 @@
+{
+  "description": "A newline before a binary operator ends an object element early",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#operations",
+    "hclsyntax/spec.md#syntax-notation"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The grammar lists Newline as a separator between object elements, but the prose says newlines between the braces are ignored as whitespace, and prose has priority over the grammar, so the newline is ignored and the input is valid. hashicorp/hcl makes newlines significant inside object constructors and ends the element at the newline (parseObjectCons in hclsyntax/parser.go calls PushIncludeNewlines(true)), and the next line, which starts with +, can't start another element.",
+  "reference_error": "Expected the start of an expression, but found an invalid expression token",
+  "expect": {
+    "valid": false
+  }
+}

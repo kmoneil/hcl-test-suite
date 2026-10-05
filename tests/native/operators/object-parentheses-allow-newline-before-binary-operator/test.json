@@ -1,0 +1,43 @@
+{
+  "description": "Inside parentheses in an object element, a newline before a binary operator is ignored",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "hclsyntax/spec.md#expression-terms"
+  ],
+  "op": "parse",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "object",
+          "items": [
+            {
+              "key": {
+                "kind": "literal",
+                "value": {
+                  "string": "k"
+                }
+              },
+              "value": {
+                "kind": "binary",
+                "operator": "+",
+                "left": {
+                  "kind": "variable",
+                  "name": "x"
+                },
+                "right": {
+                  "kind": "literal",
+                  "value": {
+                    "number": "1"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

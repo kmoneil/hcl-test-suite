@@ -1,0 +1,38 @@
+{
+  "description": "A newline before a call's opening parenthesis is ignored in a for expression's collection",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The Collection Values section says newlines are ignored between the delimiters of \"these sequences\", which refers to the tuple and object productions. ForExpr is a separate production whose grammar has no Newline, and the spec repeats the newline rule for parentheses, function call arguments and index brackets but never for for expressions. hashicorp/hcl ignores newlines everywhere inside a for expression: finishParsingForExpr in hclsyntax/parser.go calls PushIncludeNewlines(false). The setting stays in effect for the sub-expressions parsed inside the for expression.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "for",
+          "result": "tuple",
+          "key_var": null,
+          "value_var": "v",
+          "collection": {
+            "kind": "call",
+            "name": "f",
+            "args": [],
+            "expand_final": false
+          },
+          "key": null,
+          "value": {
+            "kind": "variable",
+            "name": "v"
+          },
+          "condition": null,
+          "grouping": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

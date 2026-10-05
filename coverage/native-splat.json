@@ -162,7 +162,7 @@
     {
       "id": "splat-newlines",
       "spec": "hclsyntax/spec.md#splat-operators",
-      "rule": "Newlines inside or after a splat operator are ignored only inside parentheses, tuple brackets, index brackets or function call parentheses; at the top level of an attribute they are errors or end the expression",
+      "rule": "Newlines inside or after a splat operator are ignored inside parentheses, tuple brackets, index brackets or function call parentheses; at the top level of an attribute they are errors or end the expression",
       "tests": [
         "native/splat/attr-splat-newline-after-dot-is-error",
         "native/splat/attr-splat-newlines-in-parentheses",

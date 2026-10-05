@@ -1,0 +1,58 @@
+{
+  "description": "A newline before an index's opening bracket is ignored inside a heredoc for directive",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive",
+    "hclsyntax/spec.md#index-operator",
+    "hclsyntax/spec.md#comments-and-whitespace",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec says newlines are ignored inside parentheses, brackets, braces and function call arguments, but doesn't say so for template directives. hashicorp/hcl ignores newlines inside directives: parseTemplateParts in hclsyntax/parser_template.go calls PushIncludeNewlines(false) before reading the directive.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "template_for",
+              "key_var": null,
+              "value_var": "v",
+              "collection": {
+                "kind": "index",
+                "collection": {
+                  "kind": "variable",
+                  "name": "xs"
+                },
+                "key": {
+                  "kind": "literal",
+                  "value": {
+                    "number": "0"
+                  }
+                }
+              },
+              "body": [
+                {
+                  "kind": "interpolation",
+                  "expr": {
+                    "kind": "variable",
+                    "name": "v"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "literal",
+              "value": {
+                "string": "\n"
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -246,7 +246,16 @@
         "native/for/for-line-comment-inside",
         "native/for/for-newline-inside-element-expression",
         "native/for/object-for-newlines-between-tokens",
-        "native/for/tuple-for-newlines-between-tokens"
+        "native/for/tuple-for-newlines-between-tokens",
+        "native/traversals/getattr-newline-before-dot-in-for-expression",
+        "native/traversals/index-newline-before-bracket-in-object-for-expression",
+        "native/functions/call-newline-before-parenthesis-in-for-expression",
+        "native/functions/namespaced-call-newlines-in-object-for-expression",
+        "native/splat/attr-splat-newlines-in-for-expression",
+        "native/splat/full-splat-newlines-in-object-for-expression",
+        "native/operators/for-expression-allows-newline-after-unary-operator",
+        "native/operators/object-for-expression-allows-newlines-in-conditional",
+        "native/traversals/getattr-newline-before-dot-in-object-for-key"
       ]
     },
     {
