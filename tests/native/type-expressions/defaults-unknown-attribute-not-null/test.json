@@ -1,0 +1,38 @@
+{
+  "description": "An unknown given for an optional attribute with a default is not equal to null",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "hclsyntax/spec.md#comparison-operators",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions",
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says a comparison with an unknown operand gives an unknown bool. Defaults.Apply (ext/typeexpr/defaults.go) refines an unknown value given for an attribute whose default isn't null as not null, and Value.Equals (cty/value_ops.go) uses that to rule out null.",
+  "variables": {
+    "u": {
+      "unknown": "string"
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

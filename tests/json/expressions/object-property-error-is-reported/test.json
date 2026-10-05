@@ -1,0 +1,18 @@
+{
+  "description": "An error evaluating an object property's value is an error of the object",
+  "spec": [
+    "json/spec.md#objects"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "There is no variable named \"nope\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

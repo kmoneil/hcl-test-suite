@@ -371,13 +371,15 @@
     {
       "id": "dynamic-blocks-partial-processing",
       "spec": "spec.md#partial-processing-of-body-content",
-      "rule": "Partial processing of an expanded body expands the dynamic blocks of the block types it requests, leaving them out of the remaining body and the bodies later steps leave, while the attributes and dynamic blocks it doesn't take stay in the remaining body, where a later step that requests their block types expands them",
+      "rule": "Partial processing of an expanded body expands the dynamic blocks of the block types it requests and reports errors in expanding them, leaving the blocks of those types, static or generated, out of the remaining body and the bodies later steps leave, while the attributes and dynamic blocks it doesn't take stay in the remaining body, where a later step that requests their block types expands them",
       "tests": [
         "native/dynamic-blocks/partial-expands-requested-block-type",
         "native/dynamic-blocks/partial-remaining-body-expands",
         "native/dynamic-blocks/partial-twice-remaining-body-expands",
         "native/dynamic-blocks/partial-taken-blocks-stay-out-of-later-bodies",
-        "native/dynamic-blocks/partial-remaining-body-keeps-attributes"
+        "native/dynamic-blocks/partial-remaining-body-keeps-attributes",
+        "native/dynamic-blocks/partial-processing-reports-for-each-error",
+        "native/dynamic-blocks/partial-processing-two-block-types-then-remain"
       ]
     },
     {

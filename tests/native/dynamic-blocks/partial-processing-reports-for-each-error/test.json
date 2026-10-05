@@ -1,0 +1,29 @@
+{
+  "description": "Partial processing of an expanded body reports a dynamic block's invalid for_each",
+  "spec": [
+    "ext/dynblock/README.md#hcl-dynamic-blocks-extension",
+    "ext/dynblock/README.md#usage",
+    "spec.md#partial-processing-of-body-content"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "partial",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive"
+        }
+      }
+    ]
+  },
+  "reference_error": "Cannot use a number value in for_each",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

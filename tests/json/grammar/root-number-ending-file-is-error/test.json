@@ -1,0 +1,18 @@
+{
+  "description": "A root number that ends the file without a newline is an error",
+  "spec": [
+    "json/spec.md#structural-elements"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "Root value must be object",
+  "expect": {
+    "valid": false,
+    "phase": "parse"
+  }
+}

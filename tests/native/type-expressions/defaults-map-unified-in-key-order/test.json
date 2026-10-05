@@ -1,0 +1,164 @@
+{
+  "description": "Map values given defaults are unified to the type of the first key in sorted order",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#type-unification"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions",
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The README doesn't say that applying defaults unifies the values, and the spec's unification rules (spec.md#type-unification) would unify the object types of p, q, r and s attribute by attribute to strings, keeping \"01\" whatever the key order. The input also needs a map whose element type is the dynamic pseudo-type, which no value has in the spec. hashicorp/hcl adds the defaults to the map's values and unifies them in the sorted order of their keys (unifyAsMap in ext/typeexpr/defaults.go); because z is a map and the objects don't unify as a map, go-cty's UnifyUnsafe (cty/convert/unify.go) takes the first type in its preference order that the others convert to, unsafely if need be, which with sorted keys is p's type. The \"01\" of q, r and s converts to the number 1 on the way, and back to the string \"1\" when each attribute converts to its own type, while p keeps \"01\".",
+  "variables": {
+    "m": {
+      "map": {
+        "z": {
+          "map": {
+            "a": {
+              "null": "dynamic"
+            },
+            "b": {
+              "null": "dynamic"
+            },
+            "c": {
+              "null": "dynamic"
+            },
+            "d": {
+              "null": "dynamic"
+            },
+            "l": {
+              "null": "dynamic"
+            }
+          },
+          "element_type": "dynamic"
+        }
+      },
+      "element_type": [
+        "map",
+        "dynamic"
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "p": {
+              "object": {
+                "a": {
+                  "string": "01"
+                },
+                "b": {
+                  "number": "1"
+                },
+                "c": {
+                  "number": "1"
+                },
+                "d": {
+                  "number": "1"
+                },
+                "l": {
+                  "element_type": "string",
+                  "list": []
+                }
+              }
+            },
+            "q": {
+              "object": {
+                "a": {
+                  "number": "1"
+                },
+                "b": {
+                  "string": "1"
+                },
+                "c": {
+                  "number": "1"
+                },
+                "d": {
+                  "number": "1"
+                },
+                "l": {
+                  "element_type": "string",
+                  "list": []
+                }
+              }
+            },
+            "r": {
+              "object": {
+                "a": {
+                  "number": "1"
+                },
+                "b": {
+                  "number": "1"
+                },
+                "c": {
+                  "string": "1"
+                },
+                "d": {
+                  "number": "1"
+                },
+                "l": {
+                  "element_type": "string",
+                  "list": []
+                }
+              }
+            },
+            "s": {
+              "object": {
+                "a": {
+                  "number": "1"
+                },
+                "b": {
+                  "number": "1"
+                },
+                "c": {
+                  "number": "1"
+                },
+                "d": {
+                  "string": "1"
+                },
+                "l": {
+                  "element_type": "string",
+                  "list": []
+                }
+              }
+            },
+            "z": {
+              "object": {
+                "a": {
+                  "null": "string"
+                },
+                "b": {
+                  "null": "string"
+                },
+                "c": {
+                  "null": "string"
+                },
+                "d": {
+                  "null": "string"
+                },
+                "l": {
+                  "null": [
+                    "list",
+                    "string"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

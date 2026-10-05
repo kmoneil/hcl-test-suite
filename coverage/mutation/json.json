@@ -1,0 +1,840 @@
+{
+  "package": "github.com/hashicorp/hcl/v2/json",
+  "version": "v2.24.0",
+  "survivors": [
+    {
+      "mutant": "didyoumean.go:31:6 if_true",
+      "source": "if dist < 3 { // threshold determined experimentally",
+      "class": "diagnostics",
+      "reason": "Only changes the \"Did you mean\" suggestion in the details of the \"Invalid JSON keyword\" and \"Extraneous JSON object property\" errors, which then always suggest the first candidate name."
+    },
+    {
+      "mutant": "didyoumean.go:31:6 if_false",
+      "source": "if dist < 3 { // threshold determined experimentally",
+      "class": "diagnostics",
+      "reason": "Only removes the \"Did you mean\" suggestion in the details of the \"Invalid JSON keyword\" and \"Extraneous JSON object property\" errors."
+    },
+    {
+      "mutant": "didyoumean.go:31:11 cond_boundary",
+      "source": "if dist < 3 { // threshold determined experimentally",
+      "class": "diagnostics",
+      "reason": "Only lets the \"Did you mean\" suggestion in the details of the \"Invalid JSON keyword\" and \"Extraneous JSON object property\" errors offer names at edit distance 3."
+    },
+    {
+      "mutant": "didyoumean.go:31:11 cond_negate",
+      "source": "if dist < 3 { // threshold determined experimentally",
+      "class": "diagnostics",
+      "reason": "Only changes which name the \"Did you mean\" suggestion in the details of the \"Invalid JSON keyword\" and \"Extraneous JSON object property\" errors offer, picking a dissimilar name instead of a similar one."
+    },
+    {
+      "mutant": "parser.go:120:5 stmt_remove",
+      "source": "open--",
+      "class": "diagnostics",
+      "reason": "Without the decrement, recovery after a JSON object's missing colon or missing comma error skips past nested closing braces to a later one, but that error is always reported, so only the follow-on parse errors can change."
+    },
+    {
+      "mutant": "parser.go:120:9 incdec",
+      "source": "open--",
+      "class": "diagnostics",
+      "reason": "Counting closing braces up instead of down makes recovery after a JSON object's missing colon or missing comma error skip to the end of the file, but that error is always reported, so only the follow-on parse errors can change."
+    },
+    {
+      "mutant": "parser.go:121:8 if_true",
+      "source": "if open <= 1 {",
+      "class": "diagnostics",
+      "reason": "Makes recovery after a JSON object's missing colon or missing comma error stop at the first closing brace even inside a nested object, but that error is always reported, so only the follow-on parse errors can change."
+    },
+    {
+      "mutant": "parser.go:121:8 if_false",
+      "source": "if open <= 1 {",
+      "class": "diagnostics",
+      "reason": "Makes recovery after a JSON object's missing colon or missing comma error skip to the end of the file, but that error is always reported, so only the follow-on parse errors can change."
+    },
+    {
+      "mutant": "parser.go:121:13 cond_boundary",
+      "source": "if open <= 1 {",
+      "class": "diagnostics",
+      "reason": "Makes recovery after a JSON object's missing colon or missing comma error stop one closing brace later when it skips a nested object, but that error is always reported, so only the follow-on parse errors can change."
+    },
+    {
+      "mutant": "parser.go:121:13 cond_negate",
+      "source": "if open <= 1 {",
+      "class": "diagnostics",
+      "reason": "Inverts the stopping test of recovery after a JSON object's missing colon or missing comma error, so it stops at a different closing brace, but that error is always reported, so only the follow-on parse errors can change."
+    },
+    {
+      "mutant": "parser.go:140:3 stmt_remove",
+      "source": "diags = diags.Extend(keyDiags)",
+      "class": "diagnostics",
+      "reason": "Only drops the parse errors of an object property name that fails to parse, and such a name is never a string node, so the \"Invalid object property name\" error still makes the input invalid."
+    },
+    {
+      "mutant": "parser.go:141:6 if_false",
+      "source": "if keyNode == nil {",
+      "class": "equivalent",
+      "reason": "parseValue never returns a nil node, since it wraps a value that fails to parse in a placeholder invalid value, so the removed check for a nil object property name is never true."
+    },
+    {
+      "mutant": "parser.go:159:4 stmt_remove",
+      "source": "recover(colon)",
+      "class": "diagnostics",
+      "reason": "Only skips error recovery after the always reported error for an object property name that isn't followed by a colon, so only the follow-on parse errors can change."
+    },
+    {
+      "mutant": "parser.go:161:7 if_true",
+      "source": "if colon.Type == tokenBraceC || colon.Type == tokenComma {",
+      "class": "diagnostics",
+      "reason": "Only makes every object property name that isn't followed by a colon report \"Missing object value\" instead of \"Missing property value colon\", and the input is invalid either way."
+    },
+    {
+      "mutant": "parser.go:161:7 if_false",
+      "source": "if colon.Type == tokenBraceC || colon.Type == tokenComma {",
+      "class": "diagnostics",
+      "reason": "Only changes the error for an object property name followed by a closing brace or comma from \"Missing object value\" to \"Missing property value colon\", and the input is invalid either way."
+    },
+    {
+      "mutant": "parser.go:161:18 cond_negate",
+      "source": "if colon.Type == tokenBraceC || colon.Type == tokenComma {",
+      "class": "diagnostics",
+      "reason": "Only changes which of the \"Missing object value\" and \"Missing property value colon\" errors is reported for an object property name that isn't followed by a colon, and the input is invalid either way."
+    },
+    {
+      "mutant": "parser.go:161:33 logical",
+      "source": "if colon.Type == tokenBraceC || colon.Type == tokenComma {",
+      "class": "diagnostics",
+      "reason": "Only changes the error for an object property name followed by a closing brace or comma from \"Missing object value\" to \"Missing property value colon\", and the input is invalid either way."
+    },
+    {
+      "mutant": "parser.go:161:47 cond_negate",
+      "source": "if colon.Type == tokenBraceC || colon.Type == tokenComma {",
+      "class": "diagnostics",
+      "reason": "Only changes which of the \"Missing object value\" and \"Missing property value colon\" errors is reported for an object property name that isn't followed by a colon, and the input is invalid either way."
+    },
+    {
+      "mutant": "parser.go:172:7 if_true",
+      "source": "if colon.Type == tokenEquals {",
+      "class": "diagnostics",
+      "reason": "Only gives the \"Missing property value colon\" error the equals sign detail for any token other than a colon, closing brace or comma after an object property name, and the input is invalid either way."
+    },
+    {
+      "mutant": "parser.go:172:7 if_false",
+      "source": "if colon.Type == tokenEquals {",
+      "class": "diagnostics",
+      "reason": "Only gives the \"Missing property value colon\" error for an equals sign after an object property name the generic detail instead of the one about equals signs, and the input is invalid either way."
+    },
+    {
+      "mutant": "parser.go:172:18 cond_negate",
+      "source": "if colon.Type == tokenEquals {",
+      "class": "diagnostics",
+      "reason": "Only swaps the details of the \"Missing property value colon\" error between an equals sign and other tokens after an object property name, and the input is invalid either way."
+    },
+    {
+      "mutant": "parser.go:192:6 if_false",
+      "source": "if valNode == nil {",
+      "class": "equivalent",
+      "reason": "parseValue never returns a nil node, since it wraps a value that fails to parse in a placeholder invalid value, so the removed check for a nil object property value is never true."
+    },
+    {
+      "mutant": "parser.go:225:4 stmt_remove",
+      "source": "p.Read()",
+      "class": "diagnostics",
+      "reason": "Only leaves the closing bracket unread after the always reported \"Mismatched braces\" error for a JSON object closed by a bracket, which changes that error's range and the follow-on parse errors."
+    },
+    {
+      "mutant": "parser.go:235:4 stmt_remove",
+      "source": "recover(p.Read())",
+      "class": "diagnostics",
+      "reason": "Only skips error recovery after the always reported \"Missing attribute seperator comma\" error between JSON object properties, so only that error's range and the follow-on parse errors can change."
+    },
+    {
+      "mutant": "parser.go:271:5 stmt_remove",
+      "source": "open--",
+      "class": "diagnostics",
+      "reason": "Without the decrement, recovery after an error inside a JSON array skips past nested closing brackets to a later one, but the error is always reported, so only the follow-on parse errors can change."
+    },
+    {
+      "mutant": "parser.go:271:9 incdec",
+      "source": "open--",
+      "class": "diagnostics",
+      "reason": "Counting closing brackets up instead of down makes recovery after an error inside a JSON array skip to the end of the file, but the error is always reported, so only the follow-on parse errors can change."
+    },
+    {
+      "mutant": "parser.go:272:8 if_true",
+      "source": "if open <= 1 {",
+      "class": "diagnostics",
+      "reason": "Makes recovery after an error inside a JSON array stop at the first closing bracket even inside a nested array, but the error is always reported, so only the follow-on parse errors can change."
+    },
+    {
+      "mutant": "parser.go:272:8 if_false",
+      "source": "if open <= 1 {",
+      "class": "diagnostics",
+      "reason": "Makes recovery after an error inside a JSON array skip to the end of the file, but the error is always reported, so only the follow-on parse errors can change."
+    },
+    {
+      "mutant": "parser.go:272:13 cond_boundary",
+      "source": "if open <= 1 {",
+      "class": "diagnostics",
+      "reason": "Makes recovery after an error inside a JSON array stop one closing bracket later when it skips a nested array, but the error is always reported, so only the follow-on parse errors can change."
+    },
+    {
+      "mutant": "parser.go:272:13 cond_negate",
+      "source": "if open <= 1 {",
+      "class": "diagnostics",
+      "reason": "Inverts the stopping test of recovery after an error inside a JSON array, so it stops at a different closing bracket, but the error is always reported, so only the follow-on parse errors can change."
+    },
+    {
+      "mutant": "parser.go:292:6 if_false",
+      "source": "if valNode == nil {",
+      "class": "equivalent",
+      "reason": "parseValue never returns a nil node, since it wraps a value that fails to parse in a placeholder invalid value, so the removed check for a nil array element is never true."
+    },
+    {
+      "mutant": "parser.go:312:4 stmt_remove",
+      "source": "recover(p.Read())",
+      "class": "diagnostics",
+      "reason": "Only skips error recovery after the always reported \"Invalid array value\" error for a colon in a JSON array, so only that error's range and the follow-on parse errors can change."
+    },
+    {
+      "mutant": "parser.go:320:4 stmt_remove",
+      "source": "recover(p.Read())",
+      "class": "equivalent",
+      "reason": "Only reached when the next token is the end of the file, where reading doesn't advance the peeker and recovery returns at once, so removing the call changes nothing."
+    },
+    {
+      "mutant": "parser.go:328:4 stmt_remove",
+      "source": "recover(p.Read())",
+      "class": "diagnostics",
+      "reason": "Only skips error recovery after the always reported \"Mismatched brackets\" error for a JSON array closed by a brace, so only that error's range and the follow-on parse errors can change."
+    },
+    {
+      "mutant": "parser.go:338:4 stmt_remove",
+      "source": "recover(p.Read())",
+      "class": "diagnostics",
+      "reason": "Only skips error recovery after the always reported \"Missing attribute seperator comma\" error between JSON array values, so only that error's range and the follow-on parse errors can change."
+    },
+    {
+      "mutant": "parser.go:364:5 if_false",
+      "source": "if err != nil {",
+      "class": "equivalent",
+      "reason": "When encoding/json rejects a number token it leaves the json.Number empty, and cty.ParseNumberVal rejects the empty string, so the same \"Invalid JSON number\" error with the same range is still returned."
+    },
+    {
+      "mutant": "parser.go:407:43 if_true",
+      "source": "if serr, ok := err.(*json.SyntaxError); ok {",
+      "class": "equivalent",
+      "reason": "A string token always starts with a quote, so encoding/json can only fail on it with a syntax error and the check that the error is a *json.SyntaxError is always true."
+    },
+    {
+      "mutant": "parser.go:407:43 if_false",
+      "source": "if serr, ok := err.(*json.SyntaxError); ok {",
+      "class": "diagnostics",
+      "reason": "Only makes the subject of the \"Invalid JSON string\" error the whole string token instead of the byte where encoding/json found the mistake."
+    },
+    {
+      "mutant": "parser.go:410:4 stmt_remove",
+      "source": "errPos.Byte += int(errOfs)",
+      "class": "diagnostics",
+      "reason": "Only leaves the byte offset of the \"Invalid JSON string\" error's subject at the start of the string token instead of at the mistake."
+    },
+    {
+      "mutant": "parser.go:410:16 arith",
+      "source": "errPos.Byte += int(errOfs)",
+      "class": "diagnostics",
+      "reason": "Only moves the byte offset of the \"Invalid JSON string\" error's subject back from the start of the string token instead of forward to the mistake."
+    },
+    {
+      "mutant": "parser.go:415:4 stmt_remove",
+      "source": "errPos.Column += int(errOfs)",
+      "class": "diagnostics",
+      "reason": "Only leaves the column of the \"Invalid JSON string\" error's subject at the start of the string token instead of at the mistake."
+    },
+    {
+      "mutant": "parser.go:415:18 arith",
+      "source": "errPos.Column += int(errOfs)",
+      "class": "diagnostics",
+      "reason": "Only moves the column of the \"Invalid JSON string\" error's subject back from the start of the string token instead of forward to the mistake."
+    },
+    {
+      "mutant": "parser.go:418:4 stmt_remove",
+      "source": "errEndPos.Byte++",
+      "class": "diagnostics",
+      "reason": "Only makes the subject of the \"Invalid JSON string\" error end at the byte offset where it starts instead of one byte later."
+    },
+    {
+      "mutant": "parser.go:418:18 incdec",
+      "source": "errEndPos.Byte++",
+      "class": "diagnostics",
+      "reason": "Only makes the subject of the \"Invalid JSON string\" error end one byte before where it starts instead of one byte after."
+    },
+    {
+      "mutant": "parser.go:419:4 stmt_remove",
+      "source": "errEndPos.Column++",
+      "class": "diagnostics",
+      "reason": "Only makes the subject of the \"Invalid JSON string\" error end at the column where it starts instead of one column later."
+    },
+    {
+      "mutant": "parser.go:419:20 incdec",
+      "source": "errEndPos.Column++",
+      "class": "diagnostics",
+      "reason": "Only makes the subject of the \"Invalid JSON string\" error end one column before where it starts instead of one column after."
+    },
+    {
+      "mutant": "parser.go:421:4 stmt_remove",
+      "source": "errRange = hcl.Range{",
+      "class": "diagnostics",
+      "reason": "Only leaves the subject of the \"Invalid JSON string\" error as an empty range with no file name or position instead of the byte where the mistake is."
+    },
+    {
+      "mutant": "parser.go:431:6 if_true",
+      "source": "if errRange != tok.Range {",
+      "class": "diagnostics",
+      "reason": "Only sets the string token as the Context range of the \"Invalid JSON string\" error even when it is also the subject, and the adapter never outputs an error's Context."
+    },
+    {
+      "mutant": "parser.go:431:6 if_false",
+      "source": "if errRange != tok.Range {",
+      "class": "diagnostics",
+      "reason": "Only leaves out the Context range of the \"Invalid JSON string\" error, which the adapter never outputs."
+    },
+    {
+      "mutant": "parser.go:431:15 cond_negate",
+      "source": "if errRange != tok.Range {",
+      "class": "diagnostics",
+      "reason": "Only swaps when the \"Invalid JSON string\" error carries the string token as its Context range, which the adapter never outputs."
+    },
+    {
+      "mutant": "parser.go:432:4 stmt_remove",
+      "source": "contextRange = &tok.Range",
+      "class": "diagnostics",
+      "reason": "Only leaves out the Context range of the \"Invalid JSON string\" error, which the adapter never outputs."
+    },
+    {
+      "mutant": "parser.go:485:39 if_true",
+      "source": "if suggest := keywordSuggestion(s); suggest != \"\" {",
+      "class": "diagnostics",
+      "reason": "Only adds an empty \"Did you mean\" suggestion to the \"Invalid JSON keyword\" error message for a word that isn't close to true, false or null."
+    },
+    {
+      "mutant": "parser.go:485:39 if_false",
+      "source": "if suggest := keywordSuggestion(s); suggest != \"\" {",
+      "class": "diagnostics",
+      "reason": "Only drops the \"Did you mean\" suggestion from the \"Invalid JSON keyword\" error message."
+    },
+    {
+      "mutant": "parser.go:485:47 cond_negate",
+      "source": "if suggest := keywordSuggestion(s); suggest != \"\" {",
+      "class": "diagnostics",
+      "reason": "Only changes the \"Did you mean\" suggestion in the \"Invalid JSON keyword\" error message, dropping it for words close to true, false or null and adding an empty one for other words."
+    },
+    {
+      "mutant": "parser.go:486:4 stmt_remove",
+      "source": "dym = fmt.Sprintf(\" Did you mean %q?\", suggest)",
+      "class": "diagnostics",
+      "reason": "Only drops the \"Did you mean\" suggestion from the \"Invalid JSON keyword\" error message."
+    },
+    {
+      "mutant": "public.go:60:3 stmt_remove",
+      "source": "rootNode = &objectVal{",
+      "class": "unreachable",
+      "reason": "Only keeps a root value that isn't an object or array as the body of the file, and json.Parse always returns such a file with a \"Root value must be object\" error, after which the adapter never reads the body."
+    },
+    {
+      "mutant": "scanner.go:48:6 if_false",
+      "source": "if len(buf) == 0 {",
+      "class": "equivalent",
+      "reason": "For an empty buffer skipWhitespace returns it unchanged with the same position, so the end-of-input check right after it appends the same end-of-file token."
+    },
+    {
+      "mutant": "scanner.go:68:3 stmt_remove",
+      "source": "start = p",
+      "class": "ranges",
+      "reason": "Only makes each token's source range start where scanning began instead of at the token, and JSON token positions only feed source ranges, template start positions and error subjects."
+    },
+    {
+      "mutant": "scanner.go:73:4 stmt_remove",
+      "source": "p.Pos.Column++",
+      "class": "ranges",
+      "reason": "Only stops advancing the column after a brace, bracket, comma, colon or equals sign, which only shifts the column of the source ranges of the tokens that follow."
+    },
+    {
+      "mutant": "scanner.go:73:16 incdec",
+      "source": "p.Pos.Column++",
+      "class": "ranges",
+      "reason": "Only moves the column back instead of forward after a brace, bracket, comma, colon or equals sign, which only shifts the column of the source ranges of the tokens that follow."
+    },
+    {
+      "mutant": "scanner.go:74:4 stmt_remove",
+      "source": "p.Pos.Byte++",
+      "class": "ranges",
+      "reason": "Only stops advancing the byte offset after a brace, bracket, comma, colon or equals sign, which only shifts the byte offset of the source ranges of the tokens that follow."
+    },
+    {
+      "mutant": "scanner.go:74:14 incdec",
+      "source": "p.Pos.Byte++",
+      "class": "ranges",
+      "reason": "Only moves the byte offset back instead of forward after a brace, bracket, comma, colon or equals sign, which only shifts the byte offset of the source ranges of the tokens that follow."
+    },
+    {
+      "mutant": "scanner.go:115:4 stmt_remove",
+      "source": "p.Pos.Column++",
+      "class": "diagnostics",
+      "reason": "Only leaves the column of the end-of-file token that follows an invalid character at the invalid character, and a file with an invalid character always has a parse error, so only error subjects can change."
+    },
+    {
+      "mutant": "scanner.go:115:16 incdec",
+      "source": "p.Pos.Column++",
+      "class": "diagnostics",
+      "reason": "Only moves back the column of the end-of-file token that follows an invalid character to before the invalid character, and a file with an invalid character always has a parse error, so only error subjects can change."
+    },
+    {
+      "mutant": "scanner.go:116:4 stmt_remove",
+      "source": "p.Pos.Byte++",
+      "class": "diagnostics",
+      "reason": "Only leaves the byte offset of the end-of-file token that follows an invalid character at the invalid character, and a file with an invalid character always has a parse error, so only error subjects can change."
+    },
+    {
+      "mutant": "scanner.go:116:14 incdec",
+      "source": "p.Pos.Byte++",
+      "class": "diagnostics",
+      "reason": "Only moves back the byte offset of the end-of-file token that follows an invalid character to before the invalid character, and a file with an invalid character always has a parse error, so only error subjects can change."
+    },
+    {
+      "mutant": "scanner.go:151:4 stmt_remove",
+      "source": "p.Pos.Byte++",
+      "class": "ranges",
+      "reason": "Only stops advancing the byte offset over the characters of a number, which only shifts the byte offset of the source ranges of the number token and the tokens after it."
+    },
+    {
+      "mutant": "scanner.go:151:14 incdec",
+      "source": "p.Pos.Byte++",
+      "class": "ranges",
+      "reason": "Only moves the byte offset back instead of forward over the characters of a number, which only shifts the byte offset of the source ranges of the number token and the tokens after it."
+    },
+    {
+      "mutant": "scanner.go:152:4 stmt_remove",
+      "source": "p.Pos.Column++",
+      "class": "ranges",
+      "reason": "Only stops advancing the column over the characters of a number, which only shifts the column of the source ranges of the number token and the tokens after it."
+    },
+    {
+      "mutant": "scanner.go:152:16 incdec",
+      "source": "p.Pos.Column++",
+      "class": "ranges",
+      "reason": "Only moves the column back instead of forward over the characters of a number, which only shifts the column of the source ranges of the number token and the tokens after it."
+    },
+    {
+      "mutant": "scanner.go:183:4 stmt_remove",
+      "source": "p.Pos.Byte++",
+      "class": "ranges",
+      "reason": "Only stops the byte offset from advancing over keywords such as true and null, which shifts the byte offsets of later source ranges; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:183:14 incdec",
+      "source": "p.Pos.Byte++",
+      "class": "ranges",
+      "reason": "Only moves the byte offset backwards over keywords such as true and null, which shifts the byte offsets of later source ranges; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:184:4 stmt_remove",
+      "source": "p.Pos.Column++",
+      "class": "ranges",
+      "reason": "Only stops the column from advancing over keywords such as true and null, which shifts the columns of later source ranges on the same line; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:184:16 incdec",
+      "source": "p.Pos.Column++",
+      "class": "ranges",
+      "reason": "Only moves the column backwards over keywords such as true and null, which shifts the columns of later source ranges on the same line; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:205:2 stmt_remove",
+      "source": "p.Pos.Byte++",
+      "class": "ranges",
+      "reason": "Only leaves the opening quote of a JSON string out of the byte offset, which shifts the byte offsets of the string's range and of later source ranges; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:205:12 incdec",
+      "source": "p.Pos.Byte++",
+      "class": "ranges",
+      "reason": "Only moves the byte offset backwards over the opening quote of a JSON string, which shifts the byte offsets of the string's range and of later source ranges; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:206:2 stmt_remove",
+      "source": "p.Pos.Column++",
+      "class": "ranges",
+      "reason": "Only leaves the opening quote of a JSON string out of the column count, which shifts the columns of the string's range and of later source ranges on the same line; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:206:14 incdec",
+      "source": "p.Pos.Column++",
+      "class": "ranges",
+      "reason": "Only moves the column backwards over the opening quote of a JSON string, which shifts the columns of the string's range and of later source ranges on the same line; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:215:4 stmt_remove",
+      "source": "p.Pos.Byte++",
+      "class": "ranges",
+      "reason": "Only leaves backslashes inside JSON strings out of the byte offset, which shifts the byte offsets of later source ranges; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:215:14 incdec",
+      "source": "p.Pos.Byte++",
+      "class": "ranges",
+      "reason": "Only moves the byte offset backwards over backslashes inside JSON strings, which shifts the byte offsets of later source ranges; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:216:4 stmt_remove",
+      "source": "p.Pos.Column++",
+      "class": "ranges",
+      "reason": "Only leaves backslashes inside JSON strings out of the column count, which shifts the columns of later source ranges on the same line; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:216:16 incdec",
+      "source": "p.Pos.Column++",
+      "class": "ranges",
+      "reason": "Only moves the column backwards over backslashes inside JSON strings, which shifts the columns of later source ranges on the same line; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:219:4 stmt_remove",
+      "source": "p.Pos.Byte++",
+      "class": "ranges",
+      "reason": "Only leaves the closing quote and escaped quotes of JSON strings out of the byte offset, which shifts the byte offsets of later source ranges; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:219:14 incdec",
+      "source": "p.Pos.Byte++",
+      "class": "ranges",
+      "reason": "Only moves the byte offset backwards over the closing quote and escaped quotes of JSON strings, which shifts the byte offsets of later source ranges; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:220:4 stmt_remove",
+      "source": "p.Pos.Column++",
+      "class": "ranges",
+      "reason": "Only leaves the closing quote and escaped quotes of JSON strings out of the column count, which shifts the columns of later source ranges on the same line; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:220:16 incdec",
+      "source": "p.Pos.Column++",
+      "class": "ranges",
+      "reason": "Only moves the column backwards over the closing quote and escaped quotes of JSON strings, which shifts the columns of later source ranges on the same line; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:234:4 stmt_remove",
+      "source": "p.Pos.Byte += advance",
+      "class": "ranges",
+      "reason": "Only leaves the characters of JSON strings other than quotes and backslashes out of the byte offset, which shifts the byte offsets of later source ranges; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:234:15 arith",
+      "source": "p.Pos.Byte += advance",
+      "class": "ranges",
+      "reason": "Only moves the byte offset backwards by the length of each character of a JSON string other than quotes and backslashes, which shifts the byte offsets of later source ranges; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:235:4 stmt_remove",
+      "source": "p.Pos.Column++",
+      "class": "ranges",
+      "reason": "Only leaves the characters of JSON strings other than quotes and backslashes out of the column count, which shifts the columns of later source ranges on the same line; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:235:16 incdec",
+      "source": "p.Pos.Column++",
+      "class": "ranges",
+      "reason": "Only moves the column backwards over the characters of JSON strings other than quotes and backslashes, which shifts the columns of later source ranges on the same line; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:251:4 stmt_remove",
+      "source": "p.Pos.Byte++",
+      "class": "ranges",
+      "reason": "Only stops the byte offset from advancing over spaces between JSON tokens, which shifts the byte offsets of later source ranges; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:251:14 incdec",
+      "source": "p.Pos.Byte++",
+      "class": "ranges",
+      "reason": "Only moves the byte offset backwards over spaces between JSON tokens, which shifts the byte offsets of later source ranges; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:252:4 stmt_remove",
+      "source": "p.Pos.Column++",
+      "class": "ranges",
+      "reason": "Only stops the column from advancing over spaces between JSON tokens, which shifts the columns of later source ranges on the same line; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:252:16 incdec",
+      "source": "p.Pos.Column++",
+      "class": "ranges",
+      "reason": "Only moves the column backwards over spaces between JSON tokens, which shifts the columns of later source ranges on the same line; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:254:4 stmt_remove",
+      "source": "p.Pos.Byte++",
+      "class": "ranges",
+      "reason": "Only stops the byte offset from advancing over newlines between JSON tokens, which shifts the byte offsets of later source ranges; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:254:14 incdec",
+      "source": "p.Pos.Byte++",
+      "class": "ranges",
+      "reason": "Only moves the byte offset backwards over newlines between JSON tokens, which shifts the byte offsets of later source ranges; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:255:4 stmt_remove",
+      "source": "p.Pos.Column = 1",
+      "class": "ranges",
+      "reason": "Only stops the column from going back to 1 after a newline between JSON tokens, which shifts the columns of source ranges on later lines; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:256:4 stmt_remove",
+      "source": "p.Pos.Line++",
+      "class": "ranges",
+      "reason": "Only stops the line number from advancing at newlines between JSON tokens, which changes the lines of later source ranges; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:256:14 incdec",
+      "source": "p.Pos.Line++",
+      "class": "ranges",
+      "reason": "Only counts newlines between JSON tokens backwards in the line number, which changes the lines of later source ranges; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:262:4 stmt_remove",
+      "source": "p.Pos.Byte++",
+      "class": "ranges",
+      "reason": "Only stops the byte offset from advancing over carriage returns between JSON tokens, which shifts the byte offsets of later source ranges; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:262:14 incdec",
+      "source": "p.Pos.Byte++",
+      "class": "ranges",
+      "reason": "Only moves the byte offset backwards over carriage returns between JSON tokens, which shifts the byte offsets of later source ranges; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:269:4 stmt_remove",
+      "source": "p.Pos.Byte++",
+      "class": "ranges",
+      "reason": "Only stops the byte offset from advancing over tabs between JSON tokens, which shifts the byte offsets of later source ranges; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:269:14 incdec",
+      "source": "p.Pos.Byte++",
+      "class": "ranges",
+      "reason": "Only moves the byte offset backwards over tabs between JSON tokens, which shifts the byte offsets of later source ranges; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:270:4 stmt_remove",
+      "source": "p.Pos.Column += 2",
+      "class": "ranges",
+      "reason": "Only stops the column from advancing over tabs between JSON tokens, which shifts the columns of later source ranges on the same line; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:270:17 arith",
+      "source": "p.Pos.Column += 2",
+      "class": "ranges",
+      "reason": "Only moves the column back two places for each tab between JSON tokens instead of forward, which shifts the columns of later source ranges on the same line; the scanner reads the buffer through a separate index, and source ranges of JSON syntax only appear in errors."
+    },
+    {
+      "mutant": "scanner.go:286:2 stmt_remove",
+      "source": "end.Byte += byteLen",
+      "class": "ranges",
+      "reason": "Only leaves the end byte of the source range of the invalid character token the scanner stops at unchanged, and that range is only the subject of the parse error the character causes."
+    },
+    {
+      "mutant": "scanner.go:286:11 arith",
+      "source": "end.Byte += byteLen",
+      "class": "ranges",
+      "reason": "Only moves the end byte of the source range of the invalid character token the scanner stops at, and that range is only the subject of the parse error the character causes."
+    },
+    {
+      "mutant": "scanner.go:287:2 stmt_remove",
+      "source": "end.Column += charLen",
+      "class": "ranges",
+      "reason": "Only leaves the end column of the source range of the invalid character token the scanner stops at unchanged, and that range is only the subject of the parse error the character causes."
+    },
+    {
+      "mutant": "scanner.go:287:13 arith",
+      "source": "end.Column += charLen",
+      "class": "ranges",
+      "reason": "Only moves the end column of the source range of the invalid character token the scanner stops at, and that range is only the subject of the parse error the character causes."
+    },
+    {
+      "mutant": "scanner.go:308:24 cond_boundary",
+      "source": "return (b >= 'a' && b <= 'z') || (b >= 'A' && b <= 'Z')",
+      "class": "diagnostics",
+      "reason": "Only changes how a bare word containing 'z' is split into tokens, and since no JSON keyword contains 'z' such a word is a parse error either way, with a different message."
+    },
+    {
+      "mutant": "scanner.go:308:38 cond_boundary",
+      "source": "return (b >= 'a' && b <= 'z') || (b >= 'A' && b <= 'Z')",
+      "class": "diagnostics",
+      "reason": "Only changes how a bare word containing 'A' is split into tokens, and since JSON keywords are lowercase such a word is a parse error either way, with a different message."
+    },
+    {
+      "mutant": "scanner.go:308:50 cond_boundary",
+      "source": "return (b >= 'a' && b <= 'z') || (b >= 'A' && b <= 'Z')",
+      "class": "diagnostics",
+      "reason": "Only changes how a bare word containing 'Z' is split into tokens, and since JSON keywords are lowercase such a word is a parse error either way, with a different message."
+    },
+    {
+      "mutant": "structure.go:39:40 if_true",
+      "source": "if _, ok := hiddenAttrs[attrS.Name]; !ok {",
+      "class": "diagnostics",
+      "reason": "Only adds attribute names the body already sets to the names suggested in the \"Did you mean\" text of the \"Extraneous JSON object property\" error."
+    },
+    {
+      "mutant": "structure.go:39:40 if_false",
+      "source": "if _, ok := hiddenAttrs[attrS.Name]; !ok {",
+      "class": "diagnostics",
+      "reason": "Only stops attribute names from being suggested in the \"Did you mean\" text of the \"Extraneous JSON object property\" error."
+    },
+    {
+      "mutant": "structure.go:39:40 not_remove",
+      "source": "if _, ok := hiddenAttrs[attrS.Name]; !ok {",
+      "class": "diagnostics",
+      "reason": "Only suggests the attribute names the body already sets instead of the unused ones in the \"Did you mean\" text of the \"Extraneous JSON object property\" error."
+    },
+    {
+      "mutant": "structure.go:41:4 stmt_remove",
+      "source": "nameSuggestions = append(nameSuggestions, attrS.Name)",
+      "class": "diagnostics",
+      "reason": "Only stops attribute names from being suggested in the \"Did you mean\" text of the \"Extraneous JSON object property\" error."
+    },
+    {
+      "mutant": "structure.go:47:3 stmt_remove",
+      "source": "nameSuggestions = append(nameSuggestions, blockS.Type)",
+      "class": "diagnostics",
+      "reason": "Only stops block type names from being suggested in the \"Did you mean\" text of the \"Extraneous JSON object property\" error."
+    },
+    {
+      "mutant": "structure.go:51:2 stmt_remove",
+      "source": "diags = append(diags, attrDiags...)",
+      "class": "diagnostics",
+      "reason": "The PartialContent call in Content already reports the errors of flattening the body's objects, so leaving out the second copy of those errors only changes how many are reported."
+    },
+    {
+      "mutant": "structure.go:63:7 if_true",
+      "source": "if suggestion != \"\" {",
+      "class": "diagnostics",
+      "reason": "Only adds an empty \"Did you mean\" suggestion to the detail of the \"Extraneous JSON object property\" error when no name is close enough to suggest."
+    },
+    {
+      "mutant": "structure.go:63:7 if_false",
+      "source": "if suggestion != \"\" {",
+      "class": "diagnostics",
+      "reason": "Only puts the bare suggested name instead of the \"Did you mean\" sentence into the detail of the \"Extraneous JSON object property\" error."
+    },
+    {
+      "mutant": "structure.go:63:18 cond_negate",
+      "source": "if suggestion != \"\" {",
+      "class": "diagnostics",
+      "reason": "Only changes the \"Did you mean\" text in the detail of the \"Extraneous JSON object property\" error, which is reported either way."
+    },
+    {
+      "mutant": "structure.go:64:5 stmt_remove",
+      "source": "suggestion = fmt.Sprintf(\" Did you mean %q?\", suggestion)",
+      "class": "diagnostics",
+      "reason": "Only puts the bare suggested name instead of the \"Did you mean\" sentence into the detail of the \"Extraneous JSON object property\" error."
+    },
+    {
+      "mutant": "structure.go:87:5 if_true",
+      "source": "if b.hiddenAttrs != nil {",
+      "class": "equivalent",
+      "reason": "Ranging over a nil hiddenAttrs map copies nothing, so skipping the nil check doesn't change the names marked as used."
+    },
+    {
+      "mutant": "structure.go:125:5 break_continue",
+      "source": "continue",
+      "class": "diagnostics",
+      "reason": "Stopping at a duplicate argument only drops the errors of the body's later properties, and the \"Duplicate argument\" error already makes the body invalid in the schema phase, before anything is evaluated."
+    },
+    {
+      "mutant": "structure.go:206:4 break_continue",
+      "source": "continue",
+      "class": "diagnostics",
+      "reason": "Stopping at a duplicate attribute only leaves the later properties out of the attributes, and the \"Duplicate attribute definition\" error already makes the body invalid in the schema phase, before anything is evaluated."
+    },
+    {
+      "mutant": "structure.go:255:4 stmt_remove",
+      "source": "labelRanges[len(labelRanges)-1] = p.NameRange",
+      "class": "ranges",
+      "reason": "Only leaves the source ranges of the labels of JSON blocks empty, which are only used as source positions and error subjects."
+    },
+    {
+      "mutant": "structure.go:269:2 stmt_remove",
+      "source": "copy(labelR, labelRanges)",
+      "class": "ranges",
+      "reason": "Only leaves the source ranges of the labels of JSON blocks empty, which are only used as source positions and error subjects."
+    },
+    {
+      "mutant": "structure.go:345:8 if_false",
+      "source": "if labelName != nil {",
+      "class": "diagnostics",
+      "reason": "Only gives the \"Incorrect JSON value type\" error for a non-object element of a label-level array the detail meant for body arrays."
+    },
+    {
+      "mutant": "structure.go:364:6 if_false",
+      "source": "if labelName != nil {",
+      "class": "diagnostics",
+      "reason": "Only gives the \"Incorrect JSON value type\" error for a label level that is neither an object nor an array the detail meant for bodies."
+    },
+    {
+      "mutant": "structure.go:365:4 stmt_remove",
+      "source": "diags = append(diags, &hcl.Diagnostic{",
+      "class": "diagnostics",
+      "reason": "A label level that is neither an object nor an array gives no properties, so the \"Missing block label\" error still makes the block invalid and dropping the \"Incorrect JSON value type\" error only changes the number of errors."
+    },
+    {
+      "mutant": "structure.go:404:36 arith",
+      "source": "Byte:   v.SrcRange.Start.Byte + 1,",
+      "class": "ranges",
+      "reason": "Only shifts the start byte given to the template parser for a JSON string, which only changes the byte offsets of the template's source ranges."
+    },
+    {
+      "mutant": "structure.go:405:38 arith",
+      "source": "Column: v.SrcRange.Start.Column + 1,",
+      "class": "ranges",
+      "reason": "Only shifts the start column given to the template parser for a JSON string, which only changes the columns of the template's source ranges, including those printed in error messages."
+    },
+    {
+      "mutant": "structure.go:408:7 if_false",
+      "source": "if diags.HasErrors() {",
+      "class": "diagnostics",
+      "reason": "Evaluating a JSON string whose template has syntax errors only adds the evaluation errors of the partly parsed template to those syntax errors, and in the JSON syntax no enclosing expression can use the value returned with them."
+    },
+    {
+      "mutant": "structure.go:452:7 if_false",
+      "source": "if err != nil {",
+      "class": "diagnostics",
+      "reason": "A key that can't be converted to a string converts to cty.NilVal, which the next check takes for null, so the key is still rejected with an \"Invalid object key expression\" error, only with a different detail."
+    },
+    {
+      "mutant": "structure.go:461:5 break_continue",
+      "source": "continue",
+      "class": "diagnostics",
+      "reason": "Stopping at an object key that can't be converted to a string only drops the errors of later properties and changes the value returned with the \"Invalid object key expression\" error, which already makes the evaluation fail."
+    },
+    {
+      "mutant": "structure.go:472:5 break_continue",
+      "source": "continue",
+      "class": "diagnostics",
+      "reason": "Stopping at a null object key only drops the errors of later properties and changes the value returned with the \"Invalid object key expression\" error, which already makes the evaluation fail."
+    },
+    {
+      "mutant": "structure.go:496:5 break_continue",
+      "source": "continue",
+      "class": "diagnostics",
+      "reason": "Stopping at a duplicate object property only drops the errors of later properties and changes the value returned with the \"Duplicate object attribute\" error, which already makes the evaluation fail."
+    },
+    {
+      "mutant": "structure.go:499:4 stmt_remove",
+      "source": "attrRanges[nameStr] = jsonAttr.NameRange",
+      "class": "diagnostics",
+      "reason": "Only leaves the position of the first definition out of the detail of the \"Duplicate object attribute\" error."
+    },
+    {
+      "mutant": "structure.go:598:6 if_false",
+      "source": "if diags.HasErrors() {",
+      "class": "equivalent",
+      "reason": "hcl.ExprCall only returns errors together with a nil call, so returning its call without checking the errors still returns nil."
+    }
+  ]
+}

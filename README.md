@@ -7,7 +7,7 @@ HashiCorp configuration language, in the spirit of
 Any HCL implementation, in any language, can run it by providing a small
 adapter program.
 
-**Status:** draft. 3,618 tests of the native and JSON syntaxes, checking 1,219
+**Status:** draft. 3,644 tests of the native and JSON syntaxes, checking 1,223
 rules from the spec and the type expression, try function, dynamic block and
 user function extensions at hashicorp/hcl v2.24.0. The test and adapter
 formats may still change.
@@ -27,9 +27,11 @@ formats may still change.
   adapters for [hashicorp/hcl](https://github.com/hashicorp/hcl) (Go, the
   reference implementation) and [hcl-rs](https://github.com/martinohmann/hcl-rs)
   (Rust). The Go adapter can also be built with the fork of hashicorp/hcl that
-  [OpenTofu](https://github.com/opentofu/opentofu) uses. Two more only report
+  [OpenTofu](https://github.com/opentofu/opentofu) uses. Three more only report
   whether a file parses:
-  [python-hcl2](https://github.com/amplify-education/python-hcl2) (Python) and
+  [python-hcl2](https://github.com/amplify-education/python-hcl2) (Python),
+  [bc-python-hcl2](https://github.com/bridgecrewio/python-hcl2) (its fork that
+  [Checkov](https://github.com/bridgecrewio/checkov) uses) and
   [tree-sitter-hcl](https://github.com/tree-sitter-grammars/tree-sitter-hcl)
   (the HCL grammar for tree-sitter, which editors use).
 - **`runner/hcltest.py`** runs each test through an adapter, compares the
@@ -58,6 +60,11 @@ python3 runner/hcltest.py --adapter bin/hcl-opentofu-adapter
 python3 -m venv bin/python-hcl2
 bin/python-hcl2/bin/pip install --require-hashes -r adapters/python-hcl2/requirements.txt
 python3 runner/hcltest.py --validate --adapter "bin/python-hcl2/bin/python adapters/python-hcl2/adapter.py"
+
+# bc-python-hcl2, the fork Checkov uses, only whether inputs parse (needs Python 3.10 or later)
+python3 -m venv bin/bc-python-hcl2
+bin/bc-python-hcl2/bin/pip install --require-hashes -r adapters/bc-python-hcl2/requirements.txt
+python3 runner/hcltest.py --validate --adapter "bin/bc-python-hcl2/bin/python adapters/bc-python-hcl2/adapter.py"
 
 # tree-sitter-hcl, only whether inputs parse (needs Python 3.10 or later, and a
 # C compiler on platforms without wheels for py-tree-sitter or tree-sitter-hcl)
@@ -107,21 +114,21 @@ run the tests at all.
 | for expressions | 195 | 68 | 0 |
 | operators | 359 | 105 | 0 |
 | types, conversions, unification | 137 | 80 | 4 |
-| unknown values | 212 | 85 | 0 |
+| unknown values | 213 | 86 | 0 |
 | static analysis | 121 | 38 | 0 |
-| JSON grammar | 94 | 29 | 0 |
-| JSON bodies (attributes, blocks, schemas) | 103 | 33 | 0 |
-| JSON expressions | 85 | 21 | 0 |
+| JSON grammar | 98 | 29 | 0 |
+| JSON bodies (attributes, blocks, schemas) | 106 | 33 | 0 |
+| JSON expressions | 87 | 22 | 0 |
 | JSON static analysis | 102 | 27 | 0 |
-| type expressions (`ext/typeexpr`) | 175 | 51 | 0 |
+| type expressions (`ext/typeexpr`) | 189 | 53 | 0 |
 | JSON type expressions | 34 | 8 | 0 |
 | `try` and `can` (`ext/tryfunc`) | 98 | 21 | 1 |
 | JSON `try` and `can` | 8 | 2 | 0 |
-| dynamic blocks (`ext/dynblock`) | 169 | 66 | 3 |
+| dynamic blocks (`ext/dynblock`) | 171 | 66 | 3 |
 | JSON dynamic blocks | 42 | 23 | 0 |
 | user functions (`ext/userfunc`) | 116 | 46 | 1 |
 | JSON user functions | 57 | 22 | 0 |
-| **total** | **3,618** | **1,231** | **12** |
+| **total** | **3,644** | **1,235** | **12** |
 
 - Most rules without tests need something the protocol can't express yet:
   error positions or messages, capsule values, literal-only evaluation with
@@ -133,9 +140,10 @@ run the tests at all.
   and one is guidance for applications.
   `python3 tools/coverage.py rules` lists them.
 - The tests exercise 87.8% of the statements in hashicorp/hcl's `hclsyntax`
-  package, 86.0% of its `json` package, 78.6% of `ext/typeexpr`, 97.1% of
-  `ext/tryfunc`, 71.2% of `ext/dynblock` and all of `ext/userfunc`
-  (`python3 tools/coverage.py go`).
+  package, 86.0% of its `json` package, 79.3% of `ext/typeexpr`, 97.1% of
+  `ext/tryfunc`, 71.2% of `ext/dynblock`, all of `ext/userfunc` and 32.6% of
+  the root package, much of which is the text output of errors and source
+  positions (`python3 tools/coverage.py go`).
   Most of the rest is syntax tree walking, listing the variables an
   expression uses, lookups by source position and source ranges, which the
   protocol doesn't reach, and error handling for states that valid use can't
@@ -143,20 +151,37 @@ run the tests at all.
   type constraint values; reading type expressions is fully covered. In
   `ext/dynblock` it is listing the variables that dynamic blocks use, value
   marks, hcldec interfaces and the option for checking `for_each` values.
-- Running a line isn't checking it, so `python3 tools/mutation.py run`
-  measures more: it makes 2,780 small changes to the hand-written code of
-  `hclsyntax`, one at a time (an operator swapped, a condition forced, a
-  statement removed), builds the Go adapter with each, and runs the tests
-  that reach the changed line. The tests catch 1,891 of them, which is every
-  change the protocol can see. For each of the 674 they don't catch,
-  `coverage/mutation/hclsyntax.json` says why no test can: 354 only change
-  error messages, how many errors there are or their ranges, 82 only change
-  source ranges, 151 behave the same for every input, 65 only differ in
-  states the protocol can't produce (Go API calls or hand-built syntax
-  trees), 10 need an input with two mistakes, 9 only change value marks and
-  3 only change output the protocol treats as equal. Another 214 are in code
-  no test reaches, mostly the code statement coverage leaves out, and 1
-  doesn't compile.
+- Running a line isn't checking it, so `python3 tools/mutation.py run <package>`
+  measures more: it makes small changes to the hand-written code of a
+  hashicorp/hcl package, one at a time (an operator swapped, a condition
+  forced, a statement removed), builds the Go adapter with each, and runs the
+  tests that reach the changed line. The tests catch every change the
+  protocol can see, in every package:
+
+  | Package | Changes | Caught | Not caught, with a reason | In code no test reaches |
+  | --- | ---: | ---: | ---: | ---: |
+  | `hclsyntax` | 2,780 | 1,892 | 672 | 216 |
+  | `json` | 444 | 250 | 139 | 55 |
+  | `ext/typeexpr` | 259 | 196 | 24 | 39 |
+  | `ext/tryfunc` | 27 | 17 | 9 | 1 |
+  | `ext/dynblock` | 265 | 164 | 25 | 76 |
+  | `ext/userfunc` | 53 | 45 | 8 | 0 |
+  | `ext/customdecode` | 15 | 7 | 3 | 5 |
+  | the root package | 597 | 116 | 62 | 419 |
+  | **total** | **4,440** | **2,687** | **942** | **811** |
+
+  For each change the tests don't catch, `coverage/mutation/` says why no test
+  can: 506 only change error messages, how many errors there are or their
+  ranges, 135 only change source ranges, 192 behave the same for every input,
+  85 only differ in states the protocol can't produce (Go API calls or
+  hand-built syntax trees), 10 need an input with two mistakes, 11 only change
+  value marks and 3 only change output the protocol treats as equal. Most of
+  the code no test reaches is what statement coverage leaves out; in the root
+  package it is mostly the text output of errors, source positions and
+  lookups by them, and merging the bodies of several files, which the
+  protocol never does. One change in `ext/typeexpr`, to the sorted order of a map's keys
+  when defaults are unified, makes hashicorp/hcl iterate a Go map, so the
+  tests catch it in about three runs out of four.
 
 ## How the tests are checked
 
@@ -174,39 +199,41 @@ run the tests at all.
   missing cases, and then fixed.
 - `tools/lint.py` checks formats, spec links, rule coverage, feature flags,
   duplicates and portability.
-- Mutation testing of `hclsyntax` found behaviors the tests didn't check,
-  which statement coverage can't show: error tests whose input could fail for
-  another reason, what hashicorp/hcl knows about unknown values, and states of
-  the heredoc and template scanner. Each surviving change was either given a
-  test or a reason in `coverage/mutation/`, and separate reviewers checked the
-  new tests and the reasons.
+- Mutation testing of hashicorp/hcl's packages found behaviors the tests
+  didn't check, which statement coverage can't show: error tests whose input
+  could fail for another reason, what hashicorp/hcl knows about unknown
+  values, states of the heredoc, template and JSON scanners, and how defaults
+  are applied to collections. Each surviving change was either given a test or
+  a reason in `coverage/mutation/`, and separate reviewers checked the new
+  tests and the reasons.
 
 ## Results
 
 | Implementation | Passed | Failed | Adapter errors | Skipped |
 | --- | ---: | ---: | ---: | ---: |
-| hashicorp/hcl v2.24.0 | 3,618 | 0 | 0 | 0 |
-| opentofu/hcl, as used by OpenTofu v1.12.6 | 3,616 | 2 | 0 | 0 |
-| hcl-rs 0.19.8 | 1,716 | 225 (91 disputed) | 21 | 1,656 |
+| hashicorp/hcl v2.24.0 | 3,644 | 0 | 0 | 0 |
+| opentofu/hcl, as used by OpenTofu v1.12.6 | 3,642 | 2 | 0 | 0 |
+| hcl-rs 0.19.8 | 1,716 | 225 (91 disputed) | 21 | 1,682 |
 
 OpenTofu has no HCL implementation of its own: its `go.mod` replaces
 hashicorp/hcl with the fork [opentofu/hcl](https://github.com/opentofu/hcl), so
 its row shows how that fork differs from hashicorp/hcl v2.24.0.
 
 Every test also says whether its input parses, and `--validate` checks only
-that. This measures parsers that can't run the tests, like python-hcl2 and
-tree-sitter-hcl, and checks the other implementations' parsers on the inputs
-of all 3,093 native syntax tests, including tests they skip. Only
-hashicorp/hcl and its fork read the JSON syntax, so the others skip its 525
-tests.
+that. This measures parsers that can't run the tests, like python-hcl2,
+bc-python-hcl2 and tree-sitter-hcl, and checks the other implementations'
+parsers on the inputs of all 3,110 native syntax tests, including tests they
+skip. Only hashicorp/hcl and its fork read the JSON syntax, so the others skip
+its 534 tests.
 
 | Implementation | Passed | Accepted invalid input | Rejected valid input | Adapter errors | Skipped |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| hashicorp/hcl v2.24.0 | 3,618 | 0 | 0 | 0 | 0 |
-| opentofu/hcl, as used by OpenTofu v1.12.6 | 3,618 | 0 | 0 | 0 | 0 |
-| hcl-rs 0.19.8 | 3,015 | 30 (6 disputed) | 48 (31 disputed) | 0 | 525 |
-| python-hcl2 8.1.4 | 2,814 | 98 (12 disputed) | 181 (77 disputed) | 0 | 525 |
-| tree-sitter-hcl 1.2.0 | 2,922 | 117 (22 disputed) | 54 (24 disputed) | 0 | 525 |
+| hashicorp/hcl v2.24.0 | 3,644 | 0 | 0 | 0 | 0 |
+| opentofu/hcl, as used by OpenTofu v1.12.6 | 3,644 | 0 | 0 | 0 | 0 |
+| hcl-rs 0.19.8 | 3,032 | 30 (6 disputed) | 48 (31 disputed) | 0 | 534 |
+| python-hcl2 8.1.4 | 2,831 | 98 (12 disputed) | 181 (77 disputed) | 0 | 534 |
+| bc-python-hcl2 0.4.3 | 2,798 | 129 (12 disputed) | 183 (61 disputed) | 0 | 534 |
+| tree-sitter-hcl 1.2.0 | 2,939 | 117 (22 disputed) | 54 (24 disputed) | 0 | 534 |
 
 hcl-rs fails all 78 of these tests in the first table too. As in the first
 table, a failure counts as disputed when its test is disputed, even if the
@@ -243,9 +270,9 @@ The 134 failures on tests that aren't disputed fall into these groups:
   `.` and inside `[*]`. Comparison operators have no associativity, so
   `1 < 2 < 3` is true and the rest of a chain is dropped. `-1[0]` indexes
   `-1`. It also rejects `t.01` and a newline after a unary operator even inside
-  parentheses or brackets, accepts `foo.0.0.bar` and `t[*].0.1`, uses XID_Start instead of
-  ID_Start, and treats a lone CR as whitespace but rejects one in a line
-  comment. A `$` or `%` written as `\u0024` or `\u0025` right before `${` or
+  parentheses or brackets, accepts `foo.0.0.bar` and `t[*].0.1`, uses
+  XID_Start instead of ID_Start, and treats a lone CR as whitespace but
+  rejects one in a line comment. A `$` or `%` written as `\u0024` or `\u0025` right before `${` or
   `%{` is read as the escaped `$${` or `%%{`.
 - **Numbers:** integers are limited to 64 bits (larger literals are rejected
   and arithmetic wraps), non-integers are 64-bit floats, and `0 / 0` gives
@@ -328,6 +355,107 @@ about. For example, of the namespaced calls that aren't in the spec, it accepts
 `provider::aws::arn()`, with exactly two namespaces, but rejects `ns::f()` and
 `a::b::c::f()`.
 
+### bc-python-hcl2 0.4.3
+
+bc-python-hcl2 is Bridgecrew's fork of python-hcl2, which Checkov uses to parse
+Terraform files. Checkov 3.3.21 pins bc-python-hcl2 0.4.3, which accepts any
+lark from 1.0.0 on, and the adapter runs it with lark 1.3.1. Like python-hcl2,
+it can only take part in `--validate`. The fork has no function that only
+parses, so the adapter reports whether `hcl2.loads`, the function Checkov
+calls, accepts a file. `hcl2.loads` runs a line-based check for unclosed
+quotes, which rejects a line with an odd number of `"` outside heredocs and
+comments, then the Lark parser, then the conversion to dictionaries, and an
+error in any of them rejects the file. bc-python-hcl2 only accepts text, so as
+for python-hcl2, the adapter reports invalid UTF-8 as a parse error, which
+decides the 29 tests whose input isn't UTF-8.
+
+The 239 failures on tests that aren't disputed fall into these groups.
+python-hcl2 fails 131 of the same tests. Of the 190 tests that aren't disputed
+and that python-hcl2 fails, bc-python-hcl2 passes 59: 24 with strip markers in
+quoted strings, which it doesn't parse, 15 with comments, and 20 others, most
+with newlines around blocks or in quoted strings, or a lone CR.
+
+- **Names:** like python-hcl2, it only allows ASCII letters, digits, `_` and
+  `-` in names, so `größe = 1`, `café()` and `o.café` are errors, and so are
+  non-ASCII bare block labels. Its lexer also reads `for`, `if` and `in` as
+  keywords wherever its parse tables allow one, so it rejects an attribute or
+  block named `for` or `if` anywhere but at the start of the file (`a = 1` then
+  `if = 3`), and a bare block label `in` or `if` after the type or another bare
+  label (`b in {}`).
+- **Numbers:** it rejects every number with an exponent, such as `1e3`, `15E2`
+  and `1.5e3`, because its lexer reads the `e` as the start of a name. It also
+  rejects `1.e`, which is `1` followed by the attribute access `.e`, because a
+  `.` after a number always starts a fraction. A number is a sequence of
+  one-digit tokens, and spaces and inline comments between them are ignored,
+  so it accepts `1 000` and `1/**/2` as 1000 and 12, and `[1 2]`, `f(1 2)` and
+  `(1 2)`, each with the single number 12. python-hcl2 passes all of these
+  tests.
+- **Newlines:** like python-hcl2, it doesn't check the newlines that end
+  attributes. It accepts an expression that continues on the next line
+  (`a = 1 +` then `2`, `a = 1` then `+ 2`, or a conditional split before or
+  after its `?` or `:`, including a `:` on the line after a heredoc's closing
+  marker), two attributes on one line (`a = 1 b = 2`, also in a one-line
+  block), a `}` on the line of the attribute before it, and a one-line block
+  whose `}` is on a later line, as after a line comment, or whose value is a
+  heredoc. Unlike python-hcl2, it requires a newline after a block and none
+  before its `{`, so `a {} b {}`, `outer { inner {} }` and a block's `{` on the
+  next line are errors. Inside parentheses, brackets and argument lists, where
+  newlines are ignored, it rejects a newline around `.`, before `(` or `[`, or
+  after a unary operator, as in `[o` then `.b]`, though unlike python-hcl2 it
+  allows one before `-` or `...`.
+- **Objects:** the `=` or `:` between a key and its value is optional, and so
+  is the comma between elements, so it accepts `{b 1}` and, like python-hcl2,
+  `{b = 1 c = 2}`. A name followed by brackets or parentheses is read as a key
+  and a value, so `{k[i] = 1}` and `{f(1) = 2}` are errors: `k` is the key,
+  `[i]` its value, and the `=` unexpected. The conversion to dictionaries fails
+  for keys that are tuples or objects, as in `{[] = 1}` and `{{} = 1}`, because
+  Python lists and dictionaries can't be dictionary keys.
+- **Strings:** like python-hcl2, it accepts any backslash sequence, including
+  ones that aren't escapes in HCL, such as `\q`, `\b` and `\x41`, incomplete or
+  malformed `\u` and `\U` escapes, and escapes of surrogates or of code points
+  above U+10FFFF, in strings and block labels. It also accepts interpolations
+  and directives in block labels, and rejects `$${` when no `}` follows it, as
+  at the end of a string, because it reads the `${` as the start of an
+  interpolation. Unlike python-hcl2, it accepts `%%{` there, and the line-based
+  check for unclosed quotes rejects newlines in quoted strings and block
+  labels.
+- **Templates:** it doesn't parse templates in quoted strings. Its lexer reads
+  a quoted string as one token, with a regular expression that only finds
+  where each interpolation ends, and treats directives as text. So it accepts
+  any directive, such as `%{ endif }` without `%{ if }`, `%{ for v [1] }` or
+  `%{ elif true }`, and interpolations that aren't one expression, such as
+  `${ }`, `${a b}` and `${~ ~}`. A `"` in a directive ends the string, so it
+  rejects directives that contain strings, as in `"%{ if "x" }a%{ endif }"`,
+  and a string inside an interpolation can't contain an escaped quote, so
+  `"${"\""}"` is an error. The line-based check for unclosed quotes rejects
+  `"<${ /* " */ "x" }>"`, whose line has an odd number of quotes. python-hcl2
+  parses quoted templates and fails only 8 of the 71 tests in this group.
+- **Heredocs:** its lexer also reads a heredoc as one token, with a regular
+  expression that needs a marker of at least two ASCII characters that starts
+  with a letter, an LF right after the opening marker, and at least two
+  characters, the last a line break, between that LF and the closing marker.
+  So it rejects one-letter markers (`<<A`), CR LF line endings, and heredocs
+  with no lines or only an empty line, and like python-hcl2, non-ASCII markers
+  (`<<ÉTÉ`, `<<Ω`). Also like python-hcl2, it doesn't parse the template in a
+  heredoc, so it accepts an interpolation without its closing brace there.
+- **Other syntax:** like python-hcl2, it accepts an attribute defined twice and
+  legacy index chains like `foo.0.0.bar` and `t[*].0.1`, and rejects repeated
+  unary operators (`--5`, `!!x`, `-!x`) and spaces, newlines or inline comments
+  inside `[*]` or between the `.` and `*` of `.*` (`t[ * ]`, `t. *`), which it
+  reads as single tokens. It rejects a lone CR except at the end of the file,
+  where the newline that `hcl2.loads` appends turns it into CR LF, while
+  python-hcl2 accepts a lone CR as whitespace.
+
+Some of its 73 failures on disputed tests come from the problems above, such as
+4 tests disputed about Unicode normalization, whose names aren't ASCII, 2 about
+very large numbers, which are written with exponents (`1e9000`), and 5 with
+objects whose keys are calls, indexes, tuples or objects. Most concern the
+syntax the tests are disputed about. Like python-hcl2, of the namespaced calls
+that aren't in the spec, it accepts `provider::aws::arn()`, with exactly two
+namespaces, but rejects `ns::f()` and `a::b::c::f()`, which accounts for 15
+failures, and the line-based check for unclosed quotes rejects 7 tests whose
+directives in quoted strings span lines.
+
 ### tree-sitter-hcl 1.2.0
 
 tree-sitter-hcl is the HCL grammar for tree-sitter, which editors use to
@@ -382,7 +510,7 @@ The 125 failures on tests that aren't disputed fall into these groups:
 
 ### Where the spec and hashicorp/hcl disagree
 
-635 tests are disputed. `python3 tools/coverage.py disputes` lists them all by
+642 tests are disputed. `python3 tools/coverage.py disputes` lists them all by
 spec section, with notes. The main themes:
 
 - **Source text:** a byte order mark, identifiers starting with `_`, and some
@@ -456,7 +584,9 @@ spec section, with notes. The main themes:
   conversion fills missing attributes with null. `convert` also fails for a
   value that lacks an optional attribute, which the README says becomes null.
   In the JSON syntax, a newline or line comment after a type keyword or call
-  is ignored.
+  is ignored. After applying defaults, convert unifies the elements of a list,
+  set or map value to one type, a map's in the sorted order of its keys, which
+  can turn a string default like `"01"` into `"1"`.
 - **`try` and `can`:** when the first argument that succeeds has a value that
   isn't wholly known, `try` gives the dynamic value, and `can` gives an
   unknown bool for such an argument, although the README says they give that
@@ -563,9 +693,11 @@ spec section, with notes. The main themes:
 
 ## Next steps
 
-- Mutation testing of the `json` package and the `ext/` packages, as was done
-  for `hclsyntax`.
-- Results for bc-python-hcl2, the fork of python-hcl2 that Checkov pins.
+- Mutation testing of go-cty's conversion and unification code, which
+  decides many of the results the tests check.
+- An optional protocol feature for error positions and source ranges, which
+  several rules without tests need, and which most of the changes in
+  `coverage/mutation/` only affect.
 
 ## License
 

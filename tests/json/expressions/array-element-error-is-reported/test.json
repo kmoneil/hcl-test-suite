@@ -1,0 +1,18 @@
+{
+  "description": "An error evaluating an array element is an error of the array",
+  "spec": [
+    "json/spec.md#arrays"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "There is no variable named \"nope\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

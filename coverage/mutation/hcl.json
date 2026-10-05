@@ -1,0 +1,378 @@
+{
+  "package": "github.com/hashicorp/hcl/v2",
+  "version": "v2.24.0",
+  "survivors": [
+    {
+      "mutant": "diagnostic.go:146:6 if_true",
+      "source": "if diag.Severity == DiagError {",
+      "class": "unreachable",
+      "reason": "Only differs for a diagnostic whose severity isn't error, and the only one hashicorp/hcl's packages produce is the warning json.ParseFile adds when closing the file fails, while the adapter reads files itself and calls json.Parse."
+    },
+    {
+      "mutant": "didyoumean.go:22:6 if_true",
+      "source": "if dist < 3 { // threshold determined experimentally",
+      "class": "diagnostics",
+      "reason": "Only makes the \"Unknown variable\" error from traversals suggest the first variable in scope however different its name is, which changes nothing but the error's detail text."
+    },
+    {
+      "mutant": "didyoumean.go:22:6 if_false",
+      "source": "if dist < 3 { // threshold determined experimentally",
+      "class": "diagnostics",
+      "reason": "Only drops the \"Did you mean\" suggestion from the detail of the \"Unknown variable\" error, the only error that uses the root package's name suggestions."
+    },
+    {
+      "mutant": "didyoumean.go:22:11 cond_boundary",
+      "source": "if dist < 3 { // threshold determined experimentally",
+      "class": "diagnostics",
+      "reason": "Only lets the \"Unknown variable\" error suggest a variable whose name is three edits away in its \"Did you mean\" text, and the error and the value are the same either way."
+    },
+    {
+      "mutant": "didyoumean.go:22:11 cond_negate",
+      "source": "if dist < 3 { // threshold determined experimentally",
+      "class": "diagnostics",
+      "reason": "Only makes the \"Unknown variable\" error suggest a variable whose name is at least three edits away instead of a close one, which changes nothing but the error's detail text."
+    },
+    {
+      "mutant": "expr_unwrap.go:67:6 if_false",
+      "source": "if expr == nil {",
+      "class": "unreachable",
+      "reason": "Only makes hcl.UnwrapExpressionUntil pass nil to its callback when a wrapper unwraps to nil, which neither dynblock's wrapper nor ObjectConsKeyExpr does, and hcl's own callbacks reject nil anyway, so only a Go caller with its own wrapper and callback could tell."
+    },
+    {
+      "mutant": "ops.go:70:6 if_false",
+      "source": "if keyErr != nil {",
+      "class": "diagnostics",
+      "reason": "Without the early return a key that fails to convert to the collection's key type becomes cty.NilVal, which HasIndex reports as missing, so indexing still fails with an \"Invalid index\" error and only its detail changes from the conversion message to the generic one."
+    },
+    {
+      "mutant": "ops.go:96:7 if_false",
+      "source": "if (ty.IsListType() || ty.IsTupleType()) && key.Type().Equals(cty.Number) {",
+      "class": "diagnostics",
+      "reason": "Only skips the specific details for a missing list or tuple element (fractional, negative or too large index, empty collection), so the \"Invalid index\" error, which is reported either way, gets the generic detail."
+    },
+    {
+      "mutant": "ops.go:96:24 logical",
+      "source": "if (ty.IsListType() || ty.IsTupleType()) && key.Type().Equals(cty.Number) {",
+      "class": "diagnostics",
+      "reason": "A type is never both a list and a tuple, so the condition is always false and a missing list or tuple element gets the generic detail of the \"Invalid index\" error instead of the specific one for a fractional, negative or too large index."
+    },
+    {
+      "mutant": "ops.go:96:45 logical",
+      "source": "if (ty.IsListType() || ty.IsTupleType()) && key.Type().Equals(cty.Number) {",
+      "class": "equivalent",
+      "reason": "A map key has already been converted to a string here and a list or tuple key to a number, so the key is a number exactly when the collection is a list or tuple and the condition is the same with || as with &&."
+    },
+    {
+      "mutant": "ops.go:97:8 if_true",
+      "source": "if key.IsKnown() && !key.IsNull() {",
+      "class": "equivalent",
+      "reason": "The key is always known and non-null here, because a null key fails earlier and an unknown number key makes HasIndex unknown, which returns an unknown result before this check, so forcing the condition true changes nothing."
+    },
+    {
+      "mutant": "ops.go:97:8 if_false",
+      "source": "if key.IsKnown() && !key.IsNull() {",
+      "class": "diagnostics",
+      "reason": "Only skips the specific details for a missing list or tuple element (fractional, negative or too large index, empty collection), so the \"Invalid index\" error, which is reported either way, gets the generic detail."
+    },
+    {
+      "mutant": "ops.go:97:22 logical",
+      "source": "if key.IsKnown() && !key.IsNull() {",
+      "class": "equivalent",
+      "reason": "The key is always known here, because an unknown number key makes HasIndex unknown, which returns an unknown result before this check, so the condition is true with || as with &&."
+    },
+    {
+      "mutant": "ops.go:97:25 not_remove",
+      "source": "if key.IsKnown() && !key.IsNull() {",
+      "class": "diagnostics",
+      "reason": "A null key fails earlier, so the condition is always false and a missing list or tuple element gets the generic detail of the \"Invalid index\" error instead of the specific one for a fractional, negative or too large index."
+    },
+    {
+      "mutant": "ops.go:105:32 if_true",
+      "source": "if _, acc := bf.Int(nil); acc != big.Exact {",
+      "class": "diagnostics",
+      "reason": "Only gives every missing list or tuple element the fractional-index detail of the \"Invalid index\" error, which is reported either way."
+    },
+    {
+      "mutant": "ops.go:105:32 if_false",
+      "source": "if _, acc := bf.Int(nil); acc != big.Exact {",
+      "class": "diagnostics",
+      "reason": "Only gives a fractional list or tuple index the negative-index, out-of-range or generic detail of the \"Invalid index\" error instead of the fractional-index one, since HasIndex already reports a fractional index as missing."
+    },
+    {
+      "mutant": "ops.go:105:36 cond_negate",
+      "source": "if _, acc := bf.Int(nil); acc != big.Exact {",
+      "class": "diagnostics",
+      "reason": "Only swaps which missing list or tuple elements get the fractional-index detail of the \"Invalid index\" error, which is reported either way."
+    },
+    {
+      "mutant": "ops.go:122:9 if_true",
+      "source": "if bf.Sign() < 0 {",
+      "class": "diagnostics",
+      "reason": "Only gives every whole-number index of a missing list or tuple element the negative-index detail of the \"Invalid index\" error, which is reported either way."
+    },
+    {
+      "mutant": "ops.go:122:9 if_false",
+      "source": "if bf.Sign() < 0 {",
+      "class": "diagnostics",
+      "reason": "Only gives a negative list or tuple index the out-of-range or empty-collection detail of the \"Invalid index\" error instead of the negative-index one, since HasIndex already reports a negative index as missing."
+    },
+    {
+      "mutant": "ops.go:122:19 cond_boundary",
+      "source": "if bf.Sign() < 0 {",
+      "class": "diagnostics",
+      "reason": "Only gives index 0 of an empty list or tuple the negative-index detail of the \"Invalid index\" error instead of the empty-collection one."
+    },
+    {
+      "mutant": "ops.go:122:19 cond_negate",
+      "source": "if bf.Sign() < 0 {",
+      "class": "diagnostics",
+      "reason": "Only swaps which missing list or tuple elements get the negative-index detail of the \"Invalid index\" error, which is reported either way."
+    },
+    {
+      "mutant": "ops.go:137:40 if_true",
+      "source": "if lenVal := collection.Length(); lenVal.IsKnown() && !lenVal.IsMarked() {",
+      "class": "unreachable",
+      "reason": "The length here is only unknown for an unknown list, which returns an unknown result earlier, and only marked when Go code passes a collection with cty marks to hcl.Index (AsBigFloat then panics), and no protocol input or function produces marked values."
+    },
+    {
+      "mutant": "ops.go:137:40 if_false",
+      "source": "if lenVal := collection.Length(); lenVal.IsKnown() && !lenVal.IsMarked() {",
+      "class": "diagnostics",
+      "reason": "Only skips the out-of-range and empty-collection details of the \"Invalid index\" error for a missing list or tuple element, which then gets the generic detail."
+    },
+    {
+      "mutant": "ops.go:137:57 logical",
+      "source": "if lenVal := collection.Length(); lenVal.IsKnown() && !lenVal.IsMarked() {",
+      "class": "unreachable",
+      "reason": "The length is always known here (an unknown list returns earlier and a tuple's length comes from its type), so || only differs for a length with cty marks, which makes AsBigFloat panic, and no protocol input or function produces marked values."
+    },
+    {
+      "mutant": "ops.go:137:60 not_remove",
+      "source": "if lenVal := collection.Length(); lenVal.IsKnown() && !lenVal.IsMarked() {",
+      "class": "diagnostics",
+      "reason": "No protocol input produces a marked length, so the condition is always false and a missing list or tuple element gets the generic detail of the \"Invalid index\" error instead of the out-of-range or empty-collection one."
+    },
+    {
+      "mutant": "ops.go:142:7 stmt_remove",
+      "source": "result.Sub(bf, lenBF)",
+      "class": "diagnostics",
+      "reason": "Leaving the difference at zero only gives an index more than one past the end of a list or tuple the out-of-range detail of the \"Invalid index\" error instead of the generic one."
+    },
+    {
+      "mutant": "ops.go:143:10 if_true",
+      "source": "if result.Sign() < 1 {",
+      "class": "diagnostics",
+      "reason": "Only gives an index more than one past the end of a list or tuple the out-of-range detail of the \"Invalid index\" error instead of the generic one."
+    },
+    {
+      "mutant": "ops.go:143:10 if_false",
+      "source": "if result.Sign() < 1 {",
+      "class": "diagnostics",
+      "reason": "Only replaces the out-of-range and empty-collection details of the \"Invalid index\" error for a missing list or tuple element with the generic one."
+    },
+    {
+      "mutant": "ops.go:143:24 cond_boundary",
+      "source": "if result.Sign() < 1 {",
+      "class": "diagnostics",
+      "reason": "With <= an index more than one past the end of a list or tuple also gets the out-of-range detail of the \"Invalid index\" error instead of the generic one."
+    },
+    {
+      "mutant": "ops.go:143:24 cond_negate",
+      "source": "if result.Sign() < 1 {",
+      "class": "diagnostics",
+      "reason": "Only swaps which indexes of missing list or tuple elements get the out-of-range or empty-collection detail of the \"Invalid index\" error and which get the generic one."
+    },
+    {
+      "mutant": "ops.go:144:11 if_true",
+      "source": "if lenBF.Sign() == 0 {",
+      "class": "diagnostics",
+      "reason": "Only gives an index past the end of a non-empty list or tuple the empty-collection detail of the \"Invalid index\" error instead of the out-of-range one."
+    },
+    {
+      "mutant": "ops.go:144:11 if_false",
+      "source": "if lenBF.Sign() == 0 {",
+      "class": "diagnostics",
+      "reason": "Only gives an index into an empty list or tuple the out-of-range detail of the \"Invalid index\" error instead of the empty-collection one."
+    },
+    {
+      "mutant": "ops.go:144:24 cond_negate",
+      "source": "if lenBF.Sign() == 0 {",
+      "class": "diagnostics",
+      "reason": "Only swaps the empty-collection and out-of-range details of the \"Invalid index\" error for an index past the end of a list or tuple."
+    },
+    {
+      "mutant": "ops.go:183:27 cond_negate",
+      "source": "wasNumber := key.Type() == cty.Number",
+      "class": "diagnostics",
+      "reason": "Only changes whether the \"Invalid index\" error for a key naming a missing object attribute adds the note that objects can't be indexed by number."
+    },
+    {
+      "mutant": "ops.go:202:3 stmt_remove",
+      "source": "key, _ = key.Unmark()",
+      "class": "unreachable",
+      "reason": "Unmarking the converted key only matters when the key carries cty marks (AsString panics on a marked value), and no protocol input or function produces marked values."
+    },
+    {
+      "mutant": "ops.go:207:7 if_true",
+      "source": "if wasNumber {",
+      "class": "diagnostics",
+      "reason": "Only adds the note that objects can't be indexed by number to the \"Invalid index\" error for a string key naming a missing object attribute."
+    },
+    {
+      "mutant": "ops.go:207:7 if_false",
+      "source": "if wasNumber {",
+      "class": "diagnostics",
+      "reason": "Only leaves out the note that objects can't be indexed by number from the \"Invalid index\" error for a number key naming a missing object attribute."
+    },
+    {
+      "mutant": "ops.go:213:5 stmt_remove",
+      "source": "suggestion = \" An object only supports looking up attributes by name, not by numeric index.\"",
+      "class": "diagnostics",
+      "reason": "Only leaves out the note that objects can't be indexed by number from the \"Invalid index\" error for a number key naming a missing object attribute."
+    },
+    {
+      "mutant": "ops.go:225:6 if_false",
+      "source": "if !collection.IsKnown() {",
+      "class": "equivalent",
+      "reason": "For an unknown object cty's GetAttr also returns an unknown value of the attribute's type with the object's marks, so indexing an unknown object by name gives the same result without this check."
+    },
+    {
+      "mutant": "ops.go:294:6 if_false",
+      "source": "if !obj.IsKnown() {",
+      "class": "equivalent",
+      "reason": "For an unknown object cty's GetAttr also returns an unknown value of the attribute's type with the object's marks, so accessing an attribute of an unknown object gives the same result without this check."
+    },
+    {
+      "mutant": "pos.go:131:5 if_true",
+      "source": "if r.Start.Line == r.End.Line {",
+      "class": "diagnostics",
+      "reason": "Range.String only formats source ranges in error details, such as where a duplicate argument was already set, so writing a multi-line range in the single-line form only changes error messages."
+    },
+    {
+      "mutant": "pos.go:131:5 if_false",
+      "source": "if r.Start.Line == r.End.Line {",
+      "class": "diagnostics",
+      "reason": "Range.String only formats source ranges in error details, such as where a duplicate argument was already set, so writing a single-line range in the multi-line form only changes error messages."
+    },
+    {
+      "mutant": "pos.go:131:18 cond_negate",
+      "source": "if r.Start.Line == r.End.Line {",
+      "class": "diagnostics",
+      "reason": "Range.String only formats source ranges in error details, such as where a duplicate argument was already set, so swapping the single-line and multi-line forms only changes error messages."
+    },
+    {
+      "mutant": "traversal.go:45:5 if_false",
+      "source": "if !t.IsRelative() {",
+      "class": "equivalent",
+      "reason": "Disables a panic that can never fire, because TraverseRel is only given the steps after a variable name or the steps of a relative traversal expression, which never include a root step (and a root step's TraversalStep panics anyway)."
+    },
+    {
+      "mutant": "traversal.go:55:6 if_false",
+      "source": "if newDiags.HasErrors() {",
+      "class": "diagnostics",
+      "reason": "Only lets a traversal go on after a failed step, and since every failed attribute or index step gives the dynamic value, on which later steps give the dynamic value again (or one more error for a literal null index), only the number of errors can change."
+    },
+    {
+      "mutant": "traversal.go:66:5 if_false",
+      "source": "if t.IsRelative() {",
+      "class": "equivalent",
+      "reason": "Disables a panic that can never fire, because TraverseAbs is only called for variable references, whose traversals always start with the variable name, and SimpleSplit panics on a relative traversal anyway."
+    },
+    {
+      "mutant": "traversal.go:77:6 if_false",
+      "source": "if thisCtx.Variables == nil {",
+      "class": "diagnostics",
+      "reason": "Only stops skipping evaluation contexts without a variable table, which changes the error for an undefined variable in a context chain with no variable tables (such as in a splat index key in literal-only mode) from \"Variables not allowed\" to \"Unknown variable\"."
+    },
+    {
+      "mutant": "traversal.go:81:3 stmt_remove",
+      "source": "hasNonNil = true",
+      "class": "diagnostics",
+      "reason": "Only reports a reference to an undefined variable as \"Variables not allowed\" instead of \"Unknown variable\", which is the same evaluation error with a different message."
+    },
+    {
+      "mutant": "traversal.go:81:15 bool_lit",
+      "source": "hasNonNil = true",
+      "class": "diagnostics",
+      "reason": "Only reports a reference to an undefined variable as \"Variables not allowed\" instead of \"Unknown variable\", which is the same evaluation error with a different message."
+    },
+    {
+      "mutant": "traversal.go:89:5 if_true",
+      "source": "if !hasNonNil {",
+      "class": "diagnostics",
+      "reason": "Only reports a reference to an undefined variable as \"Variables not allowed\" instead of \"Unknown variable\", which is the same evaluation error with a different message."
+    },
+    {
+      "mutant": "traversal.go:101:2 stmt_remove",
+      "source": "thisCtx = ctx",
+      "class": "diagnostics",
+      "reason": "Only drops the variable names that the \"Did you mean\" suggestion of the \"Unknown variable\" error message is chosen from."
+    },
+    {
+      "mutant": "traversal.go:102:14 cond_negate",
+      "source": "for thisCtx != nil {",
+      "class": "diagnostics",
+      "reason": "Only drops the variable names that the \"Did you mean\" suggestion of the \"Unknown variable\" error message is chosen from."
+    },
+    {
+      "mutant": "traversal.go:104:4 stmt_remove",
+      "source": "suggestions = append(suggestions, k)",
+      "class": "diagnostics",
+      "reason": "Only drops the variable names that the \"Did you mean\" suggestion of the \"Unknown variable\" error message is chosen from."
+    },
+    {
+      "mutant": "traversal.go:109:5 if_true",
+      "source": "if suggestion != \"\" {",
+      "class": "diagnostics",
+      "reason": "Only adds an empty \"Did you mean\" suggestion to the \"Unknown variable\" error message when no variable name is close enough."
+    },
+    {
+      "mutant": "traversal.go:109:5 if_false",
+      "source": "if suggestion != \"\" {",
+      "class": "diagnostics",
+      "reason": "Only leaves the \"Did you mean\" suggestion out of the \"Unknown variable\" error message."
+    },
+    {
+      "mutant": "traversal.go:109:16 cond_negate",
+      "source": "if suggestion != \"\" {",
+      "class": "diagnostics",
+      "reason": "Only changes whether the \"Unknown variable\" error message has a \"Did you mean\" suggestion."
+    },
+    {
+      "mutant": "traversal.go:110:3 stmt_remove",
+      "source": "suggestion = fmt.Sprintf(\" Did you mean %q?\", suggestion)",
+      "class": "diagnostics",
+      "reason": "Only changes the wording of the \"Did you mean\" suggestion in the \"Unknown variable\" error message."
+    },
+    {
+      "mutant": "traversal.go:143:5 if_false",
+      "source": "if t.IsRelative() {",
+      "class": "unreachable",
+      "reason": "Lets Traversal.SimpleSplit split a relative traversal instead of panicking, which only a Go caller can see, because its only caller in hashicorp/hcl, TraverseAbs, already panics on a relative traversal before calling it."
+    },
+    {
+      "mutant": "traversal.go:155:5 if_false",
+      "source": "if t.IsRelative() {",
+      "class": "equivalent",
+      "reason": "Disables a panic that can never fire, because every caller passes a traversal from a variable reference or from AbsTraversalForExpr, which always starts with a variable name, and the type assertion after it panics on a relative traversal anyway."
+    },
+    {
+      "mutant": "traversal.go:164:5 if_true",
+      "source": "if len(t) == 0 {",
+      "class": "diagnostics",
+      "reason": "Traversal.SourceRange is only used for the subject range of the dynamic block \"Invalid dynamic iterator name\" error, so returning an empty range only changes that error's range."
+    },
+    {
+      "mutant": "traversal.go:164:5 if_false",
+      "source": "if len(t) == 0 {",
+      "class": "unreachable",
+      "reason": "Makes Traversal.SourceRange panic for an empty traversal instead of returning an empty range, which only a Go caller can see, because hashicorp/hcl only calls it for a dynamic block iterator that AbsTraversalForExpr read without errors and that isn't a single name, which has at least two steps."
+    },
+    {
+      "mutant": "traversal.go:164:12 cond_negate",
+      "source": "if len(t) == 0 {",
+      "class": "diagnostics",
+      "reason": "Traversal.SourceRange is only used for the subject range of the dynamic block \"Invalid dynamic iterator name\" error, so returning an empty range only changes that error's range."
+    }
+  ]
+}

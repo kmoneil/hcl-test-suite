@@ -1,0 +1,78 @@
+{
+  "description": "Set elements are unified to one type after defaults, turning a number default into a string",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#type-unification"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions",
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The README allows any in function TypeConstraint only, while convert-with-defaults reads its type with TypeConstraintWithDefaults (native/type-expressions/defaults-default-for-any), and doesn't say that a null attribute gets its default (native/type-expressions/defaults-null-attribute). hashicorp/hcl gives the element whose a is null the default 1, which keeps its number type because a's type is any, then unifies the set's elements (unifyAsSlice in ext/typeexpr/defaults.go), which turns 1 into \"1\" to match the other element's string.",
+  "variables": {
+    "s": {
+      "set": [
+        {
+          "object": {
+            "a": {
+              "null": "string"
+            }
+          }
+        },
+        {
+          "object": {
+            "a": {
+              "string": "s"
+            }
+          }
+        }
+      ],
+      "element_type": [
+        "object",
+        {
+          "a": "string"
+        }
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "element_type": [
+            "object",
+            {
+              "a": "string"
+            }
+          ],
+          "set": [
+            {
+              "object": {
+                "a": {
+                  "string": "1"
+                }
+              }
+            },
+            {
+              "object": {
+                "a": {
+                  "string": "s"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

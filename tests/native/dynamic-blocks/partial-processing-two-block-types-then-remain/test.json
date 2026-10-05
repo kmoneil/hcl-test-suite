@@ -1,0 +1,69 @@
+{
+  "description": "The body left by partial processing of two block types has blocks of neither type",
+  "spec": [
+    "spec.md#partial-processing-of-body-content",
+    "ext/dynblock/README.md#usage"
+  ],
+  "op": "decode",
+  "features": [
+    "dynamic-blocks"
+  ],
+  "dynamic_blocks": true,
+  "schema": {
+    "mode": "partial",
+    "blocks": [
+      {
+        "type": "a",
+        "body": {
+          "mode": "exhaustive"
+        }
+      },
+      {
+        "type": "b",
+        "body": {
+          "mode": "exhaustive"
+        }
+      }
+    ],
+    "remain": {
+      "mode": "exhaustive",
+      "attributes": [
+        {
+          "name": "c"
+        }
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {},
+      "blocks": [
+        {
+          "body": {
+            "attributes": {},
+            "blocks": []
+          },
+          "labels": [],
+          "type": "a"
+        },
+        {
+          "body": {
+            "attributes": {},
+            "blocks": []
+          },
+          "labels": [],
+          "type": "b"
+        }
+      ],
+      "remain": {
+        "attributes": {
+          "c": {
+            "number": "1"
+          }
+        },
+        "blocks": []
+      }
+    }
+  }
+}

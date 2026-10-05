@@ -1,0 +1,18 @@
+{
+  "description": "A line comment after the root object is an error, since JSON has no comments",
+  "spec": [
+    "json/spec.md#hcl-json-syntax-specification"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "Extraneous data after value",
+  "expect": {
+    "valid": false,
+    "phase": "parse"
+  }
+}

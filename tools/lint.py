@@ -619,8 +619,9 @@ class Linter:
                 self.problem(where, 'needs exactly "package", "version" and "survivors"')
                 continue
             package = str(data["package"])
-            if not package.startswith(mutation.HCL + "/") or path.stem != package[len(mutation.HCL) + 1:].replace(
-                    "/", "-"):
+            if package != mutation.HCL and not package.startswith(mutation.HCL + "/"):
+                self.problem(where, f"{package!r} is not a package of {mutation.HCL}")
+            elif path.stem != mutation.slug("." if package == mutation.HCL else package[len(mutation.HCL) + 1:]):
                 self.problem(where, f"file name doesn't match the package {package!r}")
             seen = set()
             for i, entry in enumerate(data["survivors"]):

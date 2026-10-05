@@ -1,0 +1,74 @@
+{
+  "description": "A map whose values can't convert to their unified type after defaults converts as an object",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions",
+    "typed-values"
+  ],
+  "variables": {
+    "m": {
+      "map": {
+        "z": {
+          "map": {
+            "q": {
+              "string": "v"
+            }
+          },
+          "element_type": "string"
+        }
+      },
+      "element_type": [
+        "map",
+        "string"
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "x": {
+              "object": {
+                "a": {
+                  "string": "1"
+                }
+              }
+            },
+            "y": {
+              "object": {
+                "a": {
+                  "string": "2"
+                },
+                "c": {
+                  "element_type": "string",
+                  "list": []
+                }
+              }
+            },
+            "z": {
+              "element_type": "string",
+              "map": {
+                "q": {
+                  "string": "v"
+                }
+              }
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

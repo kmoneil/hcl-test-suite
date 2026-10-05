@@ -1,0 +1,42 @@
+{
+  "description": "Every missing optional attribute gets its default, also after one whose type has defaults of its own",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "a": {
+              "object": {
+                "x": {
+                  "string": "p"
+                }
+              }
+            },
+            "b": {
+              "object": {
+                "x": {
+                  "string": "q"
+                }
+              }
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

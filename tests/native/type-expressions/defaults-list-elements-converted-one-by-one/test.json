@@ -1,0 +1,166 @@
+{
+  "description": "List elements whose unified type fails to convert them after defaults convert one by one",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions",
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The README allows any in function TypeConstraint only, while convert-with-defaults reads its type with TypeConstraintWithDefaults (native/type-expressions/defaults-default-for-any), and doesn't say that a null attribute gets its default (native/type-expressions/defaults-null-attribute) or that a default value gets the defaults of its own optional attributes (native/type-expressions/defaults-inside-default-value); the first element depends on both. hashicorp/hcl unifies the list's elements after applying defaults (unifyAsSlice in ext/typeexpr/defaults.go), and when converting an element to the unified type fails, it keeps them as a tuple, whose elements then convert one by one to the object type; the default true of b, of type any, becomes \"true\".",
+  "variables": {
+    "v": {
+      "list": [
+        {
+          "object": {
+            "p": {
+              "null": [
+                "map",
+                "string"
+              ]
+            }
+          }
+        },
+        {
+          "object": {
+            "p": {
+              "map": {},
+              "element_type": "string"
+            }
+          }
+        },
+        {
+          "object": {
+            "p": {
+              "map": {
+                "s": {
+                  "string": "x"
+                },
+                "b": {
+                  "string": "yes"
+                }
+              },
+              "element_type": "string"
+            }
+          }
+        }
+      ],
+      "element_type": [
+        "object",
+        {
+          "p": [
+            "map",
+            "string"
+          ]
+        }
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "element_type": [
+            "object",
+            {
+              "p": [
+                "object",
+                {
+                  "b": "string",
+                  "c": [
+                    "list",
+                    "string"
+                  ],
+                  "n": "number",
+                  "s": "string"
+                }
+              ]
+            }
+          ],
+          "list": [
+            {
+              "object": {
+                "p": {
+                  "object": {
+                    "b": {
+                      "string": "true"
+                    },
+                    "c": {
+                      "null": [
+                        "list",
+                        "string"
+                      ]
+                    },
+                    "n": {
+                      "number": "1"
+                    },
+                    "s": {
+                      "null": "string"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "object": {
+                "p": {
+                  "object": {
+                    "b": {
+                      "string": "true"
+                    },
+                    "c": {
+                      "null": [
+                        "list",
+                        "string"
+                      ]
+                    },
+                    "n": {
+                      "number": "1"
+                    },
+                    "s": {
+                      "null": "string"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "object": {
+                "p": {
+                  "object": {
+                    "b": {
+                      "string": "yes"
+                    },
+                    "c": {
+                      "null": [
+                        "list",
+                        "string"
+                      ]
+                    },
+                    "n": {
+                      "number": "1"
+                    },
+                    "s": {
+                      "string": "x"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

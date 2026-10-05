@@ -880,6 +880,14 @@
       "tests": [
         "native/unknowns/object-errors-after-unknown-key-are-reported"
       ]
+    },
+    {
+      "id": "unknowns-attribute-unknown-map",
+      "spec": "hclsyntax/spec.md#attribute-access-operator",
+      "rule": "Accessing an attribute of an unknown map gives an unknown of the element type (disputed)",
+      "tests": [
+        "native/unknowns/attribute-of-unknown-map"
+      ]
     }
   ]
 }

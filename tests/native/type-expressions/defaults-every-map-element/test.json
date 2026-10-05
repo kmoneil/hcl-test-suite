@@ -1,0 +1,49 @@
+{
+  "description": "Defaults apply to every element of a map, not only the first",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions",
+    "typed-values"
+  ],
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "element_type": [
+            "object",
+            {
+              "x": "string"
+            }
+          ],
+          "map": {
+            "k1": {
+              "object": {
+                "x": {
+                  "string": "y"
+                }
+              }
+            },
+            "k2": {
+              "object": {
+                "x": {
+                  "string": "y"
+                }
+              }
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

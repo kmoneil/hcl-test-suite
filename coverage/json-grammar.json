@@ -11,7 +11,8 @@
         "json/grammar/root-string-is-error",
         "json/grammar/root-number-is-error",
         "json/grammar/root-boolean-is-error",
-        "json/grammar/root-null-is-error"
+        "json/grammar/root-null-is-error",
+        "json/grammar/root-number-ending-file-is-error"
       ]
     },
     {
@@ -22,7 +23,8 @@
         "json/grammar/empty-file-is-error",
         "json/grammar/whitespace-only-file-is-error",
         "json/grammar/two-root-values-is-error",
-        "json/grammar/comma-after-root-value-is-error"
+        "json/grammar/comma-after-root-value-is-error",
+        "json/grammar/line-comment-after-root-object-is-error"
       ]
     },
     {
@@ -46,7 +48,8 @@
       "tests": [
         "json/grammar/line-comment-is-error",
         "json/grammar/block-comment-is-error",
-        "json/grammar/hash-comment-is-error"
+        "json/grammar/hash-comment-is-error",
+        "json/grammar/line-comment-after-root-object-is-error"
       ]
     },
     {
@@ -128,7 +131,8 @@
       "rule": "An object must be closed by a brace: a missing brace or a bracket is an error",
       "tests": [
         "json/grammar/unclosed-object-is-error",
-        "json/grammar/object-closed-by-bracket-is-error"
+        "json/grammar/object-closed-by-bracket-is-error",
+        "json/grammar/object-cut-off-after-keyword-is-error"
       ]
     },
     {
@@ -195,7 +199,8 @@
       "rule": "A string is enclosed in double quotes: single quotes are an error, and so is a string without a closing quote",
       "tests": [
         "json/grammar/single-quoted-string-is-error",
-        "json/grammar/unterminated-string-is-error"
+        "json/grammar/unterminated-string-is-error",
+        "json/grammar/string-cut-off-by-end-of-file-is-error"
       ]
     },
     {

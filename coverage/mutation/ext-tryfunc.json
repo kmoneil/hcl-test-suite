@@ -1,0 +1,60 @@
+{
+  "package": "github.com/hashicorp/hcl/v2/ext/tryfunc",
+  "version": "v2.24.0",
+  "survivors": [
+    {
+      "mutant": "tryfunc.go:41:7 if_false",
+      "source": "if err != nil {",
+      "class": "equivalent",
+      "reason": "When every argument of try fails, ignoring the error in the type callback only lets the call go on to Impl, which evaluates the same arguments again and returns the same error."
+    },
+    {
+      "mutant": "tryfunc.go:65:5 if_false",
+      "source": "if len(args) == 0 {",
+      "class": "diagnostics",
+      "reason": "Without the check, try with no arguments still fails, through the error for when no argument succeeds, so only the message of the function call error changes."
+    },
+    {
+      "mutant": "tryfunc.go:77:3 stmt_remove",
+      "source": "diags = append(diags, moreDiags...)",
+      "class": "diagnostics",
+      "reason": "The errors collected from the arguments are only used to write the message of the error try returns when no argument succeeds, so leaving them out only shortens that message."
+    },
+    {
+      "mutant": "tryfunc.go:117:2 stmt_remove",
+      "source": "buf.WriteString(\"no expression succeeded:\\n\")",
+      "class": "diagnostics",
+      "reason": "Only removes the \"no expression succeeded:\" heading from the message of the error try returns when no argument succeeds."
+    },
+    {
+      "mutant": "tryfunc.go:119:6 if_true",
+      "source": "if diag.Subject != nil {",
+      "class": "diagnostics",
+      "reason": "Only changes how an argument error without a source range is written into the message of the error try returns when no argument succeeds."
+    },
+    {
+      "mutant": "tryfunc.go:119:6 if_false",
+      "source": "if diag.Subject != nil {",
+      "class": "diagnostics",
+      "reason": "Only leaves the source range out of each argument error listed in the message of the error try returns when no argument succeeds."
+    },
+    {
+      "mutant": "tryfunc.go:119:19 cond_negate",
+      "source": "if diag.Subject != nil {",
+      "class": "diagnostics",
+      "reason": "Only swaps which of the argument errors listed in the message of the error try returns when no argument succeeds include their source range."
+    },
+    {
+      "mutant": "tryfunc.go:120:4 stmt_remove",
+      "source": "buf.WriteString(fmt.Sprintf(\"- %s (at %s)\\n  %s\\n\", diag.Summary, diag.Subject, diag.Detail))",
+      "class": "diagnostics",
+      "reason": "Only leaves the argument errors that have a source range out of the message of the error try returns when no argument succeeds."
+    },
+    {
+      "mutant": "tryfunc.go:125:2 stmt_remove",
+      "source": "buf.WriteString(\"\\nAt least one expression must produce a successful result\")",
+      "class": "diagnostics",
+      "reason": "Only removes the closing \"At least one expression must produce a successful result\" sentence from the message of the error try returns when no argument succeeds."
+    }
+  ]
+}

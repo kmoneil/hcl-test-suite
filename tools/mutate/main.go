@@ -64,7 +64,8 @@ type mutant struct {
 	Line        int    `json:"line"`     // line after //line directives
 	Col         int    `json:"col"`      // column after //line directives, 0 if they give none
 	Func        string `json:"func"`
-	Source      string `json:"source"` // the changed line, as written
+	FuncLines   []int  `json:"func_lines,omitempty"` // first and last line of the function, if not Ragel output
+	Source      string `json:"source"`               // the changed line, as written
 }
 
 var generatedRE = regexp.MustCompile(`(?m)^// Code generated .* DO NOT EDIT\.$`)
@@ -164,9 +165,11 @@ type generator struct {
 	srcs map[string][]byte
 	out  []mutant
 
-	src      []byte // the file being walked
-	ragel    bool   // whether Ragel generated it
-	funcName string // the function being walked
+	src        []byte                 // the file being walked
+	ragel      bool                   // whether Ragel generated it
+	funcName   string                 // the function being walked
+	funcLines  []int                  // its first and last line, after //line directives
+	importUses map[*types.PkgName]int // how often the file uses each import
 }
 
 func (g *generator) file(f *ast.File) {
@@ -175,6 +178,15 @@ func (g *generator) file(f *ast.File) {
 		return
 	}
 	g.ragel = bytes.HasPrefix(g.src, []byte("//line ")) || bytes.Contains(g.src, []byte("\n//line "))
+	g.importUses = map[*types.PkgName]int{}
+	ast.Inspect(f, func(n ast.Node) bool {
+		if id, ok := n.(*ast.Ident); ok {
+			if pn, ok := g.info.Uses[id].(*types.PkgName); ok {
+				g.importUses[pn]++
+			}
+		}
+		return true
+	})
 	for _, d := range f.Decls {
 		fd, ok := d.(*ast.FuncDecl)
 		if !ok || fd.Body == nil {
@@ -183,6 +195,10 @@ func (g *generator) file(f *ast.File) {
 		g.funcName = fd.Name.Name
 		if fd.Recv != nil && len(fd.Recv.List) > 0 {
 			g.funcName = types.ExprString(fd.Recv.List[0].Type) + "." + fd.Name.Name
+		}
+		g.funcLines = nil
+		if !g.ragel {
+			g.funcLines = []int{g.fset.Position(fd.Pos()).Line, g.fset.Position(fd.End()).Line}
 		}
 		g.walk(fd.Body, nil)
 	}
@@ -214,7 +230,7 @@ func (g *generator) add(op string, start, end token.Pos, repl string) {
 	g.out = append(g.out, mutant{
 		Key: fmt.Sprintf("%s:%d:%d %s", file, raw.Line, raw.Column, op),
 		Op:  op, File: file, Start: s, End: e, Replacement: repl, Orig: string(g.src[s:e]),
-		CovFile: filepath.Base(adj.Filename), Line: adj.Line, Col: adj.Column, Func: g.funcName,
+		CovFile: filepath.Base(adj.Filename), Line: adj.Line, Col: adj.Column, Func: g.funcName, FuncLines: g.funcLines,
 		Source: strings.TrimSpace(string(g.src[lineStart : s+lineEnd])),
 	})
 }
@@ -427,6 +443,43 @@ func (g *generator) stmtList(list []ast.Stmt) {
 			keep = append(keep, "_ = "+id.Name)
 			return true
 		})
+		keep = append(keep, g.lastImportUses(s)...)
 		g.add("stmt_remove", s.Pos(), s.End(), strings.Join(keep, "; "))
 	}
+}
+
+// lastImportUses returns statements that keep an import used when s holds
+// every use of it in the file, so removing s doesn't leave the import unused.
+func (g *generator) lastImportUses(s ast.Stmt) []string {
+	inStmt := map[*types.PkgName]*ast.SelectorExpr{}
+	count := map[*types.PkgName]int{}
+	ast.Inspect(s, func(n ast.Node) bool {
+		sel, ok := n.(*ast.SelectorExpr)
+		if !ok {
+			return true
+		}
+		if x, ok := sel.X.(*ast.Ident); ok {
+			if pn, ok := g.info.Uses[x].(*types.PkgName); ok {
+				count[pn]++
+				if _, seen := inStmt[pn]; !seen {
+					inStmt[pn] = sel
+				}
+			}
+		}
+		return true
+	})
+	var keep []string
+	for pn, sel := range inStmt {
+		if count[pn] < g.importUses[pn] {
+			continue
+		}
+		ref := pn.Name() + "." + sel.Sel.Name
+		if _, isType := g.info.Uses[sel.Sel].(*types.TypeName); isType {
+			keep = append(keep, "var _ "+ref)
+		} else {
+			keep = append(keep, "_ = "+ref)
+		}
+	}
+	sort.Strings(keep)
+	return keep
 }

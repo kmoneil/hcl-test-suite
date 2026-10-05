@@ -1,0 +1,30 @@
+{
+  "description": "Defaults keep an empty set's element type, so a wrong element type is still an error",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions",
+    "ext/typeexpr/README.md#optional-object-attributes"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions",
+    "typed-values"
+  ],
+  "notes": "Not disputed like native/functions/function-error-is-eval-error: the README defines convert's result as the conversion, and the spec decides conversions between collection types by their element types (spec.md#collection-and-structural-type-conversions), so a string element type can't become an object type even with no elements; applying defaults keeps the empty set's element type (Defaults.Apply in ext/typeexpr/defaults.go).",
+  "variables": {
+    "s": {
+      "set": [],
+      "element_type": "string"
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "reference_error": "incorrect set element type",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

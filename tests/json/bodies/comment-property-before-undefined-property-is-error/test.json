@@ -1,0 +1,24 @@
+{
+  "description": "A comment property doesn't stop exhaustive processing from reporting a later property",
+  "spec": [
+    "json/spec.md#structural-elements",
+    "spec.md#partial-processing-of-body-content"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "Extraneous JSON object property",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

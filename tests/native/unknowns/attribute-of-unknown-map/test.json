@@ -1,0 +1,33 @@
+{
+  "description": "Accessing an attribute of an unknown map gives an unknown of the element type",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec defines attribute access for values of object type only, and gives an unknown result only for an unknown value whose type has the attribute. hashicorp/hcl also accepts attribute access on a map (native/traversals/getattr-on-map-element), and for an unknown map returns an unknown value of the element type (GetAttr in ops.go).",
+  "variables": {
+    "u": {
+      "unknown": [
+        "map",
+        "number"
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "number"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

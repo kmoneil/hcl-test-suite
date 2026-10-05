@@ -1,0 +1,156 @@
+{
+  "package": "github.com/hashicorp/hcl/v2/ext/dynblock",
+  "version": "v2.24.0",
+  "survivors": [
+    {
+      "mutant": "expand_body.go:113:5 if_true",
+      "source": "if len(b.hiddenAttrs) != 0 {",
+      "class": "equivalent",
+      "reason": "Without hidden attributes the forced branch only copies the schema's attributes into a new slice and adds nothing to it, so the extended schema has the same attributes."
+    },
+    {
+      "mutant": "expand_body.go:129:5 if_false",
+      "source": "if len(b.hiddenAttrs) == 0 && b.iteration == nil && len(b.valueMarks) == 0 {",
+      "class": "equivalent",
+      "reason": "Without hidden attributes, an iteration or value marks the general path copies every attribute unchanged into a new map, so skipping the shortcut gives the same attributes."
+    },
+    {
+      "mutant": "expand_body.go:129:72 cond_negate",
+      "source": "if len(b.hiddenAttrs) == 0 && b.iteration == nil && len(b.valueMarks) == 0 {",
+      "class": "equivalent",
+      "reason": "Only bodies of generated blocks have value marks and they always have an iteration, so the negated condition is never true and every body takes the general path, which without hidden attributes, an iteration or marks copies the same attributes."
+    },
+    {
+      "mutant": "expand_body.go:143:6 if_true",
+      "source": "if b.iteration != nil {",
+      "class": "unreachable",
+      "reason": "Only wraps the attributes of bodies outside any dynamic block in an expression wrapper without an iteration, which evaluates and unwraps to the same expression but panics in its Variables method, and the adapter never calls Expression.Variables."
+    },
+    {
+      "mutant": "expand_body.go:154:7 if_true",
+      "source": "if len(b.valueMarks) != 0 {",
+      "class": "unreachable",
+      "reason": "Only wraps the attributes of bodies outside any dynamic block in an expression wrapper without an iteration, which evaluates and unwraps to the same expression but panics in its Variables method, and the adapter never calls Expression.Variables."
+    },
+    {
+      "mutant": "expand_body.go:154:7 if_false",
+      "source": "if len(b.valueMarks) != 0 {",
+      "class": "equivalent",
+      "reason": "Only bodies of generated blocks have value marks and they always have an iteration, so the branch that wraps attributes of a body with marks but no iteration never runs."
+    },
+    {
+      "mutant": "expand_body.go:154:25 cond_negate",
+      "source": "if len(b.valueMarks) != 0 {",
+      "class": "unreachable",
+      "reason": "Only wraps the attributes of bodies outside any dynamic block in an expression wrapper without an iteration, which evaluates and unwraps to the same expression but panics in its Variables method, and the adapter never calls Expression.Variables."
+    },
+    {
+      "mutant": "expand_body.go:178:5 break_continue",
+      "source": "continue",
+      "class": "equivalent",
+      "reason": "The break only leaves the switch, which is the last statement of the loop body, so the loop goes on to the next block just as with continue."
+    },
+    {
+      "mutant": "expand_body.go:185:6 break_continue",
+      "source": "break",
+      "class": "unreachable",
+      "reason": "Continuing the search past the matching block type only changes which block header schema a dynamic block uses when an hcl.BodySchema lists the same block type twice, which the adapter rejects."
+    },
+    {
+      "mutant": "expand_body.go:198:5 break_continue",
+      "source": "continue",
+      "class": "equivalent",
+      "reason": "The break only leaves the switch, which is the last statement of the loop body, so the loop goes on to the next block just as with continue."
+    },
+    {
+      "mutant": "expand_body.go:204:5 break_continue",
+      "source": "continue",
+      "class": "equivalent",
+      "reason": "The break only leaves the switch, which is the last statement of the loop body, so the loop goes on to the next block just as with continue."
+    },
+    {
+      "mutant": "expand_body.go:258:2 stmt_remove",
+      "source": "ret.(*expandBody).checkForEach = b.checkForEach",
+      "class": "unreachable",
+      "reason": "Only stops the for_each checks given with the OptCheckForEach option of dynblock.Expand from reaching nested bodies, and the adapter calls Expand without options."
+    },
+    {
+      "mutant": "expand_body.go:259:2 stmt_remove",
+      "source": "ret.(*expandBody).valueMarks = valueMarks",
+      "class": "marks",
+      "reason": "Only stops the cty marks of a dynamic block's for_each value from being applied to the attributes of the blocks it generates, and no protocol input or function produces marked values."
+    },
+    {
+      "mutant": "expand_spec.go:47:6 if_false",
+      "source": "if itDiags.HasErrors() {",
+      "class": "diagnostics",
+      "reason": "AbsTraversalForExpr returns a nil traversal with its errors, so going on only adds an \"Invalid dynamic iterator name\" error to an iterator that is already an error."
+    },
+    {
+      "mutant": "expand_spec.go:69:5 if_false",
+      "source": "if diags.HasErrors() {",
+      "class": "diagnostics",
+      "reason": "Going on after an error evaluating for_each still returns that error, so the dynamic block is skipped with the same schema error, and the later checks can only add errors about the for_each value, the labels or the content block."
+    },
+    {
+      "mutant": "expand_spec.go:114:6 if_false",
+      "source": "if labelDiags.HasErrors() {",
+      "class": "diagnostics",
+      "reason": "ExprList returns no expressions with its errors, so going on only adds an \"Insufficient dynamic block labels\" error to a labels value that is already an error."
+    },
+    {
+      "mutant": "expand_spec.go:177:6 if_false",
+      "source": "if labelDiags.HasErrors() {",
+      "class": "diagnostics",
+      "reason": "The label's evaluation errors are still returned and make the expansion fail in the schema phase, so going on can only add errors about the same label value."
+    },
+    {
+      "mutant": "expand_spec.go:183:6 if_false",
+      "source": "if convErr != nil {",
+      "class": "diagnostics",
+      "reason": "A failed conversion to string leaves no value, which the null check right after it reports instead, so skipping this check only changes the detail of the \"Invalid dynamic block label\" error."
+    },
+    {
+      "mutant": "expand_spec.go:216:6 if_false",
+      "source": "if labelVal.IsMarked() {",
+      "class": "marks",
+      "reason": "Only matters for a dynamic block label whose value has cty marks, and no protocol input or function produces marked values."
+    },
+    {
+      "mutant": "expand_spec.go:240:3 stmt_remove",
+      "source": "labelRanges = append(labelRanges, labelExpr.Range())",
+      "class": "ranges",
+      "reason": "Only leaves out the label ranges of generated blocks, which are source ranges."
+    },
+    {
+      "mutant": "expr_wrap.go:50:5 if_false",
+      "source": "if e.i == nil {",
+      "class": "equivalent",
+      "reason": "Only bodies of generated blocks and the bodies nested in them wrap their attributes, and those always have an iteration, so the branch for a wrapper without one never runs."
+    },
+    {
+      "mutant": "unknown_body.go:80:5 if_true",
+      "source": "if len(got.Blocks) > 0 {",
+      "class": "equivalent",
+      "reason": "Only makes an empty block list instead of a nil one for a body without blocks, which has the same blocks."
+    },
+    {
+      "mutant": "unknown_body.go:80:21 cond_boundary",
+      "source": "if len(got.Blocks) > 0 {",
+      "class": "equivalent",
+      "reason": "Only makes an empty block list instead of a nil one for a body without blocks, which has the same blocks."
+    },
+    {
+      "mutant": "unknown_body.go:81:3 stmt_remove",
+      "source": "ret.Blocks = make(hcl.Blocks, 0, len(got.Blocks))",
+      "class": "equivalent",
+      "reason": "Only leaves the block list to grow from nil instead of preallocating it, which doesn't change the blocks it holds."
+    },
+    {
+      "mutant": "unknown_body.go:93:5 if_false",
+      "source": "if len(got) == 0 {",
+      "class": "equivalent",
+      "reason": "Only returns an empty attribute map instead of nil when there are no attributes, which has the same attributes."
+    }
+  ]
+}

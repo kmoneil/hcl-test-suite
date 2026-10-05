@@ -361,7 +361,10 @@
       "tests": [
         "native/type-expressions/convert-invalid-number",
         "native/type-expressions/convert-unknown-unconvertible",
-        "native/type-expressions/defaults-unknown-unconvertible"
+        "native/type-expressions/defaults-unknown-unconvertible",
+        "native/type-expressions/defaults-empty-set-of-wrong-element-type",
+        "native/type-expressions/defaults-empty-list-of-wrong-element-type",
+        "native/type-expressions/defaults-empty-map-of-wrong-element-type"
       ]
     },
     {
@@ -454,7 +457,9 @@
         "native/type-expressions/defaults-null-default",
         "native/type-expressions/defaults-missing-object-without-default",
         "native/type-expressions/defaults-null-default-with-nested-defaults",
-        "native/type-expressions/defaults-plain-type"
+        "native/type-expressions/defaults-plain-type",
+        "native/type-expressions/defaults-every-missing-attribute",
+        "native/type-expressions/defaults-default-converted-before-applying"
       ]
     },
     {
@@ -475,7 +480,8 @@
         "native/type-expressions/defaults-in-set",
         "native/type-expressions/defaults-in-tuple",
         "native/type-expressions/defaults-deeply-nested",
-        "native/type-expressions/defaults-inside-given-object"
+        "native/type-expressions/defaults-inside-given-object",
+        "native/type-expressions/defaults-every-map-element"
       ]
     },
     {
@@ -500,7 +506,10 @@
         "native/type-expressions/defaults-in-empty-map-value",
         "native/type-expressions/defaults-in-map-value-for-object",
         "native/type-expressions/defaults-in-map-value-no-common-type",
-        "native/type-expressions/defaults-in-list-value-elements-differ"
+        "native/type-expressions/defaults-in-list-value-elements-differ",
+        "native/type-expressions/defaults-set-elements-converted-one-by-one",
+        "native/type-expressions/defaults-list-of-maps-elements-unified",
+        "native/type-expressions/defaults-map-converted-as-object"
       ]
     },
     {
@@ -531,6 +540,25 @@
       "tests": [
         "native/type-expressions/defaults-not-an-object",
         "native/type-expressions/defaults-invalid-default"
+      ]
+    },
+    {
+      "id": "type-expressions-defaults-unification",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "After defaults, the elements of a list, set or map value are unified to one type, in the sorted order of a map's keys, converting values on the way, and when that fails they convert one by one (disputed)",
+      "tests": [
+        "native/type-expressions/defaults-set-elements-unified",
+        "native/type-expressions/defaults-list-to-set-elements-unified",
+        "native/type-expressions/defaults-list-elements-converted-one-by-one",
+        "native/type-expressions/defaults-map-unified-in-key-order"
+      ]
+    },
+    {
+      "id": "type-expressions-defaults-unknown-refined",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "An unknown value given for an optional attribute whose default isn't null is known not to be null (disputed)",
+      "tests": [
+        "native/type-expressions/defaults-unknown-attribute-not-null"
       ]
     }
   ]

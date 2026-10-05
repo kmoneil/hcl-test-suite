@@ -1,0 +1,24 @@
+{
+  "package": "github.com/hashicorp/hcl/v2/ext/customdecode",
+  "version": "v2.24.0",
+  "survivors": [
+    {
+      "mutant": "customdecode.go:55:95 if_true",
+      "source": "if fn, ok := ty.CapsuleExtensionData(CustomExpressionDecoder).(CustomExpressionDecoderFunc); ok {",
+      "class": "equivalent",
+      "reason": "When the type assertion fails, fn is the nil function, so returning it is the same as the nil returned after the if."
+    },
+    {
+      "mutant": "expression_type.go:79:5 if_false",
+      "source": "if !v.Type().Equals(ExpressionClosureType) {",
+      "class": "unreachable",
+      "reason": "Only matters when customdecode.ExpressionClosureFromVal is called directly with a value of another type, since try and can, its only callers, receive arguments that go-cty has already checked against the expression closure type."
+    },
+    {
+      "mutant": "expression_type.go:90:2 stmt_remove",
+      "source": "ExpressionType = cty.CapsuleWithOps(\"expression\", goExpressionType, &cty.CapsuleOps{",
+      "class": "unreachable",
+      "reason": "Leaves customdecode.ExpressionType unset, which only affects applications that declare it as a parameter or attribute type through the Go API, and neither the adapter nor any hashicorp/hcl package uses it."
+    }
+  ]
+}

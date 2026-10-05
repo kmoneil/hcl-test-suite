@@ -1,0 +1,150 @@
+{
+  "package": "github.com/hashicorp/hcl/v2/ext/typeexpr",
+  "version": "v2.24.0",
+  "survivors": [
+    {
+      "mutant": "defaults.go:57:5 if_false",
+      "source": "if len(d.DefaultValues) == 0 && len(d.Children) == 0 {",
+      "class": "unreachable",
+      "reason": "Only skips the early return for a Defaults value with neither default values nor children, which TypeConstraintWithDefaults never returns (structuredDefaults gives nil instead), so only a Defaults built directly in Go reaches it."
+    },
+    {
+      "mutant": "defaults.go:69:5 stmt_remove",
+      "source": "v = cty.SetValEmpty(v.Type().ElementType())",
+      "class": "equivalent",
+      "reason": "The value is already an empty set with that element type, so not rebuilding it with cty.SetValEmpty leaves it unchanged."
+    },
+    {
+      "mutant": "defaults.go:78:5 stmt_remove",
+      "source": "v = cty.ListValEmpty(v.Type().ElementType())",
+      "class": "equivalent",
+      "reason": "The value is already an empty list with that element type, so not rebuilding it with cty.ListValEmpty leaves it unchanged."
+    },
+    {
+      "mutant": "defaults.go:105:5 stmt_remove",
+      "source": "v = cty.MapValEmpty(v.Type().ElementType())",
+      "class": "equivalent",
+      "reason": "The map value is already empty with that element type when no elements or defaults are left, so not rebuilding it with cty.MapValEmpty leaves it unchanged."
+    },
+    {
+      "mutant": "defaults.go:205:5 if_false",
+      "source": "if unify == cty.NilType {",
+      "class": "equivalent",
+      "reason": "go-cty's unification returns no conversions whenever it finds no common type, so the loop that follows adds nothing and unifyAsSlice returns nil either way."
+    },
+    {
+      "mutant": "get_type.go:106:6 if_false",
+      "source": "if len(call.Arguments) > 1 {",
+      "class": "diagnostics",
+      "reason": "Only keeps the whole argument list as the subject range of the error for a list, set, map, object or tuple constructor called with more than one argument, instead of narrowing it to the extra arguments."
+    },
+    {
+      "mutant": "get_type.go:106:26 cond_boundary",
+      "source": "if len(call.Arguments) > 1 {",
+      "class": "equivalent",
+      "reason": "The check is inside the branch for an argument count other than one, so the count is either zero or at least two, and \">= 1\" and \"> 1\" agree on both."
+    },
+    {
+      "mutant": "get_type.go:110:4 stmt_remove",
+      "source": "subjectRange = hcl.RangeBetween(call.Arguments[1].Range(), call.Arguments[len(call.Arguments)-1].Range())",
+      "class": "diagnostics",
+      "reason": "Only keeps the whole argument list as the subject range of the error for a type constructor called with too many arguments, instead of narrowing it to the extra arguments."
+    },
+    {
+      "mutant": "get_type.go:157:6 if_false",
+      "source": "if diags.HasErrors() {",
+      "class": "diagnostics",
+      "reason": "When the argument of object(...) isn't a static map, hcl.ExprMap's own \"A static map expression is required\" error is returned with an empty object type instead of the type expression error, so the type expression still fails and only the message changes."
+    },
+    {
+      "mutant": "get_type.go:181:5 break_continue",
+      "source": "continue",
+      "class": "diagnostics",
+      "reason": "Stopping at the first attribute of an object type whose name isn't an identifier, which is already an error, only leaves out the errors that the attributes after it would add."
+    },
+    {
+      "mutant": "get_type.go:192:5 break_continue",
+      "source": "continue",
+      "class": "diagnostics",
+      "reason": "Stopping at the first repeated attribute name of an object type, which is already an error, only leaves the later attributes out of a type that every caller discards because of that error, and leaves out the errors they would add."
+    },
+    {
+      "mutant": "get_type.go:212:7 break_continue",
+      "source": "continue",
+      "class": "diagnostics",
+      "reason": "Stopping at the first optional() without arguments in an object type, which is already an error, only leaves out the errors that the attributes after it would add."
+    },
+    {
+      "mutant": "get_type.go:221:12 if_true",
+      "source": "if !defaultDiags.HasErrors() {",
+      "class": "diagnostics",
+      "reason": "Only marks the attribute optional and keeps its default when evaluating the default value already reported an error, so the type expression fails either way and at most an error about converting that default is added."
+    },
+    {
+      "mutant": "get_type.go:276:6 stmt_remove",
+      "source": "delete(defaultValues, attrName)",
+      "class": "unreachable",
+      "reason": "Only keeps a default value that failed to convert in the Defaults that typeexpr.TypeConstraintWithDefaults returns together with the \"Invalid default value for optional attribute\" error, and the adapter discards the type and defaults of a type expression with errors."
+    },
+    {
+      "mutant": "get_type.go:291:6 if_false",
+      "source": "if diags.HasErrors() {",
+      "class": "diagnostics",
+      "reason": "When the argument of tuple(...) isn't a static list, hcl.ExprList's own \"A static list expression is required\" error is returned with an empty tuple type instead of the type expression error, so the type expression still fails and only the message and range change."
+    },
+    {
+      "mutant": "get_type.go:306:7 if_true",
+      "source": "if elemDefaults != nil {",
+      "class": "unreachable",
+      "reason": "Only adds nil entries for tuple elements without defaults to the tree that typeexpr.TypeConstraintWithDefaults returns, giving a tuple type without defaults a tree instead of nil, and Defaults.Apply skips nil entries and leaves a value unchanged when the tree has no default values."
+    },
+    {
+      "mutant": "get_type.go:332:5 if_false",
+      "source": "if defaults == nil {",
+      "class": "unreachable",
+      "reason": "Only returns a Defaults node with a nil child instead of nil for a list, set or map type without nested defaults, and Defaults.Apply rebuilds a value unchanged when the tree holds no default values, so only a Go caller that inspects the tree could tell."
+    },
+    {
+      "mutant": "get_type.go:344:5 if_false",
+      "source": "if len(defaultValues) == 0 && len(children) == 0 {",
+      "class": "unreachable",
+      "reason": "Only returns an empty Defaults node instead of nil for an object or tuple type without default values, and Defaults.Apply rebuilds a value unchanged when the tree holds no default values, so only a Go caller that inspects the tree could tell."
+    },
+    {
+      "mutant": "get_type.go:351:5 if_true",
+      "source": "if len(defaultValues) > 0 {",
+      "class": "equivalent",
+      "reason": "Only sets DefaultValues of a Defaults node to an empty map instead of leaving it nil, and Defaults.Apply only reads it with len and range, which treat the two the same."
+    },
+    {
+      "mutant": "get_type.go:351:24 cond_boundary",
+      "source": "if len(defaultValues) > 0 {",
+      "class": "equivalent",
+      "reason": "Only sets DefaultValues of a Defaults node to an empty map instead of leaving it nil, and Defaults.Apply only reads it with len and range, which treat the two the same."
+    },
+    {
+      "mutant": "get_type.go:354:5 if_true",
+      "source": "if len(children) > 0 {",
+      "class": "equivalent",
+      "reason": "Only sets Children of a Defaults node to an empty map instead of leaving it nil, and Defaults.Apply only reads it with len and lookups, which treat the two the same."
+    },
+    {
+      "mutant": "get_type.go:354:19 cond_boundary",
+      "source": "if len(children) > 0 {",
+      "class": "equivalent",
+      "reason": "Only sets Children of a Defaults node to an empty map instead of leaving it nil, and Defaults.Apply only reads it with len and lookups, which treat the two the same."
+    },
+    {
+      "mutant": "public.go:21:39 bool_lit",
+      "source": "ty, _, diags := getType(expr, false, false)",
+      "class": "equivalent",
+      "reason": "getType only reads its withDefaults flag inside the branch for type constraints, so passing true from typeexpr.Type, which reads exact types, changes nothing."
+    },
+    {
+      "mutant": "type_type.go:116:7 if_false",
+      "source": "if err != nil {",
+      "class": "diagnostics",
+      "reason": "When the convert function's second conversion fails it returns no value, and go-cty's Function.Call turns the resulting panic about the return type into an error, so the call still fails in the eval phase with a different message."
+    }
+  ]
+}

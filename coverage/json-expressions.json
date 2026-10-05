@@ -230,6 +230,15 @@
       "tests": [
         "json/expressions/number-exponent-beyond-binary-exponent-range-is-error"
       ]
+    },
+    {
+      "id": "expressions-element-errors",
+      "spec": "json/spec.md#expressions",
+      "rule": "An error evaluating an array element or an object property's value is an error of the whole expression",
+      "tests": [
+        "json/expressions/array-element-error-is-reported",
+        "json/expressions/object-property-error-is-reported"
+      ]
     }
   ]
 }

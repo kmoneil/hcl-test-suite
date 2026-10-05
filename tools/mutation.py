@@ -20,9 +20,9 @@ records which survivors are which, with reasons, and "report" scores the tests
 on the mutants the protocol can see.
 
 <package> is a package of hashicorp/hcl: hclsyntax, json, ext/dynblock and so
-on. Needs Go. Work files go in a directory under the system's temporary
-directory (--work to change it); a run resumes where it stopped unless the
-tests or the mutants changed.
+on, or . for the root package. Needs Go. Work files go in a directory under
+the system's temporary directory (--work to change it); a run resumes where
+it stopped unless the tests or the mutants changed.
 """
 
 import argparse
@@ -160,8 +160,23 @@ def read_cache(path, fp):
     return data if isinstance(data, dict) and data.get("fingerprint") == fp else None
 
 
+def import_path(package):
+    """The import path of a package given as on the command line, where . is the root package."""
+    return HCL if package == "." else f"{HCL}/{package}"
+
+
+def package_dir(package):
+    """The package's directory inside the module, as coverage profiles name it."""
+    return "" if package == "." else package
+
+
+def slug(package):
+    """A file name for the package: hcl for the root package, ext-dynblock for ext/dynblock."""
+    return "hcl" if package == "." else package.replace("/", "-")
+
+
 def pkg_dir(work, package):
-    d = work / package.replace("/", "-")
+    d = work / slug(package)
     d.mkdir(parents=True, exist_ok=True)
     return d
 
@@ -278,7 +293,7 @@ def block_index(blocks, package):
     by_file = defaultdict(list)
     for loc, tests in blocks.items():
         f, span = loc.rsplit(":", 1)
-        if os.path.dirname(f) != package:
+        if os.path.dirname(f) != package_dir(package):
             continue
         start, end = span.split(",")
         sl, sc = map(int, start.split("."))
@@ -288,17 +303,24 @@ def block_index(blocks, package):
 
 
 def covering_tests(mutant, by_file):
-    """Indexes of the tests that execute a mutant's line, or None if no block contains it."""
+    """Indexes of the tests that execute a mutant's line, or None if that can't be told."""
     blocks = by_file.get(mutant["cov_file"], [])
     line, col = mutant["line"], mutant["col"]
     if col == 0:  # a //line directive without columns (Ragel); match by line
         hits = [b for b in blocks if b[0][0] <= line <= b[1][0]]
         return sorted(set().union(*(b[2] for b in hits))) if hits else None
     hits = [b for b in blocks if b[0] <= (line, col) <= b[1]]
-    if not hits:
-        return None
-    # Blocks only overlap around function literals, where the innermost is right.
-    return min(hits, key=lambda b: (b[1][0] - b[0][0], b[1][1] - b[0][1]))[2]
+    if hits:
+        # Blocks only overlap around function literals, where the innermost is right.
+        return min(hits, key=lambda b: (b[1][0] - b[0][0], b[1][1] - b[0][1]))[2]
+    # Some code is in no block, such as the condition of an else if; any test
+    # that executes the function may reach it.
+    if mutant.get("func_lines"):
+        first, last = mutant["func_lines"]
+        inside = [b for b in blocks if first <= b[0][0] and b[1][0] <= last]
+        if inside:
+            return sorted(set().union(*(b[2] for b in inside)))
+    return None
 
 
 # Mutants
@@ -307,7 +329,7 @@ def generate(work, env, package):
     binary = work / "mutate"
     go(["build", "-o", str(binary), "."], cwd=ROOT / "tools" / "mutate")
     out = subprocess.run([str(binary), "-dir", str(ADAPTER_DIR), "-modfile", str(env["modfile"]),
-                          "-pkg", f"{HCL}/{package}"], check=True, capture_output=True, text=True).stdout
+                          "-pkg", import_path(package)], check=True, capture_output=True, text=True).stdout
     return json.loads(out)
 
 
@@ -320,7 +342,7 @@ def init_worker(state):
 
 def apply(mutant, wdir):
     """Writes the mutated file and an overlay that puts it in the hcl copy."""
-    src_path = STATE["copy"] / STATE["package"] / mutant["file"]
+    src_path = STATE["copy"] / package_dir(STATE["package"]) / mutant["file"]
     src = src_path.read_bytes()
     mutated = wdir / mutant["file"]
     mutated.write_bytes(src[:mutant["start"]] + mutant["replacement"].encode() + src[mutant["end"]:])
@@ -445,13 +467,13 @@ def cmd_run(args):
 # Reporting
 
 def classification_path(package):
-    return ROOT / "coverage" / "mutation" / (package.replace("/", "-") + ".json")
+    return ROOT / "coverage" / "mutation" / (slug(package) + ".json")
 
 
 def load_classifications(package):
     path = classification_path(package)
     if not path.exists():
-        return {"package": f"{HCL}/{package}", "version": None, "survivors": []}
+        return {"package": import_path(package), "version": None, "survivors": []}
     return json.loads(path.read_text(encoding="utf-8"))
 
 
@@ -477,7 +499,7 @@ def report(work, package, files=False):
     unclassified = [k for k in survivors if k not in by_key or k in stale]
     killed = status["killed"]
     visible = killed + classified["gap"] + len(unclassified)
-    print(f"{package} at {header['version']}: {len(results)} of {len(mutants)} mutants run")
+    print(f"{HCL if package == '.' else package} at {header['version']}: {len(results)} of {len(mutants)} mutants run")
     print(f"  killed          {killed:>5}  ({sum(1 for r in results.values() if 'timed out' in r.get('how', ''))} "
           "by timing out)")
     print(f"  survived        {status['survived']:>5}")
@@ -587,7 +609,7 @@ def cmd_classify(args):
     env = setup(args.work)
     _header, mutants, results = load_run(args.work, args.package)
     data = load_classifications(args.package)
-    data["package"], data["version"] = f"{HCL}/{args.package}", env["version"]
+    data["package"], data["version"] = import_path(args.package), env["version"]
     by_key = {c["mutant"]: c for c in data["survivors"]}
     added = 0
     for line in args.records.read_text(encoding="utf-8").splitlines():

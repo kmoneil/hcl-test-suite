@@ -2583,18 +2583,6 @@
       "reason": "The parser pops every newline-stack entry it pushes on every path, so the stack always has one entry at the end and the skipped assertion would never panic."
     },
     {
-      "mutant": "peeker.go:202:8 bool_lit",
-      "source": "case true:",
-      "class": "unreachable",
-      "reason": "Only changes the trace in AssertEmptyIncludeNewlinesStack's panic message, which needs newline-stack tracing turned on (only hashicorp/hcl's own tests do) and a parser stack-discipline bug."
-    },
-    {
-      "mutant": "peeker.go:207:8 bool_lit",
-      "source": "case false:",
-      "class": "unreachable",
-      "reason": "Only changes the trace in AssertEmptyIncludeNewlinesStack's panic message, which needs newline-stack tracing turned on (only hashicorp/hcl's own tests do) and a parser stack-discipline bug."
-    },
-    {
       "mutant": "public.go:30:2 stmt_remove",
       "source": "peeker.AssertEmptyIncludeNewlinesStack()",
       "class": "equivalent",

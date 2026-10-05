@@ -1,0 +1,24 @@
+{
+  "description": "A body array element that isn't an object is an error in partial processing too",
+  "spec": [
+    "json/spec.md#structural-elements",
+    "spec.md#partial-processing-of-body-content"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "partial",
+    "attributes": [
+      {
+        "name": "a"
+      }
+    ]
+  },
+  "reference_error": "A JSON object is required here, to define arguments and child blocks",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

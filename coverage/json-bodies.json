@@ -32,11 +32,12 @@
     {
       "id": "bodies-array-elements-are-objects",
       "spec": "json/spec.md#structural-elements",
-      "rule": "An element of a body array that isn't an object, such as a string, null or an array, is an error",
+      "rule": "An element of a body array that isn't an object, such as a string, null or an array, is an error, in any processing mode",
       "tests": [
         "json/bodies/body-array-string-element-is-error",
         "json/bodies/body-array-null-element-is-error",
-        "json/bodies/body-array-nested-array-is-error"
+        "json/bodies/body-array-nested-array-is-error",
+        "json/bodies/partial-body-array-element-not-object-is-error"
       ]
     },
     {
@@ -79,7 +80,8 @@
         "json/bodies/comment-property-partial-remain",
         "json/bodies/comment-property-block-body",
         "json/bodies/comment-property-body-array",
-        "json/bodies/comment-property-escaped-name"
+        "json/bodies/comment-property-escaped-name",
+        "json/bodies/comment-property-before-undefined-property-is-error"
       ]
     },
     {
@@ -282,7 +284,8 @@
         "json/bodies/block-label-level-null-is-error",
         "json/bodies/block-label-level-array-of-strings-is-error",
         "json/bodies/block-body-after-label-number-is-error",
-        "json/bodies/block-too-few-label-levels-is-error"
+        "json/bodies/block-too-few-label-levels-is-error",
+        "json/bodies/label-level-array-with-non-object-is-error"
       ]
     },
     {

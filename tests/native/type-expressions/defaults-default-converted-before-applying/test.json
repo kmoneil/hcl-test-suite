@@ -1,0 +1,104 @@
+{
+  "description": "A default value loses attributes its type lacks before it is applied",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions",
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The README allows any in function TypeConstraint only, while convert-with-defaults reads its type with TypeConstraintWithDefaults (native/type-expressions/defaults-default-for-any), and doesn't say that a null attribute gets its default (native/type-expressions/defaults-null-attribute). hashicorp/hcl converts each default to its attribute's type when it reads the type (getType in ext/typeexpr/get_type.go), which drops z, so the elements of the list keep x a number after defaults instead of being unified as maps of strings.",
+  "variables": {
+    "v": {
+      "list": [
+        {
+          "object": {
+            "b": {
+              "null": [
+                "object",
+                {
+                  "x": "number"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "object": {
+            "b": {
+              "object": {
+                "x": {
+                  "number": "5"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "element_type": [
+        "object",
+        {
+          "b": [
+            "object",
+            {
+              "x": "number"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "element_type": [
+            "object",
+            {
+              "b": [
+                "object",
+                {
+                  "x": "number"
+                }
+              ]
+            }
+          ],
+          "list": [
+            {
+              "object": {
+                "b": {
+                  "object": {
+                    "x": {
+                      "number": "1"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "object": {
+                "b": {
+                  "object": {
+                    "x": {
+                      "number": "5"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

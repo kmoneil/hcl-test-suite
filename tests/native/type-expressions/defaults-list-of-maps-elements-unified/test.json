@@ -1,0 +1,72 @@
+{
+  "description": "A list of maps keeps every element when defaults make the elements' types differ",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions",
+    "typed-values"
+  ],
+  "variables": {
+    "v": {
+      "list": [
+        {
+          "map": {
+            "a": {
+              "number": "5"
+            }
+          },
+          "element_type": "number"
+        },
+        {
+          "map": {},
+          "element_type": "number"
+        }
+      ],
+      "element_type": [
+        "map",
+        "number"
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "element_type": [
+            "object",
+            {
+              "a": "string"
+            }
+          ],
+          "list": [
+            {
+              "object": {
+                "a": {
+                  "string": "5"
+                }
+              }
+            },
+            {
+              "object": {
+                "a": {
+                  "string": "x"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

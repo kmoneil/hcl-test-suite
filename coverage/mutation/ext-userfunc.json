@@ -1,0 +1,54 @@
+{
+  "package": "github.com/hashicorp/hcl/v2/ext/userfunc",
+  "version": "v2.24.0",
+  "survivors": [
+    {
+      "mutant": "decode.go:40:5 if_false",
+      "source": "if diags.HasErrors() {",
+      "class": "diagnostics",
+      "reason": "When finding the function blocks reports an error, also decodes the well-formed function blocks, which can only add errors to a result that fails in the schema phase either way."
+    },
+    {
+      "mutant": "decode.go:49:6 if_true",
+      "source": "if baseCtx == nil {",
+      "class": "unreachable",
+      "reason": "Calls the ContextFunc given to userfunc.DecodeUserFunctions on every call of a user function instead of once, which only matters for a ContextFunc that returns a different EvalContext each time, and the adapter's always returns the same one."
+    },
+    {
+      "mutant": "decode.go:50:7 if_true",
+      "source": "if contextFunc != nil {",
+      "class": "unreachable",
+      "reason": "Only matters when userfunc.DecodeUserFunctions is given a nil ContextFunc, which the adapter never passes."
+    },
+    {
+      "mutant": "decode.go:65:4 break_continue",
+      "source": "continue",
+      "class": "diagnostics",
+      "reason": "After a function block whose content has an error, stops decoding the remaining function blocks, which only drops their errors from a result that fails in the schema phase either way."
+    },
+    {
+      "mutant": "decode.go:80:6 if_false",
+      "source": "if paramsDiags.HasErrors() {",
+      "class": "diagnostics",
+      "reason": "When params isn't a tuple or list, still declares the function with no parameters, which can only add errors to a result that fails in the schema phase either way because of the params error."
+    },
+    {
+      "mutant": "decode.go:81:4 break_continue",
+      "source": "continue",
+      "class": "diagnostics",
+      "reason": "After a params value that isn't a tuple or list, stops decoding the remaining function blocks, which only drops their errors from a result that fails in the schema phase either way."
+    },
+    {
+      "mutant": "decode.go:106:5 break_continue",
+      "source": "continue",
+      "class": "diagnostics",
+      "reason": "After an invalid variadic_param, stops decoding the remaining function blocks, which only drops their errors from a result that fails in the schema phase either way."
+    },
+    {
+      "mutant": "decode.go:133:7 if_true",
+      "source": "if spec.VarParam != nil {",
+      "class": "diagnostics",
+      "reason": "Also binds the empty variable name to an empty tuple in a user function without variadic_param, which no expression can refer to, so it only changes the \"Did you mean\" suggestion of an \"Unknown variable\" error in the result."
+    }
+  ]
+}

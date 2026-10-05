@@ -1,0 +1,124 @@
+{
+  "description": "Set elements that no longer share a type after defaults convert one by one",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions",
+    "typed-values"
+  ],
+  "variables": {
+    "s": {
+      "set": [
+        {
+          "map": {},
+          "element_type": [
+            "object",
+            {
+              "p": "string",
+              "q": [
+                "list",
+                "string"
+              ]
+            }
+          ]
+        },
+        {
+          "map": {
+            "a": {
+              "object": {
+                "p": {
+                  "string": "v"
+                },
+                "q": {
+                  "list": [
+                    {
+                      "string": "w"
+                    }
+                  ],
+                  "element_type": "string"
+                }
+              }
+            }
+          },
+          "element_type": [
+            "object",
+            {
+              "p": "string",
+              "q": [
+                "list",
+                "string"
+              ]
+            }
+          ]
+        }
+      ],
+      "element_type": [
+        "map",
+        [
+          "object",
+          {
+            "p": "string",
+            "q": [
+              "list",
+              "string"
+            ]
+          }
+        ]
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "element_type": [
+            "object",
+            {
+              "a": [
+                "object",
+                {
+                  "p": "string"
+                }
+              ]
+            }
+          ],
+          "set": [
+            {
+              "object": {
+                "a": {
+                  "object": {
+                    "p": {
+                      "string": "d"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "object": {
+                "a": {
+                  "object": {
+                    "p": {
+                      "string": "v"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}
