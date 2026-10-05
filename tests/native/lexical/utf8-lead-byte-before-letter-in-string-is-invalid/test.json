@@ -1,0 +1,11 @@
+{
+  "description": "A UTF-8 lead byte followed by an ASCII letter in a quoted string is invalid",
+  "spec": [
+    "hclsyntax/spec.md#source-code-representation"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid character encoding",
+  "expect": {
+    "valid": false
+  }
+}

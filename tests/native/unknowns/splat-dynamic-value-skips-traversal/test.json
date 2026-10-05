@@ -1,0 +1,29 @@
+{
+  "description": "A splat over the dynamic value doesn't evaluate the traversal after it",
+  "spec": [
+    "hclsyntax/spec.md#splat-operators",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec doesn't say whether the traversal of a splat over an unknown value is evaluated. SplatExpr.Value (hclsyntax/expression.go) returns the dynamic value for a dynamic source without evaluating its traversal, so the undefined variable in the index isn't reported, as in a for expression over an unknown list (native/unknowns/for-over-unknown-list-skips-body-type-check).",
+  "variables": {
+    "d": {
+      "unknown": "dynamic"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "description": "A dollar sign after an interpolation holding a heredoc is literal text in a JSON string template",
+  "spec": [
+    "json/spec.md#strings",
+    "hclsyntax/spec.md#template-literals",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x\n$"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

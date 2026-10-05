@@ -1,0 +1,23 @@
+{
+  "description": "Elements after a null condition that follows an unknown one are still evaluated",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "notes": "hashicorp/hcl doesn't report the second element's null condition after the unknown one (native/for/condition-null-after-unknown-condition), but still evaluates the third element, whose index is out of range.",
+  "variables": {
+    "u": {
+      "unknown": "bool"
+    }
+  },
+  "reference_error": "The given key does not identify an element in this collection value",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

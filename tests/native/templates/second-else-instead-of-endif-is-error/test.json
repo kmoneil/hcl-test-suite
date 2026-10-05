@@ -1,0 +1,11 @@
+{
+  "description": "A second else where an if directive's endif belongs is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive"
+  ],
+  "op": "parse",
+  "reference_error": "Already in the else clause",
+  "expect": {
+    "valid": false
+  }
+}

@@ -104,7 +104,7 @@
     {
       "id": "expressions-number-overflow",
       "spec": "json/spec.md#numbers",
-      "rule": "A JSON number too large for hashicorp/hcl's exponent range, with an exponent below 2^31, becomes infinity instead of an error (disputed)",
+      "rule": "A JSON number too large for hashicorp/hcl's exponent range, but whose binary exponent still fits in 32 bits, becomes infinity instead of an error (disputed)",
       "tests": [
         "json/expressions/number-exponent-overflow"
       ]
@@ -151,7 +151,15 @@
         "json/expressions/string-for-directive",
         "json/expressions/string-strip-markers",
         "json/expressions/string-unknown-interpolation",
-        "json/expressions/string-in-nested-values"
+        "json/expressions/string-in-nested-values",
+        "json/expressions/string-template-strip-before-directive",
+        "json/expressions/string-template-comment-in-interpolation",
+        "json/expressions/string-template-heredoc-then-dollar-sign",
+        "json/expressions/string-template-lone-percent-and-dollar",
+        "json/expressions/string-template-directive-without-spaces",
+        "json/expressions/string-template-strip-close-then-dollar-sign",
+        "json/expressions/string-template-nested-string-then-dollar-sign",
+        "json/expressions/string-template-carriage-return-after-non-ascii"
       ]
     },
     {
@@ -171,7 +179,8 @@
       "spec": "json/spec.md#strings",
       "rule": "In full expression mode, $${ and %%{ in a string give literal ${ and %{",
       "tests": [
-        "json/expressions/string-template-escapes"
+        "json/expressions/string-template-escapes",
+        "json/expressions/string-template-escape-with-tilde"
       ]
     },
     {
@@ -212,6 +221,14 @@
         "json/expressions/string-unclosed-directive-is-error",
         "json/expressions/string-undefined-variable-is-error",
         "json/expressions/string-invalid-template-unselected-attribute"
+      ]
+    },
+    {
+      "id": "expressions-number-exponent-limit",
+      "spec": "json/spec.md#numbers",
+      "rule": "A JSON number whose binary exponent doesn't fit in 32 bits, such as 1e2147483647, is an error in the parse phase (disputed)",
+      "tests": [
+        "json/expressions/number-exponent-beyond-binary-exponent-range-is-error"
       ]
     }
   ]

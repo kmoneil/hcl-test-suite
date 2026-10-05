@@ -1,0 +1,11 @@
+{
+  "description": "A closing bracket instead of a parenthesis after an expanded argument is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "parse",
+  "reference_error": "Missing closing parenthesis",
+  "expect": {
+    "valid": false
+  }
+}

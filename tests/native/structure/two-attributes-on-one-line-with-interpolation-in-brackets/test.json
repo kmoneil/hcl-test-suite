@@ -1,0 +1,13 @@
+{
+  "description": "A second attribute on the same line is an error even with an interpolation six brackets deep",
+  "spec": [
+    "hclsyntax/spec.md#attribute-definitions",
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "notes": "hashicorp/hcl's error recovery after the first attribute tracks open delimiters in a slice that starts with room for eight (recoverAfterBodyItem in hclsyntax/parser.go), and the six brackets, the quote and the interpolation fill it when the interpolation closes, so this checks the error is still reported then.",
+  "reference_error": "Missing newline after argument",
+  "expect": {
+    "valid": false
+  }
+}

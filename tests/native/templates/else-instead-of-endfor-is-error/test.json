@@ -1,0 +1,11 @@
+{
+  "description": "An else where a for directive's endfor belongs is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#template-for-directive"
+  ],
+  "op": "parse",
+  "reference_error": "An else clause is not expected for a for directive",
+  "expect": {
+    "valid": false
+  }
+}

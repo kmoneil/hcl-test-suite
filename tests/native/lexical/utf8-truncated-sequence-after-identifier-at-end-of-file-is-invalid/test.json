@@ -1,0 +1,12 @@
+{
+  "description": "A UTF-8 lead byte ending the file right after an identifier is invalid",
+  "spec": [
+    "hclsyntax/spec.md#source-code-representation"
+  ],
+  "op": "parse",
+  "notes": "With a newline after the byte, hashicorp/hcl accepts the file, reading the byte and the newline into the identifier (native/lexical/utf8-truncated-sequence-in-identifier), so the byte ends the file here.",
+  "reference_error": "Invalid character encoding",
+  "expect": {
+    "valid": false
+  }
+}

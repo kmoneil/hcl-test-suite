@@ -260,6 +260,14 @@
       "tests": [
         "native/numbers/large-integers-differing-by-one-are-not-equal"
       ]
+    },
+    {
+      "id": "numbers-exponent-limit",
+      "spec": "hclsyntax/spec.md#numeric-literals",
+      "rule": "A literal whose binary exponent doesn't fit in 32 bits, such as 1e2147483647, is an error, while smaller literals that overflow become infinity (disputed)",
+      "tests": [
+        "native/numbers/exponent-beyond-binary-exponent-range-is-error"
+      ]
     }
   ]
 }

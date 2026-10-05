@@ -1,0 +1,11 @@
+{
+  "description": "A second closing brace after a block's closing brace is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "reference_error": "Missing newline after block definition",
+  "expect": {
+    "valid": false
+  }
+}

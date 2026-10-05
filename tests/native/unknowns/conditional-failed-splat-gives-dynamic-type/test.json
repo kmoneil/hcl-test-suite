@@ -1,0 +1,31 @@
+{
+  "description": "With an unknown predicate a result that is a splat over a failed source gives the dynamic value",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator",
+    "hclsyntax/spec.md#splat-operators",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec passes an error in a result through only if that result is selected, and an unknown predicate selects neither, which is what hashicorp/hcl does. The spec doesn't say what type a result that failed contributes to the unified type: SplatExpr.Value (hclsyntax/expression.go) returns the dynamic value when its source has errors, so the conditional skips unification and gives the dynamic value.",
+  "variables": {
+    "u": {
+      "unknown": "bool"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

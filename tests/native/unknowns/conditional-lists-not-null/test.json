@@ -1,0 +1,47 @@
+{
+  "description": "An unknown choice between two lists is not equal to null",
+  "spec": [
+    "hclsyntax/spec.md#comparison-operators",
+    "hclsyntax/spec.md#conditional-operator",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says a comparison with an unknown operand gives an unknown bool. ConditionalExpr.Value (hclsyntax/expression.go) refines an unknown result of two collections of the same type as not null when neither result can be null, and Value.Equals (cty/value_ops.go) uses that to rule out null.",
+  "variables": {
+    "u": {
+      "unknown": "bool"
+    },
+    "l1": {
+      "list": [
+        {
+          "number": "1"
+        }
+      ],
+      "element_type": "number"
+    },
+    "l1b": {
+      "list": [
+        {
+          "number": "2"
+        }
+      ],
+      "element_type": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

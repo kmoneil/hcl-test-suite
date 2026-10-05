@@ -1,0 +1,21 @@
+{
+  "description": "An object constructor evaluates items after one whose key is unknown and reports their errors",
+  "spec": [
+    "hclsyntax/spec.md#collection-values",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "unknown-values"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "dynamic"
+    }
+  },
+  "reference_error": "There is no variable named \"x\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

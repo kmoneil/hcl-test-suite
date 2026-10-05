@@ -142,7 +142,11 @@
       "tests": [
         "native/structure/two-attributes-on-one-line",
         "native/structure/attributes-separated-by-comma",
-        "native/structure/attribute-trailing-comma"
+        "native/structure/attribute-trailing-comma",
+        "native/structure/two-attributes-on-one-line-with-nested-brackets",
+        "native/structure/two-attributes-on-one-line-with-interpolation",
+        "native/structure/two-attributes-on-one-line-with-directive",
+        "native/structure/two-attributes-on-one-line-with-interpolation-in-brackets"
       ]
     },
     {
@@ -362,7 +366,8 @@
         "native/structure/block-followed-by-item-on-same-line",
         "native/structure/block-closing-brace-followed-by-comment",
         "native/structure/one-line-block-followed-by-block",
-        "native/structure/one-line-block-followed-by-comment"
+        "native/structure/one-line-block-followed-by-comment",
+        "native/structure/block-followed-by-closing-brace-is-error"
       ]
     },
     {
@@ -470,7 +475,8 @@
         "native/structure/one-line-block-identifier-without-value",
         "native/structure/one-line-block-expression-without-name",
         "native/structure/one-line-block-quoted-attribute-name",
-        "native/structure/one-line-block-colon-instead-of-equals"
+        "native/structure/one-line-block-colon-instead-of-equals",
+        "native/structure/one-line-block-number-attribute-name-is-error"
       ]
     },
     {
@@ -554,7 +560,8 @@
         "native/structure/schema-block-labels",
         "native/structure/schema-block-too-few-labels-is-error",
         "native/structure/schema-block-too-many-labels-is-error",
-        "native/structure/schema-block-unexpected-label-is-error"
+        "native/structure/schema-block-unexpected-label-is-error",
+        "native/structure/schema-unquoted-label-for-block-without-labels-is-error"
       ]
     },
     {
@@ -653,6 +660,14 @@
       "rule": "A body schema that requests the same optional attribute name twice is not an error, and the attribute is in the content once (disputed)",
       "tests": [
         "native/structure/schema-optional-attribute-twice"
+      ]
+    },
+    {
+      "id": "structure-partial-takes-requested-blocks-anywhere",
+      "spec": "spec.md#partial-processing-of-body-content",
+      "rule": "Partial processing takes the requested blocks wherever they are in the body, also after blocks of types the schema doesn't mention",
+      "tests": [
+        "native/structure/partial-finds-requested-block-after-other-block"
       ]
     }
   ]

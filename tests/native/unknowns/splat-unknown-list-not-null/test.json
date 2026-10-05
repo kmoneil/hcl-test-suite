@@ -1,0 +1,34 @@
+{
+  "description": "A splat over an unknown list is not equal to null",
+  "spec": [
+    "hclsyntax/spec.md#comparison-operators",
+    "hclsyntax/spec.md#splat-operators",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says a comparison with an unknown operand gives an unknown bool. SplatExpr.Value (hclsyntax/expression.go) refines its unknown result over an unknown list as not null, and Value.Equals (cty/value_ops.go) uses that to rule out null.",
+  "variables": {
+    "l": {
+      "unknown": [
+        "list",
+        "number"
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

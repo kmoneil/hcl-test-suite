@@ -1,0 +1,13 @@
+{
+  "description": "A legacy index with an exponent too large to read is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#index-operator",
+    "hclsyntax/spec.md#numeric-literals"
+  ],
+  "op": "parse",
+  "notes": "The spec's legacy index is a dot followed by digits only, so it rejects this input for the exponent; hashicorp/hcl accepts exponents in legacy indexes (native/traversals/legacy-index-exponent) and rejects this one because the number can't be read.",
+  "reference_error": "Invalid number literal",
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "description": "An object for expression with a null condition takes no part in unifying when it isn't selected",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec doesn't say whether a null condition is an error (native/for/condition-null-is-error), nor what type a failed result that isn't selected has. hashicorp/hcl treats the null condition as an error, evaluates both results (ConditionalExpr.Value in hclsyntax/expression.go), and ForExpr.Value gives the dynamic value when a condition is null. Because one result has the dynamic pseudo-type, it skips unification and returns the selected result unconverted.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "b": {
+              "number": "2"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

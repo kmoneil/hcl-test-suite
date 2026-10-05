@@ -1,0 +1,23 @@
+{
+  "description": "An object for evaluates elements after a tuple key that follows an unknown one",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "notes": "hashicorp/hcl doesn't report the second element's tuple key after the unknown one (native/for/object-key-tuple-after-unknown-key), but still evaluates the third element, whose index is out of range.",
+  "variables": {
+    "u": {
+      "unknown": "string"
+    }
+  },
+  "reference_error": "The given key does not identify an element in this collection value",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

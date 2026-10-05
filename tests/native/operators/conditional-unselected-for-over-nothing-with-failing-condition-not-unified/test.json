@@ -1,0 +1,25 @@
+{
+  "description": "An unselected for over an empty collection with a failing condition takes no part in unifying",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec evaluates the if condition once for each element, so over an empty collection the undefined variable is never evaluated, the true result is an empty tuple, and tuples of different lengths don't unify (native/types/unify-tuples-of-different-lengths-gives-list). hashicorp/hcl also checks the condition once before iterating (ForExpr.Value in hclsyntax/expression.go), so the undefined variable fails the for expression, which then gives the dynamic value; because one result has the dynamic pseudo-type, ConditionalExpr.Value skips unification and returns the selected result unconverted.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "number": "2"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "description": "A stray ~} after an attribute's value, outside any template, is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#operators-and-delimiters"
+  ],
+  "op": "parse",
+  "reference_error": "Missing newline after argument",
+  "expect": {
+    "valid": false
+  }
+}

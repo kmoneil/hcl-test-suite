@@ -1,0 +1,12 @@
+{
+  "description": "A UTF-8 lead byte followed by an ASCII letter in a heredoc is invalid",
+  "spec": [
+    "hclsyntax/spec.md#source-code-representation",
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid character encoding",
+  "expect": {
+    "valid": false
+  }
+}

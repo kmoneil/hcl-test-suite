@@ -1,0 +1,11 @@
+{
+  "description": "Two :: separators in a row in a function name are a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "parse",
+  "reference_error": "Missing function name",
+  "expect": {
+    "valid": false
+  }
+}

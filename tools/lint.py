@@ -19,6 +19,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "runner"))
 import hcltest  # noqa: E402  reuses the runner's test loading and normalization
+import mutation  # noqa: E402  the classes of surviving mutants
 
 TESTS = ROOT / "tests"
 COVERAGE = ROOT / "coverage"
@@ -37,6 +38,7 @@ NAME = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 MAX_INPUT_BYTES = 2048
 MAX_DESCRIPTION = 100
 EM_DASH = "\u2014"
+MUTANT_KEY = re.compile(r"^[\w.]+\.go:\d+:\d+ [a-z_]+$")
 
 
 def is_function_name(name):
@@ -604,6 +606,38 @@ class Linter:
             if self.in_scope(name):
                 self.problem(name, "no rule in coverage/ lists this test")
 
+    def check_mutation(self):
+        """Checks the format of coverage/mutation/; tools/mutation.py checks the entries against a run."""
+        for path in sorted((COVERAGE / "mutation").glob("*.json")):
+            where = path.relative_to(ROOT).as_posix()
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=hcltest.unique_keys)
+            except ValueError as e:
+                self.problem(where, f"invalid JSON: {e}")
+                continue
+            if set(data) != {"package", "version", "survivors"}:
+                self.problem(where, 'needs exactly "package", "version" and "survivors"')
+                continue
+            package = str(data["package"])
+            if not package.startswith(mutation.HCL + "/") or path.stem != package[len(mutation.HCL) + 1:].replace(
+                    "/", "-"):
+                self.problem(where, f"file name doesn't match the package {package!r}")
+            seen = set()
+            for i, entry in enumerate(data["survivors"]):
+                entry_where = f"{where} survivor {entry.get('mutant', i)!r}"
+                if set(entry) != {"mutant", "source", "class", "reason"}:
+                    self.problem(entry_where, 'needs exactly "mutant", "source", "class" and "reason"')
+                    continue
+                if not MUTANT_KEY.match(str(entry["mutant"])):
+                    self.problem(entry_where, '"mutant" must be a key like "parser.go:12:5 if_true"')
+                elif entry["mutant"] in seen:
+                    self.problem(entry_where, "classified twice")
+                seen.add(entry["mutant"])
+                if entry["class"] not in mutation.CLASSES:
+                    self.problem(entry_where, f"unknown class {entry['class']!r}")
+                self.text_field(entry_where, "source", entry["source"])
+                self.text_field(entry_where, "reason", entry["reason"])
+
 
 def main():
     parser = argparse.ArgumentParser(description="Check tests and coverage files.")
@@ -624,6 +658,7 @@ def main():
             linter.problem(directory.relative_to(TESTS).as_posix(), "test directory without test.json")
     linter.check_same_inputs(inputs)
     linter.check_coverage(names)
+    linter.check_mutation()
 
     for problem in linter.problems:
         print(problem)

@@ -1,0 +1,13 @@
+{
+  "description": "A second attribute on the same line is an error even when it holds a directive",
+  "spec": [
+    "hclsyntax/spec.md#attribute-definitions",
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "notes": "hashicorp/hcl's error recovery after the first attribute skips to the end of the line while tracking open delimiters (recoverAfterBodyItem in hclsyntax/parser.go), and this checks the error is still reported when that line closes a template directive.",
+  "reference_error": "Missing newline after argument",
+  "expect": {
+    "valid": false
+  }
+}

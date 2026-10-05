@@ -650,7 +650,8 @@
       "spec": "spec.md#type-unification",
       "rule": "A list of numbers and a set of strings unify to a list of numbers, because the set's strings convert to numbers unsafely (disputed)",
       "tests": [
-        "native/types/unify-list-and-set-unifies-element-types"
+        "native/types/unify-list-and-set-unifies-element-types",
+        "native/types/unify-set-and-list-fails-for-selected-set"
       ]
     },
     {

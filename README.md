@@ -7,7 +7,7 @@ HashiCorp configuration language, in the spirit of
 Any HCL implementation, in any language, can run it by providing a small
 adapter program.
 
-**Status:** draft. 3,460 tests of the native and JSON syntaxes, checking 1,201
+**Status:** draft. 3,618 tests of the native and JSON syntaxes, checking 1,219
 rules from the spec and the type expression, try function, dynamic block and
 user function extensions at hashicorp/hcl v2.24.0. The test and adapter
 formats may still change.
@@ -19,7 +19,8 @@ formats may still change.
   a `test.json` file with the expected result
   ([test format](docs/test-format.md)).
 - **`coverage/`** lists every rule the spec states, area by area, and the
-  tests that check each one.
+  tests that check each one. `coverage/mutation/` explains, for each small
+  change to hashicorp/hcl that no test catches, why no test can.
 - **Adapters** connect one implementation to the runner. An adapter reads a
   file, parses, evaluates or decodes it with a schema, and prints JSON
   ([protocol](docs/protocol.md)). `adapters/` has
@@ -34,8 +35,9 @@ formats may still change.
 - **`runner/hcltest.py`** runs each test through an adapter, compares the
   output with the expected result and prints a report. It needs only
   Python 3.9 or later.
-- **`tools/`** has the lint (`lint.py`) and coverage measurements
-  (`coverage.py`).
+- **`tools/`** has the lint (`lint.py`), coverage measurements
+  (`coverage.py`) and mutation testing (`mutation.py`, with the mutant
+  generator in `mutate/`).
 
 ## Running the suite
 
@@ -92,25 +94,25 @@ run the tests at all.
 
 | Area | Tests | Rules | Rules without tests |
 | --- | ---: | ---: | ---: |
-| lexical elements | 146 | 64 | 1 |
-| numbers | 59 | 28 | 1 |
-| structure (bodies, attributes, blocks, schemas) | 177 | 67 | 0 |
+| lexical elements | 168 | 65 | 1 |
+| numbers | 60 | 29 | 1 |
+| structure (bodies, attributes, blocks, schemas) | 185 | 68 | 0 |
 | collections (tuples, objects) | 152 | 66 | 0 |
-| strings | 76 | 27 | 0 |
-| heredocs | 107 | 36 | 0 |
-| templates | 306 | 87 | 0 |
-| variables, attribute access, index | 155 | 58 | 1 |
-| splat | 101 | 30 | 0 |
-| function calls | 152 | 38 | 0 |
-| for expressions | 175 | 64 | 0 |
-| operators | 347 | 104 | 0 |
-| types, conversions, unification | 136 | 80 | 4 |
-| unknown values | 181 | 78 | 0 |
+| strings | 79 | 27 | 0 |
+| heredocs | 124 | 36 | 0 |
+| templates | 322 | 87 | 0 |
+| variables, attribute access, index | 160 | 60 | 1 |
+| splat | 104 | 30 | 0 |
+| function calls | 157 | 38 | 0 |
+| for expressions | 195 | 68 | 0 |
+| operators | 359 | 105 | 0 |
+| types, conversions, unification | 137 | 80 | 4 |
+| unknown values | 212 | 85 | 0 |
 | static analysis | 121 | 38 | 0 |
 | JSON grammar | 94 | 29 | 0 |
 | JSON bodies (attributes, blocks, schemas) | 103 | 33 | 0 |
-| JSON expressions | 75 | 20 | 0 |
-| JSON static analysis | 98 | 27 | 0 |
+| JSON expressions | 85 | 21 | 0 |
+| JSON static analysis | 102 | 27 | 0 |
 | type expressions (`ext/typeexpr`) | 175 | 51 | 0 |
 | JSON type expressions | 34 | 8 | 0 |
 | `try` and `can` (`ext/tryfunc`) | 98 | 21 | 1 |
@@ -119,7 +121,7 @@ run the tests at all.
 | JSON dynamic blocks | 42 | 23 | 0 |
 | user functions (`ext/userfunc`) | 116 | 46 | 1 |
 | JSON user functions | 57 | 22 | 0 |
-| **total** | **3,460** | **1,213** | **12** |
+| **total** | **3,618** | **1,231** | **12** |
 
 - Most rules without tests need something the protocol can't express yet:
   error positions or messages, capsule values, literal-only evaluation with
@@ -130,8 +132,8 @@ run the tests at all.
   spec leaves to implementations (rounding and the order of set elements),
   and one is guidance for applications.
   `python3 tools/coverage.py rules` lists them.
-- The tests exercise 85.0% of the statements in hashicorp/hcl's `hclsyntax`
-  package, 85.8% of its `json` package, 78.6% of `ext/typeexpr`, 97.1% of
+- The tests exercise 87.8% of the statements in hashicorp/hcl's `hclsyntax`
+  package, 86.0% of its `json` package, 78.6% of `ext/typeexpr`, 97.1% of
   `ext/tryfunc`, 71.2% of `ext/dynblock` and all of `ext/userfunc`
   (`python3 tools/coverage.py go`).
   Most of the rest is syntax tree walking, listing the variables an
@@ -141,6 +143,20 @@ run the tests at all.
   type constraint values; reading type expressions is fully covered. In
   `ext/dynblock` it is listing the variables that dynamic blocks use, value
   marks, hcldec interfaces and the option for checking `for_each` values.
+- Running a line isn't checking it, so `python3 tools/mutation.py run`
+  measures more: it makes 2,780 small changes to the hand-written code of
+  `hclsyntax`, one at a time (an operator swapped, a condition forced, a
+  statement removed), builds the Go adapter with each, and runs the tests
+  that reach the changed line. The tests catch 1,891 of them, which is every
+  change the protocol can see. For each of the 674 they don't catch,
+  `coverage/mutation/hclsyntax.json` says why no test can: 354 only change
+  error messages, how many errors there are or their ranges, 82 only change
+  source ranges, 151 behave the same for every input, 65 only differ in
+  states the protocol can't produce (Go API calls or hand-built syntax
+  trees), 10 need an input with two mistakes, 9 only change value marks and
+  3 only change output the protocol treats as equal. Another 214 are in code
+  no test reaches, mostly the code statement coverage leaves out, and 1
+  doesn't compile.
 
 ## How the tests are checked
 
@@ -158,14 +174,20 @@ run the tests at all.
   missing cases, and then fixed.
 - `tools/lint.py` checks formats, spec links, rule coverage, feature flags,
   duplicates and portability.
+- Mutation testing of `hclsyntax` found behaviors the tests didn't check,
+  which statement coverage can't show: error tests whose input could fail for
+  another reason, what hashicorp/hcl knows about unknown values, and states of
+  the heredoc and template scanner. Each surviving change was either given a
+  test or a reason in `coverage/mutation/`, and separate reviewers checked the
+  new tests and the reasons.
 
 ## Results
 
 | Implementation | Passed | Failed | Adapter errors | Skipped |
 | --- | ---: | ---: | ---: | ---: |
-| hashicorp/hcl v2.24.0 | 3,460 | 0 | 0 | 0 |
-| opentofu/hcl, as used by OpenTofu v1.12.6 | 3,458 | 2 | 0 | 0 |
-| hcl-rs 0.19.8 | 1,624 | 222 (89 disputed) | 21 | 1,593 |
+| hashicorp/hcl v2.24.0 | 3,618 | 0 | 0 | 0 |
+| opentofu/hcl, as used by OpenTofu v1.12.6 | 3,616 | 2 | 0 | 0 |
+| hcl-rs 0.19.8 | 1,716 | 225 (91 disputed) | 21 | 1,656 |
 
 OpenTofu has no HCL implementation of its own: its `go.mod` replaces
 hashicorp/hcl with the fork [opentofu/hcl](https://github.com/opentofu/hcl), so
@@ -174,19 +196,19 @@ its row shows how that fork differs from hashicorp/hcl v2.24.0.
 Every test also says whether its input parses, and `--validate` checks only
 that. This measures parsers that can't run the tests, like python-hcl2 and
 tree-sitter-hcl, and checks the other implementations' parsers on the inputs
-of all 2,949 native syntax tests, including tests they skip. Only
-hashicorp/hcl and its fork read the JSON syntax, so the others skip its 511
+of all 3,093 native syntax tests, including tests they skip. Only
+hashicorp/hcl and its fork read the JSON syntax, so the others skip its 525
 tests.
 
 | Implementation | Passed | Accepted invalid input | Rejected valid input | Adapter errors | Skipped |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| hashicorp/hcl v2.24.0 | 3,460 | 0 | 0 | 0 | 0 |
-| opentofu/hcl, as used by OpenTofu v1.12.6 | 3,460 | 0 | 0 | 0 | 0 |
-| hcl-rs 0.19.8 | 2,873 | 29 (6 disputed) | 47 (30 disputed) | 0 | 511 |
-| python-hcl2 8.1.4 | 2,681 | 90 (11 disputed) | 178 (75 disputed) | 0 | 511 |
-| tree-sitter-hcl 1.2.0 | 2,793 | 102 (22 disputed) | 54 (24 disputed) | 0 | 511 |
+| hashicorp/hcl v2.24.0 | 3,618 | 0 | 0 | 0 | 0 |
+| opentofu/hcl, as used by OpenTofu v1.12.6 | 3,618 | 0 | 0 | 0 | 0 |
+| hcl-rs 0.19.8 | 3,015 | 30 (6 disputed) | 48 (31 disputed) | 0 | 525 |
+| python-hcl2 8.1.4 | 2,814 | 98 (12 disputed) | 181 (77 disputed) | 0 | 525 |
+| tree-sitter-hcl 1.2.0 | 2,922 | 117 (22 disputed) | 54 (24 disputed) | 0 | 525 |
 
-hcl-rs fails all 76 of these tests in the first table too. As in the first
+hcl-rs fails all 78 of these tests in the first table too. As in the first
 table, a failure counts as disputed when its test is disputed, even if the
 dispute is about evaluation rather than parsing.
 
@@ -214,14 +236,14 @@ don't change results.
 
 ### hcl-rs 0.19.8
 
-The 133 failures on tests that aren't disputed fall into these groups:
+The 134 failures on tests that aren't disputed fall into these groups:
 
 - **Parsing:** it accepts `[for, x]`, `{for: 1}` and `[for v inxs: v]`; literal
   newlines and the escapes `\b`, `\f` and `\/` in strings; and newlines after
   `.` and inside `[*]`. Comparison operators have no associativity, so
   `1 < 2 < 3` is true and the rest of a chain is dropped. `-1[0]` indexes
   `-1`. It also rejects `t.01` and a newline after a unary operator even inside
-  parentheses or brackets, accepts `foo.0.0.bar`, uses XID_Start instead of
+  parentheses or brackets, accepts `foo.0.0.bar` and `t[*].0.1`, uses XID_Start instead of
   ID_Start, and treats a lone CR as whitespace but rejects one in a line
   comment. A `$` or `%` written as `\u0024` or `\u0025` right before `${` or
   `%{` is read as the escaped `$${` or `%%{`.
@@ -253,10 +275,10 @@ fails for some valid files: a for expression whose result is a number literal,
 as in `[for v in xs: 1]`, raises a TypeError, and an attribute followed by a
 block with the same name is an error (in the other order, the block is
 silently dropped). python-hcl2 only accepts text, so as for hcl-rs, the adapter
-reports invalid UTF-8 as a parse error, which decides the 15 tests whose input
+reports invalid UTF-8 as a parse error, which decides the 29 tests whose input
 isn't UTF-8.
 
-The 182 failures on tests that aren't disputed fall into these groups:
+The 190 failures on tests that aren't disputed fall into these groups:
 
 - **Strip markers:** it rejects them on interpolations in quoted strings, as in
   `"${~ x}"` and `"${x ~}"`, although it accepts them in heredocs and on
@@ -299,7 +321,7 @@ The 182 failures on tests that aren't disputed fall into these groups:
   `!!x`), and spaces or newlines inside `[*]` or between the `.` and `*` of
   `.*` (`t[ * ]`, `t. *`).
 
-Some of its 86 failures on disputed tests come from the problems above, such
+Some of its 89 failures on disputed tests come from the problems above, such
 as the 17 tests disputed about which characters strip markers remove, whose
 strip markers it rejects. Most concern the syntax the tests are disputed
 about. For example, of the namespaced calls that aren't in the spec, it accepts
@@ -328,7 +350,7 @@ they depend on the platform:
   whitespace, so U+00A0 wouldn't be whitespace on macOS either, and markers
   with an `É` would be rejected on Linux arm64 too.
 
-The 110 failures on tests that aren't disputed fall into these groups:
+The 125 failures on tests that aren't disputed fall into these groups:
 
 - **Newlines:** it doesn't check the newlines that end attributes and block
   lines. It accepts an attribute's `=` or value, a block label or `{`, or the
@@ -354,13 +376,13 @@ The 110 failures on tests that aren't disputed fall into these groups:
   U+00FF, such as `Ω`, or here one from U+0080 to U+00FF, such as `É`.
 - **Other syntax:** it accepts an attribute defined twice, braces around the
   top-level body, legacy index chains like `foo.0.0.bar`, `ns::f` without
-  parentheses, `ns::()`, and `inxs` or `ifc` in for expressions. It rejects
-  spaces, newlines or inline comments inside `[*]` or between the `.` and `*`
-  of `.*` (`t[ * ]`, `t. *`).
+  parentheses, `ns::()`, `ns::::f()` and `ns::1(2)`, and `inxs` or `ifc` in
+  for expressions. It rejects spaces, newlines or inline comments inside
+  `[*]` or between the `.` and `*` of `.*` (`t[ * ]`, `t. *`).
 
 ### Where the spec and hashicorp/hcl disagree
 
-595 tests are disputed. `python3 tools/coverage.py disputes` lists them all by
+635 tests are disputed. `python3 tools/coverage.py disputes` lists them all by
 spec section, with notes. The main themes:
 
 - **Source text:** a byte order mark, identifiers starting with `_`, and some
@@ -379,7 +401,15 @@ spec section, with notes. The main themes:
   dynamic pseudo-type read as unknown results, which its own guarantees rule
   out.
 - **Logic operators:** `&&` and `||` return known results for some unknown
-  operands and drop errors from the operand that doesn't decide.
+  operands and drop errors from the operand that doesn't decide, and an
+  unknown left operand hides errors in the right one.
+- **Unknown values:** hashicorp/hcl records what it knows about an unknown
+  result, so a conditional, template, splat or arithmetic result that can't
+  be null is not equal to null, and number ranges, collection lengths and a
+  template's known start decide some comparisons. After an unknown condition
+  or key, a for expression doesn't report a later null or invalid one. The
+  spec doesn't say what type a result that failed contributes to a
+  conditional.
 - **Types:** unification prefers lists over tuples and maps over objects, bool
   and number don't unify to string, and string to number conversion accepts
   `"1e3"`, `"1p4"`, `"+5"` and `"Inf"`.
@@ -533,6 +563,8 @@ spec section, with notes. The main themes:
 
 ## Next steps
 
+- Mutation testing of the `json` package and the `ext/` packages, as was done
+  for `hclsyntax`.
 - Results for bc-python-hcl2, the fork of python-hcl2 that Checkov pins.
 
 ## License

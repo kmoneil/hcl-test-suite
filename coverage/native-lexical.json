@@ -18,7 +18,9 @@
         "native/lexical/invalid-utf8-byte-in-quoted-string",
         "native/lexical/invalid-utf8-byte-between-tokens",
         "native/lexical/invalid-utf8-byte-in-identifier",
-        "native/lexical/invalid-utf8-byte-in-heredoc"
+        "native/lexical/invalid-utf8-byte-in-heredoc",
+        "native/lexical/utf16-byte-order-mark-is-invalid",
+        "native/lexical/utf8-two-c0-bytes-are-invalid"
       ]
     },
     {
@@ -41,10 +43,19 @@
     {
       "id": "lexical-utf8-truncated-sequence",
       "spec": "hclsyntax/spec.md#source-code-representation",
-      "rule": "A lead byte that isn't followed by all of its continuation bytes is a parse error, whether another character or the end of the file cuts the sequence short",
+      "rule": "A lead byte that isn't followed by all of its continuation bytes is a parse error, whether another character, a newline or the end of the file cuts the sequence short, in code, quoted strings and heredocs",
       "tests": [
         "native/lexical/utf8-truncated-sequence-is-invalid",
-        "native/lexical/utf8-truncated-sequence-at-end-of-file-is-invalid"
+        "native/lexical/utf8-truncated-sequence-at-end-of-file-is-invalid",
+        "native/lexical/utf8-lead-byte-before-newline-is-invalid",
+        "native/lexical/utf8-lead-byte-as-last-value-is-invalid",
+        "native/lexical/utf8-truncated-sequence-after-identifier-at-end-of-file-is-invalid",
+        "native/lexical/utf8-lead-byte-before-letter-in-heredoc-is-invalid",
+        "native/lexical/utf8-lead-byte-before-letter-in-string-is-invalid",
+        "native/lexical/utf8-lead-byte-between-letters-in-string-is-invalid",
+        "native/lexical/utf8-two-lead-bytes-in-string-are-invalid",
+        "native/lexical/utf8-four-byte-lead-before-letter-in-heredoc-is-invalid",
+        "native/lexical/utf8-two-lead-bytes-in-heredoc-are-invalid"
       ]
     },
     {
@@ -93,7 +104,8 @@
       "spec": "hclsyntax/spec.md#source-code-representation",
       "rule": "A UTF-8 byte order mark at the very start of a file is skipped (disputed)",
       "tests": [
-        "native/lexical/byte-order-mark-at-start"
+        "native/lexical/byte-order-mark-at-start",
+        "native/lexical/byte-order-mark-before-if-directive"
       ]
     },
     {
@@ -162,7 +174,8 @@
         "native/lexical/no-break-space-is-not-whitespace",
         "native/lexical/ideographic-space-is-not-whitespace",
         "native/lexical/form-feed-is-not-whitespace",
-        "native/lexical/vertical-tab-is-not-whitespace"
+        "native/lexical/vertical-tab-is-not-whitespace",
+        "native/lexical/two-no-break-spaces-are-invalid"
       ]
     },
     {
@@ -193,7 +206,9 @@
         "native/lexical/lone-cr-at-line-start-is-invalid",
         "native/lexical/lone-cr-inside-brackets-is-invalid",
         "native/lexical/lone-cr-does-not-end-line-comment",
-        "native/lexical/inline-comment-with-lone-cr"
+        "native/lexical/inline-comment-with-lone-cr",
+        "native/lexical/two-lone-crs-are-invalid",
+        "native/lexical/lone-cr-at-end-of-file-is-invalid"
       ]
     },
     {
@@ -547,7 +562,9 @@
         "native/lexical/single-pipe-is-invalid",
         "native/lexical/caret-is-invalid",
         "native/lexical/tilde-outside-template-is-invalid",
-        "native/lexical/double-star-is-not-an-operator"
+        "native/lexical/double-star-is-not-an-operator",
+        "native/lexical/strip-marker-close-in-object-is-invalid",
+        "native/lexical/strip-marker-close-after-value-is-invalid"
       ]
     },
     {
@@ -608,6 +625,18 @@
         "native/lexical/ellipsis-outside-call-is-invalid",
         "native/lexical/colon-outside-conditional-is-invalid",
         "native/lexical/equals-inside-expression-is-invalid"
+      ]
+    },
+    {
+      "id": "lexical-operators-doubled",
+      "spec": "hclsyntax/spec.md#operators-and-delimiters",
+      "rule": "A multi-character operator written twice in a row, such as ==== or &&&&, is two operators where no construct allows that, so it is an error",
+      "tests": [
+        "native/lexical/equality-operator-twice-is-invalid",
+        "native/lexical/inequality-operator-twice-is-invalid",
+        "native/lexical/greater-than-or-equal-twice-is-invalid",
+        "native/lexical/and-operator-twice-is-invalid",
+        "native/lexical/or-operator-twice-is-invalid"
       ]
     }
   ]

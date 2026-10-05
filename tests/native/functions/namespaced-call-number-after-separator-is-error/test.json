@@ -1,0 +1,11 @@
+{
+  "description": "A number after :: in a function name is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "parse",
+  "reference_error": "Missing function name",
+  "expect": {
+    "valid": false
+  }
+}

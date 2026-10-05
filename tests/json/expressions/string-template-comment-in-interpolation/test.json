@@ -1,0 +1,25 @@
+{
+  "description": "An inline comment inside an interpolation in a JSON string template is ignored",
+  "spec": [
+    "json/spec.md#strings",
+    "hclsyntax/spec.md#template-interpolations"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "description": "An unknown left operand of && hides the error of a template with a null part before an unknown one",
+  "spec": [
+    "hclsyntax/spec.md#logic-operators",
+    "hclsyntax/spec.md#template-interpolations",
+    "hclsyntax/spec.md#templates",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec doesn't say that an unknown operand hides errors in the other one. The ShortCircuit function of OpLogicalAnd (hclsyntax/expression_ops.go) returns an unknown bool with only the left operand's errors when both operands are unknown and the left one has no errors. TemplateExpr.Value (hclsyntax/expression_template.go) keeps evaluating parts after a null interpolation, so the later unknown part makes the failed template's result unknown, and its error isn't reported.",
+  "variables": {
+    "u": {
+      "unknown": "bool"
+    },
+    "v": {
+      "unknown": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "bool"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

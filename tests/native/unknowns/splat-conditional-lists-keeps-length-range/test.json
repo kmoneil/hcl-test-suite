@@ -1,0 +1,55 @@
+{
+  "description": "A splat over an unknown choice of non-empty lists is not equal to an empty list",
+  "spec": [
+    "hclsyntax/spec.md#comparison-operators",
+    "hclsyntax/spec.md#splat-operators",
+    "hclsyntax/spec.md#conditional-operator",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says a comparison with an unknown operand gives an unknown bool. ConditionalExpr.Value refines the unknown list with the range of its results' lengths, SplatExpr.Value (hclsyntax/expression.go) keeps that range for its result, and Value.Equals (cty/value_ops.go) uses it to rule out an empty list.",
+  "variables": {
+    "u": {
+      "unknown": "bool"
+    },
+    "l0": {
+      "list": [],
+      "element_type": "number"
+    },
+    "l1": {
+      "list": [
+        {
+          "number": "1"
+        }
+      ],
+      "element_type": "number"
+    },
+    "l2": {
+      "list": [
+        {
+          "number": "2"
+        },
+        {
+          "number": "3"
+        }
+      ],
+      "element_type": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

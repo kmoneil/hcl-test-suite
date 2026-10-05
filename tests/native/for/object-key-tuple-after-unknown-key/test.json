@@ -1,0 +1,30 @@
+{
+  "description": "An object for key that is a tuple after an unknown key gives the dynamic value",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says each key becomes an attribute name, which a tuple can't be, and that unknown values give the dynamic pseudo-type only when they are otherwise type-valid. ForExpr.Value (hclsyntax/expression.go) only reports a null key or one that can't convert to a string while every earlier key was known, so after an unknown key it skips the error and returns the dynamic value.",
+  "variables": {
+    "u": {
+      "unknown": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

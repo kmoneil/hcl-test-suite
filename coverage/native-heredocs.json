@@ -86,7 +86,9 @@
         "native/heredocs/longer-identifier-is-content",
         "native/heredocs/marker-prefix-is-content",
         "native/heredocs/marker-in-other-case-is-content",
-        "native/heredocs/other-character-with-same-low-byte-is-content"
+        "native/heredocs/other-character-with-same-low-byte-is-content",
+        "native/heredocs/dollar-sign-before-marker-is-content",
+        "native/heredocs/percent-sign-before-marker-is-content"
       ]
     },
     {
@@ -100,11 +102,18 @@
     {
       "id": "heredocs-closing-marker-is-literal-text",
       "spec": "hclsyntax/spec.md#template-expressions",
-      "rule": "Only literal template text can form the closing marker line: text produced by an interpolation, or the marker with an interpolation before or after it on the line, is content",
+      "rule": "Only literal template text can form the closing marker line: text produced by an interpolation, or the marker with an interpolation or directive before or after it on the line, is content, whatever the interpolation or directive holds",
       "tests": [
         "native/heredocs/interpolated-marker-is-content",
         "native/heredocs/marker-joined-to-interpolation-is-content",
-        "native/heredocs/interpolation-before-marker-is-content"
+        "native/heredocs/interpolation-before-marker-is-content",
+        "native/heredocs/marker-after-strip-directive-is-content",
+        "native/heredocs/nested-template-before-marker-is-content",
+        "native/heredocs/nested-template-with-strip-before-marker-is-content",
+        "native/heredocs/marker-after-strip-interpolation-is-content",
+        "native/heredocs/marker-after-directive-is-content",
+        "native/heredocs/nested-template-with-strip-interpolation-before-marker-is-content",
+        "native/heredocs/nested-template-with-directive-before-marker-is-content"
       ]
     },
     {
@@ -179,7 +188,8 @@
         "native/heredocs/unterminated-heredoc",
         "native/heredocs/unterminated-empty-heredoc",
         "native/heredocs/flush-unterminated-heredoc",
-        "native/heredocs/marker-at-end-of-file-is-invalid"
+        "native/heredocs/marker-at-end-of-file-is-invalid",
+        "native/heredocs/unterminated-in-utf8-sequence-at-end-of-file"
       ]
     },
     {
@@ -244,7 +254,8 @@
         "native/heredocs/crlf-line-endings",
         "native/heredocs/crlf-line-endings-parse",
         "native/heredocs/mixed-line-endings-are-kept",
-        "native/heredocs/flush-crlf-line-endings"
+        "native/heredocs/flush-crlf-line-endings",
+        "native/heredocs/dollar-sign-on-crlf-line-is-content"
       ]
     },
     {
@@ -281,7 +292,8 @@
       "spec": "hclsyntax/spec.md#template-expressions",
       "rule": "With <<-, other leading Unicode whitespace such as U+00A0 NO-BREAK SPACE counts as one character of indentation (disputed)",
       "tests": [
-        "native/heredocs/flush-no-break-space-counts-as-indentation"
+        "native/heredocs/flush-no-break-space-counts-as-indentation",
+        "native/heredocs/flush-removes-indentation-of-mixed-width-characters"
       ]
     },
     {

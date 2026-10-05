@@ -1,0 +1,12 @@
+{
+  "description": "A number can't be the attribute name in a one-line block",
+  "spec": [
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#attribute-definitions"
+  ],
+  "op": "parse",
+  "reference_error": "An argument or block definition is required here",
+  "expect": {
+    "valid": false
+  }
+}

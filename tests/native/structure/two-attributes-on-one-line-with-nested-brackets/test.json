@@ -1,0 +1,13 @@
+{
+  "description": "A second attribute on the same line is an error even when it nests brackets eight deep",
+  "spec": [
+    "hclsyntax/spec.md#attribute-definitions",
+    "hclsyntax/spec.md#structural-elements"
+  ],
+  "op": "parse",
+  "notes": "hashicorp/hcl's error recovery after the first attribute tracks the open brackets in a slice that starts with room for eight (recoverAfterBodyItem in hclsyntax/parser.go), and this checks the error is still reported when the brackets fill it.",
+  "reference_error": "Missing newline after argument",
+  "expect": {
+    "valid": false
+  }
+}

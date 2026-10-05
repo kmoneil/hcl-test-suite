@@ -65,13 +65,14 @@
     {
       "id": "functions-expand-final-position",
       "spec": "hclsyntax/spec.md#functions-and-function-calls",
-      "rule": "The ellipsis may only directly follow the last argument inside the parentheses: not an earlier argument, not a lone ellipsis, not before or after a trailing comma and not after the closing parenthesis",
+      "rule": "The ellipsis may only directly follow the last argument inside the parentheses: not an earlier argument, not a lone ellipsis, not before or after a trailing comma and not after the closing parenthesis, and the closing parenthesis must follow it directly",
       "tests": [
         "native/functions/call-expand-after-comma-is-error",
         "native/functions/call-expand-not-last-is-error",
         "native/functions/call-expand-outside-parentheses-is-error",
         "native/functions/call-expand-then-comma-is-error",
-        "native/functions/call-expand-without-argument-is-error"
+        "native/functions/call-expand-without-argument-is-error",
+        "native/functions/call-expand-closed-by-bracket-is-error"
       ]
     },
     {
@@ -179,7 +180,10 @@
         "native/functions/namespaced-call-newline-after-separator-is-error",
         "native/functions/namespaced-call-triple-colon-is-error",
         "native/functions/namespaced-name-without-call-is-error",
-        "native/functions/namespaced-call-newline-before-separator-is-error"
+        "native/functions/namespaced-call-newline-before-separator-is-error",
+        "native/functions/namespaced-call-number-after-separator-is-error",
+        "native/functions/namespaced-name-followed-by-bracket-is-error",
+        "native/functions/namespaced-call-doubled-separator-is-error"
       ]
     },
     {
@@ -212,7 +216,8 @@
         "native/functions/namespaced-call-does-not-find-plain-function",
         "native/functions/namespaced-function-call-evaluates",
         "native/functions/namespaced-function-call-multiple-levels",
-        "native/functions/namespaced-unknown-function-in-known-namespace"
+        "native/functions/namespaced-unknown-function-in-known-namespace",
+        "native/functions/namespaced-unknown-function-one-letter-namespace"
       ]
     },
     {

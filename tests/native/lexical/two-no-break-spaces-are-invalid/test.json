@@ -1,0 +1,11 @@
+{
+  "description": "Two no-break spaces in a row before an attribute are invalid characters",
+  "spec": [
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "reference_error": "This character is not used within the language",
+  "expect": {
+    "valid": false
+  }
+}

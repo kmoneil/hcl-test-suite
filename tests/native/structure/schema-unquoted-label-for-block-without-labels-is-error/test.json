@@ -1,0 +1,25 @@
+{
+  "description": "An unquoted label on a block whose type the schema gives no labels is an error",
+  "spec": [
+    "spec.md#schema-driven-processing",
+    "hclsyntax/spec.md#structural-elements",
+    "hclsyntax/spec.md#blocks"
+  ],
+  "op": "decode",
+  "schema": {
+    "mode": "exhaustive",
+    "blocks": [
+      {
+        "type": "b",
+        "body": {
+          "mode": "dynamic-attributes"
+        }
+      }
+    ]
+  },
+  "reference_error": "Extraneous label for b",
+  "expect": {
+    "valid": false,
+    "phase": "schema"
+  }
+}

@@ -235,7 +235,8 @@
         "native/traversals/getattr-double-dot-is-error",
         "native/traversals/getattr-missing-name-is-error",
         "native/traversals/getattr-quoted-name-is-error",
-        "native/traversals/getattr-without-object-is-error"
+        "native/traversals/getattr-without-object-is-error",
+        "native/traversals/double-dot-between-longer-names-is-error"
       ]
     },
     {
@@ -559,6 +560,24 @@
       "rule": "A minus sign cannot follow the dot of a legacy index, so a legacy index can't be negative",
       "tests": [
         "native/traversals/legacy-index-negative-is-error"
+      ]
+    },
+    {
+      "id": "traversals-legacy-index-unreadable-number",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "A legacy index whose number can't be read, such as one with an exponent too large to represent, is a syntax error, also after an attribute-only splat",
+      "tests": [
+        "native/traversals/legacy-index-with-unreadable-number-is-error",
+        "native/traversals/legacy-index-after-splat-with-unreadable-number-is-error"
+      ]
+    },
+    {
+      "id": "traversals-index-operand-errors",
+      "spec": "hclsyntax/spec.md#index-operator",
+      "rule": "Errors in evaluating an index operation's collection or key are reported",
+      "tests": [
+        "native/traversals/index-collection-error-is-reported",
+        "native/traversals/index-key-error-is-reported"
       ]
     }
   ]

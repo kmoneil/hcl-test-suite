@@ -1,0 +1,11 @@
+{
+  "description": "A carriage return ending the file without a line feed is invalid",
+  "spec": [
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "reference_error": "This character is not used within the language",
+  "expect": {
+    "valid": false
+  }
+}

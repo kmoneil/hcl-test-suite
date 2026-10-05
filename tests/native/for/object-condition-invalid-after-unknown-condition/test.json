@@ -1,0 +1,30 @@
+{
+  "description": "An object for condition that isn't a bool after an unknown one gives the dynamic value",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says the condition must evaluate to a bool, and that unknown values give the dynamic pseudo-type only when they are otherwise type-valid. ForExpr.Value (hclsyntax/expression.go) only reports a null or invalid condition while every earlier condition was known, so after an unknown condition it skips the error and returns the dynamic value.",
+  "variables": {
+    "u": {
+      "unknown": "bool"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "description": "Two C0 bytes, which never occur in UTF-8, are invalid",
+  "spec": [
+    "hclsyntax/spec.md#source-code-representation"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid character encoding",
+  "expect": {
+    "valid": false
+  }
+}

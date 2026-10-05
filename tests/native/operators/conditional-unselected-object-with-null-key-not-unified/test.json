@@ -1,0 +1,24 @@
+{
+  "description": "An object constructor with a null key takes no part in unifying when it isn't selected",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says errors in the result that isn't selected aren't passed through, and that both results must unify, but not what type a failed result has. hashicorp/hcl evaluates both results (ConditionalExpr.Value in hclsyntax/expression.go), and ObjectConsExpr.Value gives the dynamic value when a key is null. Because one result has the dynamic pseudo-type, it skips unification and returns the selected object unconverted, where unifying with an object type would give a map.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "b": {
+              "number": "2"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

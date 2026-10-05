@@ -1,0 +1,14 @@
+{
+  "description": "A literal whose binary exponent doesn't fit in 32 bits, such as 1e2147483647, is an error",
+  "spec": [
+    "hclsyntax/spec.md#numeric-literals",
+    "spec.md#primitive-types"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec requires an error only for a number that can't be represented exactly, and an arbitrary-precision decimal can represent 10^2147483647, so the spec doesn't decide. hashicorp/hcl parses literals with go-cty's ParseNumberVal, which uses math/big: it rejects a literal whose binary exponent before scaling (the mantissa's bit length plus the decimal exponent, less any fraction digits) doesn't fit in a 32-bit integer, while a smaller one that overflows while scaling becomes infinity (native/numbers/exponent-overflow-becomes-infinity).",
+  "reference_error": "Invalid number literal",
+  "expect": {
+    "valid": false
+  }
+}

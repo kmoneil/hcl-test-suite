@@ -171,13 +171,14 @@
         "json/analysis/traversal-names-not-normalized",
         "json/analysis/traversal-index-string-escapes",
         "json/analysis/traversal-surrounding-spaces",
-        "json/analysis/traversal-inline-comment"
+        "json/analysis/traversal-inline-comment",
+        "json/analysis/traversal-attribute-after-quoted-index"
       ]
     },
     {
       "id": "analysis-json-traversal-content-errors",
       "spec": "json/spec.md#static-traversal",
-      "rule": "Static traversal analysis of a string whose content isn't a native traversal is an error: an operation, a function call, template interpolation syntax, an index with a variable key, a splat of either kind, an unclosed index bracket, a dot without a name, or nothing",
+      "rule": "Static traversal analysis of a string whose content isn't a native traversal is an error: an operation, a function call, template interpolation syntax, an index with a variable key, a number too large to represent or a quoted key holding an interpolation, a splat of either kind, an unclosed index bracket, a dot without a name, or nothing",
       "tests": [
         "json/analysis/traversal-operation",
         "json/analysis/traversal-call",
@@ -187,7 +188,10 @@
         "json/analysis/traversal-attribute-only-splat",
         "json/analysis/traversal-unclosed-index",
         "json/analysis/traversal-trailing-dot",
-        "json/analysis/traversal-empty-string"
+        "json/analysis/traversal-empty-string",
+        "json/analysis/traversal-index-number-too-large-is-error",
+        "json/analysis/traversal-quoted-index-with-template-is-error",
+        "json/analysis/traversal-quoted-index-without-bracket-is-error"
       ]
     },
     {

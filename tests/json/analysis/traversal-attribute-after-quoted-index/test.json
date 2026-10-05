@@ -1,0 +1,46 @@
+{
+  "description": "A string traversal keeps an attribute access after a quoted index",
+  "spec": [
+    "spec.md#static-analysis",
+    "json/spec.md#static-traversal"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax",
+    "static-analysis"
+  ],
+  "schema": {
+    "mode": "exhaustive",
+    "attributes": [
+      {
+        "name": "a",
+        "analysis": {
+          "kind": "static-traversal"
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "static_traversal": [
+            {
+              "root": "x"
+            },
+            {
+              "index": {
+                "string": "b"
+              }
+            },
+            {
+              "attr": "c"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

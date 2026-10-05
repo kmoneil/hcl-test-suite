@@ -1,0 +1,11 @@
+{
+  "description": "A namespaced function name followed by a bracket instead of a parenthesis is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls"
+  ],
+  "op": "parse",
+  "reference_error": "Missing open parenthesis",
+  "expect": {
+    "valid": false
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "description": "Calling an undefined function in a one-letter namespace is an evaluation error",
+  "spec": [
+    "hclsyntax/spec.md#functions-and-function-calls",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec has no namespaced function names, so n::f() would be a syntax error. hashicorp/hcl parses the call (finishParsingFunctionCall in hclsyntax/parser.go) and reports the unknown function during evaluation (FunctionCallExpr.Value in hclsyntax/expression.go), naming the namespace it took from the name.",
+  "reference_error": "There are no functions in namespace \"n::\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

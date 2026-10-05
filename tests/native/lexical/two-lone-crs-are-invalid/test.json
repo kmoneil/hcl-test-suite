@@ -1,0 +1,11 @@
+{
+  "description": "Two carriage returns in a row without a line feed are invalid",
+  "spec": [
+    "hclsyntax/spec.md#comments-and-whitespace"
+  ],
+  "op": "parse",
+  "reference_error": "This character is not used within the language",
+  "expect": {
+    "valid": false
+  }
+}

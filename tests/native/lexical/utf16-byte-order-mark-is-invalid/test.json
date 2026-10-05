@@ -1,0 +1,11 @@
+{
+  "description": "A UTF-16 byte order mark, two bytes that never occur in UTF-8, is invalid",
+  "spec": [
+    "hclsyntax/spec.md#source-code-representation"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid character encoding",
+  "expect": {
+    "valid": false
+  }
+}

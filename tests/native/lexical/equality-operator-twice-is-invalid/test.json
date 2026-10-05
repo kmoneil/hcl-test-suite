@@ -1,0 +1,11 @@
+{
+  "description": "The equality operator written twice in a row is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#operators-and-delimiters"
+  ],
+  "op": "parse",
+  "reference_error": "Expected the start of an expression",
+  "expect": {
+    "valid": false
+  }
+}

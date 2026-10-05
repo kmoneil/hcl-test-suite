@@ -1,0 +1,20 @@
+{
+  "description": "<<- removes the same number of indentation characters from each line, whatever their size",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says <<- removes leading spaces without saying which characters count as spaces (native/heredocs/flush-no-break-space-counts-as-indentation). hashicorp/hcl counts any leading Unicode whitespace as indentation (flushHeredocTemplateParts in hclsyntax/parser_template.go uses unicode.IsSpace), so the first line's U+00A0 and space are two characters of indentation, the same as the second line's two spaces, and two characters are removed from each line although the first line's take three bytes.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x\ny\n"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "description": "Elements after one with an unknown condition are still evaluated, so their errors are reported",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "variables": {
+    "u": {
+      "unknown": "bool"
+    }
+  },
+  "reference_error": "The given key does not identify an element in this collection value",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

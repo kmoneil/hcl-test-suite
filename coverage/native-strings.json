@@ -97,7 +97,10 @@
       "tests": [
         "native/strings/unterminated-at-end-of-file",
         "native/strings/unterminated-at-end-of-line",
-        "native/strings/escaped-quote-does-not-close"
+        "native/strings/escaped-quote-does-not-close",
+        "native/strings/unterminated-after-dollar-sign-at-end-of-file",
+        "native/strings/unterminated-in-three-byte-sequence-at-end-of-file",
+        "native/strings/unterminated-in-two-byte-sequence-at-end-of-file"
       ]
     },
     {

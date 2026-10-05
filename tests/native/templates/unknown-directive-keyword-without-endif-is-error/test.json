@@ -1,0 +1,13 @@
+{
+  "description": "A directive with an unknown keyword is a syntax error, not a directive to skip",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive",
+    "hclsyntax/spec.md#keywords"
+  ],
+  "op": "parse",
+  "notes": "native/templates/unknown-directive-keyword-is-error has an endif after the directive, which catches an implementation that reads the keyword as if; this input has none, which catches one that skips the directive and would then fail only on that endif.",
+  "reference_error": "\"elif\" is not a valid template control keyword",
+  "expect": {
+    "valid": false
+  }
+}

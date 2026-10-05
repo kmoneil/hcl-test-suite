@@ -51,7 +51,8 @@
       "rule": "An escaped sequence followed by ~ is literal text; the ~ is not a strip marker",
       "tests": [
         "native/templates/escaped-interpolation-with-tilde-is-literal",
-        "native/templates/escaped-directive-with-tilde-is-literal"
+        "native/templates/escaped-directive-with-tilde-is-literal",
+        "native/templates/escaped-interpolation-with-tilde-in-heredoc"
       ]
     },
     {
@@ -173,7 +174,8 @@
       "rule": "Only one expression is allowed in an interpolation; anything after it other than } is a syntax error",
       "tests": [
         "native/templates/interpolation-with-two-expressions-is-error",
-        "native/templates/interpolation-with-colon-is-error"
+        "native/templates/interpolation-with-colon-is-error",
+        "native/templates/interpolation-expression-followed-by-string-is-error"
       ]
     },
     {
@@ -182,7 +184,8 @@
       "rule": "An interpolation sequence without its closing } is a syntax error",
       "tests": [
         "native/templates/unclosed-interpolation-in-quoted-template-is-error",
-        "native/templates/unclosed-interpolation-in-heredoc-is-error"
+        "native/templates/unclosed-interpolation-in-heredoc-is-error",
+        "native/templates/interpolation-missing-closing-brace-before-quote-is-error"
       ]
     },
     {
@@ -200,7 +203,14 @@
         "native/templates/quoted-template-in-heredoc-interpolation",
         "native/templates/directives-cannot-span-nested-templates",
         "native/templates/directive-is-not-an-expression",
-        "native/templates/heredoc-in-quoted-template-interpolation"
+        "native/templates/heredoc-in-quoted-template-interpolation",
+        "native/heredocs/interpolation-in-heredoc-nested-in-interpolation",
+        "native/templates/strip-close-in-nested-template-interpolation",
+        "native/heredocs/nested-template-with-strip-directive-in-interpolation",
+        "native/templates/strip-directive-in-nested-template-interpolation",
+        "native/heredocs/strip-directive-in-heredoc-inside-interpolation",
+        "native/heredocs/directive-in-heredoc-inside-interpolation",
+        "native/heredocs/strip-interpolation-in-heredoc-inside-interpolation"
       ]
     },
     {
@@ -459,7 +469,10 @@
         "native/templates/else-if-is-error",
         "native/templates/endif-with-extra-tokens-is-error",
         "native/templates/unclosed-endif-marker-is-error",
-        "native/templates/interleaved-directives-are-error"
+        "native/templates/interleaved-directives-are-error",
+        "native/templates/if-inside-for-must-end-before-endfor",
+        "native/templates/second-else-instead-of-endif-is-error",
+        "native/templates/endif-without-closing-brace-before-nested-string-is-error"
       ]
     },
     {
@@ -471,7 +484,8 @@
         "native/templates/unknown-directive-keyword-is-error",
         "native/templates/directive-without-keyword-is-error",
         "native/templates/empty-directive-is-error",
-        "native/templates/directive-keywords-are-names-in-interpolations"
+        "native/templates/directive-keywords-are-names-in-interpolations",
+        "native/templates/unknown-directive-keyword-without-endif-is-error"
       ]
     },
     {
@@ -481,7 +495,8 @@
       "tests": [
         "native/templates/directives-need-no-spaces",
         "native/templates/directives-allow-tabs",
-        "native/templates/directives-allow-inline-comments"
+        "native/templates/directives-allow-inline-comments",
+        "native/templates/directives-need-no-spaces-in-heredoc"
       ]
     },
     {
@@ -683,7 +698,10 @@
         "native/templates/for-directive-with-colon-is-error",
         "native/templates/for-directive-with-if-clause-is-error",
         "native/templates/for-keyword-is-case-sensitive",
-        "native/templates/endfor-with-extra-tokens-is-error"
+        "native/templates/endfor-with-extra-tokens-is-error",
+        "native/templates/else-instead-of-endfor-is-error",
+        "native/templates/for-inside-if-must-end-before-endif",
+        "native/templates/for-value-variable-number-is-error"
       ]
     },
     {
@@ -711,7 +729,9 @@
       "rule": "A ~ right after the %{ of an if directive removes the spaces at the end of the literal before the directive",
       "tests": [
         "native/templates/strip-before-if",
-        "native/templates/strip-around-if-directive-parse-tree"
+        "native/templates/strip-around-if-directive-parse-tree",
+        "native/templates/strip-before-directive-in-heredoc",
+        "native/templates/strip-before-directive-at-heredoc-start"
       ]
     },
     {
@@ -887,7 +907,8 @@
         "native/templates/strip-in-heredoc-removes-spaces-before-newline",
         "native/templates/strip-in-heredoc-removes-previous-line-end",
         "native/templates/strip-in-heredoc-with-crlf-line-endings",
-        "native/templates/heredoc-stripped-newline-parse-tree"
+        "native/templates/heredoc-stripped-newline-parse-tree",
+        "native/templates/strip-directive-at-heredoc-line-start-removes-line-break"
       ]
     },
     {

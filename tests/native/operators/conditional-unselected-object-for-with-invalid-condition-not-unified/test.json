@@ -1,0 +1,25 @@
+{
+  "description": "An object for expression whose condition isn't a bool takes no part in unifying when not selected",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec says errors in the result that isn't selected aren't passed through, and that both results must unify, but not what type a failed result has. hashicorp/hcl evaluates both results (ConditionalExpr.Value in hclsyntax/expression.go), and ForExpr.Value gives the dynamic value when a condition can't convert to bool. Because one result has the dynamic pseudo-type, it skips unification and returns the selected result unconverted.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "b": {
+              "number": "2"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

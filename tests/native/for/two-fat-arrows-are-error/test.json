@@ -1,0 +1,11 @@
+{
+  "description": "Two fat arrows in a row in an object for expression are a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid expression",
+  "expect": {
+    "valid": false
+  }
+}

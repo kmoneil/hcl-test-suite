@@ -1,0 +1,30 @@
+{
+  "description": "A null condition after an unknown one gives the dynamic value instead of an error",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec doesn't say whether a null condition is an error (native/for/condition-null-is-error), and says unknown values give the dynamic pseudo-type only when they are otherwise type-valid. hashicorp/hcl reports a null condition otherwise, but ForExpr.Value (hclsyntax/expression.go) only reports it while every earlier condition was known, so after an unknown condition it skips the error and returns the dynamic value.",
+  "variables": {
+    "u": {
+      "unknown": "bool"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "dynamic"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

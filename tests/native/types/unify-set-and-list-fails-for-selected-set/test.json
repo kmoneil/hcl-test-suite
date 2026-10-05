@@ -1,0 +1,36 @@
+{
+  "description": "A selected set of strings that can't convert to the unified list of numbers is an error",
+  "spec": [
+    "hclsyntax/spec.md#conditional-operator",
+    "spec.md#type-unification"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec unifies a set of strings and a list of numbers to a list of strings (set and list give list, string and number give string), so this should give [\"x\"]. hashicorp/hcl picks the list of numbers because an unsafe conversion to it from the set of strings exists (unify in cty/convert/unify.go), and converting \"x\" to a number then fails, here for the true result (native/types/unify-list-and-set-unifies-element-types has it in the false result).",
+  "variables": {
+    "s": {
+      "set": [
+        {
+          "string": "x"
+        }
+      ],
+      "element_type": "string"
+    },
+    "l": {
+      "list": [
+        {
+          "number": "5"
+        }
+      ],
+      "element_type": "number"
+    }
+  },
+  "reference_error": "The true result value has the wrong type",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

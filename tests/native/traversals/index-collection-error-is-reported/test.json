@@ -1,0 +1,12 @@
+{
+  "description": "An error in the collection of an index operation is reported",
+  "spec": [
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "eval",
+  "reference_error": "There is no variable named \"x\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

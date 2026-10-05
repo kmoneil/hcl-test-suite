@@ -1,0 +1,12 @@
+{
+  "description": "An if condition that fails only for a particular element is an error",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "reference_error": "Can't access attributes on a primitive-typed value",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

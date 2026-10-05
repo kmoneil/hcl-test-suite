@@ -1,0 +1,11 @@
+{
+  "description": "A comma in place of the colon after a for expression's collection is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "parse",
+  "reference_error": "requires a colon after the collection expression",
+  "expect": {
+    "valid": false
+  }
+}

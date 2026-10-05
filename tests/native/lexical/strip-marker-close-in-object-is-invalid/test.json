@@ -1,0 +1,11 @@
+{
+  "description": "A tilde before the closing brace of an object constructor is invalid",
+  "spec": [
+    "hclsyntax/spec.md#operators-and-delimiters"
+  ],
+  "op": "parse",
+  "reference_error": "Missing attribute separator",
+  "expect": {
+    "valid": false
+  }
+}

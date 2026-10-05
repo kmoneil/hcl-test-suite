@@ -1,0 +1,12 @@
+{
+  "description": "A heredoc cut off by the end of the file inside a UTF-8 sequence is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions",
+    "hclsyntax/spec.md#source-code-representation"
+  ],
+  "op": "parse",
+  "reference_error": "Unterminated template string",
+  "expect": {
+    "valid": false
+  }
+}

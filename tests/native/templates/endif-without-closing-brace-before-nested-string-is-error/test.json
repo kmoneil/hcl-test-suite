@@ -1,0 +1,11 @@
+{
+  "description": "An endif marker followed by a quoted string instead of its closing brace is a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#template-if-directive"
+  ],
+  "op": "parse",
+  "reference_error": "Extra characters in endif marker",
+  "expect": {
+    "valid": false
+  }
+}

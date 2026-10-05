@@ -320,11 +320,16 @@
     {
       "id": "unknowns-comparison-refined-unknown",
       "spec": "hclsyntax/spec.md#comparison-operators",
-      "rule": "A comparison with an unknown gives a known result when hashicorp/hcl can decide it from what it knows about the unknown: an arithmetic result is never null, a template result has a known start, and a conditional's number result lies between its two results (disputed)",
+      "rule": "A comparison with an unknown gives a known result when hashicorp/hcl can decide it from what it knows about the unknown: an arithmetic result is never null, a template result has a known start, a conditional's result is never null when neither of its results is, a conditional's number result lies between its two results, and its collection result has a length between theirs (disputed)",
       "tests": [
         "native/unknowns/equal-unknown-sum-and-null",
         "native/unknowns/equal-template-with-known-prefix",
-        "native/unknowns/less-than-conditional-with-known-range"
+        "native/unknowns/less-than-conditional-with-known-range",
+        "native/unknowns/conditional-number-results-not-null",
+        "native/unknowns/conditional-string-results-not-null",
+        "native/unknowns/less-than-conditional-below-both-results",
+        "native/unknowns/equal-conditional-lists-and-longer-list",
+        "native/unknowns/conditional-lists-not-null"
       ]
     },
     {
@@ -452,9 +457,11 @@
     {
       "id": "unknowns-conditional-unknown-predicate-result-errors",
       "spec": "hclsyntax/spec.md#conditional-operator",
-      "rule": "With an unknown predicate errors in the results aren't reported, and a failed arithmetic result takes part in unification as a number (disputed)",
+      "rule": "With an unknown predicate errors in the results aren't reported, and a failed result takes part in unification with the type it has when it fails: a failed arithmetic result a number, a splat over a failed source the dynamic pseudo-type, and a failed splat over an object a one-element tuple (disputed)",
       "tests": [
-        "native/unknowns/conditional-unknown-predicate-ignores-result-errors"
+        "native/unknowns/conditional-unknown-predicate-ignores-result-errors",
+        "native/unknowns/conditional-failed-splat-gives-dynamic-type",
+        "native/unknowns/conditional-failed-splat-over-object-gives-tuple-type"
       ]
     },
     {
@@ -689,7 +696,8 @@
       "rule": "A splat whose traversal is invalid for the element type is an error even if the source is unknown",
       "tests": [
         "native/unknowns/splat-unknown-list-missing-attribute-fails",
-        "native/unknowns/splat-unknown-object-missing-attribute-fails"
+        "native/unknowns/splat-unknown-object-missing-attribute-fails",
+        "native/unknowns/splat-unknown-tuple-missing-attribute-fails"
       ]
     },
     {
@@ -799,6 +807,78 @@
       "tests": [
         "native/unknowns/tuple-with-unknown-element",
         "native/unknowns/object-with-unknown-attribute-value"
+      ]
+    },
+    {
+      "id": "unknowns-comparison-unrefined-unknown",
+      "spec": "hclsyntax/spec.md#comparison-operators",
+      "rule": "A comparison with an unknown stays unknown when what is known about the unknown doesn't decide it: a conditional with a result that can be null may be null, a conditional's collection result can have any length from its shorter result's to its longer result's, a choice between collections of different types has no known length, and the known start of a template ends at its first unknown part and, in hashicorp/hcl, after at most 128 bytes",
+      "tests": [
+        "native/unknowns/conditional-with-null-result-compared-with-null",
+        "native/unknowns/equal-template-text-after-unknown-part",
+        "native/unknowns/conditional-string-or-null-compared-with-null",
+        "native/unknowns/greater-than-conditional-inside-range",
+        "native/unknowns/equal-template-differing-after-128-bytes",
+        "native/unknowns/conditional-list-or-null-list-compared-with-null",
+        "native/unknowns/equal-conditional-shorter-and-longer-list",
+        "native/unknowns/equal-conditional-longer-and-shorter-list",
+        "native/unknowns/equal-conditional-list-and-set"
+      ]
+    },
+    {
+      "id": "unknowns-conditional-failed-result-may-be-null",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "With an unknown predicate a result that fails gives an unknown that may be null, so comparing the conditional with null is unknown",
+      "tests": [
+        "native/unknowns/conditional-failed-splat-compared-with-null",
+        "native/unknowns/conditional-failed-addition-compared-with-null",
+        "native/unknowns/conditional-failed-negation-compared-with-null"
+      ]
+    },
+    {
+      "id": "unknowns-splat-dynamic-traversal-unchecked",
+      "spec": "hclsyntax/spec.md#splat-operators",
+      "rule": "A splat over the dynamic value gives the dynamic value without evaluating its traversal, so errors there aren't reported (disputed)",
+      "tests": [
+        "native/unknowns/splat-dynamic-value-skips-traversal"
+      ]
+    },
+    {
+      "id": "unknowns-comparison-refined-splat-and-template",
+      "spec": "hclsyntax/spec.md#comparison-operators",
+      "rule": "A comparison with an unknown is also known when hashicorp/hcl can decide it from the facts that a template result is never null and that a splat over an unknown list is never null and has the list's range of lengths (disputed)",
+      "tests": [
+        "native/unknowns/splat-unknown-list-not-null",
+        "native/unknowns/splat-conditional-lists-keeps-length-range",
+        "native/unknowns/template-result-not-null"
+      ]
+    },
+    {
+      "id": "unknowns-logic-unknown-left-hides-right-errors",
+      "spec": "hclsyntax/spec.md#logic-operators",
+      "rule": "When the left operand of && or || is unknown and has no errors, errors in an unknown right operand aren't reported, including a failed template whose later unknown part makes it unknown (disputed)",
+      "tests": [
+        "native/unknowns/and-unknown-left-hides-error-in-right",
+        "native/unknowns/or-unknown-left-hides-error-in-right",
+        "native/unknowns/and-unknown-left-hides-template-with-null-before-unknown-part",
+        "native/unknowns/and-unknown-left-hides-template-with-tuple-before-unknown-part"
+      ]
+    },
+    {
+      "id": "unknowns-logic-left-errors-reported",
+      "spec": "hclsyntax/spec.md#logic-operators",
+      "rule": "An error in the left operand of && or || is reported even when the right operand is unknown",
+      "tests": [
+        "native/unknowns/and-error-in-left-beside-unknown-right",
+        "native/unknowns/or-error-in-left-beside-unknown-right"
+      ]
+    },
+    {
+      "id": "unknowns-object-items-after-unknown-key",
+      "spec": "hclsyntax/spec.md#collection-values",
+      "rule": "An object constructor still evaluates the items after one whose key is unknown, so their errors are reported",
+      "tests": [
+        "native/unknowns/object-errors-after-unknown-key-are-reported"
       ]
     }
   ]

@@ -1,0 +1,25 @@
+{
+  "description": "A strip marker before a directive works in a JSON string evaluated as a template",
+  "spec": [
+    "json/spec.md#strings",
+    "hclsyntax/spec.md#template-literals"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "xy"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

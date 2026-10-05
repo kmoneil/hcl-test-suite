@@ -75,7 +75,8 @@
       "tests": [
         "native/for/for-missing-variable-is-error",
         "native/for/for-second-variable-must-be-identifier",
-        "native/for/for-variable-must-be-identifier"
+        "native/for/for-variable-must-be-identifier",
+        "native/for/second-variable-number-is-error"
       ]
     },
     {
@@ -126,7 +127,8 @@
       "tests": [
         "native/for/for-condition-before-colon-is-error",
         "native/for/for-missing-colon-is-error",
-        "native/for/object-for-missing-colon-is-error"
+        "native/for/object-for-missing-colon-is-error",
+        "native/for/comma-instead-of-colon-is-error"
       ]
     },
     {
@@ -161,7 +163,8 @@
         "native/for/object-for-second-arrow-is-error",
         "native/for/object-for-second-item-is-error",
         "native/for/object-for-trailing-comma-is-error",
-        "native/for/object-for-without-key-is-error"
+        "native/for/object-for-without-key-is-error",
+        "native/for/two-fat-arrows-are-error"
       ]
     },
     {
@@ -672,6 +675,51 @@
       "rule": "In literal-only mode, a for expression can still use the variables it defines",
       "tests": [
         "native/for/for-literal-only-mode"
+      ]
+    },
+    {
+      "id": "for-elements-after-unknown-condition",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "Elements after one whose condition or key is unknown are still evaluated, also after a later condition or key that is null or invalid, so errors in their element expressions are reported",
+      "tests": [
+        "native/for/errors-after-unknown-condition-are-reported",
+        "native/for/object-errors-after-unknown-condition-are-reported",
+        "native/for/object-errors-after-unknown-key-are-reported",
+        "native/for/errors-after-null-condition-following-unknown-are-reported",
+        "native/for/errors-after-invalid-condition-following-unknown-are-reported",
+        "native/for/object-errors-after-null-condition-following-unknown-are-reported",
+        "native/for/object-errors-after-invalid-condition-following-unknown-are-reported",
+        "native/for/object-errors-after-null-key-following-unknown-are-reported",
+        "native/for/object-errors-after-tuple-key-following-unknown-are-reported"
+      ]
+    },
+    {
+      "id": "for-condition-errors-after-unknown-condition",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "A condition that is null or can't be converted to bool after an element whose condition is unknown isn't an error, and the result is the dynamic value (disputed)",
+      "tests": [
+        "native/for/condition-null-after-unknown-condition",
+        "native/for/object-condition-invalid-after-unknown-condition",
+        "native/for/object-condition-null-after-unknown-condition",
+        "native/for/condition-invalid-after-unknown-condition"
+      ]
+    },
+    {
+      "id": "for-condition-error-per-element",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "An error while evaluating the if condition for an element is reported, even when the condition only fails for some elements",
+      "tests": [
+        "native/for/condition-error-for-element-is-reported",
+        "native/for/object-condition-error-for-element-is-reported"
+      ]
+    },
+    {
+      "id": "for-key-errors-after-unknown-key",
+      "spec": "hclsyntax/spec.md#for-expressions",
+      "rule": "A key that is null or can't be converted to a string after an element whose key is unknown isn't an error, and the result is the dynamic value (disputed)",
+      "tests": [
+        "native/for/object-key-null-after-unknown-key",
+        "native/for/object-key-tuple-after-unknown-key"
       ]
     }
   ]

@@ -1,0 +1,11 @@
+{
+  "description": "Two UTF-8 lead bytes in a row in a quoted string are invalid",
+  "spec": [
+    "hclsyntax/spec.md#source-code-representation"
+  ],
+  "op": "parse",
+  "reference_error": "Invalid character encoding",
+  "expect": {
+    "valid": false
+  }
+}

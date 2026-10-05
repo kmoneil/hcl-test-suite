@@ -1,0 +1,12 @@
+{
+  "description": "Two dots in a row between names longer than one letter are a syntax error",
+  "spec": [
+    "hclsyntax/spec.md#attribute-access-operator"
+  ],
+  "op": "parse",
+  "notes": "native/traversals/getattr-double-dot-is-error uses one-letter names, which hashicorp/hcl's scanner reads along a different path.",
+  "reference_error": "An attribute name is required after a dot",
+  "expect": {
+    "valid": false
+  }
+}

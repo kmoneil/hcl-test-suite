@@ -1,0 +1,12 @@
+{
+  "description": "A quoted template cut off by the end of the file inside a three-byte UTF-8 sequence is an error",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions",
+    "hclsyntax/spec.md#source-code-representation"
+  ],
+  "op": "parse",
+  "reference_error": "Unterminated template string",
+  "expect": {
+    "valid": false
+  }
+}

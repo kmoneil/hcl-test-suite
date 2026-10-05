@@ -1,0 +1,21 @@
+{
+  "description": "A JSON number whose binary exponent doesn't fit in 32 bits, such as 1e2147483647, is an error",
+  "spec": [
+    "json/spec.md#numbers",
+    "spec.md#primitive-types"
+  ],
+  "op": "decode",
+  "features": [
+    "json-syntax"
+  ],
+  "status": "disputed",
+  "notes": "The spec requires an error only for a number that can't be represented exactly, and an arbitrary-precision decimal can represent 10^2147483647, so the spec doesn't decide. hashicorp/hcl parses JSON numbers with go-cty's ParseNumberVal (parseNumber in json/parser.go), which uses math/big: it rejects a literal whose binary exponent before scaling (the mantissa's bit length plus the decimal exponent, less any fraction digits) doesn't fit in a 32-bit integer, while a smaller one that overflows while scaling becomes infinity (json/expressions/number-exponent-overflow). Because hashicorp/hcl converts numbers while reading the file, the error comes in the parse phase although the file is valid JSON.",
+  "schema": {
+    "mode": "dynamic-attributes"
+  },
+  "reference_error": "Invalid JSON number",
+  "expect": {
+    "valid": false,
+    "phase": "parse"
+  }
+}

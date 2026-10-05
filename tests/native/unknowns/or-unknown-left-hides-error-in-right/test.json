@@ -1,0 +1,30 @@
+{
+  "description": "An unknown left operand of || hides an error in the right operand",
+  "spec": [
+    "hclsyntax/spec.md#logic-operators",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec doesn't say that an unknown operand hides errors in the other one. The ShortCircuit function of OpLogicalOr (hclsyntax/expression_ops.go) returns an unknown bool with only the left operand's errors when both operands are unknown and the left one has no errors, so the undefined variable on the right, whose value is the dynamic value, isn't reported.",
+  "variables": {
+    "u": {
+      "unknown": "bool"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "bool"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

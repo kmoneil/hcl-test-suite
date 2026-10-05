@@ -78,18 +78,20 @@
     {
       "id": "splat-attr-legacy-index",
       "spec": "hclsyntax/spec.md#splat-operators",
-      "rule": "A legacy index after .* and its attribute accesses is applied to each element, like the attribute accesses (disputed)",
+      "rule": "A legacy index after .* and its attribute accesses is applied to each element, like the attribute accesses, and so are attribute accesses after it (disputed)",
       "tests": [
         "native/splat/attr-splat-legacy-index-applies-to-each",
-        "native/splat/attr-splat-legacy-index-in-each"
+        "native/splat/attr-splat-legacy-index-in-each",
+        "native/splat/attr-splat-attribute-after-legacy-index-applies-to-each"
       ]
     },
     {
       "id": "splat-attr-legacy-index-chain",
       "spec": "hclsyntax/spec.md#splat-operators",
-      "rule": "Two legacy indexes written directly after each other inside an attribute-only splat are a syntax error",
+      "rule": "Two legacy indexes written directly after each other after a splat operator are a syntax error",
       "tests": [
-        "native/splat/attr-splat-legacy-index-chain-is-error"
+        "native/splat/attr-splat-legacy-index-chain-is-error",
+        "native/splat/full-splat-legacy-index-chain-is-error"
       ]
     },
     {
@@ -156,7 +158,8 @@
       "tests": [
         "native/splat/attr-splat-quoted-attribute-is-error",
         "native/splat/full-splat-missing-close-bracket-is-error",
-        "native/splat/full-splat-two-stars-is-error"
+        "native/splat/full-splat-two-stars-is-error",
+        "native/splat/full-splat-cut-off-by-end-of-file-is-error"
       ]
     },
     {

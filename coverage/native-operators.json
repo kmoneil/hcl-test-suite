@@ -931,7 +931,8 @@
         "native/operators/conditional-missing-false-result",
         "native/operators/conditional-missing-true-result",
         "native/operators/conditional-missing-condition",
-        "native/lexical/colon-outside-conditional-is-invalid"
+        "native/lexical/colon-outside-conditional-is-invalid",
+        "native/operators/conditional-comma-instead-of-colon-is-error"
       ]
     },
     {
@@ -1064,6 +1065,24 @@
       "rule": "A failed function call in the result that isn't selected gives the dynamic value, so it unifies with the other result and causes no error (disputed)",
       "tests": [
         "native/operators/conditional-unselected-failed-call-not-unified"
+      ]
+    },
+    {
+      "id": "operators-conditional-unselected-failed-collection-not-unified",
+      "spec": "hclsyntax/spec.md#conditional-operator",
+      "rule": "An object constructor whose key fails, is null or isn't a string, or a for expression whose condition or key fails, takes no part in unifying the results when it isn't selected (disputed)",
+      "tests": [
+        "native/operators/conditional-unselected-object-with-failed-key-not-unified",
+        "native/operators/conditional-unselected-object-with-null-key-not-unified",
+        "native/operators/conditional-unselected-object-with-tuple-key-not-unified",
+        "native/operators/conditional-unselected-object-for-with-null-key-not-unified",
+        "native/operators/conditional-unselected-object-with-failed-key-template-not-unified",
+        "native/operators/conditional-unselected-object-for-with-null-condition-not-unified",
+        "native/operators/conditional-unselected-object-for-with-invalid-condition-not-unified",
+        "native/operators/conditional-unselected-object-for-with-tuple-key-not-unified",
+        "native/operators/conditional-unselected-tuple-for-with-null-condition-not-unified",
+        "native/operators/conditional-unselected-tuple-for-with-invalid-condition-not-unified",
+        "native/operators/conditional-unselected-for-over-nothing-with-failing-condition-not-unified"
       ]
     }
   ]

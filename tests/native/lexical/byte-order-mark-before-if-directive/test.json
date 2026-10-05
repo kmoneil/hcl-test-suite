@@ -1,0 +1,41 @@
+{
+  "description": "An if directive in a file that starts with a byte order mark is an if directive",
+  "spec": [
+    "hclsyntax/spec.md#source-code-representation",
+    "hclsyntax/spec.md#template-if-directive"
+  ],
+  "op": "parse",
+  "status": "disputed",
+  "notes": "The spec says byte order marks are not permitted (native/lexical/byte-order-mark-at-start). hashicorp/hcl deliberately skips a leading UTF-8 byte order mark (scanTokens in hclsyntax/scan_tokens.rl) and still counts its bytes in source positions, so the rest of the file, here an if directive, reads as it would without it.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "kind": "template",
+          "parts": [
+            {
+              "kind": "template_if",
+              "condition": {
+                "kind": "literal",
+                "value": {
+                  "bool": true
+                }
+              },
+              "then": [
+                {
+                  "kind": "literal",
+                  "value": {
+                    "string": "x"
+                  }
+                }
+              ],
+              "else": []
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}
