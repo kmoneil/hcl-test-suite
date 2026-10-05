@@ -16,12 +16,14 @@
     {
       "id": "heredocs-marker-identifier-forms",
       "spec": "hclsyntax/spec.md#identifiers",
-      "rule": "Any identifier can be the marker, including lowercase letters, digits, underscores, dashes (also at the end), non-ASCII letters and words that are keywords elsewhere",
+      "rule": "Any identifier can be the marker, including lowercase letters, digits, underscores, dashes (also at the end), non-ASCII letters (including ones above U+00FF and ones three bytes long in UTF-8) and words that are keywords elsewhere",
       "tests": [
         "native/heredocs/marker-lowercase",
         "native/heredocs/marker-with-underscores-and-digits",
         "native/heredocs/marker-with-dashes",
         "native/heredocs/marker-non-ascii",
+        "native/heredocs/marker-above-latin-1",
+        "native/heredocs/marker-three-byte-utf-8",
         "native/heredocs/marker-keyword"
       ]
     },
@@ -76,14 +78,15 @@
     {
       "id": "heredocs-closing-marker-whole-line",
       "spec": "hclsyntax/spec.md#template-expressions",
-      "rule": "A line ends the heredoc only if it is exactly the marker; the marker with other text before or after it, a longer identifier, a shorter prefix or a different letter case is ordinary content",
+      "rule": "A line ends the heredoc only if it is exactly the marker; the marker with other text before or after it, a longer identifier, a shorter prefix, a different letter case, or a line whose characters differ from the marker's only above the low byte of their code points is ordinary content",
       "tests": [
         "native/heredocs/marker-within-line-is-content",
         "native/heredocs/marker-at-line-start-is-content",
         "native/heredocs/marker-at-line-end-is-content",
         "native/heredocs/longer-identifier-is-content",
         "native/heredocs/marker-prefix-is-content",
-        "native/heredocs/marker-in-other-case-is-content"
+        "native/heredocs/marker-in-other-case-is-content",
+        "native/heredocs/other-character-with-same-low-byte-is-content"
       ]
     },
     {

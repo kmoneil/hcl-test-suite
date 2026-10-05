@@ -1,0 +1,20 @@
+{
+  "description": "A line with a character other than the marker is content, even if their code points share a low byte",
+  "spec": [
+    "hclsyntax/spec.md#template-expressions",
+    "hclsyntax/spec.md#identifiers"
+  ],
+  "op": "eval",
+  "notes": "The marker is U+03A9 GREEK CAPITAL LETTER OMEGA and the first line is U+00A9 COPYRIGHT SIGN. Their code points differ only above the low byte, so a scanner that compares only the low byte of each code point would end the heredoc at the first line.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "©\n"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

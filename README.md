@@ -7,7 +7,7 @@ HashiCorp configuration language, in the spirit of
 Any HCL implementation, in any language, can run it by providing a small
 adapter program.
 
-**Status:** draft. 3,414 tests of the native and JSON syntaxes, checking 1,200
+**Status:** draft. 3,417 tests of the native and JSON syntaxes, checking 1,200
 rules from the spec and the type expression, try function, dynamic block and
 user function extensions at hashicorp/hcl v2.24.0. The test and adapter
 formats may still change.
@@ -97,7 +97,7 @@ run the tests at all.
 | structure (bodies, attributes, blocks, schemas) | 177 | 67 | 0 |
 | collections (tuples, objects) | 152 | 66 | 0 |
 | strings | 76 | 27 | 0 |
-| heredocs | 104 | 36 | 0 |
+| heredocs | 107 | 36 | 0 |
 | templates | 303 | 86 | 0 |
 | variables, attribute access, index | 146 | 58 | 1 |
 | splat | 93 | 30 | 0 |
@@ -119,7 +119,7 @@ run the tests at all.
 | JSON dynamic blocks | 42 | 23 | 0 |
 | user functions (`ext/userfunc`) | 116 | 46 | 1 |
 | JSON user functions | 57 | 22 | 0 |
-| **total** | **3,414** | **1,212** | **12** |
+| **total** | **3,417** | **1,212** | **12** |
 
 - Most rules without tests need something the protocol can't express yet:
   error positions or messages, capsule values, literal-only evaluation with
@@ -130,7 +130,7 @@ run the tests at all.
   spec leaves to implementations (rounding and the order of set elements),
   and one is guidance for applications.
   `python3 tools/coverage.py rules` lists them.
-- The tests exercise 84.9% of the statements in hashicorp/hcl's `hclsyntax`
+- The tests exercise 85.0% of the statements in hashicorp/hcl's `hclsyntax`
   package, 85.8% of its `json` package, 78.6% of `ext/typeexpr`, 97.1% of
   `ext/tryfunc`, 71.2% of `ext/dynblock` and all of `ext/userfunc`
   (`python3 tools/coverage.py go`).
@@ -163,9 +163,9 @@ run the tests at all.
 
 | Implementation | Passed | Failed | Adapter errors | Skipped |
 | --- | ---: | ---: | ---: | ---: |
-| hashicorp/hcl v2.24.0 | 3,414 | 0 | 0 | 0 |
-| opentofu/hcl, as used by OpenTofu v1.12.6 | 3,412 | 2 | 0 | 0 |
-| hcl-rs 0.19.8 | 1,593 | 207 (74 disputed) | 21 | 1,593 |
+| hashicorp/hcl v2.24.0 | 3,417 | 0 | 0 | 0 |
+| opentofu/hcl, as used by OpenTofu v1.12.6 | 3,415 | 2 | 0 | 0 |
+| hcl-rs 0.19.8 | 1,596 | 207 (74 disputed) | 21 | 1,593 |
 
 OpenTofu has no HCL implementation of its own: its `go.mod` replaces
 hashicorp/hcl with the fork [opentofu/hcl](https://github.com/opentofu/hcl), so
@@ -174,17 +174,17 @@ its row shows how that fork differs from hashicorp/hcl v2.24.0.
 Every test also says whether its input parses, and `--validate` checks only
 that. This measures parsers that can't run the tests, like python-hcl2 and
 tree-sitter-hcl, and checks the other implementations' parsers on the inputs
-of all 2,903 native syntax tests, including tests they skip. Only
+of all 2,906 native syntax tests, including tests they skip. Only
 hashicorp/hcl and its fork read the JSON syntax, so the others skip its 511
 tests.
 
 | Implementation | Passed | Accepted invalid input | Rejected valid input | Adapter errors | Skipped |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| hashicorp/hcl v2.24.0 | 3,414 | 0 | 0 | 0 | 0 |
-| opentofu/hcl, as used by OpenTofu v1.12.6 | 3,414 | 0 | 0 | 0 | 0 |
-| hcl-rs 0.19.8 | 2,842 | 29 (6 disputed) | 32 (15 disputed) | 0 | 511 |
-| python-hcl2 8.1.4 | 2,656 | 88 (9 disputed) | 159 (59 disputed) | 0 | 511 |
-| tree-sitter-hcl 1.2.0 | 2,771 | 93 (13 disputed) | 39 (14 disputed) | 0 | 511 |
+| hashicorp/hcl v2.24.0 | 3,417 | 0 | 0 | 0 | 0 |
+| opentofu/hcl, as used by OpenTofu v1.12.6 | 3,417 | 0 | 0 | 0 | 0 |
+| hcl-rs 0.19.8 | 2,845 | 29 (6 disputed) | 32 (15 disputed) | 0 | 511 |
+| python-hcl2 8.1.4 | 2,656 | 88 (9 disputed) | 162 (59 disputed) | 0 | 511 |
+| tree-sitter-hcl 1.2.0 | 2,770 | 93 (13 disputed) | 43 (13 disputed) | 0 | 511 |
 
 hcl-rs fails all 61 of these tests in the first table too. As in the first
 table, a failure counts as disputed when its test is disputed, even if the
@@ -256,7 +256,7 @@ silently dropped). python-hcl2 only accepts text, so as for hcl-rs, the adapter
 reports invalid UTF-8 as a parse error, which decides the 15 tests whose input
 isn't UTF-8.
 
-The 179 failures on tests that aren't disputed fall into these groups:
+The 182 failures on tests that aren't disputed fall into these groups:
 
 - **Strip markers:** it rejects them on interpolations in quoted strings, as in
   `"${~ x}"` and `"${x ~}"`, although it accepts them in heredocs and on
@@ -312,10 +312,23 @@ tree-sitter-hcl is the HCL grammar for tree-sitter, which editors use to
 highlight and navigate code. The adapter parses with py-tree-sitter 0.26.0 and
 reports a file as invalid when its tree has an ERROR or MISSING node. The
 grammar classifies characters with the C library's locale functions, so the
-adapter sets a UTF-8 locale. These results are from glibc 2.41; in the C
-locale, non-ASCII heredoc markers would be rejected.
+adapter sets a UTF-8 locale. These results are from macOS 27.0 on arm64, and
+they depend on the platform:
 
-The 105 failures on tests that aren't disputed fall into these groups:
+- Its scanner keeps the characters of a heredoc's marker in C `char`s, so
+  only a marker whose characters are all up to U+00FF can be matched, and
+  one with characters from U+0080 to U+00FF only where `char` is unsigned,
+  as on Linux arm64 but not on macOS or x86-64. On Linux arm64 it passes the
+  two tests whose markers have an `É`, and a line whose character only
+  shares the marker's low byte, like `©` for `Ω`, ends the heredoc early.
+- macOS counts U+00A0 NO-BREAK SPACE as whitespace and glibc 2.41 doesn't, so
+  here it passes the disputed test with a no-break space before the closing
+  marker of a `<<-` heredoc, which it fails with glibc.
+- In the C locale it treats no non-ASCII character as a letter or
+  whitespace, so U+00A0 wouldn't be whitespace on macOS either, and markers
+  with an `É` would be rejected on Linux arm64 too.
+
+The 110 failures on tests that aren't disputed fall into these groups:
 
 - **Newlines:** it doesn't check the newlines that end attributes and block
   lines. It accepts an attribute's `=` or value, a block label or `{`, or the
@@ -336,7 +349,9 @@ The 105 failures on tests that aren't disputed fall into these groups:
   whitespace, and invalid UTF-8 in strings and heredocs.
 - **Heredocs:** it accepts text after the opening marker, markers that start
   with a digit, `<<--EOT`, and an expression that continues after the closing
-  marker, and a closing marker inside a directive doesn't end the heredoc.
+  marker, and a closing marker inside a directive doesn't end the heredoc. It
+  never finds the closing marker when the marker has a character above
+  U+00FF, such as `Ω`, or here one from U+0080 to U+00FF, such as `É`.
 - **Other syntax:** it accepts an attribute defined twice, braces around the
   top-level body, legacy index chains like `foo.0.0.bar`, `ns::f` without
   parentheses, `ns::()`, and `inxs` or `ifc` in for expressions. It rejects
@@ -517,8 +532,6 @@ spec section, with notes. The main themes:
 
 - Newlines next to traversals and operators inside for expressions,
   interpolations, template directives and object braces.
-- A heredoc marker with a character above U+00FF, which tree-sitter-hcl
-  can't match on any platform.
 
 ## License
 
