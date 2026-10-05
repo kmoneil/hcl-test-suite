@@ -91,21 +91,32 @@ func run(args []string) (out any, err error) {
 	return nil, errors.New(usage)
 }
 
+// operatorModule names the module whose operators replace go-cty's in the
+// evaluator, set by tenon.go when the adapter is built with it.
+var operatorModule string
+
 func capabilities() object {
 	// The adapter reports the HCL module it was built with, which is a fork
-	// when the module file replaces hashicorp/hcl (see opentofu.mod).
-	implementation, version := "hashicorp/hcl", "unknown"
+	// when the module file replaces hashicorp/hcl (see opentofu.mod), and the
+	// module its operators come from when they aren't go-cty's (see tenon.go).
+	implementation, version, operatorVersion := "hashicorp/hcl", "unknown", "unknown"
 	if info, ok := debug.ReadBuildInfo(); ok {
 		for _, dep := range info.Deps {
-			if dep.Path != "github.com/hashicorp/hcl/v2" {
-				continue
-			}
-			version = dep.Version
-			if dep.Replace != nil {
-				implementation = strings.TrimSuffix(strings.TrimPrefix(dep.Replace.Path, "github.com/"), "/v2")
-				version = dep.Replace.Version
+			switch {
+			case dep.Path == "github.com/hashicorp/hcl/v2":
+				version = dep.Version
+				if dep.Replace != nil {
+					implementation = strings.TrimSuffix(strings.TrimPrefix(dep.Replace.Path, "github.com/"), "/v2")
+					version = dep.Replace.Version
+				}
+			case operatorModule != "" && dep.Path == "github.com/"+operatorModule:
+				operatorVersion = dep.Version
 			}
 		}
+	}
+	if operatorModule != "" {
+		implementation = fmt.Sprintf("%s %s with the operators of %s", implementation, version, operatorModule)
+		version = operatorVersion
 	}
 	return object{
 		"implementation": implementation,

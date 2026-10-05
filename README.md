@@ -27,7 +27,9 @@ formats may still change.
   adapters for [hashicorp/hcl](https://github.com/hashicorp/hcl) (Go, the
   reference implementation) and [hcl-rs](https://github.com/martinohmann/hcl-rs)
   (Rust). The Go adapter can also be built with the fork of hashicorp/hcl that
-  [OpenTofu](https://github.com/opentofu/opentofu) uses. Three more only report
+  [OpenTofu](https://github.com/opentofu/opentofu) uses, or with the operators
+  of [tenon](https://github.com/kmoneil/tenon), a value library that answers
+  what go-cty answers for HCL, in place of go-cty's. Three more only report
   whether a file parses:
   [python-hcl2](https://github.com/amplify-education/python-hcl2) (Python),
   [bc-python-hcl2](https://github.com/bridgecrewio/python-hcl2) (its fork that
@@ -55,6 +57,10 @@ python3 runner/hcltest.py --adapter bin/hcl-rs-adapter
 # the HCL of OpenTofu v1.12.6 (needs Go)
 (cd adapters/go && go build -modfile=opentofu.mod -o ../../bin/hcl-opentofu-adapter .)
 python3 runner/hcltest.py --adapter bin/hcl-opentofu-adapter
+
+# hashicorp/hcl with the operators of tenon v0.17.0 (needs Go)
+(cd adapters/go && go build -modfile=tenon.mod -o ../../bin/hcl-tenon-adapter main.go tenon.go)
+python3 runner/hcltest.py --adapter bin/hcl-tenon-adapter
 
 # python-hcl2, only whether inputs parse (needs Python 3.10 or later)
 python3 -m venv bin/python-hcl2
@@ -213,11 +219,14 @@ run the tests at all.
 | --- | ---: | ---: | ---: | ---: |
 | hashicorp/hcl v2.24.0 | 3,644 | 0 | 0 | 0 |
 | opentofu/hcl, as used by OpenTofu v1.12.6 | 3,642 | 2 | 0 | 0 |
+| hashicorp/hcl v2.24.0 with the operators of tenon v0.17.0 | 3,617 | 27 (12 disputed) | 0 | 0 |
 | hcl-rs 0.19.8 | 1,716 | 225 (91 disputed) | 21 | 1,682 |
 
 OpenTofu has no HCL implementation of its own: its `go.mod` replaces
 hashicorp/hcl with the fork [opentofu/hcl](https://github.com/opentofu/hcl), so
-its row shows how that fork differs from hashicorp/hcl v2.24.0.
+its row shows how that fork differs from hashicorp/hcl v2.24.0. tenon isn't an
+HCL implementation either, and its row is hashicorp/hcl with only the
+operators changed.
 
 Every test also says whether its input parses, and `--validate` checks only
 that. This measures parsers that can't run the tests, like python-hcl2,
@@ -260,6 +269,51 @@ don't change results.
   `github.com/hashicorp/hcl/v2` and the go-cty version from its `go.mod` into
   `adapters/go/opentofu.mod`, then run
   `go mod tidy -modfile=opentofu.mod` in `adapters/go`.
+
+### hashicorp/hcl with the operators of tenon v0.17.0
+
+[tenon](https://github.com/kmoneil/tenon) is a Go value library that answers
+what go-cty answers for HCL, with exact numbers, no infinities, and unknown
+values that keep what is known about them. `adapters/go/tenon.go` sets the
+functions behind HCL's 15 operators (arithmetic, comparison, equality and
+logic) to tenon's, crossing values with its bridge ctytenon v0.3.0, as tenon's
+`proof` module does. Parsing, conversion, unification, indexing, splat, for
+expressions and templates are still hashicorp/hcl and go-cty, and the
+functions the tests call come from the tests and hashicorp/hcl's extensions,
+so the row measures tenon's operators only. ctytenon needs go-cty v1.19.0, which passes every test
+with go-cty's own operators, and the parser is hashicorp/hcl's, so
+`--validate` passes all 3,644 tests.
+
+Each of the 27 failures is a difference tenon documents, in its `proof`
+module, its `Equals` function or its bridge ctytenon:
+
+- **Infinity (13, 1 disputed):** tenon has no infinities, which HCL's spec
+  requires, so an operation on an infinity, from a variable or from a string
+  go-cty reads as one (`"inf" + 0`), fails with `encode.not_a_number`.
+- **Division and modulo by zero (4, all disputed):** `1 / 0` and `5 % 0` are
+  errors instead of an infinity and the dividend.
+- **Invalid UTF-8 (4, all disputed):** comparing quoted strings that aren't
+  valid UTF-8, which hashicorp/hcl accepts and the spec says are a parse
+  error, fails with `string.invalid_utf8`.
+- **Unknown values (3, 1 disputed):** tenon answers from what is known where
+  HCL's spec gives an unknown value: an unknown number and an unknown string
+  aren't equal, and `u * 0` is `0`. `[u, 1] == [1, 2]` is `false`, as the
+  spec says and hashicorp/hcl doesn't.
+- **Nulls (2, 1 disputed):** the `null` keyword takes the other operand's
+  type before comparing, so `[n] == [null]` is `true` for a null string `n`. Nulls of
+  different types aren't equal, as the spec says and hashicorp/hcl doesn't.
+- **Negative zero (1, disputed):** tenon has one zero, so `"${-0}"` is `"0"`.
+
+Run against tenon v0.16.0, the suite also found that `[null] == [null]` was
+unknown, which v0.17.0 fixed
+([kmoneil/tenon#208](https://github.com/kmoneil/tenon/issues/208)), and six of
+the differences above that tenon didn't document yet, which v0.17.0 does
+([kmoneil/tenon#209](https://github.com/kmoneil/tenon/issues/209)). To follow a
+new tenon release, run
+`go get -modfile=tenon.mod github.com/kmoneil/tenon@<version> github.com/kmoneil/tenon/ctytenon@<version>`
+in `adapters/go`. `go mod tidy` can't see `tenon.go`, which its `ignore`
+constraint keeps out of the other builds, so it would remove tenon from
+`tenon.mod`.
 
 ### hcl-rs 0.19.8
 
