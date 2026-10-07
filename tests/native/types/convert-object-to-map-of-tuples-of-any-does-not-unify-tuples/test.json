@@ -1,0 +1,25 @@
+{
+  "description": "Converting an object to a map of tuples of any doesn't unify the element types of the tuples",
+  "spec": [
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#type-unification"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The spec converts an object to a map by converting each attribute to the map's element type (spec.md#collection-and-structural-type-conversions), which gives a tuple of a number and a tuple of a string here, and two tuple types of the same length unify element by element (spec.md#type-unification), so the map would hold [\"1\"] and [\"x\"], as hashicorp/hcl gives for convert([[1], [\"x\"]], list(tuple([any]))). go-cty's conversionObjectToMap (cty/convert/conversion_collection.go) unifies the converted attributes only when the map's element type is a collection or object type, not a tuple type, so the two attributes keep different types and the conversion fails. conversionTupleToList always unifies its converted elements (conversionUnifyListElements).",
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "reference_error": "attribute types must all match for conversion to map",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

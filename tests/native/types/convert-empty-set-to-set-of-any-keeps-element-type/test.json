@@ -1,0 +1,37 @@
+{
+  "description": "Converting an empty set of strings to a set of any keeps its element type",
+  "spec": [
+    "spec.md#conversion-to-and-from-the-dynamic-pseudo-type",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "Converting a value to the dynamic pseudo-type leaves it as it is, so converting a set to a set of any leaves its type as it is, also when it has no elements.",
+  "variables": {
+    "s": {
+      "set": [],
+      "element_type": "string"
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "set": [],
+          "element_type": "string"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

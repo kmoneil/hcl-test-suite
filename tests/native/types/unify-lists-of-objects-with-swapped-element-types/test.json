@@ -1,0 +1,97 @@
+{
+  "description": "Lists of objects whose tuple attributes swap number and string unify keeping a string a string",
+  "spec": [
+    "spec.md#type-unification",
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The input needs a null set whose element type is the dynamic pseudo-type (s), which the spec has no value for: the dynamic pseudo-type is a placeholder for a type that isn't known yet, so no value should have it as a collection's element type. Apart from that, the spec gives the same result. The spec unifies the attributes one by one: a to tuple([string, string]), b to number and c to the dynamic pseudo-type, so the string \"x\" stays a string. The result's full type differs (go-cty gives p's type, with a number in a), so the test reads only \"x\". The set makes go-cty rank the given types instead of building a new one. It ranks neither list above the other (a ranks each way once, and two numbers or two dynamic pseudo-types rank equal in compareTypes in cty/convert/compare_types.go), so it tries them in the order given and picks p's type.",
+  "variables": {
+    "p": {
+      "list": [
+        {
+          "object": {
+            "a": {
+              "tuple": [
+                {
+                  "number": "1"
+                },
+                {
+                  "string": "x"
+                }
+              ]
+            },
+            "b": {
+              "number": "2"
+            },
+            "c": {
+              "null": "dynamic"
+            }
+          }
+        }
+      ],
+      "element_type": [
+        "object",
+        {
+          "a": [
+            "tuple",
+            [
+              "number",
+              "string"
+            ]
+          ],
+          "b": "number",
+          "c": "dynamic"
+        }
+      ]
+    },
+    "q": {
+      "null": [
+        "list",
+        [
+          "object",
+          {
+            "a": [
+              "tuple",
+              [
+                "string",
+                "number"
+              ]
+            ],
+            "b": "number",
+            "c": "dynamic"
+          }
+        ]
+      ]
+    },
+    "s": {
+      "null": [
+        "set",
+        "dynamic"
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

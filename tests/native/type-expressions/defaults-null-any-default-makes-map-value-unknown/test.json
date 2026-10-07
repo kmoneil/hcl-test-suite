@@ -1,0 +1,60 @@
+{
+  "description": "A null default of type any added to a map of lists makes every attribute unknown",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The README says defaults populate missing optional attributes, so the result should be the list given for a and the null default for b, and the spec says an operation returns an unknown value only if an operand is unknown. hashicorp/hcl's Defaults.apply unifies the map's elements with the added default (unifyAsMap in ext/typeexpr/defaults.go), a list of strings with the dynamic pseudo-type; go-cty unifies those to the dynamic pseudo-type with conversions that replace every value with the dynamic value (unifyAllAsDynamic, called from unifyCollectionTypes in cty/convert/unify.go), so both attributes become unknown. The test also needs any in a type constraint with defaults (native/type-expressions/any-with-defaults).",
+  "variables": {
+    "m": {
+      "map": {
+        "a": {
+          "list": [
+            {
+              "string": "x"
+            }
+          ],
+          "element_type": "string"
+        }
+      },
+      "element_type": [
+        "list",
+        "string"
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "a": {
+              "unknown": [
+                "list",
+                "string"
+              ]
+            },
+            "b": {
+              "unknown": "dynamic"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

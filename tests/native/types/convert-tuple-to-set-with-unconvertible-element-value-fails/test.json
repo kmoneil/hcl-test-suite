@@ -1,0 +1,24 @@
+{
+  "description": "Converting a tuple to a set fails when an element's value doesn't convert to the set's element type",
+  "spec": [
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "Not disputed like native/functions/function-error-is-eval-error: the README defines convert's result as the conversion, and the spec makes this conversion an error, because the string \"x\" doesn't convert to a number (spec.md#primitive-type-conversions).",
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "reference_error": "a number is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

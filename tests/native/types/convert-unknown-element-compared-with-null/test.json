@@ -1,0 +1,37 @@
+{
+  "description": "An unknown number converted to string compared with null is unknown",
+  "spec": [
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+    "hclsyntax/spec.md#comparison-operators",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "The unknown number might be null, and so might the unknown string it converts to.",
+  "variables": {
+    "u": {
+      "unknown": "number"
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "bool"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

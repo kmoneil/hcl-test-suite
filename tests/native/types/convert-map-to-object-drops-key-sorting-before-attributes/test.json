@@ -1,0 +1,48 @@
+{
+  "description": "Converting a map to an object type drops a key that sorts before the object's attributes",
+  "spec": [
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The spec makes it an error to convert a map whose set of keys doesn't exactly match the object type's attributes (spec.md#collection-and-structural-type-conversions). hashicorp/hcl's convert converts with go-cty's convert.Convert, whose map to object conversion skips each map key that isn't an attribute of the object type (conversionMapToObject in cty/convert/conversion_collection.go), so a is dropped and b is kept.",
+  "variables": {
+    "m": {
+      "map": {
+        "a": {
+          "string": "x"
+        },
+        "b": {
+          "string": "y"
+        }
+      },
+      "element_type": "string"
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "b": {
+              "string": "y"
+            }
+          }
+        }
+      },
+      "blocks": []
+    },
+    "valid": true
+  }
+}

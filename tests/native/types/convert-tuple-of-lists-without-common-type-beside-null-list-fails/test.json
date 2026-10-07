@@ -1,0 +1,24 @@
+{
+  "description": "Converting to a list of lists of any is an error without a common type, also beside a list of null",
+  "spec": [
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#type-unification"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "Not disputed like native/functions/function-error-is-eval-error: the README defines convert's result as the conversion, and the spec makes this conversion an error, because the converted lists, a list of numbers and a list of tuples, have no common type (spec.md#type-unification). The list holding only null can't change that, whatever it converts to: hashicorp/hcl makes it a list whose element type is the dynamic pseudo-type, which the spec has no value for, and then fails when it puts the three lists in one list (conversionTupleToList in go-cty's cty/convert/conversion_collection.go).",
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "reference_error": "element types must all match for conversion to list",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

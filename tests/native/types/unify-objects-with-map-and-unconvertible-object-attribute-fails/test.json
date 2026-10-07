@@ -1,0 +1,30 @@
+{
+  "description": "Objects don't unify when an attribute's object value can't convert to the other's map type",
+  "spec": [
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "notes": "hashicorp/hcl unifies attribute x to a map of strings: the object's attribute types, an empty tuple and the dynamic pseudo-type of null, unify to the dynamic pseudo-type, and a map of that unifies with the map of strings (unifyObjectsAsMaps in cty/convert/unify.go). But the empty tuple can't convert to a string, so the object can't convert to that type, and neither the objects nor a map of their attribute types unify (unifyObjectTypes and unifyObjectTypesToMap). The spec unifies the attribute to the object type, which the map's strings can't convert to either.",
+  "variables": {
+    "m": {
+      "map": {
+        "a": {
+          "string": "s"
+        },
+        "b": {
+          "string": "t"
+        }
+      },
+      "element_type": "string"
+    }
+  },
+  "reference_error": "Type mismatch for object attribute \"x\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

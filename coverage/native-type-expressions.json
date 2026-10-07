@@ -351,7 +351,9 @@
         "native/type-expressions/convert-any",
         "native/type-expressions/convert-list-of-any",
         "native/type-expressions/convert-list-of-any-without-common-type",
-        "native/type-expressions/convert-null-to-any"
+        "native/type-expressions/convert-null-to-any",
+        "native/types/convert-object-to-map-of-any-unifies-attribute-types",
+        "native/types/convert-tuple-to-set-of-any-unifies-element-types"
       ]
     },
     {
@@ -395,6 +397,23 @@
       "rule": "Converting to an object type with an optional attribute keeps a null given for that attribute",
       "tests": [
         "native/type-expressions/convert-optional-attribute-null"
+      ]
+    },
+    {
+      "id": "type-expressions-convert-optional-attribute-from-map",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "Converting a map to an object type is an error when the map's element for an optional attribute doesn't convert to that attribute's type, although the map could have left the attribute out",
+      "tests": [
+        "native/type-expressions/convert-map-element-unconvertible-to-optional-attribute"
+      ]
+    },
+    {
+      "id": "type-expressions-optional-null-converts",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "The null that fills a missing optional attribute converts like any null of the attribute's type: into a set of objects of that type, and from a map of any back to an object attribute of that type",
+      "tests": [
+        "native/type-expressions/defaults-optional-object-null-joins-set-of-objects",
+        "native/type-expressions/defaults-optional-object-null-from-map-to-object"
       ]
     },
     {
@@ -450,16 +469,17 @@
       "spec": "ext/typeexpr/README.md#optional-object-attributes",
       "rule": "An optional attribute missing from an object gets its default value converted to the attribute's type, while a given attribute keeps its value, a missing one whose default is null or that has no default is null even when its type has defaults of its own, and a type without optional attributes converts as convert does",
       "tests": [
-        "native/type-expressions/defaults-missing-attribute",
-        "native/type-expressions/defaults-given-attribute",
         "native/type-expressions/defaults-converted-default",
-        "native/type-expressions/defaults-without-default",
-        "native/type-expressions/defaults-null-default",
+        "native/type-expressions/defaults-default-converted-before-applying",
+        "native/type-expressions/defaults-every-missing-attribute",
+        "native/type-expressions/defaults-given-attribute",
+        "native/type-expressions/defaults-missing-attribute",
+        "native/type-expressions/defaults-missing-attributes-between-given-ones",
         "native/type-expressions/defaults-missing-object-without-default",
+        "native/type-expressions/defaults-null-default",
         "native/type-expressions/defaults-null-default-with-nested-defaults",
         "native/type-expressions/defaults-plain-type",
-        "native/type-expressions/defaults-every-missing-attribute",
-        "native/type-expressions/defaults-default-converted-before-applying"
+        "native/type-expressions/defaults-without-default"
       ]
     },
     {
@@ -498,18 +518,52 @@
       "spec": "ext/typeexpr/README.md#optional-object-attributes",
       "rule": "Defaults also apply to the object elements of list, set and map values, not only of tuple and object constructors, also when the elements end up with different types, and to a map value converted to an object type, also when a default has another type than the map's elements, while an empty collection value stays empty",
       "tests": [
-        "native/type-expressions/defaults-in-list-value",
-        "native/type-expressions/defaults-in-set-value",
-        "native/type-expressions/defaults-in-map-value",
         "native/type-expressions/defaults-in-empty-list-value",
-        "native/type-expressions/defaults-in-empty-set-value",
         "native/type-expressions/defaults-in-empty-map-value",
+        "native/type-expressions/defaults-in-empty-set-value",
+        "native/type-expressions/defaults-in-list-value",
+        "native/type-expressions/defaults-in-list-value-elements-differ",
+        "native/type-expressions/defaults-in-map-value",
         "native/type-expressions/defaults-in-map-value-for-object",
         "native/type-expressions/defaults-in-map-value-no-common-type",
-        "native/type-expressions/defaults-in-list-value-elements-differ",
-        "native/type-expressions/defaults-set-elements-converted-one-by-one",
+        "native/type-expressions/defaults-in-set-value",
         "native/type-expressions/defaults-list-of-maps-elements-unified",
-        "native/type-expressions/defaults-map-converted-as-object"
+        "native/type-expressions/defaults-map-converted-as-object",
+        "native/type-expressions/defaults-map-value-with-list-defaults-for-object",
+        "native/type-expressions/defaults-set-elements-converted-one-by-one"
+      ]
+    },
+    {
+      "id": "type-expressions-defaults-map-missing-optional-null-type",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "An optional attribute without a default that is missing from a map value converted to an object type becomes a null of the attribute's type, which as the type of a value has no optional attributes, so a further conversion that keeps the attribute gives that null",
+      "tests": [
+        "native/type-expressions/defaults-map-missing-optional-object-attribute-null-type"
+      ]
+    },
+    {
+      "id": "type-expressions-defaults-missing-optional-object-in-list-of-any",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "A list of the nulls that a missing optional attribute becomes, where the attribute's type is an object type with optional attributes, converts to a list or set of any whose element type is that object type without optional attributes",
+      "tests": [
+        "native/type-expressions/defaults-missing-optional-object-null-in-list-of-any",
+        "native/type-expressions/defaults-missing-optional-object-null-in-set-of-any"
+      ]
+    },
+    {
+      "id": "type-expressions-defaults-missing-optional-object-in-map",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "The elements of a map value converted to a map of objects all get the same object type, also when only some of them lack an optional attribute whose type is an object type with optional attributes",
+      "tests": [
+        "native/type-expressions/defaults-map-elements-missing-optional-object-unified"
+      ]
+    },
+    {
+      "id": "type-expressions-defaults-missing-optional-object-in-map-of-tuples",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "A map value whose tuple elements hold objects, only some of which lack an optional attribute whose type is an object type with optional attributes, fails to convert to a map of such tuples (disputed)",
+      "tests": [
+        "native/type-expressions/defaults-map-of-tuples-missing-optional-object-is-error"
       ]
     },
     {
@@ -521,16 +575,25 @@
       ]
     },
     {
+      "id": "type-expressions-defaults-dynamic-unification-unknown",
+      "spec": "ext/typeexpr/README.md#optional-object-attributes",
+      "rule": "A null default of type any added to a map value whose elements are collections unifies with them to the dynamic pseudo-type, which makes every attribute of the result unknown (disputed)",
+      "tests": [
+        "native/type-expressions/defaults-null-any-default-makes-map-value-unknown"
+      ]
+    },
+    {
       "id": "type-expressions-defaults-null-unknown",
       "spec": "ext/typeexpr/README.md#optional-object-attributes",
       "rule": "A null or unknown value, a null or unknown element or an unknown attribute gets no defaults before the conversion, while the other elements do",
       "tests": [
-        "native/type-expressions/defaults-null-value",
-        "native/type-expressions/defaults-unknown-value",
+        "native/type-expressions/defaults-in-list-value-null-element",
+        "native/type-expressions/defaults-null-dynamic-element",
         "native/type-expressions/defaults-null-element",
+        "native/type-expressions/defaults-null-value",
         "native/type-expressions/defaults-unknown-attribute",
         "native/type-expressions/defaults-unknown-element",
-        "native/type-expressions/defaults-in-list-value-null-element"
+        "native/type-expressions/defaults-unknown-value"
       ]
     },
     {
@@ -547,10 +610,12 @@
       "spec": "ext/typeexpr/README.md#optional-object-attributes",
       "rule": "After defaults, the elements of a list, set or map value are unified to one type, in the sorted order of a map's keys, converting values on the way, and when that fails they convert one by one (disputed)",
       "tests": [
-        "native/type-expressions/defaults-set-elements-unified",
-        "native/type-expressions/defaults-list-to-set-elements-unified",
+        "native/type-expressions/defaults-every-object-element-unified-with-map",
+        "native/type-expressions/defaults-every-tuple-element-unified-with-list",
         "native/type-expressions/defaults-list-elements-converted-one-by-one",
-        "native/type-expressions/defaults-map-unified-in-key-order"
+        "native/type-expressions/defaults-list-to-set-elements-unified",
+        "native/type-expressions/defaults-map-unified-in-key-order",
+        "native/type-expressions/defaults-set-elements-unified"
       ]
     },
     {

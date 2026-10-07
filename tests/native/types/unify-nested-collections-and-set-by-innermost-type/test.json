@@ -1,0 +1,110 @@
+{
+  "description": "Lists of sets of maps of numbers and of strings and a set unify to a list of sets of maps of strings",
+  "spec": [
+    "spec.md#type-unification",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The input needs a null set whose element type is the dynamic pseudo-type (f), which the spec has no value for: the dynamic pseudo-type is a placeholder for a type that isn't known yet, so no value should have it as a collection's element type. Apart from that, the spec gives the same result. Two collection types of the same kind unify according to their element types, at every level, and the list is preferred over the set. go-cty ranks the given types here (compareTypes in cty/convert/compare_types.go, which compares two lists, two sets or two maps by their element types) and picks the first that every type converts to.",
+  "variables": {
+    "n": {
+      "null": [
+        "list",
+        [
+          "set",
+          [
+            "map",
+            "number"
+          ]
+        ]
+      ]
+    },
+    "s": {
+      "null": [
+        "list",
+        [
+          "set",
+          [
+            "map",
+            "string"
+          ]
+        ]
+      ]
+    },
+    "f": {
+      "null": [
+        "set",
+        "dynamic"
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [
+            {
+              "null": [
+                "list",
+                [
+                  "set",
+                  [
+                    "map",
+                    "string"
+                  ]
+                ]
+              ]
+            },
+            {
+              "null": [
+                "list",
+                [
+                  "set",
+                  [
+                    "map",
+                    "string"
+                  ]
+                ]
+              ]
+            },
+            {
+              "null": [
+                "list",
+                [
+                  "set",
+                  [
+                    "map",
+                    "string"
+                  ]
+                ]
+              ]
+            }
+          ],
+          "element_type": [
+            "list",
+            [
+              "set",
+              [
+                "map",
+                "string"
+              ]
+            ]
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

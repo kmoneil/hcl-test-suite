@@ -1,0 +1,23 @@
+{
+  "description": "Converting an object fails when an attribute has no conversion to its type in the target",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#primitive-type-conversions",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "reference_error": "attribute \"a\": number required, but have bool",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

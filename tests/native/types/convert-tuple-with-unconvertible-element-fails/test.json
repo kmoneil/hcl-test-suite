@@ -1,0 +1,24 @@
+{
+  "description": "Converting a tuple fails when an element has no conversion to its type in the target",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#primitive-type-conversions",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "Not disputed like native/functions/function-error-is-eval-error: the README defines convert's result as the conversion, and the spec makes this conversion an error, because a tuple converts to another tuple type only when each element converts, and there is no conversion from bool to number (spec.md#collection-and-structural-type-conversions, spec.md#primitive-type-conversions).",
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "reference_error": "tuple required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

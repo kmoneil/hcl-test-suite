@@ -1,0 +1,34 @@
+{
+  "description": "Attributes that become lists with no common element type are an error for a map of lists of any",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#type-unification",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": [
+            "map",
+            [
+              "list",
+              "dynamic"
+            ]
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "cannot find a common base type for all elements",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

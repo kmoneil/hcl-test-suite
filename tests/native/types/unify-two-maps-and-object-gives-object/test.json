@@ -1,0 +1,107 @@
+{
+  "description": "Two maps of objects and an object whose attribute lacks one of theirs unify to the object type",
+  "spec": [
+    "spec.md#type-unification",
+    "spec.md#collection-and-structural-type-conversions",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "The spec prefers the object type, and each map converts to it, dropping q. hashicorp/hcl gets the same result another way: it can't convert the object's attribute a, an object without q, to the maps' element type, which has q (go-cty doesn't fill a missing attribute with null as the spec does), and in go-cty the maps' element type and that attribute's type don't unify (objects with different attributes unify only to a map, and string and a list of strings have no common type), so unifyObjectsAsMaps in cty/convert/unify.go fails, and unify ranks the maps first and then takes the object type.",
+  "variables": {
+    "m": {
+      "map": {
+        "a": {
+          "object": {
+            "p": {
+              "string": "x"
+            },
+            "q": {
+              "list": [
+                {
+                  "string": "y"
+                }
+              ],
+              "element_type": "string"
+            }
+          }
+        }
+      },
+      "element_type": [
+        "object",
+        {
+          "p": "string",
+          "q": [
+            "list",
+            "string"
+          ]
+        }
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [
+            {
+              "object": {
+                "a": {
+                  "object": {
+                    "p": {
+                      "string": "x"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "object": {
+                "a": {
+                  "object": {
+                    "p": {
+                      "string": "x"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "object": {
+                "a": {
+                  "object": {
+                    "p": {
+                      "string": "z"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "element_type": [
+            "object",
+            {
+              "a": [
+                "object",
+                {
+                  "p": "string"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

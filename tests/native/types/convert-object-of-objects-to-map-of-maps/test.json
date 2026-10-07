@@ -1,0 +1,42 @@
+{
+  "description": "An object whose attribute is an object converts to a map of maps",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "map": {
+            "a": {
+              "map": {
+                "x": {
+                  "string": "1"
+                }
+              },
+              "element_type": "string"
+            }
+          },
+          "element_type": [
+            "map",
+            "string"
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

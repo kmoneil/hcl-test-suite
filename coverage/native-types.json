@@ -192,11 +192,22 @@
     {
       "id": "types-type-specification-mismatch",
       "spec": "spec.md#type-specifications",
-      "rule": "A type that isn't identical to a type specification and doesn't match it through the dynamic pseudo-type doesn't match, such as a tuple of another length, a list of another element type, or a tuple of elements with no common type for a list of the dynamic pseudo-type",
+      "rule": "A type that isn't identical to a type specification and doesn't match it through the dynamic pseudo-type doesn't match, such as a tuple of another length or with an element of another type, a list, set or map of another element type, an object with an attribute of another type, or a tuple of elements with no common type for a list of the dynamic pseudo-type",
       "tests": [
         "native/types/function-list-of-dynamic-tuple-elements-must-unify",
         "native/types/function-list-parameter-element-type-mismatch-is-error",
-        "native/types/function-tuple-parameter-length-mismatch-is-error"
+        "native/types/function-map-parameter-unconvertible-element-is-error",
+        "native/types/function-object-parameter-attribute-type-mismatch-is-error",
+        "native/types/function-set-parameter-unconvertible-element-is-error",
+        "native/types/function-tuple-parameter-element-type-mismatch-is-error",
+        "native/types/function-tuple-parameter-length-mismatch-is-error",
+        "native/types/convert-map-of-sets-with-unknown-for-nested-dynamic-parameter-is-error",
+        "native/types/function-list-of-lists-of-dynamic-elements-must-unify",
+        "native/types/function-list-of-lists-of-dynamic-with-null-element-must-unify",
+        "native/types/function-map-of-dynamic-with-null-attribute-must-unify",
+        "native/types/function-map-of-lists-of-dynamic-attributes-must-unify",
+        "native/types/function-set-of-lists-of-dynamic-elements-must-unify",
+        "native/types/function-set-parameter-unconvertible-tuple-element-is-error"
       ]
     },
     {
@@ -206,6 +217,17 @@
       "tests": [
         "native/types/function-empty-tuple-for-list-of-dynamic-parameter",
         "native/types/function-null-keyword-for-list-of-dynamic-parameter"
+      ]
+    },
+    {
+      "id": "types-type-specification-empty-collection-with-nested-dynamic",
+      "spec": "spec.md#type-specifications",
+      "rule": "A list, set or map holding an empty collection and a non-empty one, both collections of collections, is an error for its own type with the dynamic pseudo-type as the innermost element type, because the empty collection converts to a collection whose element type holds the dynamic pseudo-type while the non-empty one keeps its own element type (disputed)",
+      "tests": [
+        "native/types/function-nested-dynamic-list-with-empty-element-is-error",
+        "native/types/function-nested-dynamic-set-with-empty-element-is-error",
+        "native/types/function-nested-dynamic-map-with-empty-element-is-error",
+        "native/types/function-map-with-empty-list-for-nested-dynamic-parameter-is-error"
       ]
     },
     {
@@ -348,6 +370,16 @@
       "tests": [
         "native/types/null-number-or-operand-is-error",
         "native/types/function-null-of-unconvertible-type-is-error"
+      ]
+    },
+    {
+      "id": "types-empty-collection-to-collection-of-dynamic",
+      "spec": "spec.md#conversion-to-and-from-the-dynamic-pseudo-type",
+      "rule": "An empty list, set or map converted to the same kind of collection of the dynamic pseudo-type keeps its element type, as it would if it had elements",
+      "tests": [
+        "native/types/convert-empty-list-to-list-of-any-keeps-element-type",
+        "native/types/convert-empty-set-to-set-of-any-keeps-element-type",
+        "native/types/convert-empty-map-to-map-of-any-keeps-element-type"
       ]
     },
     {
@@ -519,6 +551,24 @@
       ]
     },
     {
+      "id": "types-set-with-unknown-element-to-list",
+      "spec": "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+      "rule": "A set holding an unknown element and another element converts to an unknown list, because the unknown element may equal the other one, so the list's length isn't known, and a map of such sets converts to a map of lists",
+      "tests": [
+        "native/types/convert-map-of-number-tuple-sets-with-unknown-to-string-tuple-lists",
+        "native/types/convert-map-of-sets-with-unknown-element-to-map-of-lists",
+        "native/types/convert-set-with-unknown-element-to-list-is-unknown"
+      ]
+    },
+    {
+      "id": "types-set-with-unknown-element-to-list-keeps-element-type",
+      "spec": "spec.md#collection-and-structural-type-conversions",
+      "rule": "A set holding an unknown element converted to a list of another element type gives an unknown list of the set's own element type (disputed)",
+      "tests": [
+        "native/types/convert-set-with-unknown-element-to-list-of-other-type-keeps-set-type"
+      ]
+    },
+    {
       "id": "types-list-to-set-merges-equal-elements",
       "spec": "spec.md#collection-and-structural-type-conversions",
       "rule": "Converting a tuple with equal elements to a set keeps one of them, as hashicorp/hcl does when a set and a tuple unify to a set (disputed)",
@@ -531,8 +581,27 @@
       "spec": "spec.md#collection-and-structural-type-conversions",
       "rule": "A tuple converts to a list when every element converts to the list's element type, converting each element",
       "tests": [
-        "native/types/unify-tuple-and-list-converts-tuple-to-list",
-        "native/types/unify-list-with-unconvertible-tuple-fails"
+        "native/types/convert-tuple-to-list-converts-elements-after-a-matching-one",
+        "native/types/unify-list-with-unconvertible-tuple-fails",
+        "native/types/unify-tuple-and-list-converts-tuple-to-list"
+      ]
+    },
+    {
+      "id": "types-tuple-to-set-conversion",
+      "spec": "spec.md#collection-and-structural-type-conversions",
+      "rule": "A tuple converts to a set when every element converts to the set's element type, converting each element, including the elements after one that already has that type",
+      "tests": [
+        "native/types/convert-tuple-to-set-converts-elements-after-a-matching-one"
+      ]
+    },
+    {
+      "id": "types-tuple-to-set-unconvertible-element",
+      "spec": "spec.md#collection-and-structural-type-conversions",
+      "rule": "A tuple doesn't convert to a set when one of its elements doesn't convert to the set's element type, whether the element's type has no such conversion, even in an unknown tuple, or its value fails to convert",
+      "tests": [
+        "native/types/convert-unknown-tuple-to-set-with-unconvertible-element-fails",
+        "native/types/convert-tuple-to-set-with-unconvertible-element-value-fails",
+        "native/types/convert-tuple-to-set-with-unconvertible-element-type-fails"
       ]
     },
     {
@@ -540,6 +609,8 @@
       "spec": "spec.md#collection-and-structural-type-conversions",
       "rule": "An object converts to a map when every attribute converts to the map's element type, with attribute names as keys",
       "tests": [
+        "native/types/convert-object-of-objects-to-map-of-maps",
+        "native/types/function-map-parameter-unconvertible-attribute-is-error",
         "native/types/unify-map-and-object-gives-map",
         "native/types/unify-map-with-unconvertible-object-fails"
       ]
@@ -556,7 +627,7 @@
     {
       "id": "types-map-to-object-conversion",
       "spec": "spec.md#collection-and-structural-type-conversions",
-      "rule": "hashicorp/hcl never converts a map to an object when unifying, so a map keeps its keys even when they don't match the object's attributes; it converts a map argument for an object parameter, but drops map keys that aren't attributes of the object type instead of failing (disputed)",
+      "rule": "When a map and an object that converts to the map's type unify, hashicorp/hcl keeps the map, so the map keeps its keys even when they don't match the object's attributes; it converts a map argument for an object parameter, but drops map keys that aren't attributes of the object type instead of failing (disputed)",
       "tests": [
         "native/types/unify-map-and-object-keeps-map",
         "native/types/unify-map-and-object-with-other-keys-gives-map",
@@ -573,6 +644,14 @@
       ]
     },
     {
+      "id": "types-map-to-object-drops-extra-keys",
+      "spec": "spec.md#collection-and-structural-type-conversions",
+      "rule": "Converting a map value to an object type drops every map key that isn't an attribute of the object type, also one that sorts before the attributes, instead of failing (disputed)",
+      "tests": [
+        "native/types/convert-map-to-object-drops-key-sorting-before-attributes"
+      ]
+    },
+    {
       "id": "types-object-to-object-conversion",
       "spec": "spec.md#collection-and-structural-type-conversions",
       "rule": "An object converts to an object type with the same attribute names by converting each attribute value",
@@ -585,8 +664,25 @@
       "spec": "spec.md#collection-and-structural-type-conversions",
       "rule": "hashicorp/hcl never converts an object to an object type with attributes it lacks, which the spec fills with null: objects with different attribute names unify to a map, and such an object argument for an object parameter is an error (disputed)",
       "tests": [
-        "native/types/unify-objects-with-different-attributes-gives-map",
-        "native/types/function-object-parameter-missing-attribute-is-error"
+        "native/types/function-object-parameter-missing-attribute-beside-null-is-error",
+        "native/types/function-object-parameter-missing-attribute-is-error",
+        "native/types/unify-objects-with-different-attributes-gives-map"
+      ]
+    },
+    {
+      "id": "types-object-to-object-extra-attributes",
+      "spec": "spec.md#collection-and-structural-type-conversions",
+      "rule": "Converting an object to an object type that lacks some of its attributes drops them and keeps the attributes the type has, including ones that sort after a dropped one",
+      "tests": [
+        "native/types/convert-object-drops-attributes-not-in-type"
+      ]
+    },
+    {
+      "id": "types-object-to-object-unconvertible-attribute",
+      "spec": "spec.md#collection-and-structural-type-conversions",
+      "rule": "Converting an object to an object type fails when an attribute's value has no conversion to that attribute's type in the target",
+      "tests": [
+        "native/types/convert-object-with-unconvertible-attribute-fails"
       ]
     },
     {
@@ -594,6 +690,8 @@
       "spec": "spec.md#collection-and-structural-type-conversions",
       "rule": "A tuple converts to another tuple type of the same length when each element converts",
       "tests": [
+        "native/types/convert-tuple-converts-element-after-matching-one",
+        "native/types/convert-tuple-with-unconvertible-element-fails",
         "native/types/unify-tuples-unifies-each-element",
         "native/types/unify-tuples-with-ununifiable-elements-fails"
       ]
@@ -604,6 +702,152 @@
       "rule": "Converting a set of strings to a list of numbers is unsafe and fails for a string that isn't a number, which hashicorp/hcl attempts when a list of numbers and a set of strings unify (disputed)",
       "tests": [
         "native/types/unify-list-and-set-unifies-element-types"
+      ]
+    },
+    {
+      "id": "types-map-of-sets-with-unknown-element-to-map-of-lists",
+      "spec": "spec.md#collection-and-structural-type-conversions",
+      "rule": "Converting a map of sets to a map of lists, where one set holds an unknown element, turns that set into an unknown list of the set's own element type and then unifies the map's elements with safe conversions only, which fails where only unsafe conversions exist and, for element types holding the dynamic pseudo-type, can give maps or lists of it in place of the objects or tuples asked for (disputed)",
+      "tests": [
+        "native/types/convert-map-of-sets-holding-unknown-to-map-of-lists-fails",
+        "native/types/convert-map-of-sets-with-unknown-to-map-of-object-lists-gives-maps",
+        "native/types/convert-map-of-sets-with-unknown-to-map-of-nested-object-lists-fails",
+        "native/types/convert-map-of-sets-with-unknown-to-map-of-tuple-lists-gives-lists",
+        "native/types/convert-map-of-sets-with-unknown-and-mixed-tuple-attribute-fails"
+      ]
+    },
+    {
+      "id": "types-unknown-conversion",
+      "spec": "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+      "rule": "Converting an unknown value whose type converts to the target type gives an unknown value of the target type: an unknown map to another map type or to an object type, also one with an optional attribute that the map's elements can't convert to, and an unknown list to a set type",
+      "tests": [
+        "native/types/convert-unknown-list-to-set",
+        "native/types/convert-unknown-map-to-map",
+        "native/types/convert-unknown-map-to-object",
+        "native/types/convert-unknown-map-to-object-with-unconvertible-optional-attribute",
+        "native/types/convert-unknown-map-to-object-with-unconvertible-optional-list-attribute",
+        "native/types/convert-unknown-map-to-object-with-unconvertible-optional-set-attribute"
+      ]
+    },
+    {
+      "id": "types-unknown-conversion-to-dynamic",
+      "spec": "spec.md#conversion-to-and-from-the-dynamic-pseudo-type",
+      "rule": "Converting an unknown value to a type containing the dynamic pseudo-type gives an unknown whose type has the value's own types in place of the dynamic pseudo-type: an unknown map's element type, an unknown object's attribute type, and for an unknown object converted to a map or an unknown tuple converted to a list, the unification of its attribute or element types, where a dynamic attribute or element gives way to a string one",
+      "tests": [
+        "native/types/convert-unknown-map-to-map-of-any",
+        "native/types/convert-unknown-object-to-object-with-any-attribute",
+        "native/types/convert-unknown-object-with-dynamic-attribute-to-map-of-any",
+        "native/types/convert-unknown-tuple-to-list-of-any",
+        "native/types/convert-unknown-tuple-with-dynamic-element-to-list-of-any"
+      ]
+    },
+    {
+      "id": "types-unknown-conversion-to-set-of-dynamic",
+      "spec": "spec.md#conversion-to-and-from-the-dynamic-pseudo-type",
+      "rule": "Converting an unknown list to a set of any gives an unknown set of the list's element type, and converting an unknown tuple to a set of any gives an unknown set of the unification of the tuple's element types",
+      "tests": [
+        "native/types/convert-unknown-list-to-set-of-any",
+        "native/types/convert-unknown-tuple-to-set-of-any",
+        "native/types/convert-unknown-tuple-with-dynamic-element-to-set-of-any"
+      ]
+    },
+    {
+      "id": "types-unknown-conversion-unrefined",
+      "spec": "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+      "rule": "A converted unknown that came from one that may be null may be null too, and an unknown list converted to a set may have fewer elements than the list, since equal elements merge, so comparing the converted unknown with null or with a shorter set gives an unknown bool",
+      "tests": [
+        "native/types/convert-unknown-element-compared-with-null",
+        "native/types/convert-unknown-list-to-set-compared-with-shorter-set"
+      ]
+    },
+    {
+      "id": "types-unknown-list-to-set-may-be-empty",
+      "spec": "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+      "rule": "An unknown list that may be empty converts to a set that may be empty too, so comparing the converted unknown with an empty set gives an unknown bool",
+      "tests": [
+        "native/types/convert-unknown-list-to-set-compared-with-empty-set"
+      ]
+    },
+    {
+      "id": "types-unknown-conversion-refined",
+      "spec": "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+      "rule": "A converted unknown keeps what hashicorp/hcl knows about the unknown it came from: one that can't be null still can't be, and an unknown list converted to another list type keeps its range of lengths, so comparing it with null or with a list whose length is outside that range gives false (disputed)",
+      "tests": [
+        "native/types/convert-unknown-sum-compared-with-null",
+        "native/types/convert-unknown-list-keeps-length-lower-bound",
+        "native/types/convert-unknown-list-keeps-length-upper-bound"
+      ]
+    },
+    {
+      "id": "types-unknown-nonempty-list-to-set-refined",
+      "spec": "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+      "rule": "An unknown list known to hold at least one element converts to a set known to hold at least one too, since merging equal elements can't empty a set, so comparing the converted unknown with an empty set gives false (disputed)",
+      "tests": [
+        "native/types/convert-unknown-nonempty-list-to-set-not-equal-to-empty-set"
+      ]
+    },
+    {
+      "id": "types-convert-empty-to-collection-of-any",
+      "spec": "spec.md#collection-and-structural-type-conversions",
+      "rule": "An empty tuple converts to a set of any, and an empty object to a map of any, giving an empty collection although there are no element types to unify",
+      "tests": [
+        "native/types/convert-empty-tuple-to-set-of-any",
+        "native/types/convert-empty-object-to-map-of-any"
+      ]
+    },
+    {
+      "id": "types-convert-nested-any-unifies-converted-elements",
+      "spec": "spec.md#type-unification",
+      "rule": "Converting an object to a map whose element type is a collection type containing any unifies the types of the converted attributes, so a list of numbers and a list of strings become lists of strings",
+      "tests": [
+        "native/types/convert-object-to-map-of-lists-of-any-unifies-lists"
+      ]
+    },
+    {
+      "id": "types-convert-nested-any-without-common-type",
+      "spec": "spec.md#type-unification",
+      "rule": "Converting to a list, set or map whose element type is a collection type containing any is an error when the converted elements have no common type, also beside a list holding only null",
+      "tests": [
+        "native/types/convert-tuple-of-lists-without-common-type-to-list-of-lists-of-any-fails",
+        "native/types/convert-tuple-of-lists-without-common-type-to-set-of-lists-of-any-fails",
+        "native/types/convert-object-of-lists-without-common-type-to-map-of-lists-of-any-fails",
+        "native/types/convert-tuple-of-lists-without-common-type-beside-null-list-fails"
+      ]
+    },
+    {
+      "id": "types-convert-nested-any-without-unification",
+      "spec": "spec.md#collection-and-structural-type-conversions",
+      "rule": "Converting a tuple to a set whose element type is a collection type containing any, or an object to a map whose element type is a tuple type containing any, doesn't unify the converted elements, so a list or tuple of a number and one of a string are an error, unlike in a list (disputed)",
+      "tests": [
+        "native/types/convert-tuple-to-set-of-lists-of-any-does-not-unify-lists",
+        "native/types/convert-object-to-map-of-tuples-of-any-does-not-unify-tuples"
+      ]
+    },
+    {
+      "id": "types-convert-collection-of-any-dynamic-element",
+      "spec": "spec.md#type-unification",
+      "rule": "Converting to a collection of any is an error when the element types have no common type, even if one more element is the null keyword or of the dynamic pseudo-type, also for an unknown tuple",
+      "tests": [
+        "native/types/convert-object-without-common-type-beside-null-to-map-of-any-fails",
+        "native/types/convert-unknown-tuple-to-list-of-any-with-dynamic-element-fails",
+        "native/types/convert-unknown-tuple-to-set-of-any-with-dynamic-element-fails"
+      ]
+    },
+    {
+      "id": "types-convert-null-keywords-to-collection-of-any",
+      "spec": "spec.md#type-unification",
+      "rule": "A tuple whose elements are all the null keyword converts to a list of any holding those nulls, and to a set of any holding a single null, since equal elements merge (disputed)",
+      "tests": [
+        "native/types/convert-tuple-of-null-keywords-to-list-of-any",
+        "native/types/convert-tuple-of-null-keywords-to-set-of-any"
+      ]
+    },
+    {
+      "id": "types-convert-unknown-object-to-map-of-any-dynamic-attribute",
+      "spec": "spec.md#type-unification",
+      "rule": "An unknown object whose attribute types have no common type, one of them the dynamic pseudo-type, converts to an unknown map of any instead of failing as such a tuple does for a list of any (disputed)",
+      "tests": [
+        "native/types/convert-unknown-object-to-map-of-any-with-dynamic-attribute"
       ]
     },
     {
@@ -629,10 +873,14 @@
       "spec": "spec.md#type-unification",
       "rule": "Two collection types of the same kind unify to that kind of collection of their unified element types, or fail if the element types don't unify",
       "tests": [
+        "native/types/unify-lists-converts-false-result-elements",
+        "native/types/unify-lists-of-objects-gives-new-element-type",
         "native/types/unify-lists-unifies-element-types",
+        "native/types/unify-lists-with-ununifiable-element-types-fails",
+        "native/types/unify-maps-of-objects-gives-new-element-type",
         "native/types/unify-maps-unifies-element-types",
-        "native/types/unify-sets-unifies-element-types",
-        "native/types/unify-lists-with-ununifiable-element-types-fails"
+        "native/types/unify-sets-of-objects-gives-new-element-type",
+        "native/types/unify-sets-unifies-element-types"
       ]
     },
     {
@@ -650,6 +898,7 @@
       "spec": "spec.md#type-unification",
       "rule": "A list of numbers and a set of strings unify to a list of numbers, because the set's strings convert to numbers unsafely (disputed)",
       "tests": [
+        "native/types/function-tuple-elements-unified-to-list-of-numbers-fail",
         "native/types/unify-list-and-set-unifies-element-types",
         "native/types/unify-set-and-list-fails-for-selected-set"
       ]
@@ -657,11 +906,12 @@
     {
       "id": "types-unify-map-and-object",
       "spec": "spec.md#type-unification",
-      "rule": "A map type and an object type unify to a map type, converting the object (disputed)",
+      "rule": "A map type and an object type that converts to it unify to the map type, converting the object (disputed)",
       "tests": [
         "native/types/unify-map-and-object-gives-map",
         "native/types/unify-map-and-object-keeps-map",
-        "native/types/unify-map-and-object-with-other-keys-gives-map"
+        "native/types/unify-map-and-object-with-other-keys-gives-map",
+        "native/types/unify-map-and-object-with-ununifiable-attributes-gives-map"
       ]
     },
     {
@@ -670,10 +920,47 @@
       "rule": "A list type and a tuple type unify to a list type, and a set type and a tuple type unify to a set type (disputed)",
       "tests": [
         "native/types/unify-list-and-tuple-gives-list",
-        "native/types/unify-tuple-and-list-converts-tuple-to-list",
+        "native/types/unify-list-and-tuple-of-mixed-elements-gives-list",
         "native/types/unify-list-and-tuple-of-other-length-gives-list",
         "native/types/unify-set-and-tuple-gives-set",
-        "native/types/unify-set-and-tuple-merges-equal-elements"
+        "native/types/unify-set-and-tuple-merges-equal-elements",
+        "native/types/unify-tuple-and-list-converts-tuple-to-list"
+      ]
+    },
+    {
+      "id": "types-unify-collection-and-structural-element-types",
+      "spec": "spec.md#type-unification",
+      "rule": "A list of numbers unified with a tuple of strings, or a map of numbers unified with an object of strings, converts the numbers in the places of the tuple's or object's strings to strings, also when the tuple holds the null keyword beside its strings",
+      "tests": [
+        "native/types/unify-list-and-tuple-unifies-element-types",
+        "native/types/unify-list-and-tuple-with-null-keyword-element",
+        "native/types/unify-map-and-object-unifies-element-types"
+      ]
+    },
+    {
+      "id": "types-unify-list-and-tuple-conversion-repeated",
+      "spec": "spec.md#type-unification",
+      "rule": "A list of maps and a tuple of objects with differing attribute types, unified to the list type, fail when the tuple is the chosen result, because hashicorp/hcl converts the original tuple instead of its converted elements (disputed)",
+      "tests": [
+        "native/types/unify-list-of-maps-and-tuple-of-objects-fails-for-tuple"
+      ]
+    },
+    {
+      "id": "types-unify-tuple-or-object-own-conversion-first",
+      "spec": "spec.md#type-unification",
+      "rule": "A tuple unified with a list type, or an object unified with a map type, fails when it is the selected result and its elements don't convert to the type they unify to among themselves, even when they convert to the unified list or map type (disputed)",
+      "tests": [
+        "native/types/unify-tuple-and-list-fails-for-tuple-not-converting-to-own-list-type",
+        "native/types/unify-object-and-map-fails-for-object-not-converting-to-own-map-type"
+      ]
+    },
+    {
+      "id": "types-unify-structural-and-collection-element-types",
+      "spec": "spec.md#type-unification",
+      "rule": "A tuple of numbers unified with a list of strings, or an object of numbers unified with a map of strings, converts to that list or map type, so its numbers become strings (disputed)",
+      "tests": [
+        "native/types/unify-tuple-and-list-unifies-element-types",
+        "native/types/unify-object-and-map-unifies-element-types"
       ]
     },
     {
@@ -688,12 +975,39 @@
       ]
     },
     {
+      "id": "types-unify-dynamic-collection-element-type",
+      "spec": "spec.md#type-unification",
+      "rule": "A collection whose element type is the dynamic pseudo-type and a collection of the same kind with a primitive element type unify to the second collection's type, converting the first (disputed)",
+      "tests": [
+        "native/types/unify-list-of-dynamic-takes-other-element-type"
+      ]
+    },
+    {
       "id": "types-unify-dynamic-element-with-structural-type",
       "spec": "spec.md#type-unification",
       "rule": "A dynamic tuple element unified with an object element keeps the dynamic pseudo-type instead of taking the object type (disputed)",
       "tests": [
         "native/types/unify-null-keyword-element-with-object",
         "native/unknowns/conditional-dynamic-element-with-object-stays-dynamic"
+      ]
+    },
+    {
+      "id": "types-unify-null-keyword-beside-selected-structural-element",
+      "spec": "spec.md#type-unification",
+      "rule": "A tuple nested in the selected result of a conditional is returned unchanged when the other result has the null keyword in its place",
+      "tests": [
+        "native/types/unify-null-keyword-element-with-selected-tuple"
+      ]
+    },
+    {
+      "id": "types-unify-dynamic-element-with-collection-or-tuple",
+      "spec": "spec.md#type-unification",
+      "rule": "A dynamic tuple element unified with a map, list, set or tuple element keeps the dynamic pseudo-type instead of taking the other element's type (disputed)",
+      "tests": [
+        "native/types/unify-null-keyword-element-with-map",
+        "native/types/unify-null-keyword-element-with-list",
+        "native/types/unify-null-keyword-element-with-set",
+        "native/types/unify-null-keyword-element-with-tuple"
       ]
     },
     {
@@ -706,13 +1020,22 @@
       ]
     },
     {
+      "id": "types-unify-dynamic-fallback",
+      "spec": "spec.md#type-unification",
+      "rule": "Types with no common type, such as an object type and string, unify to the dynamic pseudo-type when it is one of them (disputed)",
+      "tests": [
+        "native/types/unify-object-string-and-dynamic-gives-dynamic"
+      ]
+    },
+    {
       "id": "types-unify-objects-same-attributes",
       "spec": "spec.md#type-unification",
       "rule": "Two object types with the same attribute names unify attribute by attribute to an object type, or fail if some attribute types don't unify",
       "tests": [
+        "native/types/unify-null-keyword-attribute-with-number",
+        "native/types/unify-objects-produces-new-type",
         "native/types/unify-objects-unifies-common-attribute-types",
-        "native/types/unify-objects-with-ununifiable-common-attribute-fails",
-        "native/types/unify-objects-produces-new-type"
+        "native/types/unify-objects-with-ununifiable-common-attribute-fails"
       ]
     },
     {
@@ -722,6 +1045,16 @@
       "tests": [
         "native/types/unify-objects-with-different-attributes-gives-map",
         "native/types/unify-objects-with-different-attribute-types-fails"
+      ]
+    },
+    {
+      "id": "types-unify-objects-different-attributes-keep-own-type",
+      "spec": "spec.md#type-unification",
+      "rule": "When objects with different attribute names unify, an attribute read from the result keeps its own type and the selected value if the other attributes are the null keyword, an empty object or tuple, or a map or list of the dynamic pseudo-type",
+      "tests": [
+        "native/types/unify-objects-with-null-keyword-attribute-keeps-values",
+        "native/types/unify-objects-with-empty-object-attribute-keeps-map-type",
+        "native/types/unify-objects-with-empty-tuple-attribute-keeps-list-type"
       ]
     },
     {
@@ -735,11 +1068,29 @@
       ]
     },
     {
+      "id": "types-unify-same-shape-without-collection-fallback",
+      "spec": "spec.md#type-unification",
+      "rule": "Objects with the same attribute names, or tuples of the same length, fail to unify when the types of one attribute or element don't unify, even when all their attribute or element types would unify as the element type of a map or list (disputed)",
+      "tests": [
+        "native/types/unify-objects-with-bool-and-number-attribute-fails",
+        "native/types/unify-tuples-with-bool-and-number-element-fails"
+      ]
+    },
+    {
       "id": "types-unify-tuples-of-different-lengths",
       "spec": "spec.md#type-unification",
       "rule": "Tuple types of different lengths unify to a list of their unified element types (disputed)",
       "tests": [
+        "native/types/unify-longer-tuple-and-shorter-tuple-gives-list",
         "native/types/unify-tuples-of-different-lengths-gives-list"
+      ]
+    },
+    {
+      "id": "types-unify-tuples-of-different-lengths-without-common-type",
+      "spec": "spec.md#type-unification",
+      "rule": "Tuple types of different lengths fail to unify when their elements have no common type, also when some of those elements are tuples of different lengths",
+      "tests": [
+        "native/types/unify-tuple-of-tuples-of-different-lengths-and-shorter-tuple-fails"
       ]
     },
     {
@@ -747,7 +1098,10 @@
       "spec": "spec.md#type-unification",
       "rule": "Unification can produce a type that is none of its input types",
       "tests": [
+        "native/types/unify-lists-of-objects-gives-new-element-type",
+        "native/types/unify-maps-of-objects-gives-new-element-type",
         "native/types/unify-objects-produces-new-type",
+        "native/types/unify-sets-of-objects-gives-new-element-type",
         "native/types/unify-tuples-produces-new-type"
       ]
     },
@@ -757,7 +1111,11 @@
       "rule": "Unification fails if one of the types can't convert to the type the rules select",
       "tests": [
         "native/types/unify-list-with-unconvertible-tuple-fails",
-        "native/types/unify-map-with-unconvertible-object-fails"
+        "native/types/unify-map-with-unconvertible-object-fails",
+        "native/types/unify-map-with-unconvertible-object-fails-when-object-selected",
+        "native/types/unify-maps-with-unconvertible-element-types-fails",
+        "native/types/unify-objects-with-map-and-unconvertible-object-attribute-fails",
+        "native/types/unify-tuples-with-map-and-unconvertible-object-element-fails"
       ]
     },
     {
@@ -776,6 +1134,61 @@
       "rule": "Unification rules combine: a set of numbers and a list of strings unify to a list of strings",
       "tests": [
         "native/types/unify-set-and-list-unifies-element-types"
+      ]
+    },
+    {
+      "id": "types-unify-several-dynamic-anywhere",
+      "spec": "spec.md#type-unification",
+      "rule": "Among three or more types, the dynamic pseudo-type takes the type the others unify to, whether it comes before or after them (disputed)",
+      "tests": [
+        "native/types/unify-map-and-object-between-nulls-gives-object"
+      ]
+    },
+    {
+      "id": "types-unify-object-not-convertible-to-map",
+      "spec": "spec.md#type-unification",
+      "rule": "A map type and an object type that can't convert to it unify to the object type, converting the map, as for a map of the dynamic pseudo-type and an object whose attribute types don't unify, also beside a second map of the same type",
+      "tests": [
+        "native/types/unify-map-and-object-between-nulls-gives-object",
+        "native/types/unify-objects-and-map-attribute-by-attribute",
+        "native/types/unify-two-maps-and-object-gives-object"
+      ]
+    },
+    {
+      "id": "types-unify-several-collections-by-elements",
+      "spec": "spec.md#type-unification",
+      "rule": "Three or more list and set types unify to a list of the type their elements unify to: tuples element by element, and collections by their own element types at every level",
+      "tests": [
+        "native/types/unify-lists-of-nested-tuples-and-set-element-by-element",
+        "native/types/unify-lists-of-tuples-and-set-element-by-element",
+        "native/types/unify-nested-collections-and-set-by-innermost-type"
+      ]
+    },
+    {
+      "id": "types-unify-several-objects-by-attributes",
+      "spec": "spec.md#type-unification",
+      "rule": "Among three or more types, objects with the same attribute names unify attribute by attribute, and when objects have different attributes or swap the types of their attributes, a string in the first object stays a string in the result",
+      "tests": [
+        "native/types/unify-objects-and-map-attribute-by-attribute",
+        "native/types/unify-lists-of-objects-with-swapped-element-types",
+        "native/types/unify-objects-with-extra-attribute-and-map",
+        "native/types/unify-lists-of-objects-with-different-attributes"
+      ]
+    },
+    {
+      "id": "types-unify-several-sequence-kinds",
+      "spec": "spec.md#type-unification",
+      "rule": "Where three or more types hold a list, a set and a tuple type in the same place, those unify to the list or the tuple type, never the set type (disputed)",
+      "tests": [
+        "native/types/unify-set-tuple-and-list-elements-not-to-set"
+      ]
+    },
+    {
+      "id": "types-unify-dynamic-element-takes-ununifiable-types",
+      "spec": "spec.md#type-unification",
+      "rule": "A collection of tuples with dynamic pseudo-type elements unifies with collections of tuples whose elements in those places don't unify, such as a set of strings and a set of lists (disputed)",
+      "tests": [
+        "native/types/unify-dynamic-tuple-element-takes-ununifiable-elements"
       ]
     },
     {

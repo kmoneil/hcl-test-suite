@@ -1,0 +1,49 @@
+{
+  "description": "An empty object attribute doesn't change another attribute's map type when objects unify",
+  "spec": [
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator",
+    "hclsyntax/spec.md#attribute-access-operator",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The input needs a null map whose element type is the dynamic pseudo-type (md), which the spec has no value for: the dynamic pseudo-type is a placeholder for a type that isn't known yet, so no value should have it as a collection's element type. Apart from that, the spec gives the same result. hashicorp/hcl unifies objects with different attribute names to a map whose element type unifies all the attribute types (unifyObjectTypesToMap in cty/convert/unify.go). For a map of strings, a map of the dynamic pseudo-type and an empty object, unifyObjectsAsMaps fails because the empty object has no attribute types to unify, so unify ranks the three types (compareTypes in cty/convert/compare_types.go) and takes the map of strings, which the empty object converts to as an empty map. The spec gives an object type with all three attributes, where p keeps its type. Either way p is an unknown map of strings.",
+  "variables": {
+    "u": {
+      "unknown": "bool"
+    },
+    "ms": {
+      "map": {
+        "k": {
+          "string": "v"
+        }
+      },
+      "element_type": "string"
+    },
+    "md": {
+      "null": [
+        "map",
+        "dynamic"
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": [
+            "map",
+            "string"
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

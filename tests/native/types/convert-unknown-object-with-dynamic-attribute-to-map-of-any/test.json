@@ -1,0 +1,46 @@
+{
+  "description": "An unknown object with a dynamic and a string attribute converts to an unknown map of strings",
+  "spec": [
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#type-unification",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "type-expressions"
+  ],
+  "variables": {
+    "u": {
+      "unknown": [
+        "object",
+        {
+          "a": "dynamic",
+          "b": "string"
+        }
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": [
+            "map",
+            "string"
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

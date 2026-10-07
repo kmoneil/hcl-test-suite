@@ -1,0 +1,51 @@
+{
+  "description": "A map of maps of strings and a map of objects with a list attribute fail to unify",
+  "spec": [
+    "spec.md#type-unification",
+    "spec.md#collection-and-structural-type-conversions",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "notes": "The element types have no common type, because the map's strings don't convert to the object's list attribute and the list doesn't convert to string. The object's dynamic attribute makes hashicorp/hcl's first pass over the element types accept a map of strings (unifyObjectsAsMaps in cty/convert/unify.go), so only its check that each map converts to the selected type (unifyCollectionTypes) rejects them.",
+  "variables": {
+    "x": {
+      "map": {
+        "k": {
+          "map": {
+            "a": {
+              "string": "s"
+            }
+          },
+          "element_type": "string"
+        }
+      },
+      "element_type": [
+        "map",
+        "string"
+      ]
+    },
+    "y": {
+      "null": [
+        "map",
+        [
+          "object",
+          {
+            "a": [
+              "list",
+              "string"
+            ],
+            "b": "dynamic"
+          }
+        ]
+      ]
+    }
+  },
+  "reference_error": "must have consistent types",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

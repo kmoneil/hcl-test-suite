@@ -1,0 +1,82 @@
+{
+  "description": "Two objects and a map unify to an object type whose attributes unify those of the objects",
+  "spec": [
+    "spec.md#type-unification",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The input needs a null map whose element type is the dynamic pseudo-type (m), which the spec has no value for: the dynamic pseudo-type is a placeholder for a type that isn't known yet, so no value should have it as a collection's element type. Apart from that, the spec gives the same result. The objects unify attribute by attribute to object({a = string, b = object({})}), which is preferred over the map. go-cty can't make one map of the objects (a string and an empty object have no common type), so it ranks the given types (compareTypes in cty/convert/compare_types.go compares two objects attribute by attribute), tries the map first and then the object whose a is a string.",
+  "variables": {
+    "m": {
+      "null": [
+        "map",
+        "dynamic"
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [
+            {
+              "object": {
+                "a": {
+                  "string": "1"
+                },
+                "b": {
+                  "object": {}
+                }
+              }
+            },
+            {
+              "object": {
+                "a": {
+                  "string": "2"
+                },
+                "b": {
+                  "object": {}
+                }
+              }
+            },
+            {
+              "null": [
+                "object",
+                {
+                  "a": "string",
+                  "b": [
+                    "object",
+                    {}
+                  ]
+                }
+              ]
+            }
+          ],
+          "element_type": [
+            "object",
+            {
+              "a": "string",
+              "b": [
+                "object",
+                {}
+              ]
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

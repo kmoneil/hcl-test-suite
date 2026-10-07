@@ -1,0 +1,38 @@
+{
+  "description": "Converting a tuple to a set of any unifies the element types",
+  "spec": [
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#type-unification"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "body": {
+      "attributes": {
+        "a": {
+          "element_type": "string",
+          "set": [
+            {
+              "string": "1"
+            },
+            {
+              "string": "a"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    },
+    "valid": true
+  }
+}

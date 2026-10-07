@@ -1,0 +1,28 @@
+{
+  "description": "A map of numbers and an object with a tuple attribute fail to unify when the object is selected",
+  "spec": [
+    "spec.md#type-unification",
+    "spec.md#collection-and-structural-type-conversions",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "notes": "Like native/types/unify-map-with-unconvertible-object-fails, with the object as the selected result: hashicorp/hcl converts only the selected result to the unified type, so here the conditional would give the object if the map were wrongly taken to convert to the object type.",
+  "variables": {
+    "m": {
+      "map": {
+        "a": {
+          "number": "5"
+        }
+      },
+      "element_type": "number"
+    }
+  },
+  "reference_error": "must have consistent types",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

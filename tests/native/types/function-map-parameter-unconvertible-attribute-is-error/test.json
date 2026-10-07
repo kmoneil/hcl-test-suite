@@ -1,0 +1,31 @@
+{
+  "description": "An object argument with an attribute that fails to convert is an error for a map parameter",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#primitive-type-conversions",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": [
+            "map",
+            "number"
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "a number is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

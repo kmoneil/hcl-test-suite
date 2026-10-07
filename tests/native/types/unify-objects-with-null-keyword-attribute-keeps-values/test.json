@@ -1,0 +1,21 @@
+{
+  "description": "Objects with different attributes, one the null keyword, unify keeping the selected values",
+  "spec": [
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator",
+    "hclsyntax/spec.md#attribute-access-operator"
+  ],
+  "op": "eval",
+  "notes": "hashicorp/hcl unifies objects with different attribute names to a map of their unified attribute types, here a map of strings, which the object holding null converts to only unsafely (unifyObjectTypesToMap in cty/convert/unify.go). The spec gives an object type with both attributes. Either way attribute a of the selected object is \"x\".",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "x"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

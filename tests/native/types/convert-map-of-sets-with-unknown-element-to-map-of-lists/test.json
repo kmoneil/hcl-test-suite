@@ -1,0 +1,78 @@
+{
+  "description": "A map of sets converts to a map of lists when one set holds an unknown element",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The input needs a map of sets of lists whose innermost element type is the dynamic pseudo-type (m), which the spec has no value for: the dynamic pseudo-type is a placeholder for a type that isn't known yet, so no value should have it as a collection's element type. Apart from that, the spec gives the same result. The test only checks that the conversion succeeds, through the converted map's keys: hashicorp/hcl gives the result the element type list(list(dynamic)) instead of list(list(number)), because go-cty converts a set of unknown length to an unknown list of the set's own element type, list(list(dynamic)) (conversionCollectionToList in cty/convert/conversion_collection.go), and conversionCollectionToMap then unifies the map's converted elements with safe conversions only (conversionUnifyCollectionElements), under which number and the dynamic pseudo-type unify to the dynamic pseudo-type.",
+  "variables": {
+    "m": {
+      "map": {
+        "k": {
+          "set": [
+            {
+              "unknown": [
+                "list",
+                "dynamic"
+              ]
+            },
+            {
+              "list": [],
+              "element_type": "dynamic"
+            }
+          ],
+          "element_type": [
+            "list",
+            "dynamic"
+          ]
+        },
+        "l": {
+          "set": [],
+          "element_type": [
+            "list",
+            "dynamic"
+          ]
+        }
+      },
+      "element_type": [
+        "set",
+        [
+          "list",
+          "dynamic"
+        ]
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "k"
+            },
+            {
+              "string": "l"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

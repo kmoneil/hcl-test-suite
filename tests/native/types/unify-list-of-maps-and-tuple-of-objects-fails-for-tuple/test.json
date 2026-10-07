@@ -1,0 +1,45 @@
+{
+  "description": "A list of maps and a tuple of objects with differing attribute types fail when the tuple is chosen",
+  "spec": [
+    "spec.md#type-unification",
+    "spec.md#collection-and-structural-type-conversions",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec unifies a list and a tuple by preferring the tuple type, which the list converts to here, so the result is the tuple. hashicorp/hcl unifies them to a list of maps of strings, and the tuple converts to that on its own (convert([{a = 1}, {a = \"x\"}], list(map(string))) succeeds), but unifyTuplesAsList in go-cty's cty/convert/unify.go runs the tuple's conversion and then returns listConv(in), converting the original tuple again instead of the converted one, which fails because its elements' types differ. With the condition true, the list is chosen and the result is valid.",
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "map": {
+            "a": {
+              "string": "1"
+            }
+          },
+          "element_type": "string"
+        },
+        {
+          "map": {
+            "a": {
+              "string": "x"
+            }
+          },
+          "element_type": "string"
+        }
+      ],
+      "element_type": [
+        "map",
+        "string"
+      ]
+    }
+  },
+  "reference_error": "element types must all match for conversion to list",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

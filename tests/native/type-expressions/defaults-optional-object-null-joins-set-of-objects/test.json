@@ -1,0 +1,59 @@
+{
+  "description": "The null filling a missing optional object attribute converts into a set of objects of its type",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#conversion-of-null-values",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "The test uses convert-with-defaults, which gives the missing attribute a a null, because hashicorp/hcl's convert fails for a value that lacks an optional attribute (native/type-expressions/convert-missing-optional-attribute). go-cty makes that null with the attribute's type constraint, which still has the optional attribute b (conversionMapToObject in cty/convert/conversion_collection.go), and the conversion to the set gives it the type without b's optional marker, the type of the converted object.",
+  "variables": {
+    "m": {
+      "map": {},
+      "element_type": "string"
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "body": {
+      "attributes": {
+        "a": {
+          "element_type": [
+            "object",
+            {
+              "b": "string"
+            }
+          ],
+          "set": [
+            {
+              "object": {
+                "b": {
+                  "string": "s"
+                }
+              }
+            },
+            {
+              "null": [
+                "object",
+                {
+                  "b": "string"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "blocks": []
+    },
+    "valid": true
+  }
+}

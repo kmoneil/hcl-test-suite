@@ -1,0 +1,53 @@
+{
+  "description": "An unknown object with a dynamic attribute and no common type converts to an unknown map of any",
+  "spec": [
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "spec.md#type-unification",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The spec makes this conversion an error: the dynamic pseudo-type unifies with any other type by selecting it, and is the result only if all the types are dynamic, so the bool and the tuple still need a common type, which they don't have (spec.md#type-unification), and an operation on unknown values is an error when their types already rule it out (spec.md#unknown-values-and-the-dynamic-pseudo-type). go-cty's unify (cty/convert/unify.go) gives the dynamic pseudo-type for these attribute types, because neither the bool nor the tuple converts to the other while every type converts to the dynamic pseudo-type, and conversionObjectToMap (cty/convert/conversion_collection.go), unlike conversionTupleToList and conversionTupleToSet, doesn't then check that every attribute type is dynamic, so the unknown object converts to an unknown map of the dynamic pseudo-type. native/types/convert-unknown-tuple-to-list-of-any-with-dynamic-element-fails is the same conversion for a tuple and a list.",
+  "variables": {
+    "u": {
+      "unknown": [
+        "object",
+        {
+          "a": "bool",
+          "b": [
+            "tuple",
+            [
+              "number"
+            ]
+          ],
+          "c": "dynamic"
+        }
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": [
+            "map",
+            "dynamic"
+          ]
+        }
+      },
+      "blocks": []
+    },
+    "valid": true
+  }
+}

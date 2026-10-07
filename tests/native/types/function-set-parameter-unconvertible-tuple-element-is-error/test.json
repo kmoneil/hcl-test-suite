@@ -1,0 +1,31 @@
+{
+  "description": "A tuple argument with an element that fails to convert is an error for a set parameter",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#primitive-type-conversions",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": [
+            "set",
+            "number"
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "a number is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

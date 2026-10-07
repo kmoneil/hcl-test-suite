@@ -1,0 +1,42 @@
+{
+  "description": "Converting an unknown map to a map of any keeps its element type",
+  "spec": [
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+    "spec.md#conversion-to-and-from-the-dynamic-pseudo-type",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "type-expressions"
+  ],
+  "variables": {
+    "u": {
+      "unknown": [
+        "map",
+        "string"
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": [
+            "map",
+            "string"
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

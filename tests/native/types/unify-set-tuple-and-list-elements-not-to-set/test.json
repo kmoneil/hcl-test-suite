@@ -1,0 +1,101 @@
+{
+  "description": "A set, a tuple and a list in the same place of tuples in lists don't unify to the set",
+  "spec": [
+    "spec.md#type-unification",
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The input needs a null set whose element type is the dynamic pseudo-type (s), which the spec has no value for: the dynamic pseudo-type is a placeholder for a type that isn't known yet, so no value should have it as a collection's element type. Apart from that, the spec gives the same result. The spec unifies the second tuple elements, a set, a tuple and a list of strings, to the tuple type, and hashicorp/hcl picks the list type. Either can be indexed, so the test reads [\"a\"][0] from z; the full results differ. go-cty ranks list over tuple over set (compareTypes in cty/convert/compare_types.go). The first elements, string against number, make z's type rank equal to x's and y's, and y's ranks above x's, so it tries y's type, which x's set can't convert to, and then z's. If it ranked the list and the tuple any other way, or the tuple and the set equal, it would try x's type, whose set can't be indexed, before z's.",
+  "variables": {
+    "x": {
+      "null": [
+        "list",
+        [
+          "tuple",
+          [
+            "string",
+            [
+              "set",
+              "string"
+            ]
+          ]
+        ]
+      ]
+    },
+    "y": {
+      "null": [
+        "list",
+        [
+          "tuple",
+          [
+            "string",
+            [
+              "tuple",
+              [
+                "string"
+              ]
+            ]
+          ]
+        ]
+      ]
+    },
+    "z": {
+      "list": [
+        {
+          "tuple": [
+            {
+              "number": "1"
+            },
+            {
+              "list": [
+                {
+                  "string": "a"
+                }
+              ],
+              "element_type": "string"
+            }
+          ]
+        }
+      ],
+      "element_type": [
+        "tuple",
+        [
+          "number",
+          [
+            "list",
+            "string"
+          ]
+        ]
+      ]
+    },
+    "s": {
+      "null": [
+        "set",
+        "dynamic"
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "a"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

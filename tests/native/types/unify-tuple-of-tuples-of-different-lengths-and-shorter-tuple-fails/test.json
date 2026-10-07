@@ -1,0 +1,14 @@
+{
+  "description": "A tuple of two tuples of different lengths and a tuple of one number fail to unify",
+  "spec": [
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "notes": "The spec unifies tuple types only when they have the same length. hashicorp/hcl unifies tuples of different lengths to a list when their elements unify (unifyTupleTypesToList in cty/convert/unify.go), but the tuples [1, 2] and [3] and the number 4 have no common type either, so both fail. Ranking those element types compares the two inner tuples, whose lengths differ (compareTypes in cty/convert/compare_types.go).",
+  "reference_error": "The 'true' tuple has length 2, but the 'false' tuple has length 1",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "description": "Two maps of objects unify to a map of an object type that neither of them has",
+  "spec": [
+    "spec.md#type-unification",
+    "spec.md#collection-and-structural-type-conversions",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "variables": {
+    "x": {
+      "map": {
+        "k": {
+          "object": {
+            "a": {
+              "string": "1"
+            },
+            "b": {
+              "number": "2"
+            }
+          }
+        }
+      },
+      "element_type": [
+        "object",
+        {
+          "a": "string",
+          "b": "number"
+        }
+      ]
+    },
+    "y": {
+      "map": {
+        "k": {
+          "object": {
+            "a": {
+              "number": "3"
+            },
+            "b": {
+              "string": "4"
+            }
+          }
+        }
+      },
+      "element_type": [
+        "object",
+        {
+          "a": "number",
+          "b": "string"
+        }
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "map": {
+            "k": {
+              "object": {
+                "a": {
+                  "string": "1"
+                },
+                "b": {
+                  "string": "2"
+                }
+              }
+            }
+          },
+          "element_type": [
+            "object",
+            {
+              "a": "string",
+              "b": "string"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

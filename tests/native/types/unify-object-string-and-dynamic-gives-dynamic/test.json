@@ -1,0 +1,50 @@
+{
+  "description": "An object type, string and the dynamic pseudo-type unify to the dynamic pseudo-type",
+  "spec": [
+    "spec.md#type-unification",
+    "spec.md#conversion-of-null-values",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "Converting to map(any) unifies the attribute types. The spec says the dynamic pseudo-type is the result of unification only if all the types are the dynamic pseudo-type, and has no rule unifying an object type with string, so these attribute types have no common type; it lets a null convert to a null of any type, but doesn't say which map type that would be here. go-cty's unify (cty/convert/unify.go) finds no rule for the mixture, tries each given type in turn, and accepts the dynamic pseudo-type, to which everything converts, so conversionObjectToMap in cty/convert/conversion_collection.go finds a conversion, and getConversion in cty/convert/conversion.go turns the null object into a null map of the dynamic pseudo-type (dynamicReplace in cty/convert/conversion_dynamic.go). A known object with these attributes fails to convert instead.",
+  "variables": {
+    "v": {
+      "null": [
+        "object",
+        {
+          "a": [
+            "object",
+            {}
+          ],
+          "b": "string",
+          "c": "dynamic"
+        }
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "null": [
+            "map",
+            "dynamic"
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

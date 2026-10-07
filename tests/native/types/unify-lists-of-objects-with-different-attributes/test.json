@@ -1,0 +1,92 @@
+{
+  "description": "Lists of objects with different attributes and a set of maps unify keeping attribute values",
+  "spec": [
+    "spec.md#type-unification",
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "hclsyntax/spec.md#for-expressions",
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "The spec unifies the objects to object({a = string, b = string, c = string}), filling missing attributes with null, so p's b stays \"x\". hashicorp/hcl picks the set of maps of strings instead (it can't convert an object to one with an attribute it lacks), which gives \"x\" too. go-cty doesn't rank objects with different attributes against each other (compareTypes in cty/convert/compare_types.go); if it ranked them by their common attribute, the three lists would rank in a circle and sortTypes in cty/convert/sort_types.go would never reach the set.",
+  "variables": {
+    "p": {
+      "list": [
+        {
+          "object": {
+            "a": {
+              "number": "1"
+            },
+            "b": {
+              "string": "x"
+            }
+          }
+        }
+      ],
+      "element_type": [
+        "object",
+        {
+          "a": "number",
+          "b": "string"
+        }
+      ]
+    },
+    "q": {
+      "null": [
+        "list",
+        [
+          "object",
+          {
+            "b": "number",
+            "c": "string"
+          }
+        ]
+      ]
+    },
+    "r": {
+      "null": [
+        "list",
+        [
+          "object",
+          {
+            "a": "string",
+            "c": "number"
+          }
+        ]
+      ]
+    },
+    "s": {
+      "null": [
+        "set",
+        [
+          "map",
+          "string"
+        ]
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "string": "x"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

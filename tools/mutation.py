@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""Measures how many small changes to hashicorp/hcl the tests catch (mutation testing).
+"""Measures how many small changes to hashicorp/hcl and go-cty the tests catch (mutation testing).
 
     python3 tools/mutation.py run [<package>]          # run every mutant of a package (default hclsyntax)
     python3 tools/mutation.py report [<package>]       # summarize the last run
     python3 tools/mutation.py survivors [<package>]    # list survivors that coverage/mutation/ doesn't classify
     python3 tools/mutation.py try <package> <mutant> <op> <input> [<context>]
-                                                       # run hashicorp/hcl and one mutant on an input
+                                                       # run the unmutated adapter and one mutant on an input
     python3 tools/mutation.py classify <package> <records.jsonl>
                                                        # add classified survivors to coverage/mutation/
 
-A mutant is hashicorp/hcl with one small change to the package's hand-written
+A mutant is the adapter built with one small change to the package's hand-written
 code: an operator swapped, a condition forced, a statement removed
 (tools/mutate/main.go lists them). For each mutant, "run" builds the Go adapter
 with the change and runs the tests that execute the changed line, stopping at
@@ -20,7 +20,9 @@ records which survivors are which, with reasons, and "report" scores the tests
 on the mutants the protocol can see.
 
 <package> is a package of hashicorp/hcl: hclsyntax, json, ext/dynblock and so
-on, or . for the root package. Needs Go. Work files go in a directory under
+on, or . for the root package; or of go-cty, the value system hashicorp/hcl
+evaluates with: cty, cty/convert and the others under cty/. Needs Go. Work
+files go in a directory under
 the system's temporary directory (--work to change it); a run resumes where
 it stopped unless the tests or the mutants changed.
 """
@@ -45,10 +47,12 @@ import hcltest  # noqa: E402  reuses the runner's test loading and comparison
 
 ADAPTER_DIR = ROOT / "adapters" / "go"
 HCL = "github.com/hashicorp/hcl/v2"
-# Packages whose per-test coverage is recorded. Go only writes coverage data if
-# the main package is instrumented too.
-COVER_PACKAGES = ["", "hclsyntax", "json", "ext/customdecode", "ext/dynblock", "ext/tryfunc", "ext/typeexpr",
-                  "ext/userfunc"]
+CTY = "github.com/zclconf/go-cty"
+MODULES = (HCL, CTY)
+# Packages whose per-test coverage is recorded.
+COVER_PACKAGES = [f"{HCL}/{p}".rstrip("/") for p in ("", "hclsyntax", "json", "ext/customdecode", "ext/dynblock",
+                                                     "ext/tryfunc", "ext/typeexpr", "ext/userfunc")] + \
+                 [f"{CTY}/{p}" for p in ("cty", "cty/convert", "cty/function", "cty/function/stdlib", "cty/set")]
 CLASSES = {
     "diagnostics": "can only change error messages, the number or order of errors, or their ranges",
     "ranges": "can only change source ranges of syntax nodes or tokens",
@@ -100,24 +104,29 @@ def go(args, cwd=ADAPTER_DIR, **kw):
 
 
 def setup(work):
-    """Makes a writable copy of the hashicorp/hcl module the adapter uses, and a
-    modfile that builds the adapter with it. Mutants are applied to the copy
-    with go build -overlay, which can't replace files in the module cache."""
-    info = json.loads(go(["list", "-m", "-json", HCL]))
-    copy = work / f"hcl-{info['Version']}"
-    if not (copy / "go.mod").exists():
-        tmp = work / "hcl-copying"
-        shutil.rmtree(tmp, ignore_errors=True)
-        shutil.copytree(info["Dir"], tmp)
-        for dirpath, dirnames, filenames in os.walk(tmp):
-            for name in dirnames + filenames:
-                path = os.path.join(dirpath, name)
-                os.chmod(path, os.stat(path).st_mode | stat.S_IWUSR)
-        tmp.rename(copy)
+    """Makes writable copies of the hashicorp/hcl and go-cty modules the adapter
+    uses, and a modfile that builds the adapter with them. Mutants are applied
+    to a copy with go build -overlay, which can't replace files in the module
+    cache."""
+    copies, versions, replaces = {}, {}, ""
+    for module in MODULES:
+        info = json.loads(go(["list", "-m", "-json", module]))
+        copy = work / f"{'hcl' if module == HCL else 'go-cty'}-{info['Version']}"
+        if not (copy / "go.mod").exists():
+            tmp = work / f"{copy.name}-copying"
+            shutil.rmtree(tmp, ignore_errors=True)
+            shutil.copytree(info["Dir"], tmp)
+            for dirpath, dirnames, filenames in os.walk(tmp):
+                for name in dirnames + filenames:
+                    path = os.path.join(dirpath, name)
+                    os.chmod(path, os.stat(path).st_mode | stat.S_IWUSR)
+            tmp.rename(copy)
+        copies[module], versions[module] = copy, info["Version"]
+        replaces += f"\nreplace {module} => {copy}\n"
     modfile = work / "adapter.mod"
-    write_if_changed(modfile, (ADAPTER_DIR / "go.mod").read_bytes() + f"\nreplace {HCL} => {copy}\n".encode())
+    write_if_changed(modfile, (ADAPTER_DIR / "go.mod").read_bytes() + replaces.encode())
     write_if_changed(work / "adapter.sum", (ADAPTER_DIR / "go.sum").read_bytes())
-    return {"copy": copy, "modfile": modfile, "version": info["Version"]}
+    return {"copies": copies, "modfile": modfile, "versions": versions}
 
 
 def write_if_changed(path, data):
@@ -135,7 +144,8 @@ def build(env, out, overlay=None, cover=False):
     if overlay:
         args += ["-overlay", str(overlay)]
     if cover:
-        args += ["-cover", "-coverpkg=" + ",".join(["./..."] + [f"{HCL}/{p}".rstrip("/") for p in COVER_PACKAGES])]
+        # Go only writes coverage data if the main package is instrumented too.
+        args += ["-cover", "-coverpkg=" + ",".join(["./..."] + COVER_PACKAGES)]
     return subprocess.run(["go"] + args + ["."], cwd=ADAPTER_DIR, capture_output=True, text=True)
 
 
@@ -160,19 +170,37 @@ def read_cache(path, fp):
     return data if isinstance(data, dict) and data.get("fingerprint") == fp else None
 
 
+def module_of(package):
+    """The module of a package given as on the command line: go-cty for cty and
+    the packages under it, which hashicorp/hcl has none of, and hashicorp/hcl
+    for the rest."""
+    return CTY if package == "cty" or package.startswith("cty/") else HCL
+
+
 def import_path(package):
-    """The import path of a package given as on the command line, where . is the root package."""
-    return HCL if package == "." else f"{HCL}/{package}"
+    """The import path of a package given as on the command line, where . is hashicorp/hcl's root package."""
+    return HCL if package == "." else f"{module_of(package)}/{package}"
 
 
 def package_dir(package):
-    """The package's directory inside the module, as coverage profiles name it."""
+    """The package's directory inside its module, as coverage blocks are keyed."""
     return "" if package == "." else package
 
 
 def slug(package):
-    """A file name for the package: hcl for the root package, ext-dynblock for ext/dynblock."""
+    """A file name for the package: hcl for the root package, ext-dynblock for
+    ext/dynblock, cty-convert for cty/convert."""
     return "hcl" if package == "." else package.replace("/", "-")
+
+
+def module_relative(loc):
+    """A coverage location relative to its module, or None if it is in neither
+    module. The two modules' package directories don't overlap, so the result
+    names one place."""
+    for module in MODULES:
+        if loc.startswith(module + "/"):
+            return loc[len(module) + 1:]
+    return None
 
 
 def pkg_dir(work, package):
@@ -245,8 +273,8 @@ def coverage_worker(job):
     blocks = []
     for line in profile.read_text().splitlines()[1:]:
         loc, _n, count = line.rsplit(" ", 2)
-        if count != "0" and loc.startswith(HCL + "/"):
-            blocks.append(loc[len(HCL) + 1:])
+        if count != "0" and module_relative(loc):
+            blocks.append(module_relative(loc))
     shutil.rmtree(d)
     return outcome, message, blocks
 
@@ -254,6 +282,7 @@ def coverage_worker(job):
 def per_test_coverage(work, env, tests, fp, workers):
     """For every block of the covered packages, the indexes of the tests that execute it."""
     cache = work / "coverage.json"
+    fp += "/" + hashlib.sha256(" ".join(COVER_PACKAGES).encode()).hexdigest()[:8]
     data = read_cache(cache, fp)
     if data:
         return data["blocks"]
@@ -279,8 +308,8 @@ def per_test_coverage(work, env, tests, fp, workers):
                    cwd=ADAPTER_DIR, capture_output=True)
     for line in profile.read_text().splitlines()[1:]:
         loc = line.rsplit(" ", 2)[0]
-        if loc.startswith(HCL + "/"):
-            blocks[loc[len(HCL) + 1:]] = []
+        if module_relative(loc):
+            blocks[module_relative(loc)] = []
     for i, (_o, _m, locs) in enumerate(results):
         for loc in locs:
             blocks[loc].append(i)
@@ -341,8 +370,8 @@ def init_worker(state):
 
 
 def apply(mutant, wdir):
-    """Writes the mutated file and an overlay that puts it in the hcl copy."""
-    src_path = STATE["copy"] / package_dir(STATE["package"]) / mutant["file"]
+    """Writes the mutated file and an overlay that puts it in the module's copy."""
+    src_path = STATE["copies"][module_of(STATE["package"])] / package_dir(STATE["package"]) / mutant["file"]
     src = src_path.read_bytes()
     mutated = wdir / mutant["file"]
     mutated.write_bytes(src[:mutant["start"]] + mutant["replacement"].encode() + src[mutant["end"]:])
@@ -437,7 +466,7 @@ def cmd_run(args):
     d = pkg_dir(work, args.package)
     (d / "mutants.json").write_text(json.dumps(mutants))
     header = {"fingerprint": fp, "mutants": hashlib.sha256(json.dumps(mutants).encode()).hexdigest()[:16],
-              "version": env["version"]}
+              "version": env["versions"][module_of(args.package)]}
     results_path = d / "results.jsonl"
     done = set()
     if results_path.exists():
@@ -451,7 +480,7 @@ def cmd_run(args):
     for test_ids in blocks.values():
         for i in test_ids:
             size[i] += 1
-    state = {"work": work, "env": env, "copy": env["copy"], "package": args.package, "tests": tests, "base": base,
+    state = {"work": work, "env": env, "copies": env["copies"], "package": args.package, "tests": tests, "base": base,
              "by_file": block_index(blocks, args.package), "size": size}
     print(f"{len(mutants)} mutants of {args.package}, {len(todo)} to run", flush=True)
     started = time.time()
@@ -499,7 +528,7 @@ def report(work, package, files=False):
     unclassified = [k for k in survivors if k not in by_key or k in stale]
     killed = status["killed"]
     visible = killed + classified["gap"] + len(unclassified)
-    print(f"{HCL if package == '.' else package} at {header['version']}: {len(results)} of {len(mutants)} mutants run")
+    print(f"{import_path(package)} at {header['version']}: {len(results)} of {len(mutants)} mutants run")
     print(f"  killed          {killed:>5}  ({sum(1 for r in results.values() if 'timed out' in r.get('how', ''))} "
           "by timing out)")
     print(f"  survived        {status['survived']:>5}")
@@ -582,7 +611,7 @@ def cmd_try(args):
         sys.exit("building the adapter failed")
     wdir = pkg_dir(args.work, args.package) / "try" / str(m["id"])
     wdir.mkdir(parents=True, exist_ok=True)
-    STATE.update(copy=env["copy"], package=args.package)
+    STATE.update(copies=env["copies"], package=args.package)
     binary = wdir / "adapter"
     if not binary.exists():
         result = build(env, binary, overlay=apply(m, wdir))
@@ -590,7 +619,7 @@ def cmd_try(args):
             sys.exit("the mutant doesn't compile:\n" + result.stderr)
     print(f"mutant #{m['id']} {m['key']} ({m['func']}): {m['orig']!r} -> {m['replacement']!r}")
     outs = []
-    for label, b in (("hashicorp/hcl", base_bin), ("mutant", binary)):
+    for label, b in (("unmutated", base_bin), ("mutant", binary)):
         cmd = [str(b), args.op, str(args.input)] + ([str(args.context)] if args.context else [])
         p = subprocess.run(cmd, capture_output=True, text=True, timeout=TIMEOUT * 2)
         try:
@@ -609,7 +638,7 @@ def cmd_classify(args):
     env = setup(args.work)
     _header, mutants, results = load_run(args.work, args.package)
     data = load_classifications(args.package)
-    data["package"], data["version"] = import_path(args.package), env["version"]
+    data["package"], data["version"] = import_path(args.package), env["versions"][module_of(args.package)]
     by_key = {c["mutant"]: c for c in data["survivors"]}
     added = 0
     for line in args.records.read_text(encoding="utf-8").splitlines():

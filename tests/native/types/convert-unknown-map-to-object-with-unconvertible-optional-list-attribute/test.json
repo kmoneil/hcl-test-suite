@@ -1,0 +1,41 @@
+{
+  "description": "An unknown map converts to an object type with an optional list its elements don't convert to",
+  "spec": [
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+    "spec.md#collection-and-structural-type-conversions",
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "The map may lack an element a, which the optional attribute allows, so the conversion isn't provably invalid, and attribute b of the unknown object is an unknown string. Like native/types/convert-unknown-map-to-object-with-unconvertible-optional-attribute, with a list of any in place of the map of any.",
+  "variables": {
+    "u": {
+      "unknown": [
+        "map",
+        "string"
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "string"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "description": "Converting a map of sets of maps to a map of lists of objects fails when one set holds an unknown",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The spec converts each map element to the list type: the set of one map in element a becomes a list of one object, and the set in element b, which holds an unknown map, becomes an unknown list of objects, since its length isn't known. hashicorp/hcl fails instead, because go-cty gives the set in element b an unknown list of the set's own element type, list(map(set(number))), rather than of the target element type (conversionCollectionToList in cty/convert/conversion_collection.go), and conversionCollectionToMap then unifies the elements with safe conversions only (conversionUnifyCollectionElements), which finds no common type for that list and the list of objects.",
+  "variables": {
+    "m": {
+      "map": {
+        "a": {
+          "set": [
+            {
+              "map": {
+                "x": {
+                  "set": [
+                    {
+                      "number": "1"
+                    }
+                  ],
+                  "element_type": "number"
+                },
+                "y": {
+                  "set": [
+                    {
+                      "number": "2"
+                    }
+                  ],
+                  "element_type": "number"
+                }
+              },
+              "element_type": [
+                "set",
+                "number"
+              ]
+            }
+          ],
+          "element_type": [
+            "map",
+            [
+              "set",
+              "number"
+            ]
+          ]
+        },
+        "b": {
+          "set": [
+            {
+              "map": {
+                "x": {
+                  "set": [
+                    {
+                      "number": "3"
+                    }
+                  ],
+                  "element_type": "number"
+                },
+                "y": {
+                  "set": [
+                    {
+                      "number": "4"
+                    }
+                  ],
+                  "element_type": "number"
+                }
+              },
+              "element_type": [
+                "set",
+                "number"
+              ]
+            },
+            {
+              "unknown": [
+                "map",
+                [
+                  "set",
+                  "number"
+                ]
+              ]
+            }
+          ],
+          "element_type": [
+            "map",
+            [
+              "set",
+              "number"
+            ]
+          ]
+        }
+      },
+      "element_type": [
+        "set",
+        [
+          "map",
+          [
+            "set",
+            "number"
+          ]
+        ]
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "reference_error": "cannot find a common base type for all elements",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "description": "Converting an unknown map of numbers to a map of strings gives an unknown map of strings",
+  "spec": [
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+    "spec.md#collection-and-structural-type-conversions",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "type-expressions"
+  ],
+  "variables": {
+    "u": {
+      "unknown": [
+        "map",
+        "number"
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": [
+            "map",
+            "string"
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

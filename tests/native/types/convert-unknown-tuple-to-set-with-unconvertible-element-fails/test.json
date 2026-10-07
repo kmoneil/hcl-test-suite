@@ -1,0 +1,42 @@
+{
+  "description": "Converting an unknown tuple to a set fails when an element's type doesn't convert to the set's",
+  "spec": [
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "Not disputed like native/functions/function-error-is-eval-error: the README defines convert's result as the conversion, and the spec makes this conversion an error, also for an unknown tuple, because the tuple's types already rule it out: its second element, a tuple, has no conversion to string (spec.md#unknown-values-and-the-dynamic-pseudo-type).",
+  "variables": {
+    "u": {
+      "unknown": [
+        "tuple",
+        [
+          "string",
+          [
+            "tuple",
+            [
+              "number"
+            ]
+          ]
+        ]
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "reference_error": "element 1: string required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

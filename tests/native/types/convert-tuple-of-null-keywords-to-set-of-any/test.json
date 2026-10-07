@@ -1,0 +1,36 @@
+{
+  "description": "Converting a tuple of null keywords to a set of any gives a set of one null",
+  "spec": [
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "spec.md#type-unification",
+    "spec.md#collection-and-structural-type-conversions",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The conversion gives a set whose element type is the dynamic pseudo-type, the unification of the two nulls' types, which the spec has no value for: the dynamic pseudo-type is a placeholder for a type that isn't known yet, so no value should have it as a collection's element type. Iterating over the set doesn't avoid that, since its element, a null of the dynamic pseudo-type, has the set's element type. Apart from that, the spec gives the same result: equal elements merge in a set, and two nulls are equal, so one remains. hashicorp/hcl gives such a set (conversionTupleToSet in go-cty's cty/convert/conversion_collection.go).",
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "null": "dynamic"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

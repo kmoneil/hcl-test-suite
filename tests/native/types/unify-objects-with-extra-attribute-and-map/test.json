@@ -1,0 +1,40 @@
+{
+  "description": "Objects, one with an extra attribute, and a map unify keeping the first object's string attribute",
+  "spec": [
+    "spec.md#type-unification",
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "hclsyntax/spec.md#attribute-access-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The input needs a null map whose element type is the dynamic pseudo-type (m), which the spec has no value for: the dynamic pseudo-type is a placeholder for a type that isn't known yet, so no value should have it as a collection's element type. Apart from that, the spec gives the same result. The spec unifies the objects to the union of their attributes, with a, b and c strings, so the first object's b stays the string \"2\"; the full results differ, since hashicorp/hcl keeps the first object's type. The map makes go-cty rank the given types (d's empty tuple keeps the objects from making one map), and it doesn't rank objects with different numbers of attributes against each other (compareTypes in cty/convert/compare_types.go). If it ranked the third object above the first (b and c tie, a is a string), it would try the second object's type first and make b a number.",
+  "variables": {
+    "m": {
+      "null": [
+        "map",
+        "dynamic"
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "2"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

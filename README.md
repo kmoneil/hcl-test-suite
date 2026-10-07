@@ -7,7 +7,7 @@ HashiCorp configuration language, in the spirit of
 Any HCL implementation, in any language, can run it by providing a small
 adapter program.
 
-**Status:** draft. 3,644 tests of the native and JSON syntaxes, checking 1,223
+**Status:** draft. 3,781 tests of the native and JSON syntaxes, checking 1,271
 rules from the spec and the type expression, try function, dynamic block and
 user function extensions at hashicorp/hcl v2.24.0. The test and adapter
 formats may still change.
@@ -20,7 +20,7 @@ formats may still change.
   ([test format](docs/test-format.md)).
 - **`coverage/`** lists every rule the spec states, area by area, and the
   tests that check each one. `coverage/mutation/` explains, for each small
-  change to hashicorp/hcl that no test catches, why no test can.
+  change to hashicorp/hcl or go-cty that no test catches, why no test can.
 - **Adapters** connect one implementation to the runner. An adapter reads a
   file, parses, evaluates or decodes it with a schema, and prints JSON
   ([protocol](docs/protocol.md)). `adapters/` has
@@ -119,14 +119,14 @@ run the tests at all.
 | function calls | 157 | 38 | 0 |
 | for expressions | 195 | 68 | 0 |
 | operators | 359 | 105 | 0 |
-| types, conversions, unification | 137 | 80 | 4 |
+| types, conversions, unification | 260 | 121 | 4 |
 | unknown values | 213 | 86 | 0 |
 | static analysis | 121 | 38 | 0 |
 | JSON grammar | 98 | 29 | 0 |
 | JSON bodies (attributes, blocks, schemas) | 106 | 33 | 0 |
 | JSON expressions | 87 | 22 | 0 |
 | JSON static analysis | 102 | 27 | 0 |
-| type expressions (`ext/typeexpr`) | 189 | 53 | 0 |
+| type expressions (`ext/typeexpr`) | 203 | 60 | 0 |
 | JSON type expressions | 34 | 8 | 0 |
 | `try` and `can` (`ext/tryfunc`) | 98 | 21 | 1 |
 | JSON `try` and `can` | 8 | 2 | 0 |
@@ -134,7 +134,7 @@ run the tests at all.
 | JSON dynamic blocks | 42 | 23 | 0 |
 | user functions (`ext/userfunc`) | 116 | 46 | 1 |
 | JSON user functions | 57 | 22 | 0 |
-| **total** | **3,644** | **1,235** | **12** |
+| **total** | **3,781** | **1,283** | **12** |
 
 - Most rules without tests need something the protocol can't express yet:
   error positions or messages, capsule values, literal-only evaluation with
@@ -149,7 +149,7 @@ run the tests at all.
   package, 86.0% of its `json` package, 79.3% of `ext/typeexpr`, 97.1% of
   `ext/tryfunc`, 71.2% of `ext/dynblock`, all of `ext/userfunc` and 32.6% of
   the root package, much of which is the text output of errors and source
-  positions (`python3 tools/coverage.py go`).
+  positions, and 91.8% of go-cty's `cty/convert` (`python3 tools/coverage.py go`).
   Most of the rest is syntax tree walking, listing the variables an
   expression uses, lookups by source position and source ranges, which the
   protocol doesn't reach, and error handling for states that valid use can't
@@ -159,10 +159,10 @@ run the tests at all.
   marks, hcldec interfaces and the option for checking `for_each` values.
 - Running a line isn't checking it, so `python3 tools/mutation.py run <package>`
   measures more: it makes small changes to the hand-written code of a
-  hashicorp/hcl package, one at a time (an operator swapped, a condition
-  forced, a statement removed), builds the Go adapter with each, and runs the
-  tests that reach the changed line. The tests catch every change the
-  protocol can see, in every package:
+  hashicorp/hcl package or of go-cty's `cty/convert`, one at a time (an
+  operator swapped, a condition forced, a statement removed), builds the Go
+  adapter with each, and runs the tests that reach the changed line. The tests catch every change the protocol can
+  see, in every package:
 
   | Package | Changes | Caught | Not caught, with a reason | In code no test reaches |
   | --- | ---: | ---: | ---: | ---: |
@@ -174,18 +174,23 @@ run the tests at all.
   | `ext/userfunc` | 53 | 45 | 8 | 0 |
   | `ext/customdecode` | 15 | 7 | 3 | 5 |
   | the root package | 597 | 116 | 62 | 419 |
-  | **total** | **4,440** | **2,687** | **942** | **811** |
+  | go-cty's `cty/convert` | 970 | 770 | 139 | 61 |
+  | **total** | **5,410** | **3,457** | **1,081** | **872** |
 
   For each change the tests don't catch, `coverage/mutation/` says why no test
-  can: 506 only change error messages, how many errors there are or their
-  ranges, 135 only change source ranges, 192 behave the same for every input,
-  85 only differ in states the protocol can't produce (Go API calls or
-  hand-built syntax trees), 10 need an input with two mistakes, 11 only change
-  value marks and 3 only change output the protocol treats as equal. Most of
+  can: 594 only change error messages, how many errors there are or their
+  ranges, 135 only change source ranges, 240 behave the same for every input,
+  87 only differ in states the protocol can't produce (Go API calls,
+  hand-built syntax trees, capsule types or marked values), 11 need an input
+  with two mistakes, 11 only change value marks and 3 only change output the
+  protocol treats as equal. Most of
   the code no test reaches is what statement coverage leaves out; in the root
   package it is mostly the text output of errors, source positions and
   lookups by them, and merging the bodies of several files, which the
-  protocol never does. One change in `ext/typeexpr`, to the sorted order of a map's keys
+  protocol never does; in `cty/convert` it is conversions to and from
+  capsule types, marked values and the entry point of safe-mode conversion,
+  which the protocol can't produce, and the text of errors for mismatches
+  between structural types and collections. One change in `ext/typeexpr`, to the sorted order of a map's keys
   when defaults are unified, makes hashicorp/hcl iterate a Go map, so the
   tests catch it in about three runs out of four.
 
@@ -209,18 +214,23 @@ run the tests at all.
   didn't check, which statement coverage can't show: error tests whose input
   could fail for another reason, what hashicorp/hcl knows about unknown
   values, states of the heredoc, template and JSON scanners, and how defaults
-  are applied to collections. Each surviving change was either given a test or
-  a reason in `coverage/mutation/`, and separate reviewers checked the new
-  tests and the reasons.
+  are applied to collections. Mutation testing of go-cty's `cty/convert`,
+  which hashicorp/hcl converts and unifies values with, found many more:
+  conversions to and between collections of `any`, of empty collections, of
+  unknown values and of objects and tuples that don't fit, how unification
+  combines collections, objects and tuples, and the order in which it tries
+  types. Each surviving change was either given a test or a reason in
+  `coverage/mutation/`, and separate reviewers checked the new tests and the
+  reasons.
 
 ## Results
 
 | Implementation | Passed | Failed | Adapter errors | Skipped |
 | --- | ---: | ---: | ---: | ---: |
-| hashicorp/hcl v2.24.0 | 3,644 | 0 | 0 | 0 |
-| opentofu/hcl, as used by OpenTofu v1.12.6 | 3,642 | 2 | 0 | 0 |
-| hashicorp/hcl v2.24.0 with the operators of tenon v0.17.0 | 3,617 | 27 (12 disputed) | 0 | 0 |
-| hcl-rs 0.19.8 | 1,716 | 225 (91 disputed) | 21 | 1,682 |
+| hashicorp/hcl v2.24.0 | 3,781 | 0 | 0 | 0 |
+| opentofu/hcl, as used by OpenTofu v1.12.6 | 3,779 | 2 | 0 | 0 |
+| hashicorp/hcl v2.24.0 with the operators of tenon v0.17.0 | 3,754 | 27 (12 disputed) | 0 | 0 |
+| hcl-rs 0.19.8 | 1,718 | 228 (93 disputed) | 21 | 1,814 |
 
 OpenTofu has no HCL implementation of its own: its `go.mod` replaces
 hashicorp/hcl with the fork [opentofu/hcl](https://github.com/opentofu/hcl), so
@@ -231,18 +241,18 @@ operators changed.
 Every test also says whether its input parses, and `--validate` checks only
 that. This measures parsers that can't run the tests, like python-hcl2,
 bc-python-hcl2 and tree-sitter-hcl, and checks the other implementations'
-parsers on the inputs of all 3,110 native syntax tests, including tests they
+parsers on the inputs of all 3,247 native syntax tests, including tests they
 skip. Only hashicorp/hcl and its fork read the JSON syntax, so the others skip
 its 534 tests.
 
 | Implementation | Passed | Accepted invalid input | Rejected valid input | Adapter errors | Skipped |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| hashicorp/hcl v2.24.0 | 3,644 | 0 | 0 | 0 | 0 |
-| opentofu/hcl, as used by OpenTofu v1.12.6 | 3,644 | 0 | 0 | 0 | 0 |
-| hcl-rs 0.19.8 | 3,032 | 30 (6 disputed) | 48 (31 disputed) | 0 | 534 |
-| python-hcl2 8.1.4 | 2,831 | 98 (12 disputed) | 181 (77 disputed) | 0 | 534 |
-| bc-python-hcl2 0.4.3 | 2,798 | 129 (12 disputed) | 183 (61 disputed) | 0 | 534 |
-| tree-sitter-hcl 1.2.0 | 2,939 | 117 (22 disputed) | 54 (24 disputed) | 0 | 534 |
+| hashicorp/hcl v2.24.0 | 3,781 | 0 | 0 | 0 | 0 |
+| opentofu/hcl, as used by OpenTofu v1.12.6 | 3,781 | 0 | 0 | 0 | 0 |
+| hcl-rs 0.19.8 | 3,169 | 30 (6 disputed) | 48 (31 disputed) | 0 | 534 |
+| python-hcl2 8.1.4 | 2,968 | 98 (12 disputed) | 181 (77 disputed) | 0 | 534 |
+| bc-python-hcl2 0.4.3 | 2,935 | 129 (12 disputed) | 183 (61 disputed) | 0 | 534 |
+| tree-sitter-hcl 1.2.0 | 3,076 | 117 (22 disputed) | 54 (24 disputed) | 0 | 534 |
 
 hcl-rs fails all 78 of these tests in the first table too. As in the first
 table, a failure counts as disputed when its test is disputed, even if the
@@ -282,7 +292,7 @@ expressions and templates are still hashicorp/hcl and go-cty, and the
 functions the tests call come from the tests and hashicorp/hcl's extensions,
 so the row measures tenon's operators only. ctytenon needs go-cty v1.19.0, which passes every test
 with go-cty's own operators, and the parser is hashicorp/hcl's, so
-`--validate` passes all 3,644 tests.
+`--validate` passes all 3,781 tests.
 
 Each of the 27 failures is a difference tenon documents, in its `proof`
 module, its `Equals` function or its bridge ctytenon:
@@ -317,7 +327,7 @@ constraint keeps out of the other builds, so it would remove tenon from
 
 ### hcl-rs 0.19.8
 
-The 134 failures on tests that aren't disputed fall into these groups:
+The 135 failures on tests that aren't disputed fall into these groups:
 
 - **Parsing:** it accepts `[for, x]`, `{for: 1}` and `[for v inxs: v]`; literal
   newlines and the escapes `\b`, `\f` and `\/` in strings; and newlines after
@@ -744,11 +754,57 @@ spec section, with notes. The main themes:
 - The `ext/userfunc` package documentation declares `params = ["name"]`,
   which hashicorp/hcl rejects in the native syntax: parameter names must be
   bare identifiers there, as in the README.
+- When go-cty unifies a tuple with a list type, or an object with a map type,
+  the conversion it builds converts the tuple or object to the type of its
+  own elements, discards the result, and converts the original value to the
+  list or map type (`return listConv(in)` in `unifyTuplesAsList`, and the
+  same in `unifyObjectsAsMaps`, `cty/convert/unify.go`). So
+  `false ? l : [{a = 1}, {a = "x"}]`, with `l` a list of maps of strings,
+  fails although the tuple converts to that list type on its own, and
+  `true ? [["1"], s] : z`, with `s` an empty set of numbers and `z` an empty
+  list of lists of strings, makes hashicorp/hcl panic with "not a number",
+  which it doesn't recover.
+- A set holding an unknown converts to an unknown list of the set's own
+  element type, not the target's (`conversionCollectionToList`):
+  `convert(s, list(number))`, for a set of strings holding `"1"` and an
+  unknown, gives an unknown list of strings, and passing that set for a
+  `list(number)` parameter fails.
+- A collection of collections of collections holding an empty one fails to
+  convert to its own type with `any` innermost: `[[], [["a"]]]`, a list of
+  lists of lists of strings, fails for a parameter of type
+  `list(list(list(any)))` with "element types must all match", because the
+  empty element becomes a list of lists of the dynamic pseudo-type while the
+  other keeps its type.
+- A map converted to an object type fills a missing optional attribute with
+  a null whose type keeps its optional attributes (`conversionMapToObject`),
+  which no value's type should have; the adapter's output for it isn't a
+  valid value, so a test has to convert it again.
+- Applying defaults with a null default of type `any` beside collections
+  makes known values unknown: converting the map `{a = ["x"]}` to
+  `object({a = list(string), b = optional(any, null)})` gives an unknown `a`
+  (`unifyAllAsDynamic`'s conversions, used by `ext/typeexpr`'s defaults).
+- Applying defaults drops a default when a null list sits beside a list of
+  objects: `[[{c = 1}, null], null]` converted to
+  `list(list(object({c = number, b = optional(bool, true)})))` gives `b` a
+  null, while `[[{c = 1}]]` gives it `true`, because the unification of the
+  elements picks the object type without `b` and converts unsafely to it.
+- go-cty's ranking of types for unification isn't transitive
+  (`compareTypes`), so preferences can form a circle, and the same four
+  values converted to `list(any)` succeed in one order and fail in another.
+- Whether `c ? m : {a = ["x"], b = null}`, with `m` a map of strings, is
+  valid depends on `c`: true gives `m`, false is an error.
+- Converted elements are unified for some targets and not others: a tuple
+  converted to a list of `list(any)` unifies the converted lists, but one
+  converted to a set of `list(any)` doesn't, so `convert([[1], ["x"]],
+  set(list(any)))` fails while the list version succeeds; an object
+  converted to a map unifies its converted attributes only when the map's
+  element type is a collection or object type.
 
 ## Next steps
 
-- Mutation testing of go-cty's conversion and unification code, which
-  decides many of the results the tests check.
+- Mutation testing of go-cty's other packages that the tests reach: `cty`,
+  whose value operations the operators, indexing and equality use, and
+  `function`, which checks and refines function arguments and results.
 - An optional protocol feature for error positions and source ranges, which
   several rules without tests need, and which most of the changes in
   `coverage/mutation/` only affect.

@@ -1,0 +1,111 @@
+{
+  "description": "A map of sets of number tuples, one holding an unknown, converts to a map of lists of string tuples",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "The set holding an unknown element may have one element or two, so it converts to an unknown list. hashicorp/hcl first converts it to an unknown list of the set's own element type, tuple([number]) (conversionCollectionToList in go-cty's cty/convert/conversion_collection.go), and then unifies the map's converted elements with safe conversions only (conversionUnifyCollectionElements), which turn it into an unknown list of tuple([string]).",
+  "variables": {
+    "m": {
+      "map": {
+        "x": {
+          "set": [],
+          "element_type": [
+            "tuple",
+            [
+              "number"
+            ]
+          ]
+        },
+        "y": {
+          "set": [
+            {
+              "unknown": [
+                "tuple",
+                [
+                  "number"
+                ]
+              ]
+            },
+            {
+              "tuple": [
+                {
+                  "number": "2"
+                }
+              ]
+            }
+          ],
+          "element_type": [
+            "tuple",
+            [
+              "number"
+            ]
+          ]
+        }
+      },
+      "element_type": [
+        "set",
+        [
+          "tuple",
+          [
+            "number"
+          ]
+        ]
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "map": {
+            "x": {
+              "list": [],
+              "element_type": [
+                "tuple",
+                [
+                  "string"
+                ]
+              ]
+            },
+            "y": {
+              "unknown": [
+                "list",
+                [
+                  "tuple",
+                  [
+                    "string"
+                  ]
+                ]
+              ]
+            }
+          },
+          "element_type": [
+            "list",
+            [
+              "tuple",
+              [
+                "string"
+              ]
+            ]
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

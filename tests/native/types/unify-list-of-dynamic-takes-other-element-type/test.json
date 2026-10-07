@@ -1,0 +1,44 @@
+{
+  "description": "A null list of the dynamic pseudo-type unified with a list of strings becomes a null list of strings",
+  "spec": [
+    "spec.md#type-unification",
+    "spec.md#conversion-of-null-values",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The input needs a null list whose element type is the dynamic pseudo-type (n), which the spec has no value for: the dynamic pseudo-type is a placeholder for a type that isn't known yet, so no value should have it as a collection's element type. Apart from that, the spec gives the same result.",
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "string": "x"
+        }
+      ],
+      "element_type": "string"
+    },
+    "n": {
+      "null": [
+        "list",
+        "dynamic"
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "null": [
+            "list",
+            "string"
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

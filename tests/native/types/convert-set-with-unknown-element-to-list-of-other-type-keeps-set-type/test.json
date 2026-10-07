@@ -1,0 +1,48 @@
+{
+  "description": "A set with an unknown converted to a list of numbers is an unknown list of the set's element type",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The spec converts each set element to the list's element type, so the result of a conversion to a list of numbers is a list of numbers, here an unknown one because the set's length isn't known. hashicorp/hcl gives an unknown list of strings, the set's own element type: conversionCollectionToList in go-cty's cty/convert/conversion_collection.go returns cty.UnknownVal(cty.List(val.Type().ElementType())) for a collection of unknown length, without converting to the target element type.",
+  "variables": {
+    "s": {
+      "set": [
+        {
+          "string": "1"
+        },
+        {
+          "unknown": "string"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": [
+            "list",
+            "string"
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

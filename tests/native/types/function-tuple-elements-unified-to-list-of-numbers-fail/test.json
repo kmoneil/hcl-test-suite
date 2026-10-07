@@ -1,0 +1,57 @@
+{
+  "description": "Objects whose list and set attributes unify to lists of numbers fail when a set holds a non-number",
+  "spec": [
+    "spec.md#type-unification",
+    "spec.md#functions-and-function-calls",
+    "spec.md#type-specifications"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec's call rules make an argument that doesn't match its parameter's type an error, and a tuple doesn't match a list type. But the spec also says automatic conversion is attempted when a value doesn't match what an operation expects, and its conversion would succeed here: the two objects need a common type for the list, and the spec unifies a list of numbers and a set of strings to a list of strings (list and set give list, number and string give string), so both objects would convert to an object of two lists of strings. hashicorp/hcl converts the argument to the parameter's type with go-cty (FunctionCallExpr.Value in hclsyntax/expression.go), whose conversionTupleToList unifies the converted elements (conversionUnifyListElements in cty/convert/conversion_collection.go). go-cty's unify (cty/convert/unify.go) picks a list of numbers for each attribute, because an unsafe conversion to it from the set of strings exists, and converting \"x\" to a number then fails.",
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "number": "5"
+        }
+      ],
+      "element_type": "number"
+    },
+    "s": {
+      "set": [
+        {
+          "string": "x"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": [
+            "list",
+            [
+              "object",
+              {
+                "a": "dynamic",
+                "b": "dynamic"
+              }
+            ]
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "a number is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

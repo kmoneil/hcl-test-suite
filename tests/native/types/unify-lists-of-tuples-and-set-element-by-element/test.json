@@ -1,0 +1,110 @@
+{
+  "description": "Two lists of tuples and a set unify to a list of tuples whose elements unify one by one",
+  "spec": [
+    "spec.md#type-unification",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The input needs a null set whose element type is the dynamic pseudo-type (f), which the spec has no value for: the dynamic pseudo-type is a placeholder for a type that isn't known yet, so no value should have it as a collection's element type. Apart from that, the spec gives the same result. The tuples [number, string] and [string, string] unify element by element to [string, string], and the list is preferred over the set. The types aren't all of one kind, so go-cty doesn't build a new type: it ranks the given types (compareTypes in cty/convert/compare_types.go, which compares two tuples element by element and two strings as equal) and picks the first that every type converts to, the list of [string, string] tuples.",
+  "variables": {
+    "n": {
+      "null": [
+        "list",
+        [
+          "tuple",
+          [
+            "number",
+            "string"
+          ]
+        ]
+      ]
+    },
+    "s": {
+      "null": [
+        "list",
+        [
+          "tuple",
+          [
+            "string",
+            "string"
+          ]
+        ]
+      ]
+    },
+    "f": {
+      "null": [
+        "set",
+        "dynamic"
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [
+            {
+              "null": [
+                "list",
+                [
+                  "tuple",
+                  [
+                    "string",
+                    "string"
+                  ]
+                ]
+              ]
+            },
+            {
+              "null": [
+                "list",
+                [
+                  "tuple",
+                  [
+                    "string",
+                    "string"
+                  ]
+                ]
+              ]
+            },
+            {
+              "null": [
+                "list",
+                [
+                  "tuple",
+                  [
+                    "string",
+                    "string"
+                  ]
+                ]
+              ]
+            }
+          ],
+          "element_type": [
+            "list",
+            [
+              "tuple",
+              [
+                "string",
+                "string"
+              ]
+            ]
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

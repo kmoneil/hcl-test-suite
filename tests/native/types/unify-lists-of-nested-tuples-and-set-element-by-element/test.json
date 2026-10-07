@@ -1,0 +1,138 @@
+{
+  "description": "Lists of nested tuples and a set unify to a list of tuples unified element by element",
+  "spec": [
+    "spec.md#type-unification",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "The nested tuples [string, number] and [number, number] unify element by element to [string, number], and the list is preferred over the set. The types aren't all of one kind, so go-cty doesn't build a new type: it ranks the given types (compareTypes in cty/convert/compare_types.go, which ranks a tuple above another when one of its elements ranks above and none below, recursively, so that equal elements count for neither) and picks the first that every type converts to, here the first list's type.",
+  "variables": {
+    "l1": {
+      "list": [],
+      "element_type": [
+        "tuple",
+        [
+          [
+            "tuple",
+            [
+              "string",
+              "number"
+            ]
+          ]
+        ]
+      ]
+    },
+    "l2": {
+      "list": [],
+      "element_type": [
+        "tuple",
+        [
+          [
+            "tuple",
+            [
+              "number",
+              "number"
+            ]
+          ]
+        ]
+      ]
+    },
+    "s": {
+      "set": [],
+      "element_type": [
+        "tuple",
+        [
+          [
+            "tuple",
+            [
+              "number",
+              "number"
+            ]
+          ]
+        ]
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [
+            {
+              "list": [],
+              "element_type": [
+                "tuple",
+                [
+                  [
+                    "tuple",
+                    [
+                      "string",
+                      "number"
+                    ]
+                  ]
+                ]
+              ]
+            },
+            {
+              "list": [],
+              "element_type": [
+                "tuple",
+                [
+                  [
+                    "tuple",
+                    [
+                      "string",
+                      "number"
+                    ]
+                  ]
+                ]
+              ]
+            },
+            {
+              "list": [],
+              "element_type": [
+                "tuple",
+                [
+                  [
+                    "tuple",
+                    [
+                      "string",
+                      "number"
+                    ]
+                  ]
+                ]
+              ]
+            }
+          ],
+          "element_type": [
+            "list",
+            [
+              "tuple",
+              [
+                [
+                  "tuple",
+                  [
+                    "string",
+                    "number"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

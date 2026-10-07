@@ -1,0 +1,101 @@
+{
+  "description": "Map elements that lack an optional object attribute convert to the same object type as the rest",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "In hashicorp/hcl the null for k2's missing attribute a has a type that still marks x as optional (conversionMapToObject in go-cty's cty/convert/conversion_collection.go), unlike k1's converted attribute, and conversionCollectionToMap unifies the converted elements to one type.",
+  "variables": {
+    "m": {
+      "map": {
+        "k1": {
+          "map": {
+            "a": {
+              "map": {
+                "x": {
+                  "string": "s"
+                }
+              },
+              "element_type": "string"
+            }
+          },
+          "element_type": [
+            "map",
+            "string"
+          ]
+        },
+        "k2": {
+          "map": {},
+          "element_type": [
+            "map",
+            "string"
+          ]
+        }
+      },
+      "element_type": [
+        "map",
+        [
+          "map",
+          "string"
+        ]
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "map": {
+            "k1": {
+              "object": {
+                "a": {
+                  "object": {
+                    "x": {
+                      "string": "s"
+                    }
+                  }
+                }
+              }
+            },
+            "k2": {
+              "object": {
+                "a": {
+                  "null": [
+                    "object",
+                    {
+                      "x": "string"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "element_type": [
+            "object",
+            {
+              "a": [
+                "object",
+                {
+                  "x": "string"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

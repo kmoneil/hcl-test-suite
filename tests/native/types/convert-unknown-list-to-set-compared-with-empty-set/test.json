@@ -1,0 +1,44 @@
+{
+  "description": "An unknown list converted to a set compared with an empty set is unknown",
+  "spec": [
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+    "hclsyntax/spec.md#comparison-operators",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "The list may be empty, so the set it converts to may be empty too.",
+  "variables": {
+    "u": {
+      "unknown": [
+        "list",
+        "string"
+      ]
+    },
+    "s0": {
+      "set": [],
+      "element_type": "string"
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "bool"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

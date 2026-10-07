@@ -1,0 +1,25 @@
+{
+  "description": "Converting a tuple to a set of lists of any doesn't unify the element types of the lists",
+  "spec": [
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#type-unification"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The spec converts a tuple to a set as if it first converted the tuple to a list of the same element type and then that list to the set (spec.md#collection-and-structural-type-conversions). Converting this tuple to a list of lists of any gives lists of strings, as native/types/convert-object-to-map-of-lists-of-any-unifies-lists does for a map, so the set would hold [\"1\"] and [\"x\"]. go-cty's conversionTupleToSet (cty/convert/conversion_collection.go) converts each element on its own, to a list of numbers and a list of strings, and unlike conversionTupleToList it doesn't unify the converted elements, so the conversion fails.",
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "reference_error": "element types must all match for conversion to set",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

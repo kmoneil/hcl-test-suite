@@ -1,0 +1,15 @@
+{
+  "description": "Objects don't unify when an attribute they share is bool in one and number in the other",
+  "spec": [
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec's rules only say that number and bool each unify with string, and none names bool with number. But it defines unification as finding a type that all the given types can be converted to, the most general supertype in a lattice, and bool and number both convert safely to string, which would give the object {a = \"true\", b = \"x\"}. hashicorp/hcl fails to unify attribute a, and then fails the whole unification (unifyObjectTypes in cty/convert/unify.go) instead of trying a map of all the attribute types, which would be a map of strings.",
+  "reference_error": "Type mismatch for object attribute \"a\"",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

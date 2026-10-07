@@ -1,0 +1,300 @@
+{
+  "description": "After defaults, every object among a list value's elements converts to their unified map type",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#type-unification"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The README says Defaults populate missing optional attributes with their default values, so the objects with c = 1, 2 and 3 should all get b = true. hashicorp/hcl's Defaults.apply (ext/typeexpr/defaults.go) unifies the elements of each list or map value after applying defaults (unifyAsSlice and unifyAsMap) and keeps them as a tuple or an object when that fails. The objects get b while the null elements don't, so the list holding c = 1 and null becomes a tuple, and the second and third elements of v become objects: one holding that tuple and a list, and one holding two lists whose object types differ. The elements of v, a null map and these two objects, then unify through go-cty's UnifyUnsafe (unifyObjectsAsMaps in cty/convert/unify.go) to a map of lists of object({c = number}), the one candidate that every element converts to, unsafely, by dropping b. Both objects convert to it, and the final conversion gives b back as null.",
+  "variables": {
+    "v": {
+      "list": [
+        {
+          "null": [
+            "map",
+            [
+              "list",
+              [
+                "object",
+                {
+                  "c": "number"
+                }
+              ]
+            ]
+          ]
+        },
+        {
+          "map": {
+            "k": {
+              "list": [
+                {
+                  "object": {
+                    "c": {
+                      "number": "1"
+                    }
+                  }
+                },
+                {
+                  "null": [
+                    "object",
+                    {
+                      "c": "number"
+                    }
+                  ]
+                }
+              ],
+              "element_type": [
+                "object",
+                {
+                  "c": "number"
+                }
+              ]
+            },
+            "l": {
+              "list": [
+                {
+                  "object": {
+                    "c": {
+                      "number": "2"
+                    }
+                  }
+                }
+              ],
+              "element_type": [
+                "object",
+                {
+                  "c": "number"
+                }
+              ]
+            }
+          },
+          "element_type": [
+            "list",
+            [
+              "object",
+              {
+                "c": "number"
+              }
+            ]
+          ]
+        },
+        {
+          "map": {
+            "k": {
+              "null": [
+                "list",
+                [
+                  "object",
+                  {
+                    "c": "number"
+                  }
+                ]
+              ]
+            },
+            "l": {
+              "list": [
+                {
+                  "object": {
+                    "c": {
+                      "number": "3"
+                    }
+                  }
+                }
+              ],
+              "element_type": [
+                "object",
+                {
+                  "c": "number"
+                }
+              ]
+            }
+          },
+          "element_type": [
+            "list",
+            [
+              "object",
+              {
+                "c": "number"
+              }
+            ]
+          ]
+        }
+      ],
+      "element_type": [
+        "map",
+        [
+          "list",
+          [
+            "object",
+            {
+              "c": "number"
+            }
+          ]
+        ]
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "body": {
+      "attributes": {
+        "a": {
+          "element_type": [
+            "map",
+            [
+              "list",
+              [
+                "object",
+                {
+                  "b": "bool",
+                  "c": "number"
+                }
+              ]
+            ]
+          ],
+          "list": [
+            {
+              "null": [
+                "map",
+                [
+                  "list",
+                  [
+                    "object",
+                    {
+                      "b": "bool",
+                      "c": "number"
+                    }
+                  ]
+                ]
+              ]
+            },
+            {
+              "element_type": [
+                "list",
+                [
+                  "object",
+                  {
+                    "b": "bool",
+                    "c": "number"
+                  }
+                ]
+              ],
+              "map": {
+                "k": {
+                  "element_type": [
+                    "object",
+                    {
+                      "b": "bool",
+                      "c": "number"
+                    }
+                  ],
+                  "list": [
+                    {
+                      "object": {
+                        "b": {
+                          "null": "bool"
+                        },
+                        "c": {
+                          "number": "1"
+                        }
+                      }
+                    },
+                    {
+                      "null": [
+                        "object",
+                        {
+                          "b": "bool",
+                          "c": "number"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "l": {
+                  "element_type": [
+                    "object",
+                    {
+                      "b": "bool",
+                      "c": "number"
+                    }
+                  ],
+                  "list": [
+                    {
+                      "object": {
+                        "b": {
+                          "null": "bool"
+                        },
+                        "c": {
+                          "number": "2"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "element_type": [
+                "list",
+                [
+                  "object",
+                  {
+                    "b": "bool",
+                    "c": "number"
+                  }
+                ]
+              ],
+              "map": {
+                "k": {
+                  "null": [
+                    "list",
+                    [
+                      "object",
+                      {
+                        "b": "bool",
+                        "c": "number"
+                      }
+                    ]
+                  ]
+                },
+                "l": {
+                  "element_type": [
+                    "object",
+                    {
+                      "b": "bool",
+                      "c": "number"
+                    }
+                  ],
+                  "list": [
+                    {
+                      "object": {
+                        "b": {
+                          "null": "bool"
+                        },
+                        "c": {
+                          "number": "3"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      },
+      "blocks": []
+    },
+    "valid": true
+  }
+}

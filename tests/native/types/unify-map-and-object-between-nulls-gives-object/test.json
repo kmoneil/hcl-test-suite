@@ -1,0 +1,85 @@
+{
+  "description": "Nulls before and after a null map and an object of a number and a bool unify to the object type",
+  "spec": [
+    "spec.md#type-unification",
+    "spec.md#conversion-of-null-values",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The input needs a null map whose element type is the dynamic pseudo-type (m), which the spec has no value for: the dynamic pseudo-type is a placeholder for a type that isn't known yet, so no value should have it as a collection's element type. Apart from that, the spec gives the same result. The spec unifies a map and an object to the object type, and the null keyword's dynamic pseudo-type to whatever the other types unify to. go-cty ranks the given types (compareTypes in cty/convert/compare_types.go, sortTypes in cty/convert/sort_types.go) and tries the map first. The object's number and bool attributes have no common type for the map's elements, so it moves on to the object, which it has to try before the nulls on either side. The null map converts to a null object.",
+  "variables": {
+    "m": {
+      "null": [
+        "map",
+        "dynamic"
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [
+            {
+              "null": [
+                "object",
+                {
+                  "a": "number",
+                  "b": "bool"
+                }
+              ]
+            },
+            {
+              "object": {
+                "a": {
+                  "number": "1"
+                },
+                "b": {
+                  "bool": true
+                }
+              }
+            },
+            {
+              "null": [
+                "object",
+                {
+                  "a": "number",
+                  "b": "bool"
+                }
+              ]
+            },
+            {
+              "null": [
+                "object",
+                {
+                  "a": "number",
+                  "b": "bool"
+                }
+              ]
+            }
+          ],
+          "element_type": [
+            "object",
+            {
+              "a": "number",
+              "b": "bool"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

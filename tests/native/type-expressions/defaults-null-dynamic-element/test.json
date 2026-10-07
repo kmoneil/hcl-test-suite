@@ -1,0 +1,56 @@
+{
+  "description": "A null element of the dynamic pseudo-type in a list value stays null",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#conversion-of-null-values"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The input needs a list whose element type is the dynamic pseudo-type (v), which the spec has no value for: the dynamic pseudo-type is a placeholder for a type that isn't known yet, so no value should have it as a collection's element type. Apart from that, the spec gives the same result.",
+  "variables": {
+    "v": {
+      "list": [
+        {
+          "null": "dynamic"
+        }
+      ],
+      "element_type": "dynamic"
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [
+            {
+              "null": [
+                "object",
+                {
+                  "a": "string"
+                }
+              ]
+            }
+          ],
+          "element_type": [
+            "object",
+            {
+              "a": "string"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

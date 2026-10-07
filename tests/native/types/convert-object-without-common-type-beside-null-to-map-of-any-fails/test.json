@@ -1,0 +1,24 @@
+{
+  "description": "Converting to a map of any is an error when attributes have no common type, also beside a null",
+  "spec": [
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#type-unification"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "Not disputed like native/functions/function-error-is-eval-error: the README defines convert's result as the conversion, and the spec makes this conversion an error: the null keyword's dynamic pseudo-type unifies with the other types by selecting them, and a string and an empty tuple have no common type (spec.md#type-unification).",
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "reference_error": "attribute types must all match for conversion to map",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

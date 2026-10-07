@@ -1,0 +1,54 @@
+{
+  "description": "Missing optional attributes without defaults are null, and the given attributes between them stay",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "a": {
+              "null": "number"
+            },
+            "b": {
+              "number": "1"
+            },
+            "c": {
+              "null": "number"
+            },
+            "d": {
+              "number": "2"
+            },
+            "e": {
+              "null": "number"
+            },
+            "f": {
+              "number": "3"
+            },
+            "g": {
+              "null": "number"
+            },
+            "h": {
+              "number": "4"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

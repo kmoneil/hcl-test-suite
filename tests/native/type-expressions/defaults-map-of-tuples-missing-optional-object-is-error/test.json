@@ -1,0 +1,74 @@
+{
+  "description": "A map of tuples whose objects lack an optional object attribute in one element fails to convert",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The README says missing optional attributes become null, so each element converts to a tuple of an object whose attribute a is an object with a string attribute x, null for k2, and the map should convert. hashicorp/hcl fails: go-cty's conversionMapToObject (cty/convert/conversion_collection.go) gives the missing attribute a null whose type still marks x as optional, unlike k1's converted attribute, and conversionCollectionToMap unifies the converted elements only when the map's element type is a collection or object type, not a tuple type, so the two elements keep different types and the map can't be made. With objects instead of tuples the conversion works (native/type-expressions/defaults-map-elements-missing-optional-object-unified). The test uses convert-with-defaults, which converts once as applications do, because hashicorp/hcl's convert fails for any missing optional attribute (native/type-expressions/convert-missing-optional-attribute).",
+  "variables": {
+    "m": {
+      "map": {
+        "k1": {
+          "tuple": [
+            {
+              "map": {
+                "a": {
+                  "map": {
+                    "x": {
+                      "string": "s"
+                    }
+                  },
+                  "element_type": "string"
+                }
+              },
+              "element_type": [
+                "map",
+                "string"
+              ]
+            }
+          ]
+        },
+        "k2": {
+          "tuple": [
+            {
+              "map": {},
+              "element_type": [
+                "map",
+                "string"
+              ]
+            }
+          ]
+        }
+      },
+      "element_type": [
+        "tuple",
+        [
+          [
+            "map",
+            [
+              "map",
+              "string"
+            ]
+          ]
+        ]
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "reference_error": "element types must all match for conversion to map",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

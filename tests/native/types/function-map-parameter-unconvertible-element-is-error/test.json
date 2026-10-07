@@ -1,0 +1,42 @@
+{
+  "description": "A map holding a string that isn't a number doesn't match a parameter that is a map of numbers",
+  "spec": [
+    "spec.md#type-specifications",
+    "spec.md#functions-and-function-calls",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "notes": "Not disputed like the tests of converted arguments: the spec makes the call erroneous because the argument doesn't match, and hashicorp/hcl, which converts arguments, can't convert \"x\" to a number.",
+  "variables": {
+    "m": {
+      "map": {
+        "k": {
+          "string": "x"
+        }
+      },
+      "element_type": "string"
+    }
+  },
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": [
+            "map",
+            "number"
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "a number is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

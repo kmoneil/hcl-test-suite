@@ -1,0 +1,249 @@
+{
+  "description": "A map of sets with an unknown converted to a map of lists of tuples gets lists in place of tuples",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The spec converts each element of the map to the target element type, which every element here allows, so the conversion should succeed with lists of the requested type. hashicorp/hcl first converts the set holding an unknown to an unknown list of the set's own element type (conversionCollectionToList in go-cty's cty/convert/conversion_collection.go), and then unifies the map's converted elements with safe conversions only (conversionCollectionToMap calls conversionUnifyCollectionElements with unsafe set to false). The safe unification of the tuple element types falls back to a list of lists of the dynamic pseudo-type, which the result keeps in place of the tuples asked for.",
+  "variables": {
+    "m": {
+      "map": {
+        "x": {
+          "set": [],
+          "element_type": [
+            "tuple",
+            [
+              [
+                "tuple",
+                [
+                  [
+                    "tuple",
+                    [
+                      [
+                        "set",
+                        "string"
+                      ],
+                      [
+                        "list",
+                        "number"
+                      ]
+                    ]
+                  ],
+                  [
+                    "list",
+                    [
+                      "list",
+                      "string"
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "list",
+                "dynamic"
+              ]
+            ]
+          ]
+        },
+        "y": {
+          "set": [
+            {
+              "unknown": [
+                "tuple",
+                [
+                  [
+                    "tuple",
+                    [
+                      [
+                        "tuple",
+                        [
+                          [
+                            "set",
+                            "string"
+                          ],
+                          [
+                            "list",
+                            "number"
+                          ]
+                        ]
+                      ],
+                      [
+                        "list",
+                        [
+                          "list",
+                          "string"
+                        ]
+                      ]
+                    ]
+                  ],
+                  [
+                    "list",
+                    "dynamic"
+                  ]
+                ]
+              ]
+            },
+            {
+              "tuple": [
+                {
+                  "tuple": [
+                    {
+                      "tuple": [
+                        {
+                          "set": [],
+                          "element_type": "string"
+                        },
+                        {
+                          "list": [],
+                          "element_type": "number"
+                        }
+                      ]
+                    },
+                    {
+                      "list": [],
+                      "element_type": [
+                        "list",
+                        "string"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "list": [],
+                  "element_type": "dynamic"
+                }
+              ]
+            }
+          ],
+          "element_type": [
+            "tuple",
+            [
+              [
+                "tuple",
+                [
+                  [
+                    "tuple",
+                    [
+                      [
+                        "set",
+                        "string"
+                      ],
+                      [
+                        "list",
+                        "number"
+                      ]
+                    ]
+                  ],
+                  [
+                    "list",
+                    [
+                      "list",
+                      "string"
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "list",
+                "dynamic"
+              ]
+            ]
+          ]
+        }
+      },
+      "element_type": [
+        "set",
+        [
+          "tuple",
+          [
+            [
+              "tuple",
+              [
+                [
+                  "tuple",
+                  [
+                    [
+                      "set",
+                      "string"
+                    ],
+                    [
+                      "list",
+                      "number"
+                    ]
+                  ]
+                ],
+                [
+                  "list",
+                  [
+                    "list",
+                    "string"
+                  ]
+                ]
+              ]
+            ],
+            [
+              "list",
+              "dynamic"
+            ]
+          ]
+        ]
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "element_type": [
+            "list",
+            [
+              "list",
+              [
+                "list",
+                "dynamic"
+              ]
+            ]
+          ],
+          "map": {
+            "x": {
+              "element_type": [
+                "list",
+                [
+                  "list",
+                  "dynamic"
+                ]
+              ],
+              "list": []
+            },
+            "y": {
+              "unknown": [
+                "list",
+                [
+                  "list",
+                  [
+                    "list",
+                    "dynamic"
+                  ]
+                ]
+              ]
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

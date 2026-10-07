@@ -1,0 +1,35 @@
+{
+  "description": "Converting a map is an error when an element doesn't convert to its optional attribute's type",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "Not disputed like native/functions/function-error-is-eval-error: the README defines convert's result as the conversion, and the spec makes this conversion an error: a map converts to an object by converting each element to its attribute's type (spec.md#collection-and-structural-type-conversions), and a string doesn't convert to a list of strings. That the attribute is optional only allows the map to lack it.",
+  "variables": {
+    "m": {
+      "map": {
+        "a": {
+          "string": "x"
+        }
+      },
+      "element_type": "string"
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "reference_error": "map element type is incompatible with attribute",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

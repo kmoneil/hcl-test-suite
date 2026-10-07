@@ -1,0 +1,70 @@
+{
+  "description": "An unknown list converted to a set compared with a set of fewer elements is unknown",
+  "spec": [
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+    "hclsyntax/spec.md#comparison-operators",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "Equal list elements merge in a set, so the set converted from either list has one element, although both lists have more.",
+  "variables": {
+    "c": {
+      "unknown": "bool"
+    },
+    "l2": {
+      "list": [
+        {
+          "string": "x"
+        },
+        {
+          "string": "x"
+        }
+      ],
+      "element_type": "string"
+    },
+    "l3": {
+      "list": [
+        {
+          "string": "x"
+        },
+        {
+          "string": "x"
+        },
+        {
+          "string": "x"
+        }
+      ],
+      "element_type": "string"
+    },
+    "s1": {
+      "set": [
+        {
+          "string": "x"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": "bool"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

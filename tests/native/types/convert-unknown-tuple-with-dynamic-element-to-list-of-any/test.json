@@ -1,0 +1,47 @@
+{
+  "description": "An unknown tuple of a string and a dynamic element converts to an unknown list of strings",
+  "spec": [
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#type-unification",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "The dynamic pseudo-type unifies with string by selecting string. go-cty has the conversion from the dynamic pseudo-type to string only among its unsafe conversions, which it uses to unify the element types of an unknown tuple here (dynamicReplace in cty/convert/conversion_dynamic.go).",
+  "variables": {
+    "u": {
+      "unknown": [
+        "tuple",
+        [
+          "string",
+          "dynamic"
+        ]
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": [
+            "list",
+            "string"
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

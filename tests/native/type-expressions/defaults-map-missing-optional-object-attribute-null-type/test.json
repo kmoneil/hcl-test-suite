@@ -1,0 +1,45 @@
+{
+  "description": "A null for an optional object attribute missing from a map has a type without optional attributes",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "The README's convert populates a missing optional attribute with a null of the attribute's type, which as the type of a value is object({b = string}), since only type constraints have optional attributes. The outer conversion to object({a = any}) keeps the attribute as it is. It is there because hashicorp/hcl's inner conversion alone gives the null the type object({b = optional(string)}), which no value can have: go-cty's map to object conversion fills a missing optional attribute with a null of the attribute's type as written (conversionMapToObject in cty/convert/conversion_collection.go), while its object to object conversion removes optional attributes from the types of null attribute values (conversionObjectToObject in cty/convert/conversion_object.go).",
+  "variables": {
+    "m": {
+      "map": {},
+      "element_type": "string"
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "a": {
+              "null": [
+                "object",
+                {
+                  "b": "string"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

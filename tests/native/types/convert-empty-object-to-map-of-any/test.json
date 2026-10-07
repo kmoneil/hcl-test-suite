@@ -1,0 +1,30 @@
+{
+  "description": "Converting an empty object to a map of any gives an empty map",
+  "spec": [
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "spec.md#collection-and-structural-type-conversions",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "The test iterates over the converted value instead of showing it, because the spec doesn't decide the element type of an empty map of any: hashicorp/hcl gives the dynamic pseudo-type (cty.MapValEmpty in conversionObjectToMap, cty/convert/conversion_collection.go).",
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": []
+        }
+      },
+      "blocks": []
+    },
+    "valid": true
+  }
+}

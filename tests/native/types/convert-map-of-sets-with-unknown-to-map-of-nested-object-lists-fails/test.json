@@ -1,0 +1,138 @@
+{
+  "description": "A map of sets with an unknown fails to convert to a map of lists of objects holding objects",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The spec converts each element of the map to the target element type, which every element here allows, so the conversion should succeed with lists of the requested type. hashicorp/hcl first converts the set holding an unknown to an unknown list of the set's own element type (conversionCollectionToList in go-cty's cty/convert/conversion_collection.go), and then unifies the map's converted elements with safe conversions only (conversionCollectionToMap calls conversionUnifyCollectionElements with unsafe set to false). The nested objects, whose attributes differ, have no safe conversion to a common type, so the conversion fails.",
+  "variables": {
+    "m": {
+      "map": {
+        "x": {
+          "set": [],
+          "element_type": [
+            "object",
+            {
+              "a": [
+                "object",
+                {
+                  "p": [
+                    "list",
+                    "number"
+                  ],
+                  "x": [
+                    "set",
+                    "string"
+                  ]
+                }
+              ],
+              "b": "dynamic"
+            }
+          ]
+        },
+        "y": {
+          "set": [
+            {
+              "unknown": [
+                "object",
+                {
+                  "a": [
+                    "object",
+                    {
+                      "p": [
+                        "list",
+                        "number"
+                      ],
+                      "x": [
+                        "set",
+                        "string"
+                      ]
+                    }
+                  ],
+                  "b": "dynamic"
+                }
+              ]
+            },
+            {
+              "object": {
+                "a": {
+                  "object": {
+                    "p": {
+                      "list": [],
+                      "element_type": "number"
+                    },
+                    "x": {
+                      "set": [],
+                      "element_type": "string"
+                    }
+                  }
+                },
+                "b": {
+                  "unknown": "dynamic"
+                }
+              }
+            }
+          ],
+          "element_type": [
+            "object",
+            {
+              "a": [
+                "object",
+                {
+                  "p": [
+                    "list",
+                    "number"
+                  ],
+                  "x": [
+                    "set",
+                    "string"
+                  ]
+                }
+              ],
+              "b": "dynamic"
+            }
+          ]
+        }
+      },
+      "element_type": [
+        "set",
+        [
+          "object",
+          {
+            "a": [
+              "object",
+              {
+                "p": [
+                  "list",
+                  "number"
+                ],
+                "x": [
+                  "set",
+                  "string"
+                ]
+              }
+            ],
+            "b": "dynamic"
+          }
+        ]
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "reference_error": "cannot find a common base type for all elements",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

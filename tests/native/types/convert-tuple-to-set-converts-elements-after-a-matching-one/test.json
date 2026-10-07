@@ -1,0 +1,38 @@
+{
+  "description": "Converting a tuple to a set converts each element, also after one that already has the type",
+  "spec": [
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#primitive-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "body": {
+      "attributes": {
+        "a": {
+          "element_type": "string",
+          "set": [
+            {
+              "string": "1"
+            },
+            {
+              "string": "a"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    },
+    "valid": true
+  }
+}

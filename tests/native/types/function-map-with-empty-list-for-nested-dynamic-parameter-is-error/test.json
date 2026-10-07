@@ -1,0 +1,75 @@
+{
+  "description": "A map holding an empty and a non-empty list of lists fails for a parameter of nested dynamic lists",
+  "spec": [
+    "spec.md#type-specifications",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec's type specification rules make map(list(list(string))) match map(list(list(dynamic))), since any type matches the dynamic pseudo-type, so the call should receive the map unchanged. hashicorp/hcl converts the argument with go-cty's convert.Convert (FunctionCallExpr.Value in hclsyntax/expression.go), which converts each map element on its own: the empty list of element x becomes an empty list(list(dynamic)), because conversionCollectionToList (cty/convert/conversion_collection.go) gives an empty list the target element type when that isn't the dynamic pseudo-type itself, while element y stays a list(list(string)). Unifying the two (conversionUnifyCollectionElements) doesn't make their types equal, so the conversion fails.",
+  "variables": {
+    "m": {
+      "map": {
+        "x": {
+          "list": [],
+          "element_type": [
+            "list",
+            "string"
+          ]
+        },
+        "y": {
+          "list": [
+            {
+              "list": [
+                {
+                  "string": "s"
+                }
+              ],
+              "element_type": "string"
+            }
+          ],
+          "element_type": [
+            "list",
+            "string"
+          ]
+        }
+      },
+      "element_type": [
+        "list",
+        [
+          "list",
+          "string"
+        ]
+      ]
+    }
+  },
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "name": "m",
+          "type": [
+            "map",
+            [
+              "list",
+              [
+                "list",
+                "dynamic"
+              ]
+            ]
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "element types must all match for conversion to map",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

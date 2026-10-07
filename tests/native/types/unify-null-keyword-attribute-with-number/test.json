@@ -1,0 +1,28 @@
+{
+  "description": "A null keyword attribute unified with a number attribute becomes a null number in an object",
+  "spec": [
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator",
+    "spec.md#conversion-of-null-values"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "notes": "go-cty converts from the dynamic pseudo-type only as an unsafe conversion, which hashicorp/hcl's unification of object types allows (unifyObjectTypes in cty/convert/unify.go), so the result is an object rather than a map.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "a": {
+              "null": "number"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

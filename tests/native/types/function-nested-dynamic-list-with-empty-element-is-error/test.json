@@ -1,0 +1,74 @@
+{
+  "description": "A list of an empty and a non-empty list of lists is an error for its type with dynamic innermost",
+  "spec": [
+    "spec.md#type-specifications",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The argument's type, a list of lists of lists of strings, matches the parameter's list of lists of lists of the dynamic pseudo-type (spec.md#type-specifications), so the call should receive it unchanged. hashicorp/hcl converts each argument to its parameter's type with go-cty (FunctionCallExpr.Value in hclsyntax/expression.go). go-cty's conversionCollectionToList (cty/convert/conversion_collection.go) gives an empty list the target's element type, here a list of the dynamic pseudo-type, and keeps the empty list's own element type only when the target's element type is the dynamic pseudo-type itself. The two converted elements then have different types, and the outer list can't be made.",
+  "variables": {
+    "v": {
+      "list": [
+        {
+          "list": [],
+          "element_type": [
+            "list",
+            "string"
+          ]
+        },
+        {
+          "list": [
+            {
+              "list": [
+                {
+                  "string": "a"
+                }
+              ],
+              "element_type": "string"
+            }
+          ],
+          "element_type": [
+            "list",
+            "string"
+          ]
+        }
+      ],
+      "element_type": [
+        "list",
+        [
+          "list",
+          "string"
+        ]
+      ]
+    }
+  },
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": [
+            "list",
+            [
+              "list",
+              [
+                "list",
+                "dynamic"
+              ]
+            ]
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "element types must all match for conversion to list",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

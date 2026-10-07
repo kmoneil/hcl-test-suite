@@ -1,0 +1,31 @@
+{
+  "description": "Attributes with no common type are an error for a map of any, also beside a null attribute",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#type-unification",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": [
+            "map",
+            "dynamic"
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "attribute types must all match for conversion to map",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

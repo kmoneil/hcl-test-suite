@@ -1,0 +1,51 @@
+{
+  "description": "Converting an object to a map of lists of any unifies the element types of the lists",
+  "spec": [
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#type-unification"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "body": {
+      "attributes": {
+        "a": {
+          "element_type": [
+            "list",
+            "string"
+          ],
+          "map": {
+            "a": {
+              "element_type": "string",
+              "list": [
+                {
+                  "string": "1"
+                }
+              ]
+            },
+            "b": {
+              "element_type": "string",
+              "list": [
+                {
+                  "string": "x"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "blocks": []
+    },
+    "valid": true
+  }
+}

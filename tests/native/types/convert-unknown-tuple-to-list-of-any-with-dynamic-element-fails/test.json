@@ -1,0 +1,43 @@
+{
+  "description": "An unknown tuple with a dynamic element and no common type doesn't convert to a list of any",
+  "spec": [
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "spec.md#type-unification",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "Not disputed like native/functions/function-error-is-eval-error: the README defines convert's result as the conversion, and the spec makes this conversion an error, also for an unknown tuple, because the tuple's types already rule it out (spec.md#unknown-values-and-the-dynamic-pseudo-type): the dynamic pseudo-type unifies with any other type by selecting it, and is the result only if all the types are dynamic, so the bool and the tuple still need a common type, which they don't have (spec.md#type-unification).",
+  "variables": {
+    "u": {
+      "unknown": [
+        "tuple",
+        [
+          "bool",
+          [
+            "tuple",
+            [
+              "number"
+            ]
+          ],
+          "dynamic"
+        ]
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "reference_error": "all list elements must have the same type",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

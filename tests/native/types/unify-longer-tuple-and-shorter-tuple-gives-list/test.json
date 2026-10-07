@@ -1,0 +1,32 @@
+{
+  "description": "A tuple unified with a shorter tuple gives a list",
+  "spec": [
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec unifies tuple types only when they have the same length, and a tuple can't convert to a tuple of another length, so this should fail. hashicorp/hcl unifies tuples of different lengths to a list of their unified element types (unifyTupleTypes and unifyTupleTypesToList in cty/convert/unify.go), also when the longer tuple comes first (native/types/unify-tuples-of-different-lengths-gives-list has the shorter one first).",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [
+            {
+              "string": "a"
+            },
+            {
+              "string": "b"
+            }
+          ],
+          "element_type": "string"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

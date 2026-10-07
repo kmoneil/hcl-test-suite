@@ -1,0 +1,24 @@
+{
+  "description": "Converting to a list of lists of any is an error when the converted lists have no common type",
+  "spec": [
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#type-unification"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "Not disputed like native/functions/function-error-is-eval-error: the README defines convert's result as the conversion, and the spec makes this conversion an error, because the converted lists, a list of numbers and a list of tuples, have no common type (spec.md#type-unification).",
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "reference_error": "cannot find a common base type for all elements",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

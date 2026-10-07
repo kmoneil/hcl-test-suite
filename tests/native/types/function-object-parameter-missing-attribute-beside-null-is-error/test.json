@@ -1,0 +1,39 @@
+{
+  "description": "An object argument with a null attribute but without another attribute of the type is an error",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "status": "disputed",
+  "notes": "The spec's call rules make an argument that doesn't match its parameter's type an error, and the object type {x = dynamic} doesn't match {x = list(string), y = string}. But the spec also says automatic conversion is attempted when a value doesn't match what an operation expects, and its conversion rules convert an object to an object type with more attributes by filling them with null, which would give {x = null, y = null}. hashicorp/hcl converts arguments, but go-cty's object conversion requires every attribute of the target type that isn't optional (conversionObjectToObject in cty/convert/conversion_object.go), so the call fails.",
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "name": "o",
+          "type": [
+            "object",
+            {
+              "x": [
+                "list",
+                "string"
+              ],
+              "y": "string"
+            }
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "attribute \"y\" is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

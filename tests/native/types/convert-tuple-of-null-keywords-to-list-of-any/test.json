@@ -1,0 +1,39 @@
+{
+  "description": "Converting a tuple of null keywords to a list of any gives a list of the nulls",
+  "spec": [
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "spec.md#type-unification",
+    "spec.md#collection-and-structural-type-conversions",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The conversion gives a list whose element type is the dynamic pseudo-type, the unification of the two nulls' types, which the spec has no value for: the dynamic pseudo-type is a placeholder for a type that isn't known yet, so no value should have it as a collection's element type. Iterating over the list doesn't avoid that, since its elements, nulls of the dynamic pseudo-type, have the list's element type. Apart from that, the spec gives the same result. hashicorp/hcl gives such a list (conversionTupleToList in go-cty's cty/convert/conversion_collection.go).",
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "null": "dynamic"
+            },
+            {
+              "null": "dynamic"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

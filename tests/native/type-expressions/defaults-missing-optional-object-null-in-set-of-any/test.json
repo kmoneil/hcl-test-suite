@@ -1,0 +1,65 @@
+{
+  "description": "A missing optional object attribute's null in a set of any has the plain object type",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#conversion-to-and-from-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "The map lacks the optional attribute a, which becomes null, and the splat gives a sequence holding that null: a tuple by the spec's equivalence with a for expression, a list in hashicorp/hcl, and both convert the same way here. The null's type is the attribute's type, an object with the attribute x, which a value's type never marks as optional; converting the sequence to a set of any keeps that type. In hashicorp/hcl the null's type still marks x as optional (conversionMapToObject in go-cty's cty/convert/conversion_collection.go), and conversionCollectionToSet removes the mark.",
+  "variables": {
+    "v": {
+      "list": [
+        {
+          "map": {},
+          "element_type": [
+            "map",
+            "string"
+          ]
+        }
+      ],
+      "element_type": [
+        "map",
+        [
+          "map",
+          "string"
+        ]
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "set": [
+            {
+              "null": [
+                "object",
+                {
+                  "x": "string"
+                }
+              ]
+            }
+          ],
+          "element_type": [
+            "object",
+            {
+              "x": "string"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

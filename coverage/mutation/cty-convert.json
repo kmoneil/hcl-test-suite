@@ -1,0 +1,840 @@
+{
+  "package": "github.com/zclconf/go-cty/cty/convert",
+  "version": "v1.16.3",
+  "survivors": [
+    {
+      "mutant": "compare_types.go:61:24 logical",
+      "source": "case a.IsObjectType() && b.IsMapType():",
+      "class": "equivalent",
+      "reason": "Swapping whenever the left type is an object or the right type is a map only adds swaps for pairs the later checks score 0 either way, or for object pairs, whose comparison is antisymmetric, so compareTypes returns the same result for every pair of types."
+    },
+    {
+      "mutant": "compare_types.go:65:21 logical",
+      "source": "case a.IsSetType() && b.IsListType():",
+      "class": "equivalent",
+      "reason": "Swapping whenever the left type is a set or the right type is a list only adds swaps for pairs of a set or list with a primitive, map or object, which the later checks score 0 either way, so compareTypes returns the same result for every pair of types."
+    },
+    {
+      "mutant": "compare_types.go:74:13 arith",
+      "source": "return -1 * swap",
+      "class": "equivalent",
+      "reason": "swap is always 1 or -1, so -1 / swap equals -1 * swap."
+    },
+    {
+      "mutant": "compare_types.go:81:13 arith",
+      "source": "return -1 * swap",
+      "class": "equivalent",
+      "reason": "swap is always 1 or -1, so -1 / swap equals -1 * swap."
+    },
+    {
+      "mutant": "compare_types.go:88:13 arith",
+      "source": "return -1 * swap",
+      "class": "equivalent",
+      "reason": "swap is always 1 or -1, so -1 / swap equals -1 * swap."
+    },
+    {
+      "mutant": "compare_types.go:128:13 arith",
+      "source": "return 1 * swap",
+      "class": "equivalent",
+      "reason": "The variable swap is always 1 when two object types are compared, and 1 / swap equals 1 * swap for a swap of 1 or -1."
+    },
+    {
+      "mutant": "compare_types.go:156:14 arith",
+      "source": "return -1 * swap",
+      "class": "equivalent",
+      "reason": "The variable swap is always 1 when two tuple types are compared, and -1 / swap equals -1 * swap for a swap of 1 or -1."
+    },
+    {
+      "mutant": "compare_types.go:158:13 arith",
+      "source": "return 1 * swap",
+      "class": "equivalent",
+      "reason": "The variable swap is always 1 when two tuple types are compared, and 1 / swap equals 1 * swap for a swap of 1 or -1."
+    },
+    {
+      "mutant": "conversion.go:21:6 if_false",
+      "source": "if in.IsMarked() {",
+      "class": "unreachable",
+      "reason": "Without unmarking first, a marked value would lose its marks if null and make the conversion of an unknown or known value panic on the marks, and neither hashicorp/hcl nor the adapter ever marks a value."
+    },
+    {
+      "mutant": "conversion.go:36:52 if_true",
+      "source": "if isKnown, isNull := in.IsKnown(), in.IsNull(); !isKnown || isNull {",
+      "class": "equivalent",
+      "reason": "Also strips optional attributes from the target type before converting a known non-null value, but only the unknown and null branches read the stripped type, and they strip it themselves."
+    },
+    {
+      "mutant": "conversion.go:49:7 if_true",
+      "source": "if isNull {",
+      "class": "equivalent",
+      "reason": "The check is only reached for a null value, since an unknown value has already returned, so forcing it true changes nothing."
+    },
+    {
+      "mutant": "conversion.go:161:26 logical",
+      "source": "case in.IsCapsuleType() || out.IsCapsuleType():",
+      "class": "unreachable",
+      "reason": "Only decides conversions where exactly one side is a capsule type, and no converted value or target type is ever a capsule type: the convert functions' type arguments are decoded as type expressions without conversion."
+    },
+    {
+      "mutant": "conversion_collection.go:32:4 stmt_remove",
+      "source": "elemPath[len(elemPath)-1] = cty.IndexStep{",
+      "class": "diagnostics",
+      "reason": "Only sets the index step of the path that an element's conversion error records when converting a list or set to a list, and hashicorp/hcl never shows that path, only the error's text."
+    },
+    {
+      "mutant": "conversion_collection.go:49:4 stmt_remove",
+      "source": "i++",
+      "class": "diagnostics",
+      "reason": "Only changes the index that the path of an element's conversion error records when converting a list or set to a list, and hashicorp/hcl never shows that path, only the error's text."
+    },
+    {
+      "mutant": "conversion_collection.go:49:5 incdec",
+      "source": "i++",
+      "class": "diagnostics",
+      "reason": "Only changes the index that the path of an element's conversion error records when converting a list or set to a list, and hashicorp/hcl never shows that path, only the error's text."
+    },
+    {
+      "mutant": "conversion_collection.go:86:4 stmt_remove",
+      "source": "elemPath[len(elemPath)-1] = cty.IndexStep{",
+      "class": "diagnostics",
+      "reason": "Only sets the index step of the path that an element's conversion error records when converting a list or set to a set, and hashicorp/hcl never shows that path, only the error's text."
+    },
+    {
+      "mutant": "conversion_collection.go:103:4 stmt_remove",
+      "source": "i++",
+      "class": "diagnostics",
+      "reason": "Only changes the index that the path of an element's conversion error records when converting a list or set to a set, and hashicorp/hcl never shows that path, only the error's text."
+    },
+    {
+      "mutant": "conversion_collection.go:103:5 incdec",
+      "source": "i++",
+      "class": "diagnostics",
+      "reason": "Only changes the index that the path of an element's conversion error records when converting a list or set to a set, and hashicorp/hcl never shows that path, only the error's text."
+    },
+    {
+      "mutant": "conversion_collection.go:138:4 stmt_remove",
+      "source": "elemPath[len(elemPath)-1] = cty.IndexStep{",
+      "class": "diagnostics",
+      "reason": "Only sets the key step of the path that an element's conversion error records when converting a map to another map, and hashicorp/hcl never shows that path, only the error's text."
+    },
+    {
+      "mutant": "conversion_collection.go:143:7 if_false",
+      "source": "if err != nil {",
+      "class": "equivalent",
+      "reason": "Map keys are always strings, so converting a key to string returns it unchanged and never fails, and the error check never fires."
+    },
+    {
+      "mutant": "conversion_collection.go:149:7 if_true",
+      "source": "if conv != nil {",
+      "class": "equivalent",
+      "reason": "A map to map conversion is only built with an element conversion (getConversionKnown returns no conversion when the element types don't convert), so the element conversion is never nil here."
+    },
+    {
+      "mutant": "conversion_collection.go:202:6 if_false",
+      "source": "if setEty == cty.NilType {",
+      "class": "equivalent",
+      "reason": "When the element types of a tuple converted to a set of any have no common type, at least one of them isn't the dynamic pseudo-type and has no conversion to the nil type, so the conversion is still impossible without this early return."
+    },
+    {
+      "mutant": "conversion_collection.go:244:4 stmt_remove",
+      "source": "elemPath[len(elemPath)-1] = cty.IndexStep{",
+      "class": "diagnostics",
+      "reason": "Only sets the index step of the path passed to a tuple element's conversion to a set, which appears only in error values whose paths the runner never sees."
+    },
+    {
+      "mutant": "conversion_collection.go:292:6 if_false",
+      "source": "if listEty == cty.NilType {",
+      "class": "equivalent",
+      "reason": "When unifying the tuple's element types fails, some element type is neither dynamic nor convertible to the missing result type, so the element conversion loop that follows still returns no conversion."
+    },
+    {
+      "mutant": "conversion_collection.go:335:4 stmt_remove",
+      "source": "elemPath[len(elemPath)-1] = cty.IndexStep{",
+      "class": "diagnostics",
+      "reason": "Only sets the index step of the path passed to a tuple element's conversion to a list, which appears only in error values whose paths the runner never sees."
+    },
+    {
+      "mutant": "conversion_collection.go:342:8 if_false",
+      "source": "if err != nil {",
+      "class": "diagnostics",
+      "reason": "Ignoring a tuple element's conversion error still ends in an error, because the failed element is left without a type and unifying the list elements then fails, so only the error message changes."
+    },
+    {
+      "mutant": "conversion_collection.go:347:4 stmt_remove",
+      "source": "elemTys = append(elemTys, val.Type())",
+      "class": "equivalent",
+      "reason": "elemTys is appended to but never read, so removing the append changes nothing."
+    },
+    {
+      "mutant": "conversion_collection.go:388:6 if_false",
+      "source": "if mapEty == cty.NilType {",
+      "class": "equivalent",
+      "reason": "When the attribute types of an object fail to unify for a map of any, at least one attribute has a concrete type, and no conversion from a concrete type to the nil type exists, so the conversion is still impossible."
+    },
+    {
+      "mutant": "conversion_collection.go:418:4 stmt_remove",
+      "source": "elemPath[len(elemPath)-1] = cty.IndexStep{",
+      "class": "diagnostics",
+      "reason": "Only sets the map key in the path of errors from converting an object attribute to the map element type, which hashicorp/hcl never shows."
+    },
+    {
+      "mutant": "conversion_collection.go:503:4 stmt_remove",
+      "source": "elemPath[len(elemPath)-1] = cty.IndexStep{",
+      "class": "diagnostics",
+      "reason": "Only sets the map key in the path of errors from converting a map element to an object attribute type, which hashicorp/hcl never shows."
+    },
+    {
+      "mutant": "conversion_collection.go:582:6 if_true",
+      "source": "if conv == nil {",
+      "class": "equivalent",
+      "reason": "The if statement on this line has an empty body, so forcing its condition to true changes nothing."
+    },
+    {
+      "mutant": "conversion_collection.go:582:6 if_false",
+      "source": "if conv == nil {",
+      "class": "equivalent",
+      "reason": "The if statement on this line has an empty body, so forcing its condition to false changes nothing."
+    },
+    {
+      "mutant": "conversion_collection.go:582:11 cond_negate",
+      "source": "if conv == nil {",
+      "class": "equivalent",
+      "reason": "The if statement on this line has an empty body, so negating its condition changes nothing."
+    },
+    {
+      "mutant": "conversion_collection.go:584:3 stmt_remove",
+      "source": "elemPath[len(elemPath)-1] = cty.IndexStep{",
+      "class": "diagnostics",
+      "reason": "Only sets the key step of the path recorded in an error from converting a map element to the unified element type, and hashicorp/hcl reports only the error's message, which doesn't include the path."
+    },
+    {
+      "mutant": "conversion_collection.go:588:6 if_false",
+      "source": "if err != nil {",
+      "class": "two_mistakes",
+      "reason": "Ignoring a failed conversion of a map element to the unified element type still fails on the next type check unless every element failed, which needs a separate mistake in each of two elements, as in f({x = {p = ll, q = z}, y = {p = z, q = ll}}) with a map(object({p = any, q = any})) parameter, ll an empty list(list(any)) and z = [[\"a\"], [[\"a\"]]], where the mutant crashes the adapter instead of failing in the eval phase."
+    },
+    {
+      "mutant": "conversion_collection.go:616:6 if_true",
+      "source": "if conv == nil {",
+      "class": "equivalent",
+      "reason": "The if statement on this line has an empty body, so forcing its condition to true changes nothing."
+    },
+    {
+      "mutant": "conversion_collection.go:616:6 if_false",
+      "source": "if conv == nil {",
+      "class": "equivalent",
+      "reason": "The if statement on this line has an empty body, so forcing its condition to false changes nothing."
+    },
+    {
+      "mutant": "conversion_collection.go:616:11 cond_negate",
+      "source": "if conv == nil {",
+      "class": "equivalent",
+      "reason": "The if statement on this line has an empty body, so negating its condition changes nothing."
+    },
+    {
+      "mutant": "conversion_collection.go:618:3 stmt_remove",
+      "source": "elemPath[len(elemPath)-1] = cty.IndexStep{",
+      "class": "diagnostics",
+      "reason": "Only sets the index step of the path recorded in an error from converting a list element to the unified element type, and hashicorp/hcl reports only the error's message, which doesn't include the path."
+    },
+    {
+      "mutant": "conversion_object.go:68:4 stmt_remove",
+      "source": "*pathStep = cty.GetAttrStep{",
+      "class": "diagnostics",
+      "reason": "Only sets the attribute step of the path recorded in an error from converting an object attribute, and hashicorp/hcl reports only the error's message, which doesn't include the path."
+    },
+    {
+      "mutant": "conversion_tuple.go:54:4 stmt_remove",
+      "source": "*pathStep = cty.IndexStep{",
+      "class": "diagnostics",
+      "reason": "Only sets the index step of the path recorded in an error from converting a tuple element, and hashicorp/hcl reports only the error's message, which doesn't include the path."
+    },
+    {
+      "mutant": "mismatch_msg.go:35:25 logical",
+      "source": "case got.IsTupleType() && want.IsListType() && want.ElementType() == cty.DynamicPseudoType:",
+      "class": "diagnostics",
+      "reason": "Only chooses the text of the error for an impossible conversion, giving the message about list elements for every tuple and for every target of list(any)."
+    },
+    {
+      "mutant": "mismatch_msg.go:35:68 cond_negate",
+      "source": "case got.IsTupleType() && want.IsListType() && want.ElementType() == cty.DynamicPseudoType:",
+      "class": "diagnostics",
+      "reason": "Only chooses which text MismatchMessage gives for a tuple that failed to convert to a list, after the conversion has already failed, and the guard before it keeps ElementType on a list type."
+    },
+    {
+      "mutant": "mismatch_msg.go:40:25 logical",
+      "source": "case got.IsTupleType() && want.IsSetType() && want.ElementType() == cty.DynamicPseudoType:",
+      "class": "diagnostics",
+      "reason": "Only makes MismatchMessage say \"all set elements must have the same type\" for every failed conversion from a tuple that the list(any) case doesn't take and for every set(any) target, and since the change reads as got.IsTupleType() || (want.IsSetType() && ...) it never calls ElementType on a non-collection type."
+    },
+    {
+      "mutant": "mismatch_msg.go:40:67 cond_negate",
+      "source": "case got.IsTupleType() && want.IsSetType() && want.ElementType() == cty.DynamicPseudoType:",
+      "class": "diagnostics",
+      "reason": "Only chooses which text MismatchMessage gives for a tuple that failed to convert to a set, after the conversion has already failed, and the guard before it keeps ElementType on a set type."
+    },
+    {
+      "mutant": "mismatch_msg.go:45:26 logical",
+      "source": "case got.IsObjectType() && want.IsMapType() && want.ElementType() == cty.DynamicPseudoType:",
+      "class": "diagnostics",
+      "reason": "Only makes MismatchMessage say \"all map elements must have the same type\" for every failed conversion from an object to a type that isn't an object and for every map(any) target, and since the change reads as got.IsObjectType() || (want.IsMapType() && ...) it never calls ElementType on a non-collection type."
+    },
+    {
+      "mutant": "mismatch_msg.go:45:68 cond_negate",
+      "source": "case got.IsObjectType() && want.IsMapType() && want.ElementType() == cty.DynamicPseudoType:",
+      "class": "diagnostics",
+      "reason": "Only chooses which text MismatchMessage gives for an object that failed to convert to a map, after the conversion has already failed, and the guard before it keeps ElementType on a map type."
+    },
+    {
+      "mutant": "mismatch_msg.go:50:26 logical",
+      "source": "case (got.IsTupleType() || got.IsObjectType()) && want.IsCollectionType():",
+      "class": "diagnostics",
+      "reason": "Only stops MismatchMessage from giving a per-element message for a tuple or object that failed to convert to a collection, so the error text falls through to a generic required-type message."
+    },
+    {
+      "mutant": "mismatch_msg.go:56:7 not_remove",
+      "source": "case !typesAreLikelyToCauseConfusion(got, want):",
+      "class": "diagnostics",
+      "reason": "Only swaps the text MismatchMessage gives for a failed conversion between \"X required, but have Y\" and \"X required\"."
+    },
+    {
+      "mutant": "mismatch_msg.go:83:6 if_true",
+      "source": "if !exists {",
+      "class": "diagnostics",
+      "reason": "Only makes the error text of a failed object conversion report every non-optional target attribute as required, present or not."
+    },
+    {
+      "mutant": "mismatch_msg.go:84:7 if_true",
+      "source": "if !want.AttributeOptional(name) {",
+      "class": "diagnostics",
+      "reason": "Only makes the error text of a failed object conversion also report absent optional attributes as required."
+    },
+    {
+      "mutant": "mismatch_msg.go:84:7 if_false",
+      "source": "if !want.AttributeOptional(name) {",
+      "class": "diagnostics",
+      "reason": "Only stops the error text of a failed object conversion from naming absent required attributes, so it names a mismatched attribute or gives a generic message instead."
+    },
+    {
+      "mutant": "mismatch_msg.go:84:7 not_remove",
+      "source": "if !want.AttributeOptional(name) {",
+      "class": "diagnostics",
+      "reason": "Only makes the error text of a failed object conversion name absent optional attributes as required instead of absent required ones."
+    },
+    {
+      "mutant": "mismatch_msg.go:85:5 stmt_remove",
+      "source": "missingAttrs = append(missingAttrs, name)",
+      "class": "diagnostics",
+      "reason": "Only stops the error text of a failed object conversion from naming absent required attributes, so it names a mismatched attribute or gives a generic message instead."
+    },
+    {
+      "mutant": "mismatch_msg.go:87:4 break_continue",
+      "source": "continue",
+      "class": "diagnostics",
+      "reason": "Only stops the error text of a failed object conversion from looking at target attributes after the first absent one, which changes which problem the message names."
+    },
+    {
+      "mutant": "mismatch_msg.go:90:6 if_true",
+      "source": "if gotAty.Equals(wantAty) {",
+      "class": "diagnostics",
+      "reason": "Only makes the error text of a failed object conversion skip every present attribute, so it says \"incorrect object attributes\" instead of naming the mismatched one."
+    },
+    {
+      "mutant": "mismatch_msg.go:90:6 if_false",
+      "source": "if gotAty.Equals(wantAty) {",
+      "class": "diagnostics",
+      "reason": "Only makes the error text of a failed object conversion also check attributes whose types already match, and since go-cty has no conversion from a primitive type to itself it can name such an attribute, as in \"string required, but have string\"."
+    },
+    {
+      "mutant": "mismatch_msg.go:91:4 break_continue",
+      "source": "continue // exact match, so no problem",
+      "class": "diagnostics",
+      "reason": "Only stops the error text of a failed object conversion from looking at target attributes after the first one whose type matches exactly."
+    },
+    {
+      "mutant": "mismatch_msg.go:101:6 if_true",
+      "source": "if unsafeMismatchAttr != \"\" {",
+      "class": "diagnostics",
+      "reason": "Only makes the error text of a failed object conversion skip looking for a mismatched attribute, so it gives a generic message when no attribute is missing."
+    },
+    {
+      "mutant": "mismatch_msg.go:101:6 if_false",
+      "source": "if unsafeMismatchAttr != \"\" {",
+      "class": "diagnostics",
+      "reason": "Only makes the error text of a failed object conversion keep looking at later attributes after finding one that can't convert, which can change which attribute the message names."
+    },
+    {
+      "mutant": "mismatch_msg.go:101:25 cond_negate",
+      "source": "if unsafeMismatchAttr != \"\" {",
+      "class": "diagnostics",
+      "reason": "Only makes the error text of a failed object conversion skip every attribute whose type differs, since unsafeMismatchAttr starts empty, so it gives the generic \"incorrect object attributes\" when no attribute is missing."
+    },
+    {
+      "mutant": "mismatch_msg.go:104:52 if_true",
+      "source": "if conv := GetConversionUnsafe(gotAty, wantAty); conv == nil {",
+      "class": "diagnostics",
+      "reason": "Only makes the error text of a failed object conversion name the first attribute whose type differs even when that attribute converts."
+    },
+    {
+      "mutant": "mismatch_msg.go:104:52 if_false",
+      "source": "if conv := GetConversionUnsafe(gotAty, wantAty); conv == nil {",
+      "class": "diagnostics",
+      "reason": "Only stops the error text of a failed object conversion from preferring an attribute that can't convert even unsafely, so it can name an earlier attribute that only lacks a safe conversion, such as a string given for a number."
+    },
+    {
+      "mutant": "mismatch_msg.go:104:57 cond_negate",
+      "source": "if conv := GetConversionUnsafe(gotAty, wantAty); conv == nil {",
+      "class": "diagnostics",
+      "reason": "Only makes the error text of a failed object conversion name an attribute that converts instead of one that can't."
+    },
+    {
+      "mutant": "mismatch_msg.go:105:4 stmt_remove",
+      "source": "unsafeMismatchAttr = fmt.Sprintf(\"attribute %q: %s\", name, MismatchMessage(gotAty, wantAty))",
+      "class": "diagnostics",
+      "reason": "Only changes which attribute the text of an object conversion error names, falling back to the first attribute without a safe conversion; the conversion still fails, and removing a MismatchMessage call can't add a panic for a typed function parameter."
+    },
+    {
+      "mutant": "mismatch_msg.go:110:6 if_true",
+      "source": "if safeMismatchAttr != \"\" {",
+      "class": "equivalent",
+      "reason": "Only stops mismatchMessageObjects from recording an attribute that lacks a safe conversion, which never reaches a shown error: go-cty only shows MismatchMessage text for conversions that fail even unsafely (convert.Convert and the map to object conversion), and for those mismatchMessageObjects always names a missing or unconvertible attribute first."
+    },
+    {
+      "mutant": "mismatch_msg.go:110:6 if_false",
+      "source": "if safeMismatchAttr != \"\" {",
+      "class": "equivalent",
+      "reason": "Only lets a later attribute replace the one mismatchMessageObjects records as lacking a safe conversion, which never reaches a shown error: go-cty only shows MismatchMessage text for conversions that fail even unsafely (convert.Convert and the map to object conversion), and for those mismatchMessageObjects always names a missing or unconvertible attribute first."
+    },
+    {
+      "mutant": "mismatch_msg.go:110:23 cond_negate",
+      "source": "if safeMismatchAttr != \"\" {",
+      "class": "equivalent",
+      "reason": "Only stops mismatchMessageObjects from recording an attribute that lacks a safe conversion, since safeMismatchAttr starts empty, which never reaches a shown error: go-cty only shows MismatchMessage text for conversions that fail even unsafely (convert.Convert and the map to object conversion), and for those mismatchMessageObjects always names a missing or unconvertible attribute first."
+    },
+    {
+      "mutant": "mismatch_msg.go:113:46 if_true",
+      "source": "if conv := GetConversion(gotAty, wantAty); conv == nil {",
+      "class": "equivalent",
+      "reason": "Only lets mismatchMessageObjects record an attribute that does convert safely as lacking a safe conversion, which never reaches a shown error: go-cty only shows MismatchMessage text for conversions that fail even unsafely (convert.Convert and the map to object conversion), and for those mismatchMessageObjects always names a missing or unconvertible attribute first."
+    },
+    {
+      "mutant": "mismatch_msg.go:113:46 if_false",
+      "source": "if conv := GetConversion(gotAty, wantAty); conv == nil {",
+      "class": "equivalent",
+      "reason": "Only stops mismatchMessageObjects from recording an attribute that lacks a safe conversion, which never reaches a shown error: go-cty only shows MismatchMessage text for conversions that fail even unsafely (convert.Convert and the map to object conversion), and for those mismatchMessageObjects always names a missing or unconvertible attribute first."
+    },
+    {
+      "mutant": "mismatch_msg.go:113:51 cond_negate",
+      "source": "if conv := GetConversion(gotAty, wantAty); conv == nil {",
+      "class": "equivalent",
+      "reason": "Only makes mismatchMessageObjects record an attribute that converts safely instead of one that doesn't, which never reaches a shown error: go-cty only shows MismatchMessage text for conversions that fail even unsafely (convert.Convert and the map to object conversion), and for those mismatchMessageObjects always names a missing or unconvertible attribute first."
+    },
+    {
+      "mutant": "mismatch_msg.go:114:4 stmt_remove",
+      "source": "safeMismatchAttr = fmt.Sprintf(\"attribute %q: %s\", name, MismatchMessage(gotAty, wantAty))",
+      "class": "diagnostics",
+      "reason": "Only changes the text of an object conversion error when every mismatched attribute converts unsafely, to the generic \"incorrect object attributes\"; the conversion still fails, and removing a MismatchMessage call can't add a panic for a typed function parameter."
+    },
+    {
+      "mutant": "mismatch_msg.go:124:3 stmt_remove",
+      "source": "sort.Strings(missingAttrs)",
+      "class": "diagnostics",
+      "reason": "Only changes the order of the two missing attribute names in the error text for a failed object conversion."
+    },
+    {
+      "mutant": "mismatch_msg.go:140:26 cond_negate",
+      "source": "case unsafeMismatchAttr != \"\":",
+      "class": "diagnostics",
+      "reason": "Only changes the error text for a failed object conversion, to an empty text or to the attribute without a safe conversion; the conversion has already failed."
+    },
+    {
+      "mutant": "mismatch_msg.go:143:24 cond_negate",
+      "source": "case safeMismatchAttr != \"\":",
+      "class": "equivalent",
+      "reason": "Only changes what mismatchMessageObjects returns when no attribute is missing or unconvertible, which never reaches a shown error: go-cty only shows MismatchMessage text for conversions that fail even unsafely (convert.Convert and the map to object conversion), and those always have such an attribute."
+    },
+    {
+      "mutant": "mismatch_msg.go:156:25 logical",
+      "source": "case want.IsListType() && !got.IsTupleType():",
+      "class": "diagnostics",
+      "reason": "Only chooses between \"X required\" and an element-by-element explanation in the error text for a failed tuple or object to collection conversion, giving the whole-type message for every list target and every object."
+    },
+    {
+      "mutant": "mismatch_msg.go:156:28 not_remove",
+      "source": "case want.IsListType() && !got.IsTupleType():",
+      "class": "diagnostics",
+      "reason": "Only chooses between \"list of X required\" and an element-by-element explanation in the error text for a failed tuple or object to list conversion."
+    },
+    {
+      "mutant": "mismatch_msg.go:158:24 logical",
+      "source": "case want.IsSetType() && !got.IsTupleType():",
+      "class": "diagnostics",
+      "reason": "Only chooses between a whole-type message and an element-by-element explanation in the error text for a failed tuple or object to collection conversion."
+    },
+    {
+      "mutant": "mismatch_msg.go:158:27 not_remove",
+      "source": "case want.IsSetType() && !got.IsTupleType():",
+      "class": "diagnostics",
+      "reason": "Only chooses between a whole-type message and an element-by-element explanation in the error text for a failed tuple or object to collection conversion."
+    },
+    {
+      "mutant": "mismatch_msg.go:160:24 logical",
+      "source": "case want.IsMapType() && !got.IsObjectType():",
+      "class": "diagnostics",
+      "reason": "Only chooses between a whole-type message and an element-by-element explanation in the error text for a failed tuple or object to collection conversion."
+    },
+    {
+      "mutant": "mismatch_msg.go:160:27 not_remove",
+      "source": "case want.IsMapType() && !got.IsObjectType():",
+      "class": "diagnostics",
+      "reason": "Only chooses between a whole-type message and an element-by-element explanation in the error text for a failed tuple or object to collection conversion."
+    },
+    {
+      "mutant": "mismatch_msg.go:170:7 if_true",
+      "source": "if gotEty.Equals(wantEty) {",
+      "class": "diagnostics",
+      "reason": "Only makes the text of a failed tuple to list or set conversion the generic \"all elements must be ...\" message instead of naming the bad element; the conversion still fails and less code runs."
+    },
+    {
+      "mutant": "mismatch_msg.go:170:7 if_false",
+      "source": "if gotEty.Equals(wantEty) {",
+      "class": "diagnostics",
+      "reason": "Only lets the text of a failed tuple to list or set conversion name an element whose type already equals the element type (\"string required, but have string\"); getConversion and MismatchMessage handle equal types without panicking, so a typed function parameter still gets an ordinary error."
+    },
+    {
+      "mutant": "mismatch_msg.go:171:5 break_continue",
+      "source": "continue // exact match, so no problem",
+      "class": "diagnostics",
+      "reason": "Only makes the text of a failed tuple to list or set conversion the generic \"all elements must be ...\" message once an element of exactly the right type comes first; the conversion still fails and less code runs."
+    },
+    {
+      "mutant": "mismatch_msg.go:173:46 bool_lit",
+      "source": "if conv := getConversion(gotEty, wantEty, true); conv != nil {",
+      "class": "diagnostics",
+      "reason": "Only lets the text of a failed tuple to list or set conversion name an element that converts only unsafely, such as a dynamic or number one; the safe getConversion and MismatchMessage handle every type pair without panicking, so a typed function parameter still gets an ordinary error."
+    },
+    {
+      "mutant": "mismatch_msg.go:173:53 if_true",
+      "source": "if conv := getConversion(gotEty, wantEty, true); conv != nil {",
+      "class": "diagnostics",
+      "reason": "Only makes the text of a failed tuple to list or set conversion the generic \"all elements must be ...\" message instead of naming the bad element; the conversion still fails."
+    },
+    {
+      "mutant": "mismatch_msg.go:173:53 if_false",
+      "source": "if conv := getConversion(gotEty, wantEty, true); conv != nil {",
+      "class": "diagnostics",
+      "reason": "Only lets the text of a failed tuple to list or set conversion name the first element of a different but convertible type; MismatchMessage handles convertible type pairs without panicking, so a typed function parameter still gets an ordinary error."
+    },
+    {
+      "mutant": "mismatch_msg.go:173:58 cond_negate",
+      "source": "if conv := getConversion(gotEty, wantEty, true); conv != nil {",
+      "class": "diagnostics",
+      "reason": "Only makes the text of a failed tuple to list or set conversion name a convertible element, or fall back to the generic \"all elements must be ...\" message, instead of the bad element; MismatchMessage handles every type pair without panicking, so a typed function parameter still gets an ordinary error."
+    },
+    {
+      "mutant": "mismatch_msg.go:208:25 logical",
+      "source": "case want.IsListType() && !(got.IsListType() || got.IsSetType()):",
+      "class": "diagnostics",
+      "reason": "Only chooses between \"X required\" and an element type explanation in the error text for a failed collection to collection conversion, giving the whole-type message for every list target and every map."
+    },
+    {
+      "mutant": "mismatch_msg.go:208:28 not_remove",
+      "source": "case want.IsListType() && !(got.IsListType() || got.IsSetType()):",
+      "class": "diagnostics",
+      "reason": "Only chooses between \"list of X required\" and an element type explanation in the error text for a failed collection to list conversion."
+    },
+    {
+      "mutant": "mismatch_msg.go:208:47 logical",
+      "source": "case want.IsListType() && !(got.IsListType() || got.IsSetType()):",
+      "class": "diagnostics",
+      "reason": "Only chooses between \"list of X required\" and an element type explanation in the error text for a failed collection to list conversion."
+    },
+    {
+      "mutant": "mismatch_msg.go:210:24 logical",
+      "source": "case want.IsSetType() && !(got.IsListType() || got.IsSetType()):",
+      "class": "diagnostics",
+      "reason": "Only chooses between \"X required\" and an element type explanation in the error text for a failed collection to collection conversion, giving the whole-type message for every set target and every map."
+    },
+    {
+      "mutant": "mismatch_msg.go:210:27 not_remove",
+      "source": "case want.IsSetType() && !(got.IsListType() || got.IsSetType()):",
+      "class": "diagnostics",
+      "reason": "Only chooses between \"set of X required\" and an element type explanation in the error text for a failed collection to set conversion."
+    },
+    {
+      "mutant": "mismatch_msg.go:210:46 logical",
+      "source": "case want.IsSetType() && !(got.IsListType() || got.IsSetType()):",
+      "class": "diagnostics",
+      "reason": "Only chooses between \"set of X required\" and an element type explanation in the error text for a failed collection to set conversion."
+    },
+    {
+      "mutant": "mismatch_msg.go:212:24 logical",
+      "source": "case want.IsMapType() && !got.IsMapType():",
+      "class": "diagnostics",
+      "reason": "Only changes the text of the error for a collection that doesn't convert to another collection type, which with || always becomes the bare required type instead of a description of the element type mismatch."
+    },
+    {
+      "mutant": "mismatch_msg.go:212:27 not_remove",
+      "source": "case want.IsMapType() && !got.IsMapType():",
+      "class": "diagnostics",
+      "reason": "Only changes the text of the error for a collection that doesn't convert to a map: a map to map mismatch says only that a map is required, and a list or set to map mismatch describes element types instead."
+    },
+    {
+      "mutant": "mismatch_msg.go:222:3 stmt_remove",
+      "source": "noun = \"list element type\"",
+      "class": "diagnostics",
+      "reason": "Only changes the noun in the error for a list whose elements don't convert, from \"list element type\" to \"element type\"."
+    },
+    {
+      "mutant": "mismatch_msg.go:224:3 stmt_remove",
+      "source": "noun = \"set element type\"",
+      "class": "diagnostics",
+      "reason": "Only changes the noun in the error for a set whose elements don't convert, from \"set element type\" to \"element type\"."
+    },
+    {
+      "mutant": "mismatch_msg.go:226:3 stmt_remove",
+      "source": "noun = \"map element type\"",
+      "class": "diagnostics",
+      "reason": "Only changes the noun in the error for a map whose elements don't convert, from \"map element type\" to \"element type\"."
+    },
+    {
+      "mutant": "mismatch_msg.go:236:67 if_true",
+      "source": "if gotP, wantP := got.IsPrimitiveType(), want.IsPrimitiveType(); gotP != wantP {",
+      "class": "diagnostics",
+      "reason": "typesAreLikelyToCauseConfusion only picks the wording of a conversion error, and always returning false makes every fallback message name both types (\"X required, but have Y\")."
+    },
+    {
+      "mutant": "mismatch_msg.go:236:67 if_false",
+      "source": "if gotP, wantP := got.IsPrimitiveType(), want.IsPrimitiveType(); gotP != wantP {",
+      "class": "diagnostics",
+      "reason": "Only changes the wording of the error for a primitive and a non-primitive type that don't convert, other than to string, which the later checks of typesAreLikelyToCauseConfusion then word as \"X required\" without the actual type."
+    },
+    {
+      "mutant": "mismatch_msg.go:236:72 cond_negate",
+      "source": "if gotP, wantP := got.IsPrimitiveType(), want.IsPrimitiveType(); gotP != wantP {",
+      "class": "diagnostics",
+      "reason": "Only swaps which conversion errors are worded \"X required, but have Y\" and which \"X required\", depending on whether both types are primitive."
+    },
+    {
+      "mutant": "mismatch_msg.go:242:10 bool_lit",
+      "source": "return false",
+      "class": "diagnostics",
+      "reason": "Only makes the error for a primitive and a non-primitive type that don't convert say \"X required\" instead of \"X required, but have Y\"."
+    },
+    {
+      "mutant": "mismatch_msg.go:244:5 if_true",
+      "source": "if want == cty.String {",
+      "class": "diagnostics",
+      "reason": "Only makes every conversion error that reaches this check name both types (\"X required, but have Y\"), since typesAreLikelyToCauseConfusion only picks the wording."
+    },
+    {
+      "mutant": "mismatch_msg.go:244:5 if_false",
+      "source": "if want == cty.String {",
+      "class": "equivalent",
+      "reason": "Only changes the wording for a primitive type and string, a pair no shown error describes, since number and bool always convert to string and string to string is only described inside the unused text for an attribute that lacks a safe conversion."
+    },
+    {
+      "mutant": "mismatch_msg.go:244:10 cond_negate",
+      "source": "if want == cty.String {",
+      "class": "diagnostics",
+      "reason": "Only swaps the wording of conversion errors between \"X required\" and \"X required, but have Y\" depending on whether the target type is string."
+    },
+    {
+      "mutant": "mismatch_msg.go:249:5 if_true",
+      "source": "if (want == cty.Bool && got == cty.Number) || (got == cty.Bool && want == cty.Number) {",
+      "class": "diagnostics",
+      "reason": "Only makes every conversion error that reaches this check name both types (\"X required, but have Y\"), since typesAreLikelyToCauseConfusion only picks the wording."
+    },
+    {
+      "mutant": "mismatch_msg.go:249:5 if_false",
+      "source": "if (want == cty.Bool && got == cty.Number) || (got == cty.Bool && want == cty.Number) {",
+      "class": "diagnostics",
+      "reason": "Only makes the error for a bool and a number that don't convert say \"X required\" instead of \"X required, but have Y\"."
+    },
+    {
+      "mutant": "mismatch_msg.go:249:11 cond_negate",
+      "source": "if (want == cty.Bool && got == cty.Number) || (got == cty.Bool && want == cty.Number) {",
+      "class": "diagnostics",
+      "reason": "Only changes which type pairs get the \"X required, but have Y\" wording in conversion errors instead of \"X required\"."
+    },
+    {
+      "mutant": "mismatch_msg.go:249:23 logical",
+      "source": "if (want == cty.Bool && got == cty.Number) || (got == cty.Bool && want == cty.Number) {",
+      "class": "equivalent",
+      "reason": "Only changes the wording for pairs such as string to bool, bool to bool or number to number, which no shown error describes, since the only primitive pairs that fail to convert even unsafely are number and bool, whose wording is unchanged."
+    },
+    {
+      "mutant": "mismatch_msg.go:249:30 cond_negate",
+      "source": "if (want == cty.Bool && got == cty.Number) || (got == cty.Bool && want == cty.Number) {",
+      "class": "diagnostics",
+      "reason": "Only changes which type pairs get the \"X required, but have Y\" wording in conversion errors instead of \"X required\"."
+    },
+    {
+      "mutant": "mismatch_msg.go:249:45 logical",
+      "source": "if (want == cty.Bool && got == cty.Number) || (got == cty.Bool && want == cty.Number) {",
+      "class": "diagnostics",
+      "reason": "Only makes the error for a bool and a number that don't convert say \"X required\" instead of \"X required, but have Y\"."
+    },
+    {
+      "mutant": "mismatch_msg.go:249:53 cond_negate",
+      "source": "if (want == cty.Bool && got == cty.Number) || (got == cty.Bool && want == cty.Number) {",
+      "class": "diagnostics",
+      "reason": "Only changes which type pairs get the \"X required, but have Y\" wording in conversion errors instead of \"X required\"."
+    },
+    {
+      "mutant": "mismatch_msg.go:249:65 logical",
+      "source": "if (want == cty.Bool && got == cty.Number) || (got == cty.Bool && want == cty.Number) {",
+      "class": "equivalent",
+      "reason": "Only changes the wording for pairs such as string to number, number to number or bool to bool, which no shown error describes, since the only primitive pairs that fail to convert even unsafely are number and bool, whose wording is unchanged."
+    },
+    {
+      "mutant": "mismatch_msg.go:249:73 cond_negate",
+      "source": "if (want == cty.Bool && got == cty.Number) || (got == cty.Bool && want == cty.Number) {",
+      "class": "diagnostics",
+      "reason": "Only changes which type pairs get the \"X required, but have Y\" wording in conversion errors instead of \"X required\"."
+    },
+    {
+      "mutant": "mismatch_msg.go:252:10 bool_lit",
+      "source": "return false",
+      "class": "diagnostics",
+      "reason": "Only makes the error for a bool and a number that don't convert say \"X required\" instead of \"X required, but have Y\"."
+    },
+    {
+      "mutant": "mismatch_msg.go:254:5 if_true",
+      "source": "if got.IsCollectionType() && want.IsCollectionType() && !got.ElementType().HasDynamicTypes() && want.ElementType().HasDynamicTypes() {",
+      "class": "diagnostics",
+      "reason": "Only makes every conversion error that reaches this check name both types (\"X required, but have Y\"), since typesAreLikelyToCauseConfusion only picks the wording."
+    },
+    {
+      "mutant": "mismatch_msg.go:254:5 if_false",
+      "source": "if got.IsCollectionType() && want.IsCollectionType() && !got.ElementType().HasDynamicTypes() && want.ElementType().HasDynamicTypes() {",
+      "class": "equivalent",
+      "reason": "The condition needs both types to be collections, but MismatchMessage handles two collection types before it calls typesAreLikelyToCauseConfusion, so it is never true."
+    },
+    {
+      "mutant": "mismatch_msg.go:254:58 not_remove",
+      "source": "if got.IsCollectionType() && want.IsCollectionType() && !got.ElementType().HasDynamicTypes() && want.ElementType().HasDynamicTypes() {",
+      "class": "equivalent",
+      "reason": "The condition still needs both types to be collections, but MismatchMessage handles two collection types before it calls typesAreLikelyToCauseConfusion, so it is never true either way."
+    },
+    {
+      "mutant": "mismatch_msg.go:263:5 if_true",
+      "source": "if got.IsTupleType() && want.IsObjectType() || got.IsObjectType() && got.IsTupleType() {",
+      "class": "diagnostics",
+      "reason": "Only makes every conversion error that reaches this check name both types (\"X required, but have Y\"), since typesAreLikelyToCauseConfusion only picks the wording."
+    },
+    {
+      "mutant": "mismatch_msg.go:263:5 if_false",
+      "source": "if got.IsTupleType() && want.IsObjectType() || got.IsObjectType() && got.IsTupleType() {",
+      "class": "diagnostics",
+      "reason": "Only makes the error for a tuple that doesn't convert to an object type say \"object required\" instead of naming the tuple too."
+    },
+    {
+      "mutant": "mismatch_msg.go:263:23 logical",
+      "source": "if got.IsTupleType() && want.IsObjectType() || got.IsObjectType() && got.IsTupleType() {",
+      "class": "diagnostics",
+      "reason": "Only changes which type pairs (any tuple, or any object target) get the \"X required, but have Y\" wording in conversion errors."
+    },
+    {
+      "mutant": "mismatch_msg.go:263:46 logical",
+      "source": "if got.IsTupleType() && want.IsObjectType() || got.IsObjectType() && got.IsTupleType() {",
+      "class": "diagnostics",
+      "reason": "Only makes the error for a tuple that doesn't convert to an object type say \"object required\" instead of naming the tuple too."
+    },
+    {
+      "mutant": "mismatch_msg.go:263:68 logical",
+      "source": "if got.IsTupleType() && want.IsObjectType() || got.IsObjectType() && got.IsTupleType() {",
+      "class": "diagnostics",
+      "reason": "Only changes which type pairs (an object or tuple that doesn't convert) get the \"X required, but have Y\" wording in conversion errors."
+    },
+    {
+      "mutant": "mismatch_msg.go:280:9 bool_lit",
+      "source": "return true",
+      "class": "diagnostics",
+      "reason": "Only makes the remaining conversion errors name both types (\"X required, but have Y\") instead of only the required type."
+    },
+    {
+      "mutant": "sort_types.go:22:16 cond_boundary",
+      "source": "for i := 0; i < (l - 1); i++ {",
+      "class": "equivalent",
+      "reason": "The extra outer iteration with i equal to l-1 has an empty inner loop, so no comparison or edge is added."
+    },
+    {
+      "mutant": "sort_types.go:22:21 arith",
+      "source": "for i := 0; i < (l - 1); i++ {",
+      "class": "equivalent",
+      "reason": "The extra outer iterations with i equal to l-1 and l have empty inner loops, so no comparison or edge is added."
+    },
+    {
+      "mutant": "unify.go:19:5 if_false",
+      "source": "if len(types) == 0 {",
+      "class": "equivalent",
+      "reason": "With no types every kind count is zero, so unify falls through to sortTypes of an empty list and still returns no type and no conversions."
+    },
+    {
+      "mutant": "unify.go:52:5 break_continue",
+      "source": "break",
+      "class": "equivalent",
+      "reason": "The default case is the last statement of the loop body, so continue and break both just move on to the next type."
+    },
+    {
+      "mutant": "unify.go:59:36 arith",
+      "source": "case mapCt > 0 && (mapCt+objectCt+dynamicCt) == len(types):",
+      "class": "equivalent",
+      "reason": "With a dynamic type among the maps and objects, unifyObjectsAsMaps always fails because the maps then unify to the dynamic type, so skipping it reaches the same general unification."
+    },
+    {
+      "mutant": "unify.go:71:37 arith",
+      "source": "case listCt > 0 && (listCt+tupleCt+dynamicCt) == len(types):",
+      "class": "equivalent",
+      "reason": "With a dynamic type among the lists and tuples, unifyTuplesAsList always fails because the lists then unify to the dynamic type, so skipping it reaches the same general unification."
+    },
+    {
+      "mutant": "unify.go:102:7 if_false",
+      "source": "if i == wantTypeIdx {",
+      "class": "equivalent",
+      "reason": "The wanted type always equals itself, so the Equals check that follows also gives it no conversion."
+    },
+    {
+      "mutant": "unify.go:146:5 if_false",
+      "source": "if !ty.IsListType() {",
+      "class": "equivalent",
+      "reason": "When the tuples don't unify to a list, the mutant goes on to unify a type list that holds cty.NilType in their place, which never converts to or from a list type, so that unification never gives a list and unifyTuplesAsList still returns cty.NilType."
+    },
+    {
+      "mutant": "unify.go:203:5 if_false",
+      "source": "if !ty.IsMapType() {",
+      "class": "equivalent",
+      "reason": "When the objects don't unify to a map, the mutant goes on to unify a type list that holds cty.NilType in their place, which never converts to or from a map type, so that unification never gives a map and unifyObjectsAsMaps still returns cty.NilType."
+    },
+    {
+      "mutant": "unify.go:260:5 if_false",
+      "source": "if retElemType == cty.NilType {",
+      "class": "equivalent",
+      "reason": "When the element types don't unify, at least one of them is not the dynamic pseudo-type and has no conversion to cty.NilType, so the loop below finds no conversion to a collection of cty.NilType and still returns cty.NilType."
+    },
+    {
+      "mutant": "unify.go:345:6 if_false",
+      "source": "if ty.Equals(retTy) {",
+      "class": "equivalent",
+      "reason": "Only adds an identity conversion for an object already of the unified type, which rebuilds the same value and keeps an unknown's not-null refinement."
+    },
+    {
+      "mutant": "unify.go:381:6 if_false",
+      "source": "if ty.Equals(retTy) {",
+      "class": "equivalent",
+      "reason": "The types unified here are all objects and the result is a map type, so no type ever equals the result."
+    },
+    {
+      "mutant": "unify.go:441:6 if_false",
+      "source": "if ty.Equals(retTy) {",
+      "class": "equivalent",
+      "reason": "Only adds an identity conversion for a tuple already of the unified type, which rebuilds the same value and keeps an unknown's not-null refinement."
+    },
+    {
+      "mutant": "unify.go:476:6 if_false",
+      "source": "if ty.Equals(retTy) {",
+      "class": "equivalent",
+      "reason": "The types unified here are all tuples and the result is a list type, so no type ever equals the result."
+    }
+  ]
+}

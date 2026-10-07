@@ -1,0 +1,48 @@
+{
+  "description": "A set holding an unknown string and a known one converts to an unknown list",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "The unknown element may turn out to equal \"a\", so the set has one element or two, and the list it converts to can only be unknown.",
+  "variables": {
+    "s": {
+      "set": [
+        {
+          "unknown": "string"
+        },
+        {
+          "string": "a"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": [
+            "list",
+            "string"
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

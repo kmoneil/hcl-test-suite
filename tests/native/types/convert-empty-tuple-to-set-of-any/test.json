@@ -1,0 +1,30 @@
+{
+  "description": "Converting an empty tuple to a set of any gives an empty set",
+  "spec": [
+    "ext/typeexpr/README.md#the-convert-cty-function",
+    "spec.md#collection-and-structural-type-conversions",
+    "hclsyntax/spec.md#for-expressions"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "The test iterates over the converted value instead of showing it, because the spec doesn't decide the element type of an empty set of any: hashicorp/hcl gives the dynamic pseudo-type (cty.SetValEmpty in conversionTupleToSet, cty/convert/conversion_collection.go).",
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": []
+        }
+      },
+      "blocks": []
+    },
+    "valid": true
+  }
+}

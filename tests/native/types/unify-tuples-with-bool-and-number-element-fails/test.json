@@ -1,0 +1,15 @@
+{
+  "description": "Tuples of the same length don't unify when an element is bool in one and number in the other",
+  "spec": [
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "status": "disputed",
+  "notes": "The spec's rules only say that number and bool each unify with string, and none names bool with number. But it defines unification as finding a type that all the given types can be converted to, the most general supertype in a lattice, and bool and number both convert safely to string, which would give the tuple [\"true\", \"x\"]. hashicorp/hcl fails to unify element 0, and then fails the whole unification (unifyTupleTypes in cty/convert/unify.go) instead of trying a list of all the element types, which would be a list of strings.",
+  "reference_error": "Type mismatch for tuple element 0",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

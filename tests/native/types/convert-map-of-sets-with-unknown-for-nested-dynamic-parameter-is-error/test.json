@@ -1,0 +1,184 @@
+{
+  "description": "A map of sets with an unknown is an error for a parameter of type map of lists of nested any",
+  "spec": [
+    "spec.md#functions-and-function-calls",
+    "spec.md#type-specifications",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions"
+  ],
+  "notes": "Not disputed: the spec's call rules make the call an error because the argument's type, a map of sets, doesn't match the parameter's type, a map of lists (spec.md#functions-and-function-calls, spec.md#type-specifications). hashicorp/hcl fails too, for another reason: it converts the argument to the parameter's type (FunctionCallExpr.Value in hclsyntax/expression.go), go-cty turns the set holding an unknown into an unknown list of the set's own element type (conversionCollectionToList in cty/convert/conversion_collection.go), and conversionCollectionToMap then unifies the map's converted elements with safe conversions only (conversionUnifyCollectionElements), which finds no common type because the inner tuple of a set of strings and a list of numbers has only an unsafe conversion to a list of the dynamic pseudo-type.",
+  "variables": {
+    "m": {
+      "map": {
+        "x": {
+          "set": [],
+          "element_type": [
+            "tuple",
+            [
+              [
+                "tuple",
+                [
+                  [
+                    "set",
+                    "string"
+                  ],
+                  [
+                    "list",
+                    "number"
+                  ]
+                ]
+              ],
+              [
+                "list",
+                [
+                  "list",
+                  "string"
+                ]
+              ]
+            ]
+          ]
+        },
+        "y": {
+          "set": [
+            {
+              "unknown": [
+                "tuple",
+                [
+                  [
+                    "tuple",
+                    [
+                      [
+                        "set",
+                        "string"
+                      ],
+                      [
+                        "list",
+                        "number"
+                      ]
+                    ]
+                  ],
+                  [
+                    "list",
+                    [
+                      "list",
+                      "string"
+                    ]
+                  ]
+                ]
+              ]
+            },
+            {
+              "tuple": [
+                {
+                  "tuple": [
+                    {
+                      "set": [],
+                      "element_type": "string"
+                    },
+                    {
+                      "list": [],
+                      "element_type": "number"
+                    }
+                  ]
+                },
+                {
+                  "list": [],
+                  "element_type": [
+                    "list",
+                    "string"
+                  ]
+                }
+              ]
+            }
+          ],
+          "element_type": [
+            "tuple",
+            [
+              [
+                "tuple",
+                [
+                  [
+                    "set",
+                    "string"
+                  ],
+                  [
+                    "list",
+                    "number"
+                  ]
+                ]
+              ],
+              [
+                "list",
+                [
+                  "list",
+                  "string"
+                ]
+              ]
+            ]
+          ]
+        }
+      },
+      "element_type": [
+        "set",
+        [
+          "tuple",
+          [
+            [
+              "tuple",
+              [
+                [
+                  "set",
+                  "string"
+                ],
+                [
+                  "list",
+                  "number"
+                ]
+              ]
+            ],
+            [
+              "list",
+              [
+                "list",
+                "string"
+              ]
+            ]
+          ]
+        ]
+      ]
+    }
+  },
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": [
+            "map",
+            [
+              "list",
+              [
+                "list",
+                [
+                  "list",
+                  "dynamic"
+                ]
+              ]
+            ]
+          ],
+          "allow_unknown": true
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "cannot find a common base type for all elements",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

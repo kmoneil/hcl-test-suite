@@ -1,0 +1,39 @@
+{
+  "description": "An object of numbers selected beside a map of strings becomes a map of strings",
+  "spec": [
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says map and object types unify by preferring the object type, so the selected object would stay an object holding the number 1. hashicorp/hcl unifies the object's attribute types as a map, a map of numbers, unifies that with the map of strings to a map of strings, and converts the object to it (unifyObjectsAsMaps in cty/convert/unify.go), so the result is a map holding the string \"1\".",
+  "variables": {
+    "m": {
+      "map": {
+        "x": {
+          "string": "y"
+        }
+      },
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "map": {
+            "a": {
+              "string": "1"
+            }
+          },
+          "element_type": "string"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

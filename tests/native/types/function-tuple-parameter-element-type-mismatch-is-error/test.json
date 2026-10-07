@@ -1,0 +1,33 @@
+{
+  "description": "A tuple argument whose element doesn't match the parameter's element type is an error",
+  "spec": [
+    "spec.md#type-specifications",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "name": "t",
+          "type": [
+            "tuple",
+            [
+              "number"
+            ]
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "a number is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

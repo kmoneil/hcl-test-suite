@@ -1,0 +1,112 @@
+{
+  "description": "A map of sets with an unknown fails to convert when an attribute's tuple mixes a string and any",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The spec converts each element of the map to the target element type, which every element here allows, so the conversion should succeed with lists of the requested type. hashicorp/hcl first converts the set holding an unknown to an unknown list of the set's own element type (conversionCollectionToList in go-cty's cty/convert/conversion_collection.go), and then unifies the map's converted elements with safe conversions only (conversionCollectionToMap calls conversionUnifyCollectionElements with unsafe set to false). A tuple of a string and the dynamic pseudo-type has only an unsafe conversion to a list of any, so the conversion fails.",
+  "variables": {
+    "m": {
+      "map": {
+        "x": {
+          "set": [],
+          "element_type": [
+            "object",
+            {
+              "a": [
+                "tuple",
+                [
+                  "string",
+                  "dynamic"
+                ]
+              ],
+              "b": "dynamic"
+            }
+          ]
+        },
+        "y": {
+          "set": [
+            {
+              "unknown": [
+                "object",
+                {
+                  "a": [
+                    "tuple",
+                    [
+                      "string",
+                      "dynamic"
+                    ]
+                  ],
+                  "b": "dynamic"
+                }
+              ]
+            },
+            {
+              "object": {
+                "a": {
+                  "tuple": [
+                    {
+                      "string": "s"
+                    },
+                    {
+                      "unknown": "dynamic"
+                    }
+                  ]
+                },
+                "b": {
+                  "unknown": "dynamic"
+                }
+              }
+            }
+          ],
+          "element_type": [
+            "object",
+            {
+              "a": [
+                "tuple",
+                [
+                  "string",
+                  "dynamic"
+                ]
+              ],
+              "b": "dynamic"
+            }
+          ]
+        }
+      },
+      "element_type": [
+        "set",
+        [
+          "object",
+          {
+            "a": [
+              "tuple",
+              [
+                "string",
+                "dynamic"
+              ]
+            ],
+            "b": "dynamic"
+          }
+        ]
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "reference_error": "cannot find a common base type for all elements",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

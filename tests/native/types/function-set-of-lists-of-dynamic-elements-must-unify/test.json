@@ -1,0 +1,34 @@
+{
+  "description": "Elements that become lists with no common element type are an error for a set of lists of any",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions",
+    "spec.md#type-unification",
+    "spec.md#functions-and-function-calls"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions"
+  ],
+  "functions": {
+    "f": {
+      "params": [
+        {
+          "type": [
+            "set",
+            [
+              "list",
+              "dynamic"
+            ]
+          ]
+        }
+      ],
+      "result": "arguments"
+    }
+  },
+  "reference_error": "element types must all match for conversion to set",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

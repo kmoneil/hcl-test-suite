@@ -1,0 +1,61 @@
+{
+  "description": "An unknown list of one or two strings converted to a set isn't equal to an empty set",
+  "spec": [
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+    "hclsyntax/spec.md#comparison-operators",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The spec says a comparison with an unknown operand gives an unknown bool. ConditionalExpr.Value (hclsyntax/expression.go) refines the unknown choice between the two lists with the range of their lengths, one to two, go-cty keeps a lower bound of one when it converts the unknown list to a set, because merging equal elements can't empty a set (prepareUnknownResult in cty/convert/conversion.go), and Value.Equals (cty/value_ops.go) uses it to rule out an empty set.",
+  "variables": {
+    "c": {
+      "unknown": "bool"
+    },
+    "l1": {
+      "list": [
+        {
+          "string": "x"
+        }
+      ],
+      "element_type": "string"
+    },
+    "l2": {
+      "list": [
+        {
+          "string": "x"
+        },
+        {
+          "string": "y"
+        }
+      ],
+      "element_type": "string"
+    },
+    "s0": {
+      "set": [],
+      "element_type": "string"
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

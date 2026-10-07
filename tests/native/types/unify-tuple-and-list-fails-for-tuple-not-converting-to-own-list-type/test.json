@@ -1,0 +1,49 @@
+{
+  "description": "A tuple unified with a list fails when its elements don't convert to the type they unify to",
+  "spec": [
+    "spec.md#type-unification",
+    "spec.md#collection-and-structural-type-conversions",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec unifies a list and a tuple by preferring the tuple type, which the list converts to here, so the result is the tuple. hashicorp/hcl unifies them to a list of lists of strings, which the tuple converts to on its own (convert([[\"x\"], s], list(list(string))) succeeds), but unifyTuplesAsList in go-cty's cty/convert/unify.go first converts the tuple to a list of the type its own elements unify to, a set of numbers, which fails because \"x\" isn't a number.",
+  "variables": {
+    "s": {
+      "set": [],
+      "element_type": "number"
+    },
+    "z": {
+      "list": [
+        {
+          "list": [
+            {
+              "string": "y"
+            }
+          ],
+          "element_type": "string"
+        },
+        {
+          "list": [
+            {
+              "string": "1"
+            }
+          ],
+          "element_type": "string"
+        }
+      ],
+      "element_type": [
+        "list",
+        "string"
+      ]
+    }
+  },
+  "reference_error": "a number is required",
+  "expect": {
+    "valid": false,
+    "phase": "eval"
+  }
+}

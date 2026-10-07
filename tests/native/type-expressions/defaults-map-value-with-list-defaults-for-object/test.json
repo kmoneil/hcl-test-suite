@@ -1,0 +1,73 @@
+{
+  "description": "A map of sets converted to an object type gets a list of numbers and a list of bools as defaults",
+  "spec": [
+    "ext/typeexpr/README.md#optional-object-attributes",
+    "spec.md#collection-and-structural-type-conversions"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "notes": "hashicorp/hcl unifies the map's elements and the added defaults before converting (unifyAsMap in ext/typeexpr/defaults.go). go-cty tries the two list types first, which fail because a list of numbers and a list of bools don't convert to each other, then settles on a set of strings (unify in cty/convert/unify.go), and the conversion to the object type turns the defaults back into lists.",
+  "variables": {
+    "m": {
+      "map": {
+        "a": {
+          "set": [],
+          "element_type": "string"
+        },
+        "b": {
+          "set": [],
+          "element_type": "string"
+        }
+      },
+      "element_type": [
+        "set",
+        "string"
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert-with-defaults"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "object": {
+            "a": {
+              "set": [],
+              "element_type": "string"
+            },
+            "b": {
+              "set": [],
+              "element_type": "string"
+            },
+            "c": {
+              "list": [
+                {
+                  "number": "1"
+                }
+              ],
+              "element_type": "number"
+            },
+            "d": {
+              "list": [
+                {
+                  "bool": true
+                }
+              ],
+              "element_type": "bool"
+            }
+          }
+        }
+      },
+      "blocks": []
+    }
+  }
+}

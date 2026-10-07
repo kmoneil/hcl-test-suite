@@ -1,0 +1,44 @@
+{
+  "description": "Converting an unknown map to an object type gives an unknown object",
+  "spec": [
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+    "spec.md#collection-and-structural-type-conversions",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "type-expressions"
+  ],
+  "variables": {
+    "u": {
+      "unknown": [
+        "map",
+        "string"
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": [
+            "object",
+            {
+              "a": "string"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

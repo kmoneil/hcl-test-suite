@@ -1,0 +1,71 @@
+{
+  "description": "An unknown list of two or three numbers converted to strings isn't equal to a shorter list",
+  "spec": [
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+    "hclsyntax/spec.md#comparison-operators",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The spec says a comparison with an unknown operand gives an unknown bool. ConditionalExpr.Value (hclsyntax/expression.go) refines the unknown choice between the two lists with the range of their lengths, two to three, go-cty keeps that when it converts the unknown (prepareUnknownResult in cty/convert/conversion.go), and Value.Equals (cty/value_ops.go) uses it to rule out a list of one element.",
+  "variables": {
+    "c": {
+      "unknown": "bool"
+    },
+    "l2": {
+      "list": [
+        {
+          "number": "1"
+        },
+        {
+          "number": "2"
+        }
+      ],
+      "element_type": "number"
+    },
+    "l3": {
+      "list": [
+        {
+          "number": "1"
+        },
+        {
+          "number": "2"
+        },
+        {
+          "number": "3"
+        }
+      ],
+      "element_type": "number"
+    },
+    "l1": {
+      "list": [
+        {
+          "string": "1"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

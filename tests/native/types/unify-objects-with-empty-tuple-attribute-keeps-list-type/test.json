@@ -1,0 +1,49 @@
+{
+  "description": "An empty tuple attribute doesn't change another attribute's list type when objects unify",
+  "spec": [
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator",
+    "hclsyntax/spec.md#attribute-access-operator",
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values"
+  ],
+  "status": "disputed",
+  "notes": "The input needs a null list whose element type is the dynamic pseudo-type (ld), which the spec has no value for: the dynamic pseudo-type is a placeholder for a type that isn't known yet, so no value should have it as a collection's element type. Apart from that, the spec gives the same result. hashicorp/hcl unifies objects with different attribute names to a map whose element type unifies all the attribute types (unifyObjectTypesToMap in cty/convert/unify.go). For a list of strings, a list of the dynamic pseudo-type and an empty tuple, unifyTuplesAsList fails because the empty tuple has no element types to unify (unifyTupleTypesToList), so unify ranks the three types (compareTypes in cty/convert/compare_types.go) and takes the list of strings, which the empty tuple converts to as an empty list. The spec gives an object type with all three attributes, where p keeps its type. Either way p is an unknown list of strings.",
+  "variables": {
+    "u": {
+      "unknown": "bool"
+    },
+    "ls": {
+      "list": [
+        {
+          "string": "v"
+        }
+      ],
+      "element_type": "string"
+    },
+    "ld": {
+      "null": [
+        "list",
+        "dynamic"
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "unknown": [
+            "list",
+            "string"
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

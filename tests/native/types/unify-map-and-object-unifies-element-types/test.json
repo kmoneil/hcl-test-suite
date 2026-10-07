@@ -1,0 +1,34 @@
+{
+  "description": "A map of numbers unified with an object of strings converts its elements to strings",
+  "spec": [
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator",
+    "hclsyntax/spec.md#attribute-access-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "notes": "hashicorp/hcl unifies the object's attribute types as a map first, then unifies that map type with the map of numbers, which gives a map of strings (unifyObjectsAsMaps in cty/convert/unify.go). The spec unifies a map and an object to the object type, whose attribute a is a string. Either way the selected map's element a becomes the string \"1\".",
+  "variables": {
+    "m": {
+      "map": {
+        "a": {
+          "number": "1"
+        }
+      },
+      "element_type": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "1"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

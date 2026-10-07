@@ -1,0 +1,38 @@
+{
+  "description": "An unknown sum converted to string is not equal to null",
+  "spec": [
+    "spec.md#unknown-values-and-the-dynamic-pseudo-type",
+    "hclsyntax/spec.md#comparison-operators",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "unknown-values",
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The spec says a comparison with an unknown operand gives an unknown bool. hashicorp/hcl returns false because the unknown sum is refined as never null (go-cty's stdlib.AddFunc, which hclsyntax/expression_ops.go uses for +, has refineNonNull as its RefineResult in cty/function/stdlib/number.go), go-cty keeps that when it converts the unknown (prepareUnknownResult in cty/convert/conversion.go), and Value.Equals (cty/value_ops.go) uses it to rule out null.",
+  "variables": {
+    "u": {
+      "unknown": "number"
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "bool": false
+        }
+      },
+      "blocks": []
+    }
+  }
+}

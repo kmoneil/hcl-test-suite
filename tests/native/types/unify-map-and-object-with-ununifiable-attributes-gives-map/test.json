@@ -1,0 +1,43 @@
+{
+  "description": "A map of strings and an object whose attribute types don't unify with each other unify to the map",
+  "spec": [
+    "spec.md#type-unification",
+    "spec.md#collection-and-structural-type-conversions",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says map and object types unify by preferring the object type, so the selected object would stay {a = 1, b = true}. hashicorp/hcl can't unify the object's number and bool to one map element type (unifyObjectsAsMaps in cty/convert/unify.go), so it ranks the two types, putting the map first (compareTypes in cty/convert/compare_types.go), and converts each attribute to a string.",
+  "variables": {
+    "m": {
+      "map": {
+        "a": {
+          "string": "x"
+        }
+      },
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "map": {
+            "a": {
+              "string": "1"
+            },
+            "b": {
+              "string": "true"
+            }
+          },
+          "element_type": "string"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "description": "A set of tuples of dynamic elements unifies with lists of tuples whose elements don't unify",
+  "spec": [
+    "spec.md#type-unification",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values",
+    "functions",
+    "type-expressions"
+  ],
+  "status": "disputed",
+  "notes": "The spec unifies the three list types by unifying their element types, tuples that unify element by element, and the first elements of those tuples, a set of strings, a set of lists of strings and a number, have no common type. The set type of s doesn't help: list and set types unify by preferring the list type, and the dynamic pseudo-type is the result only when every input type is dynamic, so its dynamic elements can't stand for the others. So this should be an error, as converting to a list of any is when the elements have no common type. hashicorp/hcl ranks the given types (compareTypes in cty/convert/compare_types.go) and converts every empty list to s's type, whose dynamic pseudo-type elements take anything. It ranks neither of a string and a list above the other: if it did, the three lists would rank in a circle (each wins at one element), and sortTypes in cty/convert/sort_types.go would never reach s.",
+  "variables": {
+    "x": {
+      "list": [],
+      "element_type": [
+        "tuple",
+        [
+          [
+            "set",
+            "string"
+          ],
+          "number",
+          [
+            "set",
+            "number"
+          ]
+        ]
+      ]
+    },
+    "y": {
+      "list": [],
+      "element_type": [
+        "tuple",
+        [
+          [
+            "set",
+            [
+              "list",
+              "string"
+            ]
+          ],
+          [
+            "list",
+            "number"
+          ],
+          "number"
+        ]
+      ]
+    },
+    "z": {
+      "list": [],
+      "element_type": [
+        "tuple",
+        [
+          "number",
+          [
+            "set",
+            "number"
+          ],
+          [
+            "list",
+            "number"
+          ]
+        ]
+      ]
+    },
+    "s": {
+      "set": [],
+      "element_type": [
+        "tuple",
+        [
+          "dynamic",
+          "dynamic",
+          "dynamic"
+        ]
+      ]
+    }
+  },
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [
+            {
+              "set": [],
+              "element_type": [
+                "tuple",
+                [
+                  "dynamic",
+                  "dynamic",
+                  "dynamic"
+                ]
+              ]
+            },
+            {
+              "set": [],
+              "element_type": [
+                "tuple",
+                [
+                  "dynamic",
+                  "dynamic",
+                  "dynamic"
+                ]
+              ]
+            },
+            {
+              "set": [],
+              "element_type": [
+                "tuple",
+                [
+                  "dynamic",
+                  "dynamic",
+                  "dynamic"
+                ]
+              ]
+            },
+            {
+              "set": [],
+              "element_type": [
+                "tuple",
+                [
+                  "dynamic",
+                  "dynamic",
+                  "dynamic"
+                ]
+              ]
+            }
+          ],
+          "element_type": [
+            "set",
+            [
+              "tuple",
+              [
+                "dynamic",
+                "dynamic",
+                "dynamic"
+              ]
+            ]
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

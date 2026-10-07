@@ -1,0 +1,35 @@
+{
+  "description": "Converting a tuple converts an element that follows one already of its target type",
+  "spec": [
+    "spec.md#collection-and-structural-type-conversions",
+    "ext/typeexpr/README.md#the-convert-cty-function"
+  ],
+  "op": "eval",
+  "features": [
+    "functions",
+    "type-expressions"
+  ],
+  "functions": {
+    "convert": {
+      "extension": "convert"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "number": "1"
+            },
+            {
+              "string": "2"
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

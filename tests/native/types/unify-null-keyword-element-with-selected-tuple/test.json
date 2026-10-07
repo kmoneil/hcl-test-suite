@@ -1,0 +1,29 @@
+{
+  "description": "A tuple element unified with the null keyword is returned unchanged when selected",
+  "spec": [
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator",
+    "spec.md#conversion-to-and-from-the-dynamic-pseudo-type"
+  ],
+  "op": "eval",
+  "notes": "hashicorp/hcl unifies the element types, a tuple type and the dynamic pseudo-type, to the dynamic pseudo-type (unifyTupleTypes in cty/convert/unify.go), and the spec to the tuple type; either way the selected element is unchanged.",
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "tuple": [
+            {
+              "tuple": [
+                {
+                  "string": "s"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "blocks": []
+    }
+  }
+}

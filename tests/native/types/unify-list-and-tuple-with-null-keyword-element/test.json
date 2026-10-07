@@ -1,0 +1,37 @@
+{
+  "description": "A list unified with a tuple of null and a string converts its second element to a string",
+  "spec": [
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator",
+    "hclsyntax/spec.md#index-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "notes": "hashicorp/hcl unifies the tuple's element types, the dynamic pseudo-type of null and string, to string, and converts the tuple to a list of strings, which needs an unsafe conversion because of the null (unifyTupleTypesToList in cty/convert/unify.go); it then unifies that with the list of numbers to a list of strings (unifyTuplesAsList). The spec unifies a list and a tuple to the tuple type, whose second element is a string. Either way the selected list's second element becomes the string \"2\".",
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "number": "1"
+        },
+        {
+          "number": "2"
+        }
+      ],
+      "element_type": "number"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "string": "2"
+        }
+      },
+      "blocks": []
+    }
+  }
+}

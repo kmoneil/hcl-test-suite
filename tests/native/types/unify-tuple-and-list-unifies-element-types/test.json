@@ -1,0 +1,39 @@
+{
+  "description": "A tuple of numbers selected beside a list of strings becomes a list of strings",
+  "spec": [
+    "spec.md#type-unification",
+    "hclsyntax/spec.md#conditional-operator"
+  ],
+  "op": "eval",
+  "features": [
+    "typed-values"
+  ],
+  "status": "disputed",
+  "notes": "The spec says list and tuple types unify by preferring the tuple type, so the selected tuple would stay a tuple holding the number 1. hashicorp/hcl unifies the tuple's element types as a list, a list of numbers, unifies that with the list of strings to a list of strings, and converts the tuple to it (unifyTuplesAsList in cty/convert/unify.go), so the result is a list holding the string \"1\".",
+  "variables": {
+    "l": {
+      "list": [
+        {
+          "string": "x"
+        }
+      ],
+      "element_type": "string"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "body": {
+      "attributes": {
+        "a": {
+          "list": [
+            {
+              "string": "1"
+            }
+          ],
+          "element_type": "string"
+        }
+      },
+      "blocks": []
+    }
+  }
+}
